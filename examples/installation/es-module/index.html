@@ -1,0 +1,24 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Threebird 3D Tiles Loader: ES Module installation example</title>
+</head>
+<body>
+  <script async src="https://unpkg.com/es-module-shims@0.11.1/dist/es-module-shims.js"></script>
+  <script type="importmap-shim">
+    {
+      "imports": {
+        "three": "https://cdn.skypack.dev/three@0.129.0",
+        "three/examples/jsm/loaders/GLTFLoader": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/loaders/GLTFLoader",
+        "three/examples/jsm/loaders/DRACOLoader": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/loaders/DRACOLoader",
+        "three/examples/jsm/loaders/KTX2Loader": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/loaders/KTX2Loader",
+        "three/examples/jsm/loaders/OrbitControls": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/controls/OrbitControls",
+        "three/examples/jsm/libs/stats.module.js": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/libs/stats.module",
+        "@threebird/loader-3d-tiles" : "../../../dist/threebird-loader-3d-tiles.esm.js"
+      }
+    }
+  </script>
+  <script type='module-shim' src='index.js'></script>
+</body>
+</html>

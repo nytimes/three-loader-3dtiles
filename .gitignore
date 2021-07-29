@@ -1,0 +1,6 @@
+*.swp
+*.swo
+node_modules
+lib
+temp
+etc

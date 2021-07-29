@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "esnext",
+    "sourceMap": true,
+    "inlineSources": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "@threebird/loader-3d-tiles": ["../../../dist/threebird-loader-3d-tiles.d.ts"]
+    }
+  },
+  "include": [
+    "./src/**/*"
+  ]
+}

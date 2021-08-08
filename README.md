@@ -1,4 +1,4 @@
-# @threebird/loader-3d-tiles  
+# three-loader-3d-tiles  
 ![license](https://img.shields.io/badge/License-Apache%202.0-yellow.svg) ![version](https://img.shields.io/badge/version-1.0.0-blue)
 
 [Demos](#demos) &mdash;
@@ -21,8 +21,8 @@ Development of this library started at The New York Times R&D as an effort to cr
 ---
 
 ## Demos
-* [Photogrammetry exported to 3D Tiles in RealityCapture](https://automatic-lamp-fd84a7c4.pages.github.io/examples/demos/realitycapture)
-* [LiDAR Point Cloud hosted as 3D Tiles in Cesium ION](https://automatic-lamp-fd84a7c4.pages.github.io/examples/demos/cesium)
+* [Photogrammetry exported to 3D Tiles in RealityCapture](https://supreme-guide-8e1d5fe2.pages.github.io/examples/demos/realitycapture)
+* [LiDAR Point Cloud hosted as 3D Tiles in Cesium ION](https://supreme-guide-8e1d5fe2.pages.github.io/examples/demos/cesium)
 
 ---
 

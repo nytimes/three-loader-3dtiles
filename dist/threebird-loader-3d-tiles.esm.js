@@ -1,4 +1,4 @@
-import { CanvasTexture, LinearFilter, RepeatWrapping, Frustum, Matrix4 as Matrix4$1, Group, PlaneGeometry, Vector3 as Vector3$1, MeshBasicMaterial, DoubleSide, Mesh, ArrowHelper, Color, BoxGeometry, EdgesGeometry, LineSegments, LineBasicMaterial, MeshStandardMaterial, Interpolant, Loader, LoaderUtils, FileLoader, SpotLight, PointLight, DirectionalLight, MeshPhysicalMaterial, Vector2 as Vector2$1, TangentSpaceNormalMap, ImageBitmapLoader, TextureLoader, InterleavedBuffer, InterleavedBufferAttribute, BufferAttribute, RGBFormat, LinearMipmapLinearFilter, PointsMaterial, Material, sRGBEncoding, PropertyBinding, BufferGeometry, SkinnedMesh, Line, LineLoop, Points, PerspectiveCamera, MathUtils, OrthographicCamera, InterpolateLinear, AnimationClip, Bone, Object3D, Skeleton, NearestFilter, NearestMipmapNearestFilter, LinearMipmapNearestFilter, NearestMipmapLinearFilter, ClampToEdgeWrapping, MirroredRepeatWrapping, InterpolateDiscrete, FrontSide, TriangleFanDrawMode, TriangleStripDrawMode, VectorKeyframeTrack, QuaternionKeyframeTrack, NumberKeyframeTrack, Box3, Sphere, ShaderMaterial, Float32BufferAttribute, Uint8BufferAttribute } from 'three';
+import { CanvasTexture, LinearFilter, RepeatWrapping, Frustum, Matrix4 as Matrix4$2, Group, PlaneGeometry, Vector3 as Vector3$2, MeshBasicMaterial, DoubleSide, Mesh, ArrowHelper, Color, BoxGeometry, EdgesGeometry, LineSegments, LineBasicMaterial, MeshStandardMaterial, Interpolant, Loader, LoaderUtils, FileLoader, SpotLight, PointLight, DirectionalLight, MeshPhysicalMaterial, Vector2 as Vector2$1, TangentSpaceNormalMap, ImageBitmapLoader, TextureLoader, InterleavedBuffer, InterleavedBufferAttribute, BufferAttribute, RGBFormat, LinearMipmapLinearFilter, PointsMaterial, Material, sRGBEncoding, PropertyBinding, BufferGeometry, SkinnedMesh, Line, LineLoop, Points, PerspectiveCamera, MathUtils, OrthographicCamera, InterpolateLinear, AnimationClip, Bone, Object3D, Skeleton, NearestFilter, NearestMipmapNearestFilter, LinearMipmapNearestFilter, NearestMipmapLinearFilter, ClampToEdgeWrapping, MirroredRepeatWrapping, InterpolateDiscrete, FrontSide, TriangleFanDrawMode, TriangleStripDrawMode, VectorKeyframeTrack, QuaternionKeyframeTrack, NumberKeyframeTrack, Box3, Sphere, ShaderMaterial, Float32BufferAttribute, Uint8BufferAttribute } from 'three';
 import { GLTFLoader as GLTFLoader$2 } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader';
@@ -28,7 +28,7 @@ function __awaiter(thisArg, _arguments, P, generator) {
     });
 }
 
-function assert$8(condition, message) {
+function assert$9(condition, message) {
   if (!condition) {
     throw new Error(message || 'loader assertion failed.');
   }
@@ -45,9 +45,9 @@ const isBrowser$4 = typeof process !== 'object' || String(process) !== '[object 
 const matches$2 = typeof process !== 'undefined' && process.version && /v([0-9]*)/.exec(process.version);
 matches$2 && parseFloat(matches$2[1]) || 0;
 
-const VERSION$6 = "3.0.7" ;
+const VERSION$6 = "3.0.10" ;
 
-function assert$7(condition, message) {
+function assert$8(condition, message) {
   if (!condition) {
     throw new Error(message || 'loaders.gl assertion failed.');
   }
@@ -118,14 +118,14 @@ class WorkerJob {
   }
 
   done(value) {
-    assert$7(this.isRunning);
+    assert$8(this.isRunning);
     this.isRunning = false;
 
     this._resolve(value);
   }
 
   error(error) {
-    assert$7(this.isRunning);
+    assert$8(this.isRunning);
     this.isRunning = false;
 
     this._reject(error);
@@ -135,7 +135,7 @@ class WorkerJob {
 
 const workerURLCache = new Map();
 function getLoadableWorkerURL(props) {
-  assert$7(props.source && !props.url || !props.source && props.url);
+  assert$8(props.source && !props.url || !props.source && props.url);
   let workerURL = workerURLCache.get(props.source || props.url);
 
   if (!workerURL) {
@@ -150,7 +150,7 @@ function getLoadableWorkerURL(props) {
     }
   }
 
-  assert$7(workerURL);
+  assert$8(workerURL);
   return workerURL;
 }
 
@@ -171,7 +171,13 @@ function getLoadableWorkerURLFromSource(workerSource) {
 }
 
 function buildScriptSource(workerUrl) {
-  return "try {\n  importScripts('".concat(workerUrl, "');\n} catch (error) {\n  console.error(error);\n  throw error;\n}");
+  return `\
+try {
+  importScripts('${workerUrl}');
+} catch (error) {
+  console.error(error);
+  throw error;
+}`;
 }
 
 function getTransferList(object, recursive = true, transfers) {
@@ -243,7 +249,7 @@ class WorkerThread {
       source,
       url
     } = props;
-    assert$7(source || url);
+    assert$8(source || url);
     this.name = name;
     this.source = source;
     this.url = url;
@@ -272,14 +278,14 @@ class WorkerThread {
 
   _getErrorFromErrorEvent(event) {
     let message = 'Failed to load ';
-    message += "worker ".concat(this.name, ". ");
+    message += `worker ${this.name}. `;
 
     if (event.message) {
-      message += "".concat(event.message, " in ");
+      message += `${event.message} in `;
     }
 
     if (event.lineno) {
-      message += ":".concat(event.lineno, ":").concat(event.colno);
+      message += `:${event.lineno}:${event.colno}`;
     }
 
     return new Error(message);
@@ -450,7 +456,7 @@ class WorkerPool {
 
     if (this.count < this._getMaxConcurrency()) {
       this.count++;
-      const name = "".concat(this.name.toLowerCase(), " (#").concat(this.count, " of ").concat(this.maxConcurrency, ")");
+      const name = `${this.name.toLowerCase()} (#${this.count} of ${this.maxConcurrency})`;
       return new WorkerThread({
         name,
         source: this.source,
@@ -550,11 +556,11 @@ _defineProperty(WorkerFarm, "_workerFarm", void 0);
 const NPM_TAG = 'latest';
 function getWorkerURL(worker, options = {}) {
   const workerOptions = options[worker.id] || {};
-  const workerFile = "".concat(worker.id, "-worker.js");
+  const workerFile = `${worker.id}-worker.js`;
   let url = workerOptions.workerUrl;
 
   if (options._workerType === 'test') {
-    url = "modules/".concat(worker.module, "/dist/").concat(workerFile);
+    url = `modules/${worker.module}/dist/${workerFile}`;
   }
 
   if (!url) {
@@ -564,16 +570,16 @@ function getWorkerURL(worker, options = {}) {
       version = NPM_TAG;
     }
 
-    const versionTag = version ? "@".concat(version) : '';
-    url = "https://unpkg.com/@loaders.gl/".concat(worker.module).concat(versionTag, "/dist/").concat(workerFile);
+    const versionTag = version ? `@${version}` : '';
+    url = `https://unpkg.com/@loaders.gl/${worker.module}${versionTag}/dist/${workerFile}`;
   }
 
-  assert$7(url);
+  assert$8(url);
   return url;
 }
 
 function validateWorkerVersion(worker, coreVersion = VERSION$6) {
-  assert$7(worker, 'no worker provided');
+  assert$8(worker, 'no worker provided');
   const workerVersion = worker.version;
 
   if (!coreVersion || !workerVersion) {
@@ -583,9 +589,9 @@ function validateWorkerVersion(worker, coreVersion = VERSION$6) {
   return true;
 }
 
-var _nodeResolve_empty = {};
+var makeNodeStream = {};
 
-const VERSION$5 = "3.0.7" ;
+const VERSION$5 = "3.0.10" ;
 const loadLibraryPromises = {};
 async function loadLibrary(libraryUrl, moduleName = null, options = {}) {
   if (moduleName) {
@@ -607,19 +613,19 @@ function getLibraryUrl(library, moduleName, options) {
   }
 
   if (!isBrowser$3) {
-    return "modules/".concat(moduleName, "/dist/libs/").concat(library);
+    return `modules/${moduleName}/dist/libs/${library}`;
   }
 
   if (options.CDN) {
-    assert$7(options.CDN.startsWith('http'));
-    return "".concat(options.CDN, "/").concat(moduleName, "@").concat(VERSION$5, "/dist/libs/").concat(library);
+    assert$8(options.CDN.startsWith('http'));
+    return `${options.CDN}/${moduleName}@${VERSION$5}/dist/libs/${library}`;
   }
 
   if (isWorker) {
-    return "../src/libs/".concat(library);
+    return `../src/libs/${library}`;
   }
 
-  return "modules/".concat(moduleName, "/src/libs/").concat(library);
+  return `modules/${moduleName}/src/libs/${library}`;
 }
 
 async function loadLibraryFromFile(libraryUrl) {
@@ -629,7 +635,7 @@ async function loadLibraryFromFile(libraryUrl) {
   }
 
   if (!isBrowser$3) {
-    return _nodeResolve_empty.requireFromFile && (await _nodeResolve_empty.requireFromFile(libraryUrl));
+    return makeNodeStream.requireFromFile && (await makeNodeStream.requireFromFile(libraryUrl));
   }
 
   if (isWorker) {
@@ -643,7 +649,7 @@ async function loadLibraryFromFile(libraryUrl) {
 
 function loadLibraryFromString(scriptSource, id) {
   if (!isBrowser$3) {
-    return _nodeResolve_empty.requireFromString && _nodeResolve_empty.requireFromString(scriptSource, id);
+    return makeNodeStream.requireFromString && makeNodeStream.requireFromString(scriptSource, id);
   }
 
   if (isWorker) {
@@ -723,7 +729,7 @@ async function onMessage(parseOnMainThread, job, type, payload) {
       break;
 
     default:
-      console.warn("parse-with-worker unknown message ".concat(type));
+      console.warn(`parse-with-worker unknown message ${type}`);
   }
 }
 
@@ -758,13 +764,13 @@ function parseJSON(string) {
   try {
     return JSON.parse(string);
   } catch (_) {
-    throw new Error("Failed to parse JSON from data starting with \"".concat(getFirstCharacters$1(string), "\""));
+    throw new Error(`Failed to parse JSON from data starting with "${getFirstCharacters$1(string)}"`);
   }
 }
 
 function toArrayBuffer(data) {
-  if (_nodeResolve_empty.toArrayBuffer) {
-    data = _nodeResolve_empty.toArrayBuffer(data);
+  if (makeNodeStream.toArrayBuffer) {
+    data = makeNodeStream.toArrayBuffer(data);
   }
 
   if (data instanceof ArrayBuffer) {
@@ -825,8 +831,8 @@ function sliceArrayBuffer(arrayBuffer, byteOffset, byteLength) {
 }
 
 function padToNBytes(byteLength, padding) {
-  assert$8(byteLength >= 0);
-  assert$8(padding > 0);
+  assert$9(byteLength >= 0);
+  assert$9(padding > 0);
   return byteLength + (padding - 1) & ~(padding - 1);
 }
 function copyToArray(source, target, targetOffset) {
@@ -1231,7 +1237,7 @@ function resolvePath(filename) {
   }
 
   if (!filename.startsWith('http://') && !filename.startsWith('https://')) {
-    filename = "".concat(pathPrefix).concat(filename);
+    filename = `${pathPrefix}${filename}`;
   }
 
   return filename;
@@ -1378,18 +1384,18 @@ async function checkResponse(response) {
 }
 
 async function getResponseError(response) {
-  let message = "Failed to fetch resource ".concat(response.url, " (").concat(response.status, "): ");
+  let message = `Failed to fetch resource ${response.url} (${response.status}): `;
 
   try {
     const contentType = response.headers.get('Content-Type');
     let text = response.statusText;
 
     if (contentType.includes('application/json')) {
-      text += " ".concat(await response.text());
+      text += ` ${await response.text()}`;
     }
 
     message += text;
-    message = message.length > 60 ? "".concat(message.slice(60), "...") : message;
+    message = message.length > 60 ? `${message.slice(60)}...` : message;
   } catch (error) {}
 
   return message;
@@ -1399,7 +1405,7 @@ async function getInitialDataUrl(resource) {
   const INITIAL_DATA_LENGTH = 5;
 
   if (typeof resource === 'string') {
-    return "data:,".concat(resource.slice(0, INITIAL_DATA_LENGTH));
+    return `data:,${resource.slice(0, INITIAL_DATA_LENGTH)}`;
   }
 
   if (resource instanceof Blob) {
@@ -1420,7 +1426,7 @@ async function getInitialDataUrl(resource) {
   if (resource instanceof ArrayBuffer) {
     const slice = resource.slice(0, INITIAL_DATA_LENGTH);
     const base64 = arrayBufferToBase64(slice);
-    return "data:base64,".concat(base64);
+    return `data:base64,${base64}`;
   }
 
   return null;
@@ -1630,7 +1636,7 @@ function autobind(obj, predefined = ['constructor']) {
   }
 }
 
-function assert$6(condition, message) {
+function assert$7(condition, message) {
   if (!condition) {
     throw new Error(message || 'Assertion failed');
   }
@@ -1751,7 +1757,7 @@ class Log {
   }
 
   assert(condition, message) {
-    assert$6(condition, message);
+    assert$7(condition, message);
   }
 
   warn(message) {
@@ -1905,7 +1911,7 @@ class Log {
         opts
       });
       method = method || opts.method;
-      assert$6(method);
+      assert$7(method);
       opts.total = this.getTotal();
       opts.delta = this.getDelta();
       this._deltaTs = getHiResTimestamp();
@@ -1949,7 +1955,7 @@ function normalizeLogLevel(logLevel) {
       return 0;
   }
 
-  assert$6(Number.isFinite(resolvedLevel) && resolvedLevel >= 0);
+  assert$7(Number.isFinite(resolvedLevel) && resolvedLevel >= 0);
   return resolvedLevel;
 }
 
@@ -1985,7 +1991,7 @@ function normalizeArguments(opts) {
   }
 
   const messageType = typeof opts.message;
-  assert$6(messageType === 'string' || messageType === 'object');
+  assert$7(messageType === 'string' || messageType === 'object');
   return Object.assign(opts, opts.opts);
 }
 
@@ -2191,7 +2197,7 @@ function validateOptions(options, loaders) {
 
 function validateOptionsObject(options, id, defaultOptions, deprecatedOptions, loaders) {
   const loaderName = id || 'Top level';
-  const prefix = id ? "".concat(id, ".") : '';
+  const prefix = id ? `${id}.` : '';
 
   for (const key in options) {
     const isSubOptions = !id && isObject(options[key]);
@@ -2200,10 +2206,10 @@ function validateOptionsObject(options, id, defaultOptions, deprecatedOptions, l
 
     if (!(key in defaultOptions) && !isBaseUriOption && !isWorkerUrlOption) {
       if (key in deprecatedOptions) {
-        probeLog.warn("".concat(loaderName, " loader option '").concat(prefix).concat(key, "' no longer supported, use '").concat(deprecatedOptions[key], "'"))();
+        probeLog.warn(`${loaderName} loader option \'${prefix}${key}\' no longer supported, use \'${deprecatedOptions[key]}\'`)();
       } else if (!isSubOptions) {
         const suggestion = findSimilarOption(key, loaders);
-        probeLog.warn("".concat(loaderName, " loader option '").concat(prefix).concat(key, "' not recognized. ").concat(suggestion))();
+        probeLog.warn(`${loaderName} loader option \'${prefix}${key}\' not recognized. ${suggestion}`)();
       }
     }
   }
@@ -2216,14 +2222,14 @@ function findSimilarOption(optionKey, loaders) {
   for (const loader of loaders) {
     for (const key in loader.options) {
       if (optionKey === key) {
-        return "Did you mean '".concat(loader.id, ".").concat(key, "'?");
+        return `Did you mean \'${loader.id}.${key}\'?`;
       }
 
       const lowerCaseKey = key.toLowerCase();
       const isPartialMatch = lowerCaseOptionKey.startsWith(lowerCaseKey) || lowerCaseKey.startsWith(lowerCaseOptionKey);
 
       if (isPartialMatch) {
-        bestSuggestion = bestSuggestion || "Did you mean '".concat(loader.id, ".").concat(key, "'?");
+        bestSuggestion = bestSuggestion || `Did you mean \'${loader.id}.${key}\'?`;
       }
     }
   }
@@ -2285,8 +2291,8 @@ function isLoaderObject(loader) {
 function normalizeLoader(loader) {
   var _loader2, _loader3;
 
-  assert$8(loader, 'null loader');
-  assert$8(isLoaderObject(loader), 'invalid loader');
+  assert$9(loader, 'null loader');
+  assert$9(isLoaderObject(loader), 'invalid loader');
   let options;
 
   if (Array.isArray(loader)) {
@@ -2410,11 +2416,11 @@ function getNoValidLoaderMessage(data) {
   let message = 'No valid loader found';
 
   if (data) {
-    message += " data: \"".concat(getFirstCharacters(data), "\", contentType: \"").concat(type, "\"");
+    message += ` data: "${getFirstCharacters(data)}", contentType: "${type}"`;
   }
 
   if (url) {
-    message += " url: ".concat(url);
+    message += ` url: ${url}`;
   }
 
   return message;
@@ -2452,7 +2458,7 @@ function findLoaderByMIMEType(loaders, mimeType) {
       return loader;
     }
 
-    if (mimeType === "application/x.".concat(loader.id)) {
+    if (mimeType === `application/x.${loader.id}`) {
       return loader;
     }
   }
@@ -2757,7 +2763,7 @@ function getLoadersFromContext(loaders, context) {
 }
 
 async function parse$3(data, loaders, options, context) {
-  assert$7(!context || typeof context === 'object');
+  assert$8(!context || typeof context === 'object');
 
   if (loaders && !Array.isArray(loaders) && !isLoaderObject(loaders)) {
     context = undefined;
@@ -2808,8 +2814,8 @@ async function parseWithLoader(loader, data, options, context) {
     return await loader.parse(data, options, context, loader);
   }
 
-  assert$7(!loader.parseSync);
-  throw new Error("".concat(loader.id, " loader - no parser found and worker is disabled"));
+  assert$8(!loader.parseSync);
+  throw new Error(`${loader.id} loader - no parser found and worker is disabled`);
 }
 
 async function load(url, loaders, options, context) {
@@ -2832,43 +2838,43 @@ async function load(url, loaders, options, context) {
   return await parse$3(data, loaders, options);
 }
 
-function assert$5(condition, message) {
+function assert$6(condition, message) {
   if (!condition) {
     throw new Error("math.gl assertion ".concat(message));
   }
 }
 
-const RADIANS_TO_DEGREES = 1 / Math.PI * 180;
-const DEGREES_TO_RADIANS = 1 / 180 * Math.PI;
-const config = {};
-config.EPSILON = 1e-12;
-config.debug = false;
-config.precision = 4;
-config.printTypes = false;
-config.printDegrees = false;
-config.printRowMajor = true;
+const RADIANS_TO_DEGREES$1 = 1 / Math.PI * 180;
+const DEGREES_TO_RADIANS$1 = 1 / 180 * Math.PI;
+const config$1 = {};
+config$1.EPSILON = 1e-12;
+config$1.debug = false;
+config$1.precision = 4;
+config$1.printTypes = false;
+config$1.printDegrees = false;
+config$1.printRowMajor = true;
 
-function round(value) {
-  return Math.round(value / config.EPSILON) * config.EPSILON;
+function round$1(value) {
+  return Math.round(value / config$1.EPSILON) * config$1.EPSILON;
 }
 
-function formatValue(value, {
-  precision = config.precision || 4
+function formatValue$1(value, {
+  precision = config$1.precision || 4
 } = {}) {
-  value = round(value);
+  value = round$1(value);
   return "".concat(parseFloat(value.toPrecision(precision)));
 }
-function isArray(value) {
+function isArray$1(value) {
   return Array.isArray(value) || ArrayBuffer.isView(value) && !(value instanceof DataView);
 }
 
-function duplicateArray(array) {
+function duplicateArray$1(array) {
   return array.clone ? array.clone() : new Array(array.length);
 }
 
-function map$1(value, func, result) {
-  if (isArray(value)) {
-    result = result || duplicateArray(value);
+function map$3(value, func, result) {
+  if (isArray$1(value)) {
+    result = result || duplicateArray$1(value);
 
     for (let i = 0; i < result.length && i < value.length; ++i) {
       result[i] = func(value[i], i, result);
@@ -2880,26 +2886,23 @@ function map$1(value, func, result) {
   return func(value);
 }
 
-function toRadians(degrees) {
-  return radians(degrees);
+function toRadians$1(degrees) {
+  return radians$1(degrees);
 }
-function toDegrees(radians) {
-  return degrees(radians);
+function radians$1(degrees, result) {
+  return map$3(degrees, degrees => degrees * DEGREES_TO_RADIANS$1, result);
 }
-function radians(degrees, result) {
-  return map$1(degrees, degrees => degrees * DEGREES_TO_RADIANS, result);
-}
-function degrees(radians, result) {
-  return map$1(radians, radians => radians * RADIANS_TO_DEGREES, result);
+function degrees$1(radians, result) {
+  return map$3(radians, radians => radians * RADIANS_TO_DEGREES$1, result);
 }
 function clamp(value, min, max) {
-  return map$1(value, value => Math.max(min, Math.min(max, value)));
+  return map$3(value, value => Math.max(min, Math.min(max, value)));
 }
-function equals(a, b, epsilon) {
-  const oldEpsilon = config.EPSILON;
+function equals$1(a, b, epsilon) {
+  const oldEpsilon = config$1.EPSILON;
 
   if (epsilon) {
-    config.EPSILON = epsilon;
+    config$1.EPSILON = epsilon;
   }
 
   try {
@@ -2907,13 +2910,13 @@ function equals(a, b, epsilon) {
       return true;
     }
 
-    if (isArray(a) && isArray(b)) {
+    if (isArray$1(a) && isArray$1(b)) {
       if (a.length !== b.length) {
         return false;
       }
 
       for (let i = 0; i < a.length; ++i) {
-        if (!equals(a[i], b[i])) {
+        if (!equals$1(a[i], b[i])) {
           return false;
         }
       }
@@ -2930,16 +2933,16 @@ function equals(a, b, epsilon) {
     }
 
     if (Number.isFinite(a) && Number.isFinite(b)) {
-      return Math.abs(a - b) <= config.EPSILON * Math.max(1.0, Math.abs(a), Math.abs(b));
+      return Math.abs(a - b) <= config$1.EPSILON * Math.max(1.0, Math.abs(a), Math.abs(b));
     }
 
     return false;
   } finally {
-    config.EPSILON = oldEpsilon;
+    config$1.EPSILON = oldEpsilon;
   }
 }
 
-function _extendableBuiltin(cls) {
+function _extendableBuiltin$1(cls) {
   function ExtendableBuiltin() {
     var instance = Reflect.construct(cls, Array.from(arguments));
     Object.setPrototypeOf(instance, Object.getPrototypeOf(this));
@@ -2963,9 +2966,9 @@ function _extendableBuiltin(cls) {
 
   return ExtendableBuiltin;
 }
-class MathArray extends _extendableBuiltin(Array) {
+class MathArray$1 extends _extendableBuiltin$1(Array) {
   get ELEMENTS() {
-    assert$5(false);
+    assert$6(false);
     return 0;
   }
 
@@ -2990,7 +2993,7 @@ class MathArray extends _extendableBuiltin(Array) {
       return this;
     }
 
-    return isArray(arrayOrObject) ? this.toArray(arrayOrObject) : this.toObject(arrayOrObject);
+    return isArray$1(arrayOrObject) ? this.toArray(arrayOrObject) : this.toObject(arrayOrObject);
   }
 
   toTarget(target) {
@@ -3010,14 +3013,14 @@ class MathArray extends _extendableBuiltin(Array) {
   }
 
   toString() {
-    return this.formatString(config);
+    return this.formatString(config$1);
   }
 
   formatString(opts) {
     let string = '';
 
     for (let i = 0; i < this.ELEMENTS; ++i) {
-      string += (i > 0 ? ', ' : '') + formatValue(this[i], opts);
+      string += (i > 0 ? ', ' : '') + formatValue$1(this[i], opts);
     }
 
     return "".concat(opts.printTypes ? this.constructor.name : '', "[").concat(string, "]");
@@ -3029,7 +3032,7 @@ class MathArray extends _extendableBuiltin(Array) {
     }
 
     for (let i = 0; i < this.ELEMENTS; ++i) {
-      if (!equals(this[i], array[i])) {
+      if (!equals$1(this[i], array[i])) {
         return false;
       }
     }
@@ -3183,7 +3186,7 @@ class MathArray extends _extendableBuiltin(Array) {
   }
 
   check() {
-    if (config.debug && !this.validate()) {
+    if (config$1.debug && !this.validate()) {
       throw new Error("math.gl: ".concat(this.constructor.name, " some fields set to invalid numbers'"));
     }
 
@@ -3202,7 +3205,7 @@ class MathArray extends _extendableBuiltin(Array) {
 
 }
 
-function validateVector(v, length) {
+function validateVector$1(v, length) {
   if (v.length !== length) {
     return false;
   }
@@ -3215,36 +3218,36 @@ function validateVector(v, length) {
 
   return true;
 }
-function checkNumber(value) {
+function checkNumber$1(value) {
   if (!Number.isFinite(value)) {
     throw new Error("Invalid number ".concat(value));
   }
 
   return value;
 }
-function checkVector(v, length, callerName = '') {
-  if (config.debug && !validateVector(v, length)) {
+function checkVector$1(v, length, callerName = '') {
+  if (config$1.debug && !validateVector$1(v, length)) {
     throw new Error("math.gl: ".concat(callerName, " some fields set to invalid numbers'"));
   }
 
   return v;
 }
-const map = {};
-function deprecated(method, version) {
-  if (!map[method]) {
-    map[method] = true;
+const map$2 = {};
+function deprecated$1(method, version) {
+  if (!map$2[method]) {
+    map$2[method] = true;
     console.warn("".concat(method, " has been removed in version ").concat(version, ", see upgrade guide for more information"));
   }
 }
 
-class Vector extends MathArray {
+class Vector$1 extends MathArray$1 {
   get ELEMENTS() {
-    assert$5(false);
+    assert$6(false);
     return 0;
   }
 
   copy(vector) {
-    assert$5(false);
+    assert$6(false);
     return this;
   }
 
@@ -3253,7 +3256,7 @@ class Vector extends MathArray {
   }
 
   set x(value) {
-    this[0] = checkNumber(value);
+    this[0] = checkNumber$1(value);
   }
 
   get y() {
@@ -3261,7 +3264,7 @@ class Vector extends MathArray {
   }
 
   set y(value) {
-    this[1] = checkNumber(value);
+    this[1] = checkNumber$1(value);
   }
 
   len() {
@@ -3298,7 +3301,7 @@ class Vector extends MathArray {
       length += dist * dist;
     }
 
-    return checkNumber(length);
+    return checkNumber$1(length);
   }
 
   dot(mathArray) {
@@ -3308,7 +3311,7 @@ class Vector extends MathArray {
       product += this[i] * mathArray[i];
     }
 
-    return checkNumber(product);
+    return checkNumber$1(product);
   }
 
   normalize() {
@@ -3356,12 +3359,12 @@ class Vector extends MathArray {
   }
 
   getComponent(i) {
-    assert$5(i >= 0 && i < this.ELEMENTS, 'index is out of range');
-    return checkNumber(this[i]);
+    assert$6(i >= 0 && i < this.ELEMENTS, 'index is out of range');
+    return checkNumber$1(this[i]);
   }
 
   setComponent(i, value) {
-    assert$5(i >= 0 && i < this.ELEMENTS, 'index is out of range');
+    assert$6(i >= 0 && i < this.ELEMENTS, 'index is out of range');
     this[i] = value;
     return this.check();
   }
@@ -3534,7 +3537,7 @@ function transformMat4$2(out, a, m) {
   };
 })();
 
-function vec2_transformMat4AsVector(out, a, m) {
+function vec2_transformMat4AsVector$1(out, a, m) {
   const x = a[0];
   const y = a[1];
   const w = m[3] * x + m[7] * y || 1.0;
@@ -3542,7 +3545,7 @@ function vec2_transformMat4AsVector(out, a, m) {
   out[1] = (m[1] * x + m[5] * y) / w;
   return out;
 }
-function vec3_transformMat4AsVector(out, a, m) {
+function vec3_transformMat4AsVector$1(out, a, m) {
   const x = a[0];
   const y = a[1];
   const z = a[2];
@@ -3552,7 +3555,7 @@ function vec3_transformMat4AsVector(out, a, m) {
   out[2] = (m[2] * x + m[6] * y + m[10] * z) / w;
   return out;
 }
-function vec3_transformMat2(out, a, m) {
+function vec3_transformMat2$1(out, a, m) {
   const x = a[0];
   const y = a[1];
   out[0] = m[0] * x + m[2] * y;
@@ -3571,16 +3574,16 @@ function vec4_transformMat3(out, a, m) {
   return out;
 }
 
-class Vector2 extends Vector {
+class Vector2 extends Vector$1 {
   constructor(x = 0, y = 0) {
     super(2);
 
-    if (isArray(x) && arguments.length === 1) {
+    if (isArray$1(x) && arguments.length === 1) {
       this.copy(x);
     } else {
-      if (config.debug) {
-        checkNumber(x);
-        checkNumber(y);
+      if (config$1.debug) {
+        checkNumber$1(x);
+        checkNumber$1(y);
       }
 
       this[0] = x;
@@ -3601,9 +3604,9 @@ class Vector2 extends Vector {
   }
 
   fromObject(object) {
-    if (config.debug) {
-      checkNumber(object.x);
-      checkNumber(object.y);
+    if (config$1.debug) {
+      checkNumber$1(object.x);
+      checkNumber$1(object.y);
     }
 
     this[0] = object.x;
@@ -3639,7 +3642,7 @@ class Vector2 extends Vector {
   }
 
   transformAsVector(matrix4) {
-    vec2_transformMat4AsVector(this, this, matrix4);
+    vec2_transformMat4AsVector$1(this, this, matrix4);
     return this.check();
   }
 
@@ -3999,23 +4002,23 @@ var len = length$2;
   };
 })();
 
-const ORIGIN = [0, 0, 0];
-const constants$2 = {};
-class Vector3 extends Vector {
+const ORIGIN$1 = [0, 0, 0];
+const constants$4 = {};
+class Vector3$1 extends Vector$1 {
   static get ZERO() {
-    return constants$2.ZERO = constants$2.ZERO || Object.freeze(new Vector3(0, 0, 0, 0));
+    return constants$4.ZERO = constants$4.ZERO || Object.freeze(new Vector3$1(0, 0, 0, 0));
   }
 
   constructor(x = 0, y = 0, z = 0) {
     super(-0, -0, -0);
 
-    if (arguments.length === 1 && isArray(x)) {
+    if (arguments.length === 1 && isArray$1(x)) {
       this.copy(x);
     } else {
-      if (config.debug) {
-        checkNumber(x);
-        checkNumber(y);
-        checkNumber(z);
+      if (config$1.debug) {
+        checkNumber$1(x);
+        checkNumber$1(y);
+        checkNumber$1(z);
       }
 
       this[0] = x;
@@ -4039,10 +4042,10 @@ class Vector3 extends Vector {
   }
 
   fromObject(object) {
-    if (config.debug) {
-      checkNumber(object.x);
-      checkNumber(object.y);
-      checkNumber(object.z);
+    if (config$1.debug) {
+      checkNumber$1(object.x);
+      checkNumber$1(object.y);
+      checkNumber$1(object.z);
     }
 
     this[0] = object.x;
@@ -4067,7 +4070,7 @@ class Vector3 extends Vector {
   }
 
   set z(value) {
-    this[2] = checkNumber(value);
+    this[2] = checkNumber$1(value);
   }
 
   angle(vector) {
@@ -4081,7 +4084,7 @@ class Vector3 extends Vector {
 
   rotateX({
     radians,
-    origin = ORIGIN
+    origin = ORIGIN$1
   }) {
     rotateX$2(this, this, origin, radians);
     return this.check();
@@ -4089,7 +4092,7 @@ class Vector3 extends Vector {
 
   rotateY({
     radians,
-    origin = ORIGIN
+    origin = ORIGIN$1
   }) {
     rotateY$2(this, this, origin, radians);
     return this.check();
@@ -4097,7 +4100,7 @@ class Vector3 extends Vector {
 
   rotateZ({
     radians,
-    origin = ORIGIN
+    origin = ORIGIN$1
   }) {
     rotateZ$2(this, this, origin, radians);
     return this.check();
@@ -4113,7 +4116,7 @@ class Vector3 extends Vector {
   }
 
   transformAsVector(matrix4) {
-    vec3_transformMat4AsVector(this, this, matrix4);
+    vec3_transformMat4AsVector$1(this, this, matrix4);
     return this.check();
   }
 
@@ -4123,7 +4126,7 @@ class Vector3 extends Vector {
   }
 
   transformByMatrix2(matrix2) {
-    vec3_transformMat2(this, this, matrix2);
+    vec3_transformMat2$1(this, this, matrix2);
     return this.check();
   }
 
@@ -4134,21 +4137,21 @@ class Vector3 extends Vector {
 
 }
 
-class Matrix extends MathArray {
+class Matrix$1 extends MathArray$1 {
   get ELEMENTS() {
-    assert$5(false);
+    assert$6(false);
     return 0;
   }
 
   get RANK() {
-    assert$5(false);
+    assert$6(false);
     return 0;
   }
 
   toString() {
     let string = '[';
 
-    if (config.printRowMajor) {
+    if (config$1.printRowMajor) {
       string += 'row-major:';
 
       for (let row = 0; row < this.RANK; ++row) {
@@ -4177,7 +4180,7 @@ class Matrix extends MathArray {
   }
 
   setElement(row, col, value) {
-    this[col * this.RANK + row] = checkNumber(value);
+    this[col * this.RANK + row] = checkNumber$1(value);
     return this;
   }
 
@@ -4488,9 +4491,9 @@ function fromQuat$1(out, q) {
   return out;
 }
 
-const IDENTITY$1 = Object.freeze([1, 0, 0, 0, 1, 0, 0, 0, 1]);
-const ZERO$1 = Object.freeze([0, 0, 0, 0, 0, 0, 0, 0, 0]);
-const INDICES$1 = Object.freeze({
+const IDENTITY$2 = Object.freeze([1, 0, 0, 0, 1, 0, 0, 0, 1]);
+const ZERO$2 = Object.freeze([0, 0, 0, 0, 0, 0, 0, 0, 0]);
+const INDICES$2 = Object.freeze({
   COL0ROW0: 0,
   COL0ROW1: 1,
   COL0ROW2: 2,
@@ -4501,16 +4504,16 @@ const INDICES$1 = Object.freeze({
   COL2ROW1: 7,
   COL2ROW2: 8
 });
-const constants$1 = {};
-class Matrix3 extends Matrix {
+const constants$3 = {};
+class Matrix3 extends Matrix$1 {
   static get IDENTITY() {
-    constants$1.IDENTITY = constants$1.IDENTITY || Object.freeze(new Matrix3(IDENTITY$1));
-    return constants$1.IDENTITY;
+    constants$3.IDENTITY = constants$3.IDENTITY || Object.freeze(new Matrix3(IDENTITY$2));
+    return constants$3.IDENTITY;
   }
 
   static get ZERO() {
-    constants$1.ZERO = constants$1.ZERO || Object.freeze(new Matrix3(ZERO$1));
-    return constants$1.ZERO;
+    constants$3.ZERO = constants$3.ZERO || Object.freeze(new Matrix3(ZERO$2));
+    return constants$3.ZERO;
   }
 
   get ELEMENTS() {
@@ -4522,7 +4525,7 @@ class Matrix3 extends Matrix {
   }
 
   get INDICES() {
-    return INDICES$1;
+    return INDICES$2;
   }
 
   constructor(array) {
@@ -4579,7 +4582,7 @@ class Matrix3 extends Matrix {
   }
 
   identity() {
-    return this.copy(IDENTITY$1);
+    return this.copy(IDENTITY$2);
   }
 
   fromQuaternion(q) {
@@ -4645,22 +4648,22 @@ class Matrix3 extends Matrix {
         throw new Error('Illegal vector');
     }
 
-    checkVector(result, vector.length);
+    checkVector$1(result, vector.length);
     return result;
   }
 
   transformVector(vector, result) {
-    deprecated('Matrix3.transformVector');
+    deprecated$1('Matrix3.transformVector');
     return this.transform(vector, result);
   }
 
   transformVector2(vector, result) {
-    deprecated('Matrix3.transformVector');
+    deprecated$1('Matrix3.transformVector');
     return this.transform(vector, result);
   }
 
   transformVector3(vector, result) {
-    deprecated('Matrix3.transformVector');
+    deprecated$1('Matrix3.transformVector');
     return this.transform(vector, result);
   }
 
@@ -5706,9 +5709,9 @@ function transformQuat(out, a, q) {
   };
 })();
 
-const IDENTITY = Object.freeze([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
-const ZERO = Object.freeze([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-const INDICES = Object.freeze({
+const IDENTITY$1 = Object.freeze([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+const ZERO$1 = Object.freeze([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+const INDICES$1 = Object.freeze({
   COL0ROW0: 0,
   COL0ROW1: 1,
   COL0ROW2: 2,
@@ -5726,20 +5729,20 @@ const INDICES = Object.freeze({
   COL3ROW2: 14,
   COL3ROW3: 15
 });
-const constants = {};
-class Matrix4 extends Matrix {
+const constants$2 = {};
+class Matrix4$1 extends Matrix$1 {
   static get IDENTITY() {
-    constants.IDENTITY = constants.IDENTITY || Object.freeze(new Matrix4(IDENTITY));
-    return constants.IDENTITY;
+    constants$2.IDENTITY = constants$2.IDENTITY || Object.freeze(new Matrix4$1(IDENTITY$1));
+    return constants$2.IDENTITY;
   }
 
   static get ZERO() {
-    constants.ZERO = constants.ZERO || Object.freeze(new Matrix4(ZERO));
-    return constants.ZERO;
+    constants$2.ZERO = constants$2.ZERO || Object.freeze(new Matrix4$1(ZERO$1));
+    return constants$2.ZERO;
   }
 
   get INDICES() {
-    return INDICES;
+    return INDICES$1;
   }
 
   get ELEMENTS() {
@@ -5841,7 +5844,7 @@ class Matrix4 extends Matrix {
   }
 
   identity() {
-    return this.copy(IDENTITY);
+    return this.copy(IDENTITY$1);
   }
 
   fromQuaternion(q) {
@@ -5858,7 +5861,7 @@ class Matrix4 extends Matrix {
     far
   }) {
     if (far === Infinity) {
-      Matrix4._computeInfinitePerspectiveOffCenter(this, left, right, bottom, top, near);
+      Matrix4$1._computeInfinitePerspectiveOffCenter(this, left, right, bottom, top, near);
     } else {
       frustum(this, left, right, bottom, top, near, far);
     }
@@ -5934,7 +5937,7 @@ class Matrix4 extends Matrix {
     const halfY = fovy / 2;
     const top = focalDistance * Math.tan(halfY);
     const right = top * aspect;
-    return new Matrix4().ortho({
+    return new Matrix4$1().ortho({
       left: -right,
       right,
       bottom: -top,
@@ -6082,7 +6085,7 @@ class Matrix4 extends Matrix {
   transform(vector, result) {
     if (vector.length === 4) {
       result = transformMat4(result || [-0, -0, -0, -0], vector, this);
-      checkVector(result, 4);
+      checkVector$1(result, 4);
       return result;
     }
 
@@ -6107,25 +6110,25 @@ class Matrix4 extends Matrix {
         throw new Error('Illegal vector');
     }
 
-    checkVector(result, vector.length);
+    checkVector$1(result, vector.length);
     return result;
   }
 
   transformAsVector(vector, result) {
     switch (vector.length) {
       case 2:
-        result = vec2_transformMat4AsVector(result || [-0, -0], vector, this);
+        result = vec2_transformMat4AsVector$1(result || [-0, -0], vector, this);
         break;
 
       case 3:
-        result = vec3_transformMat4AsVector(result || [-0, -0, -0], vector, this);
+        result = vec3_transformMat4AsVector$1(result || [-0, -0, -0], vector, this);
         break;
 
       default:
         throw new Error('Illegal vector');
     }
 
-    checkVector(result, vector.length);
+    checkVector$1(result, vector.length);
     return result;
   }
 
@@ -6138,17 +6141,17 @@ class Matrix4 extends Matrix {
   }
 
   transformPoint(vector, result) {
-    deprecated('Matrix4.transformPoint', '3.0');
+    deprecated$1('Matrix4.transformPoint', '3.0');
     return this.transformAsPoint(vector, result);
   }
 
   transformVector(vector, result) {
-    deprecated('Matrix4.transformVector', '3.0');
+    deprecated$1('Matrix4.transformVector', '3.0');
     return this.transformAsPoint(vector, result);
   }
 
   transformDirection(vector, result) {
-    deprecated('Matrix4.transformDirection', '3.0');
+    deprecated$1('Matrix4.transformDirection', '3.0');
     return this.transformAsVector(vector, result);
   }
 
@@ -6622,7 +6625,7 @@ var rotationTo = function () {
 })();
 
 const IDENTITY_QUATERNION = [0, 0, 0, 1];
-class Quaternion extends MathArray {
+class Quaternion extends MathArray$1 {
   constructor(x = 0, y = 0, z = 0, w = 1) {
     super(-0, -0, -0, -0);
 
@@ -6677,7 +6680,7 @@ class Quaternion extends MathArray {
   }
 
   set x(value) {
-    this[0] = checkNumber(value);
+    this[0] = checkNumber$1(value);
   }
 
   get y() {
@@ -6685,7 +6688,7 @@ class Quaternion extends MathArray {
   }
 
   set y(value) {
-    this[1] = checkNumber(value);
+    this[1] = checkNumber$1(value);
   }
 
   get z() {
@@ -6693,7 +6696,7 @@ class Quaternion extends MathArray {
   }
 
   set z(value) {
-    this[2] = checkNumber(value);
+    this[2] = checkNumber$1(value);
   }
 
   get w() {
@@ -6701,7 +6704,7 @@ class Quaternion extends MathArray {
   }
 
   set w(value) {
-    this[3] = checkNumber(value);
+    this[3] = checkNumber$1(value);
   }
 
   len() {
@@ -6755,13 +6758,13 @@ class Quaternion extends MathArray {
   }
 
   multiplyRight(a, b) {
-    assert$5(!b);
+    assert$6(!b);
     multiply(this, this, a);
     return this.check();
   }
 
   multiplyLeft(a, b) {
-    assert$5(!b);
+    assert$6(!b);
     multiply(this, a, this);
     return this.check();
   }
@@ -6823,7 +6826,7 @@ class Quaternion extends MathArray {
 
   transformVector4(vector, result = vector) {
     transformQuat(result, vector, this);
-    return checkVector(result, 4);
+    return checkVector$1(result, 4);
   }
 
   lengthSq() {
@@ -6840,6 +6843,1234 @@ class Quaternion extends MathArray {
 
   multiply(a, b) {
     return this.multiplyRight(a, b);
+  }
+
+}
+
+function assert$5(condition, message) {
+  if (!condition) {
+    throw new Error(`math.gl assertion ${message}`);
+  }
+}
+
+const RADIANS_TO_DEGREES = 1 / Math.PI * 180;
+const DEGREES_TO_RADIANS = 1 / 180 * Math.PI;
+const config = {};
+config.EPSILON = 1e-12;
+config.debug = false;
+config.precision = 4;
+config.printTypes = false;
+config.printDegrees = false;
+config.printRowMajor = true;
+
+function round(value) {
+  return Math.round(value / config.EPSILON) * config.EPSILON;
+}
+
+function formatValue(value, {
+  precision = config.precision || 4
+} = {}) {
+  value = round(value);
+  return `${parseFloat(value.toPrecision(precision))}`;
+}
+function isArray(value) {
+  return Array.isArray(value) || ArrayBuffer.isView(value) && !(value instanceof DataView);
+}
+
+function duplicateArray(array) {
+  return array.clone ? array.clone() : new Array(array.length);
+}
+
+function map$1(value, func, result) {
+  if (isArray(value)) {
+    result = result || duplicateArray(value);
+
+    for (let i = 0; i < result.length && i < value.length; ++i) {
+      result[i] = func(value[i], i, result);
+    }
+
+    return result;
+  }
+
+  return func(value);
+}
+
+function toRadians(degrees) {
+  return radians(degrees);
+}
+function toDegrees(radians) {
+  return degrees(radians);
+}
+function radians(degrees, result) {
+  return map$1(degrees, degrees => degrees * DEGREES_TO_RADIANS, result);
+}
+function degrees(radians, result) {
+  return map$1(radians, radians => radians * RADIANS_TO_DEGREES, result);
+}
+function equals(a, b, epsilon) {
+  const oldEpsilon = config.EPSILON;
+
+  if (epsilon) {
+    config.EPSILON = epsilon;
+  }
+
+  try {
+    if (a === b) {
+      return true;
+    }
+
+    if (isArray(a) && isArray(b)) {
+      if (a.length !== b.length) {
+        return false;
+      }
+
+      for (let i = 0; i < a.length; ++i) {
+        if (!equals(a[i], b[i])) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    if (a && a.equals) {
+      return a.equals(b);
+    }
+
+    if (b && b.equals) {
+      return b.equals(a);
+    }
+
+    if (Number.isFinite(a) && Number.isFinite(b)) {
+      return Math.abs(a - b) <= config.EPSILON * Math.max(1.0, Math.abs(a), Math.abs(b));
+    }
+
+    return false;
+  } finally {
+    config.EPSILON = oldEpsilon;
+  }
+}
+
+function _extendableBuiltin(cls) {
+  function ExtendableBuiltin() {
+    var instance = Reflect.construct(cls, Array.from(arguments));
+    Object.setPrototypeOf(instance, Object.getPrototypeOf(this));
+    return instance;
+  }
+
+  ExtendableBuiltin.prototype = Object.create(cls.prototype, {
+    constructor: {
+      value: cls,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+
+  if (Object.setPrototypeOf) {
+    Object.setPrototypeOf(ExtendableBuiltin, cls);
+  } else {
+    ExtendableBuiltin.__proto__ = cls;
+  }
+
+  return ExtendableBuiltin;
+}
+class MathArray extends _extendableBuiltin(Array) {
+  get ELEMENTS() {
+    assert$5(false);
+    return 0;
+  }
+
+  clone() {
+    return new this.constructor().copy(this);
+  }
+
+  from(arrayOrObject) {
+    return Array.isArray(arrayOrObject) ? this.copy(arrayOrObject) : this.fromObject(arrayOrObject);
+  }
+
+  fromArray(array, offset = 0) {
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      this[i] = array[i + offset];
+    }
+
+    return this.check();
+  }
+
+  to(arrayOrObject) {
+    if (arrayOrObject === this) {
+      return this;
+    }
+
+    return isArray(arrayOrObject) ? this.toArray(arrayOrObject) : this.toObject(arrayOrObject);
+  }
+
+  toTarget(target) {
+    return target ? this.to(target) : this;
+  }
+
+  toArray(array = [], offset = 0) {
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      array[offset + i] = this[i];
+    }
+
+    return array;
+  }
+
+  toFloat32Array() {
+    return new Float32Array(this);
+  }
+
+  toString() {
+    return this.formatString(config);
+  }
+
+  formatString(opts) {
+    let string = '';
+
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      string += (i > 0 ? ', ' : '') + formatValue(this[i], opts);
+    }
+
+    return `${opts.printTypes ? this.constructor.name : ''}[${string}]`;
+  }
+
+  equals(array) {
+    if (!array || this.length !== array.length) {
+      return false;
+    }
+
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      if (!equals(this[i], array[i])) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  exactEquals(array) {
+    if (!array || this.length !== array.length) {
+      return false;
+    }
+
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      if (this[i] !== array[i]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  negate() {
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      this[i] = -this[i];
+    }
+
+    return this.check();
+  }
+
+  lerp(a, b, t) {
+    if (t === undefined) {
+      t = b;
+      b = a;
+      a = this;
+    }
+
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      const ai = a[i];
+      this[i] = ai + t * (b[i] - ai);
+    }
+
+    return this.check();
+  }
+
+  min(vector) {
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      this[i] = Math.min(vector[i], this[i]);
+    }
+
+    return this.check();
+  }
+
+  max(vector) {
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      this[i] = Math.max(vector[i], this[i]);
+    }
+
+    return this.check();
+  }
+
+  clamp(minVector, maxVector) {
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      this[i] = Math.min(Math.max(this[i], minVector[i]), maxVector[i]);
+    }
+
+    return this.check();
+  }
+
+  add(...vectors) {
+    for (const vector of vectors) {
+      for (let i = 0; i < this.ELEMENTS; ++i) {
+        this[i] += vector[i];
+      }
+    }
+
+    return this.check();
+  }
+
+  subtract(...vectors) {
+    for (const vector of vectors) {
+      for (let i = 0; i < this.ELEMENTS; ++i) {
+        this[i] -= vector[i];
+      }
+    }
+
+    return this.check();
+  }
+
+  scale(scale) {
+    if (Array.isArray(scale)) {
+      return this.multiply(scale);
+    }
+
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      this[i] *= scale;
+    }
+
+    return this.check();
+  }
+
+  sub(a) {
+    return this.subtract(a);
+  }
+
+  setScalar(a) {
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      this[i] = a;
+    }
+
+    return this.check();
+  }
+
+  addScalar(a) {
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      this[i] += a;
+    }
+
+    return this.check();
+  }
+
+  subScalar(a) {
+    return this.addScalar(-a);
+  }
+
+  multiplyScalar(scalar) {
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      this[i] *= scalar;
+    }
+
+    return this.check();
+  }
+
+  divideScalar(a) {
+    return this.scale(1 / a);
+  }
+
+  clampScalar(min, max) {
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      this[i] = Math.min(Math.max(this[i], min), max);
+    }
+
+    return this.check();
+  }
+
+  multiplyByScalar(scalar) {
+    return this.scale(scalar);
+  }
+
+  get elements() {
+    return this;
+  }
+
+  check() {
+    if (config.debug && !this.validate()) {
+      throw new Error(`math.gl: ${this.constructor.name} some fields set to invalid numbers'`);
+    }
+
+    return this;
+  }
+
+  validate() {
+    let valid = this.length === this.ELEMENTS;
+
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      valid = valid && Number.isFinite(this[i]);
+    }
+
+    return valid;
+  }
+
+}
+
+function validateVector(v, length) {
+  if (v.length !== length) {
+    return false;
+  }
+
+  for (let i = 0; i < v.length; ++i) {
+    if (!Number.isFinite(v[i])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+function checkNumber(value) {
+  if (!Number.isFinite(value)) {
+    throw new Error(`Invalid number ${value}`);
+  }
+
+  return value;
+}
+function checkVector(v, length, callerName = '') {
+  if (config.debug && !validateVector(v, length)) {
+    throw new Error(`math.gl: ${callerName} some fields set to invalid numbers'`);
+  }
+
+  return v;
+}
+const map = {};
+function deprecated(method, version) {
+  if (!map[method]) {
+    map[method] = true;
+    console.warn(`${method} has been removed in version ${version}, see upgrade guide for more information`);
+  }
+}
+
+class Vector extends MathArray {
+  get ELEMENTS() {
+    assert$5(false);
+    return 0;
+  }
+
+  copy(vector) {
+    assert$5(false);
+    return this;
+  }
+
+  get x() {
+    return this[0];
+  }
+
+  set x(value) {
+    this[0] = checkNumber(value);
+  }
+
+  get y() {
+    return this[1];
+  }
+
+  set y(value) {
+    this[1] = checkNumber(value);
+  }
+
+  len() {
+    return Math.sqrt(this.lengthSquared());
+  }
+
+  magnitude() {
+    return this.len();
+  }
+
+  lengthSquared() {
+    let length = 0;
+
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      length += this[i] * this[i];
+    }
+
+    return length;
+  }
+
+  magnitudeSquared() {
+    return this.lengthSquared();
+  }
+
+  distance(mathArray) {
+    return Math.sqrt(this.distanceSquared(mathArray));
+  }
+
+  distanceSquared(mathArray) {
+    let length = 0;
+
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      const dist = this[i] - mathArray[i];
+      length += dist * dist;
+    }
+
+    return checkNumber(length);
+  }
+
+  dot(mathArray) {
+    let product = 0;
+
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      product += this[i] * mathArray[i];
+    }
+
+    return checkNumber(product);
+  }
+
+  normalize() {
+    const length = this.magnitude();
+
+    if (length !== 0) {
+      for (let i = 0; i < this.ELEMENTS; ++i) {
+        this[i] /= length;
+      }
+    }
+
+    return this.check();
+  }
+
+  multiply(...vectors) {
+    for (const vector of vectors) {
+      for (let i = 0; i < this.ELEMENTS; ++i) {
+        this[i] *= vector[i];
+      }
+    }
+
+    return this.check();
+  }
+
+  divide(...vectors) {
+    for (const vector of vectors) {
+      for (let i = 0; i < this.ELEMENTS; ++i) {
+        this[i] /= vector[i];
+      }
+    }
+
+    return this.check();
+  }
+
+  lengthSq() {
+    return this.lengthSquared();
+  }
+
+  distanceTo(vector) {
+    return this.distance(vector);
+  }
+
+  distanceToSquared(vector) {
+    return this.distanceSquared(vector);
+  }
+
+  getComponent(i) {
+    assert$5(i >= 0 && i < this.ELEMENTS, 'index is out of range');
+    return checkNumber(this[i]);
+  }
+
+  setComponent(i, value) {
+    assert$5(i >= 0 && i < this.ELEMENTS, 'index is out of range');
+    this[i] = value;
+    return this.check();
+  }
+
+  addVectors(a, b) {
+    return this.copy(a).add(b);
+  }
+
+  subVectors(a, b) {
+    return this.copy(a).subtract(b);
+  }
+
+  multiplyVectors(a, b) {
+    return this.copy(a).multiply(b);
+  }
+
+  addScaledVector(a, b) {
+    return this.add(new this.constructor(a).multiplyScalar(b));
+  }
+
+}
+
+function vec2_transformMat4AsVector(out, a, m) {
+  const x = a[0];
+  const y = a[1];
+  const w = m[3] * x + m[7] * y || 1.0;
+  out[0] = (m[0] * x + m[4] * y) / w;
+  out[1] = (m[1] * x + m[5] * y) / w;
+  return out;
+}
+function vec3_transformMat4AsVector(out, a, m) {
+  const x = a[0];
+  const y = a[1];
+  const z = a[2];
+  const w = m[3] * x + m[7] * y + m[11] * z || 1.0;
+  out[0] = (m[0] * x + m[4] * y + m[8] * z) / w;
+  out[1] = (m[1] * x + m[5] * y + m[9] * z) / w;
+  out[2] = (m[2] * x + m[6] * y + m[10] * z) / w;
+  return out;
+}
+function vec3_transformMat2(out, a, m) {
+  const x = a[0];
+  const y = a[1];
+  out[0] = m[0] * x + m[2] * y;
+  out[1] = m[1] * x + m[3] * y;
+  out[2] = a[2];
+  return out;
+}
+
+const ORIGIN = [0, 0, 0];
+const constants$1 = {};
+class Vector3 extends Vector {
+  static get ZERO() {
+    return constants$1.ZERO = constants$1.ZERO || Object.freeze(new Vector3(0, 0, 0, 0));
+  }
+
+  constructor(x = 0, y = 0, z = 0) {
+    super(-0, -0, -0);
+
+    if (arguments.length === 1 && isArray(x)) {
+      this.copy(x);
+    } else {
+      if (config.debug) {
+        checkNumber(x);
+        checkNumber(y);
+        checkNumber(z);
+      }
+
+      this[0] = x;
+      this[1] = y;
+      this[2] = z;
+    }
+  }
+
+  set(x, y, z) {
+    this[0] = x;
+    this[1] = y;
+    this[2] = z;
+    return this.check();
+  }
+
+  copy(array) {
+    this[0] = array[0];
+    this[1] = array[1];
+    this[2] = array[2];
+    return this.check();
+  }
+
+  fromObject(object) {
+    if (config.debug) {
+      checkNumber(object.x);
+      checkNumber(object.y);
+      checkNumber(object.z);
+    }
+
+    this[0] = object.x;
+    this[1] = object.y;
+    this[2] = object.z;
+    return this.check();
+  }
+
+  toObject(object) {
+    object.x = this[0];
+    object.y = this[1];
+    object.z = this[2];
+    return object;
+  }
+
+  get ELEMENTS() {
+    return 3;
+  }
+
+  get z() {
+    return this[2];
+  }
+
+  set z(value) {
+    this[2] = checkNumber(value);
+  }
+
+  angle(vector) {
+    return angle(this, vector);
+  }
+
+  cross(vector) {
+    cross(this, this, vector);
+    return this.check();
+  }
+
+  rotateX({
+    radians,
+    origin = ORIGIN
+  }) {
+    rotateX$2(this, this, origin, radians);
+    return this.check();
+  }
+
+  rotateY({
+    radians,
+    origin = ORIGIN
+  }) {
+    rotateY$2(this, this, origin, radians);
+    return this.check();
+  }
+
+  rotateZ({
+    radians,
+    origin = ORIGIN
+  }) {
+    rotateZ$2(this, this, origin, radians);
+    return this.check();
+  }
+
+  transform(matrix4) {
+    return this.transformAsPoint(matrix4);
+  }
+
+  transformAsPoint(matrix4) {
+    transformMat4$1(this, this, matrix4);
+    return this.check();
+  }
+
+  transformAsVector(matrix4) {
+    vec3_transformMat4AsVector(this, this, matrix4);
+    return this.check();
+  }
+
+  transformByMatrix3(matrix3) {
+    transformMat3(this, this, matrix3);
+    return this.check();
+  }
+
+  transformByMatrix2(matrix2) {
+    vec3_transformMat2(this, this, matrix2);
+    return this.check();
+  }
+
+  transformByQuaternion(quaternion) {
+    transformQuat$1(this, this, quaternion);
+    return this.check();
+  }
+
+}
+
+class Matrix extends MathArray {
+  get ELEMENTS() {
+    assert$5(false);
+    return 0;
+  }
+
+  get RANK() {
+    assert$5(false);
+    return 0;
+  }
+
+  toString() {
+    let string = '[';
+
+    if (config.printRowMajor) {
+      string += 'row-major:';
+
+      for (let row = 0; row < this.RANK; ++row) {
+        for (let col = 0; col < this.RANK; ++col) {
+          string += ` ${this[col * this.RANK + row]}`;
+        }
+      }
+    } else {
+      string += 'column-major:';
+
+      for (let i = 0; i < this.ELEMENTS; ++i) {
+        string += ` ${this[i]}`;
+      }
+    }
+
+    string += ']';
+    return string;
+  }
+
+  getElementIndex(row, col) {
+    return col * this.RANK + row;
+  }
+
+  getElement(row, col) {
+    return this[col * this.RANK + row];
+  }
+
+  setElement(row, col, value) {
+    this[col * this.RANK + row] = checkNumber(value);
+    return this;
+  }
+
+  getColumn(columnIndex, result = new Array(this.RANK).fill(-0)) {
+    const firstIndex = columnIndex * this.RANK;
+
+    for (let i = 0; i < this.RANK; ++i) {
+      result[i] = this[firstIndex + i];
+    }
+
+    return result;
+  }
+
+  setColumn(columnIndex, columnVector) {
+    const firstIndex = columnIndex * this.RANK;
+
+    for (let i = 0; i < this.RANK; ++i) {
+      this[firstIndex + i] = columnVector[i];
+    }
+
+    return this;
+  }
+
+}
+
+const IDENTITY = Object.freeze([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+const ZERO = Object.freeze([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+const INDICES = Object.freeze({
+  COL0ROW0: 0,
+  COL0ROW1: 1,
+  COL0ROW2: 2,
+  COL0ROW3: 3,
+  COL1ROW0: 4,
+  COL1ROW1: 5,
+  COL1ROW2: 6,
+  COL1ROW3: 7,
+  COL2ROW0: 8,
+  COL2ROW1: 9,
+  COL2ROW2: 10,
+  COL2ROW3: 11,
+  COL3ROW0: 12,
+  COL3ROW1: 13,
+  COL3ROW2: 14,
+  COL3ROW3: 15
+});
+const constants = {};
+class Matrix4 extends Matrix {
+  static get IDENTITY() {
+    constants.IDENTITY = constants.IDENTITY || Object.freeze(new Matrix4(IDENTITY));
+    return constants.IDENTITY;
+  }
+
+  static get ZERO() {
+    constants.ZERO = constants.ZERO || Object.freeze(new Matrix4(ZERO));
+    return constants.ZERO;
+  }
+
+  get INDICES() {
+    return INDICES;
+  }
+
+  get ELEMENTS() {
+    return 16;
+  }
+
+  get RANK() {
+    return 4;
+  }
+
+  constructor(array) {
+    super(-0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0);
+
+    if (arguments.length === 1 && Array.isArray(array)) {
+      this.copy(array);
+    } else {
+      this.identity();
+    }
+  }
+
+  copy(array) {
+    this[0] = array[0];
+    this[1] = array[1];
+    this[2] = array[2];
+    this[3] = array[3];
+    this[4] = array[4];
+    this[5] = array[5];
+    this[6] = array[6];
+    this[7] = array[7];
+    this[8] = array[8];
+    this[9] = array[9];
+    this[10] = array[10];
+    this[11] = array[11];
+    this[12] = array[12];
+    this[13] = array[13];
+    this[14] = array[14];
+    this[15] = array[15];
+    return this.check();
+  }
+
+  set(m00, m10, m20, m30, m01, m11, m21, m31, m02, m12, m22, m32, m03, m13, m23, m33) {
+    this[0] = m00;
+    this[1] = m10;
+    this[2] = m20;
+    this[3] = m30;
+    this[4] = m01;
+    this[5] = m11;
+    this[6] = m21;
+    this[7] = m31;
+    this[8] = m02;
+    this[9] = m12;
+    this[10] = m22;
+    this[11] = m32;
+    this[12] = m03;
+    this[13] = m13;
+    this[14] = m23;
+    this[15] = m33;
+    return this.check();
+  }
+
+  setRowMajor(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {
+    this[0] = m00;
+    this[1] = m10;
+    this[2] = m20;
+    this[3] = m30;
+    this[4] = m01;
+    this[5] = m11;
+    this[6] = m21;
+    this[7] = m31;
+    this[8] = m02;
+    this[9] = m12;
+    this[10] = m22;
+    this[11] = m32;
+    this[12] = m03;
+    this[13] = m13;
+    this[14] = m23;
+    this[15] = m33;
+    return this.check();
+  }
+
+  toRowMajor(result) {
+    result[0] = this[0];
+    result[1] = this[4];
+    result[2] = this[8];
+    result[3] = this[12];
+    result[4] = this[1];
+    result[5] = this[5];
+    result[6] = this[9];
+    result[7] = this[13];
+    result[8] = this[2];
+    result[9] = this[6];
+    result[10] = this[10];
+    result[11] = this[14];
+    result[12] = this[3];
+    result[13] = this[7];
+    result[14] = this[11];
+    result[15] = this[15];
+    return result;
+  }
+
+  identity() {
+    return this.copy(IDENTITY);
+  }
+
+  fromQuaternion(q) {
+    fromQuat(this, q);
+    return this.check();
+  }
+
+  frustum({
+    left,
+    right,
+    bottom,
+    top,
+    near,
+    far
+  }) {
+    if (far === Infinity) {
+      Matrix4._computeInfinitePerspectiveOffCenter(this, left, right, bottom, top, near);
+    } else {
+      frustum(this, left, right, bottom, top, near, far);
+    }
+
+    return this.check();
+  }
+
+  static _computeInfinitePerspectiveOffCenter(result, left, right, bottom, top, near) {
+    const column0Row0 = 2.0 * near / (right - left);
+    const column1Row1 = 2.0 * near / (top - bottom);
+    const column2Row0 = (right + left) / (right - left);
+    const column2Row1 = (top + bottom) / (top - bottom);
+    const column2Row2 = -1.0;
+    const column2Row3 = -1.0;
+    const column3Row2 = -2.0 * near;
+    result[0] = column0Row0;
+    result[1] = 0.0;
+    result[2] = 0.0;
+    result[3] = 0.0;
+    result[4] = 0.0;
+    result[5] = column1Row1;
+    result[6] = 0.0;
+    result[7] = 0.0;
+    result[8] = column2Row0;
+    result[9] = column2Row1;
+    result[10] = column2Row2;
+    result[11] = column2Row3;
+    result[12] = 0.0;
+    result[13] = 0.0;
+    result[14] = column3Row2;
+    result[15] = 0.0;
+    return result;
+  }
+
+  lookAt(eye, center, up) {
+    if (arguments.length === 1) {
+      ({
+        eye,
+        center,
+        up
+      } = eye);
+    }
+
+    center = center || [0, 0, 0];
+    up = up || [0, 1, 0];
+    lookAt(this, eye, center, up);
+    return this.check();
+  }
+
+  ortho({
+    left,
+    right,
+    bottom,
+    top,
+    near = 0.1,
+    far = 500
+  }) {
+    ortho(this, left, right, bottom, top, near, far);
+    return this.check();
+  }
+
+  orthographic({
+    fovy = 45 * Math.PI / 180,
+    aspect = 1,
+    focalDistance = 1,
+    near = 0.1,
+    far = 500
+  }) {
+    if (fovy > Math.PI * 2) {
+      throw Error('radians');
+    }
+
+    const halfY = fovy / 2;
+    const top = focalDistance * Math.tan(halfY);
+    const right = top * aspect;
+    return new Matrix4().ortho({
+      left: -right,
+      right,
+      bottom: -top,
+      top,
+      near,
+      far
+    });
+  }
+
+  perspective({
+    fovy = undefined,
+    fov = 45 * Math.PI / 180,
+    aspect = 1,
+    near = 0.1,
+    far = 500
+  } = {}) {
+    fovy = fovy || fov;
+
+    if (fovy > Math.PI * 2) {
+      throw Error('radians');
+    }
+
+    perspective(this, fovy, aspect, near, far);
+    return this.check();
+  }
+
+  determinant() {
+    return determinant(this);
+  }
+
+  getScale(result = [-0, -0, -0]) {
+    result[0] = Math.sqrt(this[0] * this[0] + this[1] * this[1] + this[2] * this[2]);
+    result[1] = Math.sqrt(this[4] * this[4] + this[5] * this[5] + this[6] * this[6]);
+    result[2] = Math.sqrt(this[8] * this[8] + this[9] * this[9] + this[10] * this[10]);
+    return result;
+  }
+
+  getTranslation(result = [-0, -0, -0]) {
+    result[0] = this[12];
+    result[1] = this[13];
+    result[2] = this[14];
+    return result;
+  }
+
+  getRotation(result = [-0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0], scaleResult = null) {
+    const scale = this.getScale(scaleResult || [-0, -0, -0]);
+    const inverseScale0 = 1 / scale[0];
+    const inverseScale1 = 1 / scale[1];
+    const inverseScale2 = 1 / scale[2];
+    result[0] = this[0] * inverseScale0;
+    result[1] = this[1] * inverseScale1;
+    result[2] = this[2] * inverseScale2;
+    result[3] = 0;
+    result[4] = this[4] * inverseScale0;
+    result[5] = this[5] * inverseScale1;
+    result[6] = this[6] * inverseScale2;
+    result[7] = 0;
+    result[8] = this[8] * inverseScale0;
+    result[9] = this[9] * inverseScale1;
+    result[10] = this[10] * inverseScale2;
+    result[11] = 0;
+    result[12] = 0;
+    result[13] = 0;
+    result[14] = 0;
+    result[15] = 1;
+    return result;
+  }
+
+  getRotationMatrix3(result = [-0, -0, -0, -0, -0, -0, -0, -0, -0], scaleResult = null) {
+    const scale = this.getScale(scaleResult || [-0, -0, -0]);
+    const inverseScale0 = 1 / scale[0];
+    const inverseScale1 = 1 / scale[1];
+    const inverseScale2 = 1 / scale[2];
+    result[0] = this[0] * inverseScale0;
+    result[1] = this[1] * inverseScale1;
+    result[2] = this[2] * inverseScale2;
+    result[3] = this[4] * inverseScale0;
+    result[4] = this[5] * inverseScale1;
+    result[5] = this[6] * inverseScale2;
+    result[6] = this[8] * inverseScale0;
+    result[7] = this[9] * inverseScale1;
+    result[8] = this[10] * inverseScale2;
+    return result;
+  }
+
+  transpose() {
+    transpose(this, this);
+    return this.check();
+  }
+
+  invert() {
+    invert$1(this, this);
+    return this.check();
+  }
+
+  multiplyLeft(a) {
+    multiply$1(this, a, this);
+    return this.check();
+  }
+
+  multiplyRight(a) {
+    multiply$1(this, this, a);
+    return this.check();
+  }
+
+  rotateX(radians) {
+    rotateX$1(this, this, radians);
+    return this.check();
+  }
+
+  rotateY(radians) {
+    rotateY$1(this, this, radians);
+    return this.check();
+  }
+
+  rotateZ(radians) {
+    rotateZ$1(this, this, radians);
+    return this.check();
+  }
+
+  rotateXYZ([rx, ry, rz]) {
+    return this.rotateX(rx).rotateY(ry).rotateZ(rz);
+  }
+
+  rotateAxis(radians, axis) {
+    rotate(this, this, radians, axis);
+    return this.check();
+  }
+
+  scale(factor) {
+    if (Array.isArray(factor)) {
+      scale$2(this, this, factor);
+    } else {
+      scale$2(this, this, [factor, factor, factor]);
+    }
+
+    return this.check();
+  }
+
+  translate(vec) {
+    translate(this, this, vec);
+    return this.check();
+  }
+
+  transform(vector, result) {
+    if (vector.length === 4) {
+      result = transformMat4(result || [-0, -0, -0, -0], vector, this);
+      checkVector(result, 4);
+      return result;
+    }
+
+    return this.transformAsPoint(vector, result);
+  }
+
+  transformAsPoint(vector, result) {
+    const {
+      length
+    } = vector;
+
+    switch (length) {
+      case 2:
+        result = transformMat4$2(result || [-0, -0], vector, this);
+        break;
+
+      case 3:
+        result = transformMat4$1(result || [-0, -0, -0], vector, this);
+        break;
+
+      default:
+        throw new Error('Illegal vector');
+    }
+
+    checkVector(result, vector.length);
+    return result;
+  }
+
+  transformAsVector(vector, result) {
+    switch (vector.length) {
+      case 2:
+        result = vec2_transformMat4AsVector(result || [-0, -0], vector, this);
+        break;
+
+      case 3:
+        result = vec3_transformMat4AsVector(result || [-0, -0, -0], vector, this);
+        break;
+
+      default:
+        throw new Error('Illegal vector');
+    }
+
+    checkVector(result, vector.length);
+    return result;
+  }
+
+  makeRotationX(radians) {
+    return this.identity().rotateX(radians);
+  }
+
+  makeTranslation(x, y, z) {
+    return this.identity().translate([x, y, z]);
+  }
+
+  transformPoint(vector, result) {
+    deprecated('Matrix4.transformPoint', '3.0');
+    return this.transformAsPoint(vector, result);
+  }
+
+  transformVector(vector, result) {
+    deprecated('Matrix4.transformVector', '3.0');
+    return this.transformAsPoint(vector, result);
+  }
+
+  transformDirection(vector, result) {
+    deprecated('Matrix4.transformDirection', '3.0');
+    return this.transformAsVector(vector, result);
   }
 
 }
@@ -7408,8 +8639,8 @@ class TilesetCache {
 }
 
 function calculateTransformProps(tileHeader, tile) {
-  assert$8(tileHeader);
-  assert$8(tile);
+  assert$9(tileHeader);
+  assert$9(tile);
   const {
     rtcCenter,
     gltfUpAxis
@@ -7420,7 +8651,7 @@ function calculateTransformProps(tileHeader, tile) {
       center
     }
   } = tileHeader;
-  let modelMatrix = new Matrix4(computedTransform);
+  let modelMatrix = new Matrix4$1(computedTransform);
 
   if (rtcCenter) {
     modelMatrix.translate(rtcCenter);
@@ -7431,12 +8662,12 @@ function calculateTransformProps(tileHeader, tile) {
       break;
 
     case 'Y':
-      const rotationY = new Matrix4().rotateX(Math.PI / 2);
+      const rotationY = new Matrix4$1().rotateX(Math.PI / 2);
       modelMatrix = modelMatrix.multiplyRight(rotationY);
       break;
 
     case 'X':
-      const rotationX = new Matrix4().rotateY(-Math.PI / 2);
+      const rotationX = new Matrix4$1().rotateY(-Math.PI / 2);
       modelMatrix = modelMatrix.multiplyRight(rotationX);
       break;
   }
@@ -7445,10 +8676,10 @@ function calculateTransformProps(tileHeader, tile) {
     modelMatrix.translate(tile.quantizedVolumeOffset).scale(tile.quantizedVolumeScale);
   }
 
-  const cartesianOrigin = new Vector3(center);
+  const cartesianOrigin = new Vector3$1(center);
   tile.cartesianModelMatrix = modelMatrix;
   tile.cartesianOrigin = cartesianOrigin;
-  const cartographicOrigin = Ellipsoid.WGS84.cartesianToCartographic(cartesianOrigin, new Vector3());
+  const cartographicOrigin = Ellipsoid.WGS84.cartesianToCartographic(cartesianOrigin, new Vector3$1());
   const fromFixedFrameMatrix = Ellipsoid.WGS84.eastNorthUpToFixedFrame(cartesianOrigin);
   const toFixedFrameMatrix = fromFixedFrameMatrix.invert();
   tile.cartographicModelMatrix = toFixedFrameMatrix.multiplyRight(modelMatrix);
@@ -7462,15 +8693,15 @@ const INTERSECTION = Object.freeze({
   INSIDE: 1
 });
 
-new Vector3();
-new Vector3();
+new Vector3$1();
+new Vector3$1();
 
-const scratchVector$3 = new Vector3();
-const scratchVector2 = new Vector3();
+const scratchVector$3 = new Vector3$1();
+const scratchVector2 = new Vector3$1();
 class BoundingSphere {
   constructor(center = [0, 0, 0], radius = 0.0) {
     this.radius = -0;
-    this.center = new Vector3();
+    this.center = new Vector3$1();
     this.fromCenterRadius(center, radius);
   }
 
@@ -7482,7 +8713,7 @@ class BoundingSphere {
 
   fromCornerPoints(corner, oppositeCorner) {
     oppositeCorner = scratchVector$3.from(oppositeCorner);
-    this.center = new Vector3().from(corner).add(oppositeCorner).scale(0.5);
+    this.center = new Vector3$1().from(corner).add(oppositeCorner).scale(0.5);
     this.radius = this.center.distance(oppositeCorner);
     return this;
   }
@@ -7565,13 +8796,13 @@ class BoundingSphere {
 
 }
 
-const scratchVector3 = new Vector3();
-const scratchOffset = new Vector3();
-const scratchVectorU = new Vector3();
-const scratchVectorV = new Vector3();
-const scratchVectorW = new Vector3();
-const scratchCorner = new Vector3();
-const scratchToCenter = new Vector3();
+const scratchVector3 = new Vector3$1();
+const scratchOffset = new Vector3$1();
+const scratchVectorU = new Vector3$1();
+const scratchVectorV = new Vector3$1();
+const scratchVectorW = new Vector3$1();
+const scratchCorner = new Vector3$1();
+const scratchToCenter = new Vector3$1();
 const MATRIX3 = {
   COLUMN0ROW0: 0,
   COLUMN0ROW1: 1,
@@ -7585,7 +8816,7 @@ const MATRIX3 = {
 };
 class OrientedBoundingBox {
   constructor(center = [0, 0, 0], halfAxes = [0, 0, 0, 0, 0, 0, 0, 0, 0]) {
-    this.center = new Vector3().from(center);
+    this.center = new Vector3$1().from(center);
     this.halfAxes = new Matrix3(halfAxes);
   }
 
@@ -7593,16 +8824,16 @@ class OrientedBoundingBox {
     const xAxis = this.halfAxes.getColumn(0);
     const yAxis = this.halfAxes.getColumn(1);
     const zAxis = this.halfAxes.getColumn(2);
-    return [new Vector3(xAxis).len(), new Vector3(yAxis).len(), new Vector3(zAxis).len()];
+    return [new Vector3$1(xAxis).len(), new Vector3$1(yAxis).len(), new Vector3$1(zAxis).len()];
   }
 
   get quaternion() {
     const xAxis = this.halfAxes.getColumn(0);
     const yAxis = this.halfAxes.getColumn(1);
     const zAxis = this.halfAxes.getColumn(2);
-    const normXAxis = new Vector3(xAxis).normalize();
-    const normYAxis = new Vector3(yAxis).normalize();
-    const normZAxis = new Vector3(zAxis).normalize();
+    const normXAxis = new Vector3$1(xAxis).normalize();
+    const normYAxis = new Vector3$1(yAxis).normalize();
+    const normZAxis = new Vector3$1(zAxis).normalize();
     return new Quaternion().fromMatrix3(new Matrix3([...normXAxis, ...normYAxis, ...normZAxis]));
   }
 
@@ -7618,7 +8849,7 @@ class OrientedBoundingBox {
     directionsMatrix[6] = directionsMatrix[6] * halfSize[2];
     directionsMatrix[7] = directionsMatrix[7] * halfSize[2];
     directionsMatrix[8] = directionsMatrix[8] * halfSize[2];
-    this.center = new Vector3().from(center);
+    this.center = new Vector3$1().from(center);
     this.halfAxes = directionsMatrix;
     return this;
   }
@@ -7771,17 +9002,17 @@ class OrientedBoundingBox {
 
 }
 
-const scratchPosition$1 = new Vector3();
-const scratchNormal$1 = new Vector3();
+const scratchPosition$1 = new Vector3$1();
+const scratchNormal$1 = new Vector3$1();
 class Plane {
   constructor(normal = [0, 0, 1], distance = 0) {
-    this.normal = new Vector3();
+    this.normal = new Vector3$1();
     this.distance = -0;
     this.fromNormalDistance(normal, distance);
   }
 
   fromNormalDistance(normal, distance) {
-    assert$5(Number.isFinite(distance));
+    assert$6(Number.isFinite(distance));
     this.normal.from(normal).normalize();
     this.distance = distance;
     return this;
@@ -7797,7 +9028,7 @@ class Plane {
 
   fromCoefficients(a, b, c, d) {
     this.normal.set(a, b, c);
-    assert$5(equals(this.normal.len(), 1));
+    assert$6(equals$1(this.normal.len(), 1));
     this.distance = d;
     return this;
   }
@@ -7807,7 +9038,7 @@ class Plane {
   }
 
   equals(right) {
-    return equals(this.distance, right.distance) && equals(this.normal, right.normal);
+    return equals$1(this.distance, right.distance) && equals$1(this.normal, right.normal);
   }
 
   getPointDistance(point) {
@@ -7829,10 +9060,10 @@ class Plane {
 
 }
 
-const faces = [new Vector3([1, 0, 0]), new Vector3([0, 1, 0]), new Vector3([0, 0, 1])];
-const scratchPlaneCenter = new Vector3();
-const scratchPlaneNormal$1 = new Vector3();
-new Plane(new Vector3(1.0, 0.0, 0.0), 0.0);
+const faces = [new Vector3$1([1, 0, 0]), new Vector3$1([0, 1, 0]), new Vector3$1([0, 0, 1])];
+const scratchPlaneCenter = new Vector3$1();
+const scratchPlaneNormal$1 = new Vector3$1();
+new Plane(new Vector3$1(1.0, 0.0, 0.0), 0.0);
 class CullingVolume {
   static get MASK_OUTSIDE() {
     return 0xffffffff;
@@ -7848,7 +9079,7 @@ class CullingVolume {
 
   constructor(planes = []) {
     this.planes = planes;
-    assert$5(this.planes.every(plane => plane instanceof Plane));
+    assert$6(this.planes.every(plane => plane instanceof Plane));
   }
 
   fromBoundingSphere(boundingSphere) {
@@ -7883,7 +9114,7 @@ class CullingVolume {
   }
 
   computeVisibility(boundingVolume) {
-    assert$5(boundingVolume);
+    assert$6(boundingVolume);
     let intersect = INTERSECTION.INSIDE;
 
     for (const plane of this.planes) {
@@ -7903,8 +9134,8 @@ class CullingVolume {
   }
 
   computeVisibilityWithPlaneMask(boundingVolume, parentPlaneMask) {
-    assert$5(boundingVolume, 'boundingVolume is required.');
-    assert$5(Number.isFinite(parentPlaneMask), 'parentPlaneMask is required.');
+    assert$6(boundingVolume, 'boundingVolume is required.');
+    assert$6(Number.isFinite(parentPlaneMask), 'parentPlaneMask is required.');
 
     if (parentPlaneMask === CullingVolume.MASK_OUTSIDE || parentPlaneMask === CullingVolume.MASK_INSIDE) {
       return parentPlaneMask;
@@ -7935,11 +9166,11 @@ class CullingVolume {
 
 }
 
-const scratchPlaneUpVector = new Vector3();
-const scratchPlaneRightVector = new Vector3();
-const scratchPlaneNearCenter = new Vector3();
-const scratchPlaneFarCenter = new Vector3();
-const scratchPlaneNormal = new Vector3();
+const scratchPlaneUpVector = new Vector3$1();
+const scratchPlaneRightVector = new Vector3$1();
+const scratchPlaneNearCenter = new Vector3$1();
+const scratchPlaneFarCenter = new Vector3$1();
+const scratchPlaneNormal = new Vector3$1();
 class PerspectiveOffCenterFrustum {
   constructor(options = {}) {
     options = {
@@ -7960,8 +9191,8 @@ class PerspectiveOffCenterFrustum {
     this.far = options.far;
     this._far = this.far;
     this._cullingVolume = new CullingVolume([new Plane(), new Plane(), new Plane(), new Plane(), new Plane(), new Plane()]);
-    this._perspectiveMatrix = new Matrix4();
-    this._infinitePerspective = new Matrix4();
+    this._perspectiveMatrix = new Matrix4$1();
+    this._infinitePerspective = new Matrix4$1();
   }
 
   clone() {
@@ -7990,9 +9221,9 @@ class PerspectiveOffCenterFrustum {
   }
 
   computeCullingVolume(position, direction, up) {
-    assert$5(position, 'position is required.');
-    assert$5(direction, 'direction is required.');
-    assert$5(up, 'up is required.');
+    assert$6(position, 'position is required.');
+    assert$6(direction, 'direction is required.');
+    assert$6(up, 'up is required.');
     const planes = this._cullingVolume.planes;
     up = scratchPlaneUpVector.copy(up).normalize();
     const right = scratchPlaneRightVector.copy(direction).cross(up).normalize();
@@ -8007,7 +9238,7 @@ class PerspectiveOffCenterFrustum {
     planes[2].fromPointNormal(position, normal);
     normal.copy(up).multiplyByScalar(this.top).add(nearCenter).subtract(position).cross(right);
     planes[3].fromPointNormal(position, normal);
-    normal = new Vector3().copy(direction);
+    normal = new Vector3$1().copy(direction);
     planes[4].fromPointNormal(nearCenter, normal);
     normal.negate();
     planes[5].fromPointNormal(farCenter, normal);
@@ -8016,11 +9247,11 @@ class PerspectiveOffCenterFrustum {
 
   getPixelDimensions(drawingBufferWidth, drawingBufferHeight, distance, result) {
     update$1(this);
-    assert$5(Number.isFinite(drawingBufferWidth) && Number.isFinite(drawingBufferHeight));
-    assert$5(drawingBufferWidth > 0);
-    assert$5(drawingBufferHeight > 0);
-    assert$5(distance > 0);
-    assert$5(result);
+    assert$6(Number.isFinite(drawingBufferWidth) && Number.isFinite(drawingBufferHeight));
+    assert$6(drawingBufferWidth > 0);
+    assert$6(drawingBufferHeight > 0);
+    assert$6(distance > 0);
+    assert$6(result);
     const inverseNear = 1.0 / this.near;
     let tanTheta = this.top * inverseNear;
     const pixelHeight = 2.0 * distance * tanTheta / drawingBufferHeight;
@@ -8034,7 +9265,7 @@ class PerspectiveOffCenterFrustum {
 }
 
 function update$1(frustum) {
-  assert$5(Number.isFinite(frustum.right) && Number.isFinite(frustum.left) && Number.isFinite(frustum.top) && Number.isFinite(frustum.bottom) && Number.isFinite(frustum.near) && Number.isFinite(frustum.far));
+  assert$6(Number.isFinite(frustum.right) && Number.isFinite(frustum.left) && Number.isFinite(frustum.top) && Number.isFinite(frustum.bottom) && Number.isFinite(frustum.near) && Number.isFinite(frustum.far));
   const {
     top,
     bottom,
@@ -8045,14 +9276,14 @@ function update$1(frustum) {
   } = frustum;
 
   if (top !== frustum._top || bottom !== frustum._bottom || left !== frustum._left || right !== frustum._right || near !== frustum._near || far !== frustum._far) {
-    assert$5(frustum.near > 0 && frustum.near < frustum.far, 'near must be greater than zero and less than far.');
+    assert$6(frustum.near > 0 && frustum.near < frustum.far, 'near must be greater than zero and less than far.');
     frustum._left = left;
     frustum._right = right;
     frustum._top = top;
     frustum._bottom = bottom;
     frustum._near = near;
     frustum._far = far;
-    frustum._perspectiveMatrix = new Matrix4().frustum({
+    frustum._perspectiveMatrix = new Matrix4$1().frustum({
       left,
       right,
       bottom,
@@ -8060,7 +9291,7 @@ function update$1(frustum) {
       near,
       far
     });
-    frustum._infinitePerspective = new Matrix4().frustum({
+    frustum._infinitePerspective = new Matrix4$1().frustum({
       left,
       right,
       bottom,
@@ -8151,13 +9382,13 @@ class PerspectiveFrustum {
 }
 
 function update(frustum) {
-  assert$5(Number.isFinite(frustum.fov) && Number.isFinite(frustum.aspectRatio) && Number.isFinite(frustum.near) && Number.isFinite(frustum.far));
+  assert$6(Number.isFinite(frustum.fov) && Number.isFinite(frustum.aspectRatio) && Number.isFinite(frustum.near) && Number.isFinite(frustum.far));
   const f = frustum._offCenterFrustum;
 
   if (frustum.fov !== frustum._fov || frustum.aspectRatio !== frustum._aspectRatio || frustum.near !== frustum._near || frustum.far !== frustum._far || frustum.xOffset !== frustum._xOffset || frustum.yOffset !== frustum._yOffset) {
-    assert$5(frustum.fov >= 0 && frustum.fov < Math.PI);
-    assert$5(frustum.aspectRatio > 0);
-    assert$5(frustum.near >= 0 && frustum.near < frustum.far);
+    assert$6(frustum.fov >= 0 && frustum.fov < Math.PI);
+    assert$6(frustum.aspectRatio > 0);
+    assert$6(frustum.near >= 0 && frustum.near < frustum.far);
     frustum._aspectRatio = frustum.aspectRatio;
     frustum._fov = frustum.fov;
     frustum._fovy = frustum.aspectRatio <= 1 ? frustum.fov : Math.atan(Math.tan(frustum.fov * 0.5) / frustum.aspectRatio) * 2.0;
@@ -8179,18 +9410,18 @@ function update(frustum) {
   }
 }
 
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
+new Vector3$1();
+new Vector3$1();
+new Vector3$1();
+new Vector3$1();
+new Vector3$1();
+new Vector3$1();
+new Vector3$1();
+new Vector3$1();
+new Vector3$1();
+new Vector3$1();
+new Vector3$1();
+new Vector3$1();
 
 new Matrix3();
 new Matrix3();
@@ -8198,19 +9429,19 @@ new Matrix3();
 new Matrix3();
 new Matrix3();
 
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
-new Vector3();
+new Vector3$1();
+new Vector3$1();
+new Vector3$1();
+new Vector3$1();
+new Vector3$1();
 new Matrix3();
 ({
   diagonal: new Matrix3(),
   unitary: new Matrix3()
 });
 
-const scratchVector$2 = new Vector3();
-const scratchPosition = new Vector3();
+const scratchVector$2 = new Vector3$1();
+const scratchPosition = new Vector3$1();
 const cullingVolume = new CullingVolume([new Plane(), new Plane(), new Plane(), new Plane(), new Plane(), new Plane()]);
 function getFrameState(viewport, frameNumber) {
   const {
@@ -8222,12 +9453,12 @@ function getFrameState(viewport, frameNumber) {
     metersPerUnit
   } = viewport.distanceScales;
   const viewportCenterCartographic = [viewport.longitude, viewport.latitude, 0];
-  const viewportCenterCartesian = Ellipsoid.WGS84.cartographicToCartesian(viewportCenterCartographic, new Vector3());
+  const viewportCenterCartesian = Ellipsoid.WGS84.cartographicToCartesian(viewportCenterCartographic, new Vector3$1());
   const enuToFixedTransform = Ellipsoid.WGS84.eastNorthUpToFixedFrame(viewportCenterCartesian);
   const cameraPositionCartographic = viewport.unprojectPosition(viewport.cameraPosition);
-  const cameraPositionCartesian = Ellipsoid.WGS84.cartographicToCartesian(cameraPositionCartographic, new Vector3());
-  const cameraDirectionCartesian = new Vector3(enuToFixedTransform.transformAsVector(new Vector3(cameraDirection).scale(metersPerUnit))).normalize();
-  const cameraUpCartesian = new Vector3(enuToFixedTransform.transformAsVector(new Vector3(cameraUp).scale(metersPerUnit))).normalize();
+  const cameraPositionCartesian = Ellipsoid.WGS84.cartographicToCartesian(cameraPositionCartographic, new Vector3$1());
+  const cameraDirectionCartesian = new Vector3$1(enuToFixedTransform.transformAsVector(new Vector3$1(cameraDirection).scale(metersPerUnit))).normalize();
+  const cameraUpCartesian = new Vector3$1(enuToFixedTransform.transformAsVector(new Vector3$1(cameraUp).scale(metersPerUnit))).normalize();
   commonSpacePlanesToWGS84(viewport, viewportCenterCartesian);
   return {
     camera: {
@@ -8252,7 +9483,7 @@ function commonSpacePlanesToWGS84(viewport, viewportCenterCartesian) {
     const distanceToCenter = plane.normal.dot(viewport.center);
     scratchPosition.copy(plane.normal).scale(plane.distance - distanceToCenter).add(viewport.center);
     const cartographicPos = viewport.unprojectPosition(scratchPosition);
-    const cartesianPos = Ellipsoid.WGS84.cartographicToCartesian(cartographicPos, new Vector3());
+    const cartesianPos = Ellipsoid.WGS84.cartographicToCartesian(cartographicPos, new Vector3$1());
     cullingVolume.planes[i++].fromPointNormal(cartesianPos, scratchVector$2.copy(viewportCenterCartesian).subtract(cartesianPos));
   }
 }
@@ -8260,7 +9491,7 @@ function commonSpacePlanesToWGS84(viewport, viewportCenterCartesian) {
 const WGS84_RADIUS_X$1 = 6378137.0;
 const WGS84_RADIUS_Y = 6378137.0;
 const WGS84_RADIUS_Z = 6356752.3142451793;
-const scratchVector$1 = new Vector3();
+const scratchVector$1 = new Vector3$1();
 function getZoomFromBoundingVolume(boundingVolume) {
   const {
     halfAxes,
@@ -8328,12 +9559,11 @@ function defined$3(x) {
   return x !== undefined && x !== null;
 }
 
-const scratchScale = new Vector3();
-const scratchNorthWest = new Vector3();
-const scratchSouthEast = new Vector3();
-new Matrix4();
+const scratchScale = new Vector3$1();
+const scratchNorthWest = new Vector3$1();
+const scratchSouthEast = new Vector3$1();
 function createBoundingVolume(boundingVolumeHeader, transform, result) {
-  assert$8(boundingVolumeHeader, '3D Tile: boundingVolume must be defined');
+  assert$9(boundingVolumeHeader, '3D Tile: boundingVolume must be defined');
 
   if (boundingVolumeHeader.box) {
     return createBox(boundingVolumeHeader.box, transform, result);
@@ -8341,11 +9571,11 @@ function createBoundingVolume(boundingVolumeHeader, transform, result) {
 
   if (boundingVolumeHeader.region) {
     const [west, south, east, north, minHeight, maxHeight] = boundingVolumeHeader.region;
-    const northWest = Ellipsoid.WGS84.cartographicToCartesian([degrees(west), degrees(north), minHeight], scratchNorthWest);
-    const southEast = Ellipsoid.WGS84.cartographicToCartesian([degrees(east), degrees(south), maxHeight], scratchSouthEast);
-    const centerInCartesian = new Vector3().addVectors(northWest, southEast).multiplyScalar(0.5);
-    const radius = new Vector3().subVectors(northWest, southEast).len() / 2.0;
-    return createSphere([centerInCartesian[0], centerInCartesian[1], centerInCartesian[2], radius], new Matrix4());
+    const northWest = Ellipsoid.WGS84.cartographicToCartesian([degrees$1(west), degrees$1(north), minHeight], scratchNorthWest);
+    const southEast = Ellipsoid.WGS84.cartographicToCartesian([degrees$1(east), degrees$1(south), maxHeight], scratchSouthEast);
+    const centerInCartesian = new Vector3$1().addVectors(northWest, southEast).multiplyScalar(0.5);
+    const radius = new Vector3$1().subVectors(northWest, southEast).len() / 2.0;
+    return createSphere([centerInCartesian[0], centerInCartesian[1], centerInCartesian[2], radius], new Matrix4$1());
   }
 
   if (boundingVolumeHeader.sphere) {
@@ -8356,7 +9586,7 @@ function createBoundingVolume(boundingVolumeHeader, transform, result) {
 }
 
 function createBox(box, transform, result) {
-  const center = new Vector3(box[0], box[1], box[2]);
+  const center = new Vector3$1(box[0], box[1], box[2]);
   transform.transform(center, center);
   let origin = [];
 
@@ -8364,9 +9594,9 @@ function createBox(box, transform, result) {
     const halfSize = box.slice(3, 6);
     const quaternion = new Quaternion();
     quaternion.fromArray(box, 6);
-    const x = new Vector3([1, 0, 0]);
-    const y = new Vector3([0, 1, 0]);
-    const z = new Vector3([0, 0, 1]);
+    const x = new Vector3$1([1, 0, 0]);
+    const y = new Vector3$1([0, 1, 0]);
+    const z = new Vector3$1([0, 0, 1]);
     x.transformByQuaternion(quaternion);
     x.scale(halfSize[0]);
     y.transformByQuaternion(quaternion);
@@ -8393,7 +9623,7 @@ function createBox(box, transform, result) {
 }
 
 function createSphere(sphere, transform, result) {
-  const center = new Vector3(sphere[0], sphere[1], sphere[2]);
+  const center = new Vector3$1(sphere[0], sphere[1], sphere[2]);
   transform.transform(center, center);
   const scale = transform.getScale(scratchScale);
   const uniformScale = Math.max(Math.max(scale[0], scale[1]), scale[2]);
@@ -8408,12 +9638,12 @@ function createSphere(sphere, transform, result) {
   return new BoundingSphere(center, radius);
 }
 
-new Vector3();
-new Vector3();
-new Matrix4();
-new Vector3();
-new Vector3();
-new Vector3();
+new Vector3$1();
+new Vector3$1();
+new Matrix4$1();
+new Vector3$1();
+new Vector3$1();
+new Vector3$1();
 function fog(distanceToCamera, density) {
   const scalar = distanceToCamera * density;
   return 1.0 - Math.exp(-(scalar * scalar));
@@ -8507,8 +9737,8 @@ function lodJudge(tile, frameState) {
 }
 
 function projectVertexToSphere([x, y, z]) {
-  const azim = toRadians(x);
-  const incl = toRadians(y);
+  const azim = toRadians$1(x);
+  const incl = toRadians$1(y);
   const radius = 1.0 + z / WGS84_RADIUS_X;
   const radCosInc = radius * Math.cos(incl);
   x = radCosInc * Math.cos(azim);
@@ -8587,12 +9817,12 @@ class ManagedArray {
   }
 
   get(index) {
-    assert$8(index < this._array.length);
+    assert$9(index < this._array.length);
     return this._array[index];
   }
 
   set(index, element) {
-    assert$8(index >= 0);
+    assert$9(index >= 0);
 
     if (index >= this.length) {
       this.length = index + 1;
@@ -8641,7 +9871,7 @@ class ManagedArray {
   }
 
   reserve(length) {
-    assert$8(length >= 0);
+    assert$9(length >= 0);
 
     if (length > this._array.length) {
       this._array.length = length;
@@ -8649,7 +9879,7 @@ class ManagedArray {
   }
 
   resize(length) {
-    assert$8(length >= 0);
+    assert$9(length >= 0);
     this.length = length;
   }
 
@@ -8966,7 +10196,7 @@ class TilesetTraverser {
 
 }
 
-const scratchVector = new Vector3();
+const scratchVector = new Vector3$1();
 
 function defined$2(x) {
   return x !== undefined && x !== null;
@@ -9101,8 +10331,8 @@ class TileHeader {
     this._inRequestVolume = false;
     this._stackLength = 0;
     this._selectionDepth = 0;
-    this._initialTransform = new Matrix4();
-    this.transform = new Matrix4();
+    this._initialTransform = new Matrix4$1();
+    this.transform = new Matrix4$1();
 
     this._initializeLodMetric(header);
 
@@ -9193,6 +10423,10 @@ class TileHeader {
     const maySkipTile = this.refine === TILE_REFINEMENT.ADD || skipLevelOfDetail;
 
     if (maySkipTile && !this.isVisible && this._visible !== undefined) {
+      return -1;
+    }
+
+    if (this.tileset._frameNumber - this._touchedFrame >= 1) {
       return -1;
     }
 
@@ -9353,7 +10587,7 @@ class TileHeader {
       this.lodMetricType = header.lodMetricType;
     } else {
       this.lodMetricType = this.parent && this.parent.lodMetricType || this.tileset.lodMetricType;
-      console.warn("3D Tile: Required prop lodMetricType is undefined. Using parent lodMetricType");
+      console.warn(`3D Tile: Required prop lodMetricType is undefined. Using parent lodMetricType`);
     }
 
     if ('lodMetricValue' in header) {
@@ -9365,13 +10599,13 @@ class TileHeader {
   }
 
   _initializeTransforms(tileHeader) {
-    this.transform = tileHeader.transform ? new Matrix4(tileHeader.transform) : new Matrix4();
+    this.transform = tileHeader.transform ? new Matrix4$1(tileHeader.transform) : new Matrix4$1();
     const parent = this.parent;
     const tileset = this.tileset;
     const parentTransform = parent && parent.computedTransform ? parent.computedTransform.clone() : tileset.modelMatrix.clone();
-    this.computedTransform = new Matrix4(parentTransform).multiplyRight(this.transform);
-    const parentInitialTransform = parent && parent._initialTransform ? parent._initialTransform.clone() : new Matrix4();
-    this._initialTransform = new Matrix4(parentInitialTransform).multiplyRight(this.transform);
+    this.computedTransform = new Matrix4$1(parentTransform).multiplyRight(this.transform);
+    const parentInitialTransform = parent && parent._initialTransform ? parent._initialTransform.clone() : new Matrix4$1();
+    this._initialTransform = new Matrix4$1(parentInitialTransform).multiplyRight(this.transform);
   }
 
   _initializeBoundingVolumes(tileHeader) {
@@ -9453,7 +10687,7 @@ class TileHeader {
     }
   }
 
-  _updateTransform(parentTransform = new Matrix4()) {
+  _updateTransform(parentTransform = new Matrix4$1()) {
     const computedTransform = parentTransform.clone().multiplyRight(this.transform);
     const didTransformChange = !computedTransform.equals(this.computedTransform);
 
@@ -9599,7 +10833,7 @@ class I3STilesetTraverser extends TilesetTraverser {
     const tileset = tile.tileset;
 
     for (const child of children) {
-      const extendedId = "".concat(child.id, "-").concat(frameState.viewport.id);
+      const extendedId = `${child.id}-${frameState.viewport.id}`;
       const childTile = childTiles && childTiles.find(t => t.id === extendedId);
 
       if (!childTile) {
@@ -9628,7 +10862,7 @@ class I3STilesetTraverser extends TilesetTraverser {
     const {
       loader
     } = tileset;
-    const nodeUrl = tileset.getTileUrl("".concat(tileset.url, "/nodes/").concat(nodeId));
+    const nodeUrl = tileset.getTileUrl(`${tileset.url}/nodes/${nodeId}`);
     const options = { ...tileset.loadOptions,
       i3s: { ...tileset.loadOptions.i3s,
         isTileHeader: true,
@@ -9656,7 +10890,7 @@ class I3STilesetTraverser extends TilesetTraverser {
 const DEFAULT_PROPS = {
   description: '',
   ellipsoid: Ellipsoid.WGS84,
-  modelMatrix: new Matrix4(),
+  modelMatrix: new Matrix4$1(),
   throttleRequests: true,
   maxRequests: 64,
   maximumMemoryUsage: 32,
@@ -9777,7 +11011,7 @@ class Tileset3D {
 
     _defineProperty(this, "maximumMemoryUsage", void 0);
 
-    assert$8(json);
+    assert$9(json);
     this.options = { ...DEFAULT_PROPS,
       ...options
     };
@@ -9877,7 +11111,7 @@ class Tileset3D {
       return tilePath;
     }
 
-    return "".concat(tilePath).concat(this.queryParams);
+    return `${tilePath}${this.queryParams}`;
   }
 
   hasExtension(extensionName) {
@@ -10059,19 +11293,19 @@ class Tileset3D {
 
   _calculateViewProps() {
     const root = this.root;
-    assert$8(root);
+    assert$9(root);
     const {
       center
     } = root.boundingVolume;
 
     if (!center) {
       console.warn('center was not pre-calculated for the root tile');
-      this.cartographicCenter = new Vector3();
+      this.cartographicCenter = new Vector3$1();
       this.zoom = 1;
       return;
     }
 
-    this.cartographicCenter = Ellipsoid.WGS84.cartesianToCartographic(center, new Vector3());
+    this.cartographicCenter = Ellipsoid.WGS84.cartesianToCartographic(center, new Vector3$1());
     this.cartesianCenter = center;
     this.zoom = getZoomFromBoundingVolume(root.boundingVolume);
   }
@@ -10165,7 +11399,7 @@ class Tileset3D {
     this.stats.get(TILES_LOAD_FAILED).incrementCount();
     const message = error.message || error.toString();
     const url = tile.url;
-    console.error("A 3D tile failed to load: ".concat(tile.url, " ").concat(message));
+    console.error(`A 3D tile failed to load: ${tile.url} ${message}`);
     this.options.onTileError(tile, message, url);
   }
 
@@ -10298,7 +11532,7 @@ function getQueryParamString(queryParams) {
   const queryParamStrings = [];
 
   for (const key of Object.keys(queryParams)) {
-    queryParamStrings.push("".concat(key, "=").concat(queryParams[key]));
+    queryParamStrings.push(`${key}=${queryParams[key]}`);
   }
 
   switch (queryParamStrings.length) {
@@ -10306,14 +11540,14 @@ function getQueryParamString(queryParams) {
       return '';
 
     case 1:
-      return "?".concat(queryParamStrings[0]);
+      return `?${queryParamStrings[0]}`;
 
     default:
-      return "?".concat(queryParamStrings.join('&'));
+      return `?${queryParamStrings.join('&')}`;
   }
 }
 
-const VERSION$3 = "3.0.7" ;
+const VERSION$3 = "3.0.10" ;
 
 const TILE3D_TYPE = {
   COMPOSITE: 'cmpt',
@@ -10325,7 +11559,7 @@ const TILE3D_TYPE = {
 };
 
 function getStringFromArrayBuffer(arrayBuffer, byteOffset, byteLength) {
-  assert$8(arrayBuffer instanceof ArrayBuffer);
+  assert$9(arrayBuffer instanceof ArrayBuffer);
   const textDecoder = new TextDecoder('utf8');
   const typedArray = new Uint8Array(arrayBuffer, byteOffset, byteLength);
   const string = textDecoder.decode(typedArray);
@@ -10333,10 +11567,14 @@ function getStringFromArrayBuffer(arrayBuffer, byteOffset, byteLength) {
 }
 function getMagicString$1(arrayBuffer, byteOffset = 0) {
   const dataView = new DataView(arrayBuffer);
-  return "".concat(String.fromCharCode(dataView.getUint8(byteOffset + 0))).concat(String.fromCharCode(dataView.getUint8(byteOffset + 1))).concat(String.fromCharCode(dataView.getUint8(byteOffset + 2))).concat(String.fromCharCode(dataView.getUint8(byteOffset + 3)));
+  return `\
+${String.fromCharCode(dataView.getUint8(byteOffset + 0))}\
+${String.fromCharCode(dataView.getUint8(byteOffset + 1))}\
+${String.fromCharCode(dataView.getUint8(byteOffset + 2))}\
+${String.fromCharCode(dataView.getUint8(byteOffset + 3))}`;
 }
 
-const VERSION$2 = "3.0.7" ;
+const VERSION$2 = "3.0.10" ;
 
 const DEFAULT_DRACO_OPTIONS = {
   draco: {
@@ -10509,7 +11747,7 @@ class Field {
   }
 
   toString() {
-    return "".concat(this.type).concat(this.nullable ? ', nullable' : '').concat(this.metadata ? ", metadata: ".concat(this.metadata) : '');
+    return `${this.type}${this.nullable ? ', nullable' : ''}${this.metadata ? `, metadata: ${this.metadata}` : ''}`;
   }
 
 }
@@ -10668,7 +11906,7 @@ class Int extends DataType {
   }
 
   toString() {
-    return "".concat(this.isSigned ? 'I' : 'Ui', "nt").concat(this.bitWidth);
+    return `${this.isSigned ? 'I' : 'Ui'}nt${this.bitWidth}`;
   }
 
 }
@@ -10732,7 +11970,7 @@ class Float extends DataType {
   }
 
   toString() {
-    return "Float".concat(this.precision);
+    return `Float${this.precision}`;
   }
 
 }
@@ -10778,7 +12016,7 @@ class FixedSizeList extends DataType {
   }
 
   toString() {
-    return "FixedSizeList[".concat(this.listSize, "]<").concat(this.valueType, ">");
+    return `FixedSizeList[${this.listSize}]<${this.valueType}>`;
   }
 
 }
@@ -10854,7 +12092,7 @@ function makeMetadata(metadata) {
   const metadataMap = new Map();
 
   for (const key in metadata) {
-    metadataMap.set("".concat(key, ".string"), JSON.stringify(metadata[key]));
+    metadataMap.set(`${key}.string`, JSON.stringify(metadata[key]));
   }
 
   return metadataMap;
@@ -10920,7 +12158,7 @@ class DracoParser {
       }
 
       if (!dracoStatus.ok() || !dracoGeometry.ptr) {
-        const message = "DRACO decompression failed: ".concat(dracoStatus.error_msg());
+        const message = `DRACO decompression failed: ${dracoStatus.error_msg()}`;
         throw new Error(message);
       }
 
@@ -11145,7 +12383,7 @@ class DracoParser {
       return attribute.metadata[entryName].string;
     }
 
-    return "CUSTOM_ATTRIBUTE_".concat(uniqueId);
+    return `CUSTOM_ATTRIBUTE_${uniqueId}`;
   }
 
   _getTopLevelMetadata(dracoGeometry) {
@@ -11306,9 +12544,9 @@ function getUint32Array(dracoArray) {
 }
 
 const DRACO_VERSION = '1.4.1';
-const DRACO_JS_DECODER_URL = "https://www.gstatic.com/draco/versioned/decoders/".concat(DRACO_VERSION, "/draco_decoder.js");
-const DRACO_WASM_WRAPPER_URL = "https://www.gstatic.com/draco/versioned/decoders/".concat(DRACO_VERSION, "/draco_wasm_wrapper.js");
-const DRACO_WASM_DECODER_URL = "https://www.gstatic.com/draco/versioned/decoders/".concat(DRACO_VERSION, "/draco_decoder.wasm");
+const DRACO_JS_DECODER_URL = `https://www.gstatic.com/draco/versioned/decoders/${DRACO_VERSION}/draco_decoder.js`;
+const DRACO_WASM_WRAPPER_URL = `https://www.gstatic.com/draco/versioned/decoders/${DRACO_VERSION}/draco_wasm_wrapper.js`;
+const DRACO_WASM_DECODER_URL = `https://www.gstatic.com/draco/versioned/decoders/${DRACO_VERSION}/draco_decoder.wasm`;
 let loadDecoderPromise;
 async function loadDracoDecoderModule(options) {
   const modules = options.modules || {};
@@ -11486,7 +12724,7 @@ class GLType {
 
 function assert$3(condition, message) {
   if (!condition) {
-    throw new Error("math.gl assertion failed. ".concat(message));
+    throw new Error(`math.gl assertion failed. ${message}`);
   }
 }
 
@@ -11501,7 +12739,7 @@ function decodeRGB565(rgb565, target = [0, 0, 0]) {
 }
 
 new Vector2();
-new Vector3();
+new Vector3$1();
 new Vector2();
 new Vector2();
 
@@ -11516,7 +12754,7 @@ function octDecodeInRange(x, y, rangeMax, result) {
   assert$3(result);
 
   if (x < 0 || x > rangeMax || y < 0 || y > rangeMax) {
-    throw new Error("x and y must be unsigned normalized integers between 0 and ".concat(rangeMax));
+    throw new Error(`x and y must be unsigned normalized integers between 0 and ${rangeMax}`);
   }
 
   result.x = fromSNorm(x, rangeMax);
@@ -11699,7 +12937,7 @@ function createTypedArrayFromAccessor(tile3DAccessor, buffer, byteOffset, length
   const {
     componentType
   } = tile3DAccessor;
-  assert$8(tile3DAccessor.componentType);
+  assert$9(tile3DAccessor.componentType);
   const type = typeof componentType === 'string' ? GLType.fromName(componentType) : componentType;
   const size = COMPONENTS_PER_ATTRIBUTE[tile3DAccessor.type];
   const unpacker = UNPACKER[tile3DAccessor.type];
@@ -11912,7 +13150,7 @@ function validateInstance(hierarchy, instanceIndex, stack) {
     return;
   }
 
-  assert(instanceIndex < instancesLength, "Parent index ".concat(instanceIndex, " exceeds the total number of instances: ").concat(instancesLength));
+  assert(instanceIndex < instancesLength, `Parent index ${instanceIndex} exceeds the total number of instances: ${instancesLength}`);
   assert(stack.indexOf(instanceIndex) === -1, 'Circular dependency detected in the batch table hierarchy.');
   stack.push(instanceIndex);
   const parentCount = defined$1(parentCounts) ? parentCounts[instanceIndex] : 1;
@@ -11944,7 +13182,7 @@ class Tile3DBatchTableParser {
   constructor(json, binary, featureCount, options = {}) {
     var _this$json;
 
-    assert$8(featureCount >= 0);
+    assert$9(featureCount >= 0);
     this.json = json || {};
     this.binary = binary;
     this.featureCount = featureCount;
@@ -11975,7 +13213,7 @@ class Tile3DBatchTableParser {
   isClass(batchId, className) {
     this._checkBatchId(batchId);
 
-    assert$8(typeof className === 'string', className);
+    assert$9(typeof className === 'string', className);
 
     if (this._hierarchy) {
       const result = traverseHierarchy(this._hierarchy, batchId, (hierarchy, instanceIndex) => {
@@ -11990,7 +13228,7 @@ class Tile3DBatchTableParser {
   }
 
   isExactClass(batchId, className) {
-    assert$8(typeof className === 'string', className);
+    assert$9(typeof className === 'string', className);
     return this.getExactClassName(batchId) === className;
   }
 
@@ -12009,7 +13247,7 @@ class Tile3DBatchTableParser {
   hasProperty(batchId, name) {
     this._checkBatchId(batchId);
 
-    assert$8(typeof name === 'string', name);
+    assert$9(typeof name === 'string', name);
     return defined(this._properties[name]) || this._hasPropertyInHierarchy(batchId, name);
   }
 
@@ -12031,7 +13269,7 @@ class Tile3DBatchTableParser {
   getProperty(batchId, name) {
     this._checkBatchId(batchId);
 
-    assert$8(typeof name === 'string', name);
+    assert$9(typeof name === 'string', name);
 
     if (this._binaryProperties) {
       const binaryProperty = this._binaryProperties[name];
@@ -12063,7 +13301,7 @@ class Tile3DBatchTableParser {
 
     this._checkBatchId(batchId);
 
-    assert$8(typeof name === 'string', name);
+    assert$9(typeof name === 'string', name);
 
     if (this._binaryProperties) {
       const binaryProperty = this._binaryProperties[name];
@@ -12095,7 +13333,7 @@ class Tile3DBatchTableParser {
     const valid = batchId >= 0 && batchId < this.featureCount;
 
     if (!valid) {
-      throw new Error("batchId not in range [0, featureCount - 1].");
+      throw new Error(`batchId not in range [0, featureCount - 1].`);
     }
   }
 
@@ -12127,8 +13365,8 @@ class Tile3DBatchTableParser {
   _initializeBinaryProperty(name, property) {
     if ('byteOffset' in property) {
       const tile3DAccessor = property;
-      assert$8(this.binary, "Property ".concat(name, " requires a batch table binary."));
-      assert$8(tile3DAccessor.type, "Property ".concat(name, " requires a type."));
+      assert$9(this.binary, `Property ${name} requires a batch table binary.`);
+      assert$9(tile3DAccessor.type, `Property ${name} requires a type.`);
       const accessor = createTypedArrayFromAccessor(tile3DAccessor, this.binary.buffer, this.binary.byteOffset | 0, this.featureCount);
       return {
         typedArray: accessor.values,
@@ -12196,7 +13434,7 @@ class Tile3DBatchTableParser {
       const propertyValues = instanceClass.instances[name];
 
       if (defined(propertyValues)) {
-        assert$8(instanceIndex === batchId, "Inherited property \"".concat(name, "\" is read-only."));
+        assert$9(instanceIndex === batchId, `Inherited property "${name}" is read-only.`);
 
         if (defined(propertyValues.typedArray)) {
           this._setBinaryProperty(propertyValues, indexInClass, value);
@@ -12225,14 +13463,14 @@ function parse3DTileHeaderSync(tile, arrayBuffer, byteOffset = 0) {
   byteOffset += SIZEOF_UINT32$1;
 
   if (tile.version !== 1) {
-    throw new Error("3D Tile Version ".concat(tile.version, " not supported"));
+    throw new Error(`3D Tile Version ${tile.version} not supported`);
   }
 
   return byteOffset;
 }
 
 const SIZEOF_UINT32 = 4;
-const DEPRECATION_WARNING = "b3dm tile in legacy format.";
+const DEPRECATION_WARNING = `b3dm tile in legacy format.`;
 function parse3DTileTablesHeaderSync(tile, arrayBuffer, byteOffset) {
   const view = new DataView(arrayBuffer);
   let batchLength;
@@ -12385,7 +13623,7 @@ function normalize3DTileColorAttribute(tile, colors, batchTable) {
   };
 }
 
-const scratchNormal = new Vector3();
+const scratchNormal = new Vector3$1();
 function normalize3DTileNormalAttribute(tile, normals) {
   if (!normals) {
     return null;
@@ -12432,7 +13670,7 @@ function normalize3DTilePositionAttribute(tile, positions, options) {
 }
 
 function decodeQuantizedPositions(tile, positions) {
-  const scratchPosition = new Vector3();
+  const scratchPosition = new Vector3$1();
   const decodedArray = new Float32Array(tile.pointCount * 3);
 
   for (let i = 0; i < tile.pointCount; i++) {
@@ -12647,8 +13885,8 @@ async function loadDraco(tile, dracoData, options, context) {
   if (isQuantizedDraco) {
     const quantization = data.POSITION.data.quantization;
     const range = quantization.range;
-    tile.quantizedVolumeScale = new Vector3(range, range, range);
-    tile.quantizedVolumeOffset = new Vector3(quantization.minValues);
+    tile.quantizedVolumeScale = new Vector3$1(range, range, range);
+    tile.quantizedVolumeOffset = new Vector3$1(quantization.minValues);
     tile.quantizedRange = (1 << quantization.quantizationBits) - 1.0;
     tile.isQuantizedDraco = true;
   }
@@ -12683,9 +13921,9 @@ const KHR_LIGHTS_PUNCTUAL = 'KHR_lights_punctual';
 const KHR_MATERIALS_UNLIT = 'KHR_materials_unlit';
 const KHR_TECHNIQUES_WEBGL = 'KHR_techniques_webgl';
 
-const VERSION$1 = "3.0.7" ;
+const VERSION$1 = "3.0.10" ;
 
-const VERSION = "3.0.7" ;
+const VERSION = "3.0.10" ;
 
 function assert$2(condition, message) {
   if (!condition) {
@@ -12726,7 +13964,7 @@ function isImageTypeSupported(type) {
       return DATA_SUPPORTED;
 
     default:
-      throw new Error("@loaders.gl/images: image ".concat(type, " not supported in this environment"));
+      throw new Error(`@loaders.gl/images: image ${type} not supported in this environment`);
   }
 }
 function getDefaultImageType() {
@@ -12802,8 +14040,17 @@ function isSVG(url) {
 function getBlobOrSVGDataUrl(arrayBuffer, url) {
   if (isSVG(url)) {
     const textDecoder = new TextDecoder();
-    const xmlText = textDecoder.decode(arrayBuffer);
-    const src = "data:image/svg+xml;base64,".concat(btoa(xmlText));
+    let xmlText = textDecoder.decode(arrayBuffer);
+
+    try {
+      if (typeof unescape === 'function' && typeof encodeURIComponent === 'function') {
+        xmlText = unescape(encodeURIComponent(xmlText));
+      }
+    } catch (error) {
+      throw new Error(error.message);
+    }
+
+    const src = `data:image/svg+xml;base64,${btoa(xmlText)}`;
     return src;
   }
 
@@ -12843,7 +14090,7 @@ async function loadToImage(url, options) {
     try {
       image.onload = () => resolve(image);
 
-      image.onerror = err => reject(new Error("Could not load image ".concat(url, ": ").concat(err)));
+      image.onerror = err => reject(new Error(`Could not load image ${url}: ${err}`));
     } catch (error) {
       reject(error);
     }
@@ -13101,7 +14348,7 @@ function resolveUrl(url, options) {
   const baseUrl = options.baseUri || options.uri;
 
   if (!baseUrl) {
-    throw new Error("'baseUri' must be provided to resolve relative url ".concat(url));
+    throw new Error(`'baseUri' must be provided to resolve relative url ${url}`);
   }
 
   return baseUrl.substr(0, baseUrl.lastIndexOf('/') + 1) + url;
@@ -13291,7 +14538,7 @@ class GLTFScenegraph {
     const object = this.json[array] && this.json[array][index];
 
     if (!object) {
-      throw new Error("glTF file error: Could not find ".concat(array, "[").concat(index, "]"));
+      throw new Error(`glTF file error: Could not find ${array}[${index}]`);
     }
 
     return object;
@@ -14136,7 +15383,7 @@ class GLTFV1Normalizer {
         break;
 
       default:
-        console.warn("glTF: Unknown version ".concat(json.asset.version));
+        console.warn(`glTF: Unknown version ${json.asset.version}`);
         return;
     }
 
@@ -14261,7 +15508,7 @@ class GLTFV1Normalizer {
 
   _convertIdsToIndices(json, topLevelArrayName) {
     if (!json[topLevelArrayName]) {
-      console.warn("gltf v1: json doesn't contain attribute ".concat(topLevelArrayName));
+      console.warn(`gltf v1: json doesn't contain attribute ${topLevelArrayName}`);
       json[topLevelArrayName] = [];
     }
 
@@ -14283,7 +15530,7 @@ class GLTFV1Normalizer {
       const index = this.idToIndexMap[arrayName][id];
 
       if (!Number.isFinite(index)) {
-        throw new Error("gltf v1: failed to resolve ".concat(key, " with id ").concat(id));
+        throw new Error(`gltf v1: failed to resolve ${key} with id ${id}`);
       }
 
       return index;
@@ -14490,20 +15737,20 @@ class GLTFPostProcessor {
     const object = this.json[array] && this.json[array][index];
 
     if (!object) {
-      console.warn("glTF file error: Could not find ".concat(array, "[").concat(index, "]"));
+      console.warn(`glTF file error: Could not find ${array}[${index}]`);
     }
 
     return object;
   }
 
   _resolveScene(scene, index) {
-    scene.id = scene.id || "scene-".concat(index);
+    scene.id = scene.id || `scene-${index}`;
     scene.nodes = (scene.nodes || []).map(node => this.getNode(node));
     return scene;
   }
 
   _resolveNode(node, index) {
-    node.id = node.id || "node-".concat(index);
+    node.id = node.id || `node-${index}`;
 
     if (node.children) {
       node.children = node.children.map(child => this.getNode(child));
@@ -14534,13 +15781,13 @@ class GLTFPostProcessor {
   }
 
   _resolveSkin(skin, index) {
-    skin.id = skin.id || "skin-".concat(index);
+    skin.id = skin.id || `skin-${index}`;
     skin.inverseBindMatrices = this.getAccessor(skin.inverseBindMatrices);
     return skin;
   }
 
   _resolveMesh(mesh, index) {
-    mesh.id = mesh.id || "mesh-".concat(index);
+    mesh.id = mesh.id || `mesh-${index}`;
 
     if (mesh.primitives) {
       mesh.primitives = mesh.primitives.map(primitive => {
@@ -14569,7 +15816,7 @@ class GLTFPostProcessor {
   }
 
   _resolveMaterial(material, index) {
-    material.id = material.id || "material-".concat(index);
+    material.id = material.id || `material-${index}`;
 
     if (material.normalTexture) {
       material.normalTexture = { ...material.normalTexture
@@ -14615,7 +15862,7 @@ class GLTFPostProcessor {
   }
 
   _resolveAccessor(accessor, index) {
-    accessor.id = accessor.id || "accessor-".concat(index);
+    accessor.id = accessor.id || `accessor-${index}`;
 
     if (accessor.bufferView !== undefined) {
       accessor.bufferView = this.getBufferView(accessor.bufferView);
@@ -14640,14 +15887,14 @@ class GLTFPostProcessor {
   }
 
   _resolveTexture(texture, index) {
-    texture.id = texture.id || "texture-".concat(index);
+    texture.id = texture.id || `texture-${index}`;
     texture.sampler = 'sampler' in texture ? this.getSampler(texture.sampler) : DEFAULT_SAMPLER;
     texture.source = this.getImage(texture.source);
     return texture;
   }
 
   _resolveSampler(sampler, index) {
-    sampler.id = sampler.id || "sampler-".concat(index);
+    sampler.id = sampler.id || `sampler-${index}`;
     sampler.parameters = {};
 
     for (const key in sampler) {
@@ -14666,7 +15913,7 @@ class GLTFPostProcessor {
   }
 
   _resolveImage(image, index) {
-    image.id = image.id || "image-".concat(index);
+    image.id = image.id || `image-${index}`;
 
     if (image.bufferView !== undefined) {
       image.bufferView = this.getBufferView(image.bufferView);
@@ -14682,7 +15929,7 @@ class GLTFPostProcessor {
   }
 
   _resolveBufferView(bufferView, index) {
-    bufferView.id = bufferView.id || "bufferView-".concat(index);
+    bufferView.id = bufferView.id || `bufferView-${index}`;
     const bufferIndex = bufferView.buffer;
     bufferView.buffer = this.buffers[bufferIndex];
     const arrayBuffer = this.buffers[bufferIndex].arrayBuffer;
@@ -14697,7 +15944,7 @@ class GLTFPostProcessor {
   }
 
   _resolveCamera(camera, index) {
-    camera.id = camera.id || "camera-".concat(index);
+    camera.id = camera.id || `camera-${index}`;
 
     if (camera.perspective) ;
 
@@ -14723,7 +15970,11 @@ const GLB_V1_CONTENT_FORMAT_JSON = 0x0;
 const LE = true;
 
 function getMagicString(dataView, byteOffset = 0) {
-  return "".concat(String.fromCharCode(dataView.getUint8(byteOffset + 0))).concat(String.fromCharCode(dataView.getUint8(byteOffset + 1))).concat(String.fromCharCode(dataView.getUint8(byteOffset + 2))).concat(String.fromCharCode(dataView.getUint8(byteOffset + 3)));
+  return `\
+${String.fromCharCode(dataView.getUint8(byteOffset + 0))}\
+${String.fromCharCode(dataView.getUint8(byteOffset + 1))}\
+${String.fromCharCode(dataView.getUint8(byteOffset + 2))}\
+${String.fromCharCode(dataView.getUint8(byteOffset + 3))}`;
 }
 
 function isGLB(arrayBuffer, byteOffset = 0, options = {}) {
@@ -14760,16 +16011,16 @@ function parseGLBSync(glb, arrayBuffer, byteOffset = 0, options = {}) {
       return parseGLBV2(glb, dataView, byteOffset, options = {});
 
     default:
-      throw new Error("Invalid GLB version ".concat(glb.version, ". Only supports v1 and v2."));
+      throw new Error(`Invalid GLB version ${glb.version}. Only supports v1 and v2.`);
   }
 }
 
 function parseGLBV1(glb, dataView, byteOffset) {
-  assert$8(glb.header.byteLength > GLB_FILE_HEADER_SIZE + GLB_CHUNK_HEADER_SIZE);
+  assert$9(glb.header.byteLength > GLB_FILE_HEADER_SIZE + GLB_CHUNK_HEADER_SIZE);
   const contentLength = dataView.getUint32(byteOffset + 0, LE);
   const contentFormat = dataView.getUint32(byteOffset + 4, LE);
   byteOffset += GLB_CHUNK_HEADER_SIZE;
-  assert$8(contentFormat === GLB_V1_CONTENT_FORMAT_JSON);
+  assert$9(contentFormat === GLB_V1_CONTENT_FORMAT_JSON);
   parseJSONChunk(glb, dataView, byteOffset, contentLength);
   byteOffset += contentLength;
   byteOffset += parseBINChunk(glb, dataView, byteOffset, glb.header.byteLength);
@@ -14777,7 +16028,7 @@ function parseGLBV1(glb, dataView, byteOffset) {
 }
 
 function parseGLBV2(glb, dataView, byteOffset, options) {
-  assert$8(glb.header.byteLength > GLB_FILE_HEADER_SIZE + GLB_CHUNK_HEADER_SIZE);
+  assert$9(glb.header.byteLength > GLB_FILE_HEADER_SIZE + GLB_CHUNK_HEADER_SIZE);
   parseGLBChunksSync(glb, dataView, byteOffset, options);
   return byteOffset + glb.header.byteLength;
 }
@@ -14875,7 +16126,7 @@ function parseGLTFContainerSync(gltf, data, byteOffset, options) {
   } else if (data instanceof ArrayBuffer) {
     const glb = {};
     byteOffset = parseGLBSync(glb, data, byteOffset, options.glb);
-    assert$1(glb.type === 'glTF', "Invalid GLB magic string ".concat(glb.type));
+    assert$1(glb.type === 'glTF', `Invalid GLB magic string ${glb.type}`);
     gltf._glb = glb;
     gltf.json = glb.json;
   } else {
@@ -15021,7 +16272,7 @@ function parse3DTileGLTFViewSync(tile, arrayBuffer, byteOffset, options) {
   tile.gltfByteLength = gltfByteLength;
 
   if (byteOffset % 4 === 0) ; else {
-    console.warn("".concat(tile.type, ": embedded glb is not aligned to a 4-byte boundary."));
+    console.warn(`${tile.type}: embedded glb is not aligned to a 4-byte boundary.`);
   }
 
   return tile.byteOffset + tile.byteLength;
@@ -15066,7 +16317,7 @@ function extractGLTFBufferOrURL(tile, gltfFormat, options) {
       break;
 
     default:
-      throw new Error("b3dm: Illegal glTF format field");
+      throw new Error(`b3dm: Illegal glTF format field`);
   }
 }
 
@@ -15104,7 +16355,7 @@ function parseInstancedModel(tile, arrayBuffer, byteOffset, options, context) {
   byteOffset = parse3DTileHeaderSync(tile, arrayBuffer, byteOffset);
 
   if (tile.version !== 1) {
-    throw new Error("Instanced 3D Model version ".concat(tile.version, " is not supported"));
+    throw new Error(`Instanced 3D Model version ${tile.version} is not supported`);
   }
 
   byteOffset = parse3DTileTablesHeaderSync(tile, arrayBuffer, byteOffset);
@@ -15145,19 +16396,19 @@ function extractInstancedAttributes(tile, featureTable, batchTable, instancesLen
     forwardAxis: [1, 0, 0]
   };
   const instances = collectionOptions.instances;
-  const instancePosition = new Vector3();
-  new Vector3();
-  new Vector3();
-  new Vector3();
+  const instancePosition = new Vector3$1();
+  new Vector3$1();
+  new Vector3$1();
+  new Vector3$1();
   const instanceRotation = new Matrix3();
   const instanceQuaternion = new Quaternion();
-  const instanceScale = new Vector3();
+  const instanceScale = new Vector3$1();
   const instanceTranslationRotationScale = {};
-  const instanceTransform = new Matrix4();
+  const instanceTransform = new Matrix4$1();
   const scratch1 = [];
   const scratch2 = [];
-  const scratchVector1 = new Vector3();
-  const scratchVector2 = new Vector3();
+  const scratchVector1 = new Vector3$1();
+  const scratchVector2 = new Vector3$1();
 
   for (let i = 0; i < instancesLength; i++) {
     let position;
@@ -15240,7 +16491,7 @@ function extractInstancedAttributes(tile, featureTable, batchTable, instancesLen
       batchId = i;
     }
 
-    const rotationMatrix = new Matrix4().fromQuaternion(instanceTranslationRotationScale.rotation);
+    const rotationMatrix = new Matrix4$1().fromQuaternion(instanceTranslationRotationScale.rotation);
     instanceTransform.identity();
     instanceTransform.translate(instanceTranslationRotationScale.translation);
     instanceTransform.multiplyRight(rotationMatrix);
@@ -15289,7 +16540,7 @@ async function parse3DTile(arrayBuffer, byteOffset = 0, options, context, tile =
       return await parsePointCloud3DTile(tile, arrayBuffer, byteOffset, options, context);
 
     default:
-      throw new Error("3DTileLoader: unknown type ".concat(tile.type));
+      throw new Error(`3DTileLoader: unknown type ${tile.type}`);
   }
 }
 
@@ -15332,7 +16583,7 @@ function getRefine(refine) {
 function normalizeTileData(tile, options) {
   if (tile.content) {
     const contentUri = tile.content.uri || tile.content.url;
-    tile.contentUrl = "".concat(options.basePath, "/").concat(contentUri);
+    tile.contentUrl = `${options.basePath}/${contentUri}`;
   }
 
   tile.id = tile.contentUrl;
@@ -15446,17 +16697,17 @@ async function getIonTilesetMetadata(accessToken, assetId) {
     type,
     url
   } = ionAssetMetadata;
-  assert$8(type === '3DTILES' && url);
+  assert$9(type === '3DTILES' && url);
   ionAssetMetadata.headers = {
-    Authorization: "Bearer ".concat(ionAssetMetadata.accessToken)
+    Authorization: `Bearer ${ionAssetMetadata.accessToken}`
   };
   return ionAssetMetadata;
 }
 async function getIonAssets(accessToken) {
-  assert$8(accessToken);
+  assert$9(accessToken);
   const url = CESIUM_ION_URL;
   const headers = {
-    Authorization: "Bearer ".concat(accessToken)
+    Authorization: `Bearer ${accessToken}`
   };
   const response = await fetchFile(url, {
     fetch: {
@@ -15471,12 +16722,12 @@ async function getIonAssets(accessToken) {
   return await response.json();
 }
 async function getIonAssetMetadata(accessToken, assetId) {
-  assert$8(accessToken, assetId);
+  assert$9(accessToken, assetId);
   const headers = {
-    Authorization: "Bearer ".concat(accessToken)
+    Authorization: `Bearer ${accessToken}`
   };
-  const url = "".concat(CESIUM_ION_URL, "/").concat(assetId);
-  let response = await fetchFile("".concat(url), {
+  const url = `${CESIUM_ION_URL}/${assetId}`;
+  let response = await fetchFile(`${url}`, {
     fetch: {
       headers
     }
@@ -15487,7 +16738,7 @@ async function getIonAssetMetadata(accessToken, assetId) {
   }
 
   let metadata = await response.json();
-  response = await fetchFile("".concat(url, "/endpoint"), {
+  response = await fetchFile(`${url}/endpoint`, {
     fetch: {
       headers
     }
@@ -15570,7 +16821,7 @@ function getCameraFrustum(camera) {
     camera.updateMatrixWorld(); // make sure camera's world matrix is updated
     camera.matrixWorldInverse.copy(camera.matrixWorld).invert();
     const frustum = new Frustum();
-    frustum.setFromProjectionMatrix(new Matrix4$1().multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse));
+    frustum.setFromProjectionMatrix(new Matrix4$2().multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse));
     return frustum;
 }
 function loadersPlaneToMesh(plane) {
@@ -15578,9 +16829,9 @@ function loadersPlaneToMesh(plane) {
     // Create a basic rectangle geometry from math.gl plane
     const planeGeometry = new PlaneGeometry(10, 5);
     // Align the geometry to the plane
-    const coplanarPoint = new Vector3$1(...plane.projectPointOntoPlane([0, 0, 0]));
-    const normal = new Vector3$1(plane.normal.x, plane.normal.y, plane.normal.z);
-    const focalPoint = new Vector3$1().copy(coplanarPoint).add(normal);
+    const coplanarPoint = new Vector3$2(...plane.projectPointOntoPlane([0, 0, 0]));
+    const normal = new Vector3$2(plane.normal.x, plane.normal.y, plane.normal.z);
+    const focalPoint = new Vector3$2().copy(coplanarPoint).add(normal);
     planeGeometry.lookAt(focalPoint);
     planeGeometry.translate(coplanarPoint.x, coplanarPoint.y, coplanarPoint.z);
     // Edges
@@ -15608,12 +16859,12 @@ function loadersBoundingBoxToMesh(tile) {
     boxGeometry.applyMatrix4(boxRotate);
     const edges = new EdgesGeometry(boxGeometry);
     const dispPlane = new LineSegments(edges, new LineBasicMaterial({ color: boxColor }));
-    dispPlane.position.copy(new Vector3$1(...box.center));
+    dispPlane.position.copy(new Vector3$2(...box.center));
     return dispPlane;
 }
 function getMatrix4FromHalfAxes(halfAxes) {
     const m = halfAxes;
-    const rotateMatrix = new Matrix4$1().fromArray([
+    const rotateMatrix = new Matrix4$2().fromArray([
         m[0] * 2,
         m[1] * 2,
         m[2] * 2,
@@ -18136,7 +19387,7 @@ class GLTFLoader extends Loader {
       // glTF requires 'min' and 'max', but VRM (which extends glTF) currently ignores that requirement.
 
       if (min !== undefined && max !== undefined) {
-        box.set(new Vector3$1(min[0], min[1], min[2]), new Vector3$1(max[0], max[1], max[2]));
+        box.set(new Vector3$2(min[0], min[1], min[2]), new Vector3$2(max[0], max[1], max[2]));
       } else {
         console.warn('THREE.GLTFLoader: Missing min/max properties for accessor POSITION.');
 
@@ -18149,8 +19400,8 @@ class GLTFLoader extends Loader {
     var targets = primitiveDef.targets;
 
     if (targets !== undefined) {
-      var maxDisplacement = new Vector3$1();
-      var vector = new Vector3$1();
+      var maxDisplacement = new Vector3$2();
+      var vector = new Vector3$2();
 
       for (var i = 0, il = targets.length; i < il; i++) {
         var target = targets[i];
@@ -18797,7 +20048,7 @@ class GLTFLoader extends Loader {
       if (nodeDef.extensions) addUnknownExtensionsToUserData(extensions, node, nodeDef);
 
       if (nodeDef.matrix !== undefined) {
-        var matrix = new Matrix4$1();
+        var matrix = new Matrix4$2();
         matrix.fromArray(nodeDef.matrix);
         node.applyMatrix4(matrix);
       } else {
@@ -18866,7 +20117,7 @@ class GLTFLoader extends Loader {
                   if (jointNode) {
                     bones.push(jointNode);
 
-                    var mat = new Matrix4$1();
+                    var mat = new Matrix4$2();
 
                     if (skinEntry.inverseBindMatrices !== undefined) {
                       mat.fromArray(skinEntry.inverseBindMatrices.array, j * 16);
@@ -19169,7 +20420,7 @@ const gradientTexture = typeof document != 'undefined' ? generateGradientTexture
 const grayscale = Gradients.GRAYSCALE;
 const grayscaleTexture = typeof document != 'undefined' ? generateGradientTexture(grayscale) : null;
 const defaultOptions = {
-    initialTransform: new Matrix4$1(),
+    initialTransform: new Matrix4$2(),
     throttleRequests: true,
     maxRequests: 64,
     updateInterval: 0.1,
@@ -19224,26 +20475,26 @@ class Loader3DTiles {
                 tileBoxes.visible = false;
             }
             // transformations
-            let threeMat = new Matrix4$1();
+            let threeMat = new Matrix4$2();
             // TODO: This handles the situation where not the root tile is transformed, but one child below the root. There should be a more generic way to handle this...
             const tileTrasnform = tilesetJson.root.transform
-                ? new Matrix4$1().fromArray(tilesetJson.root.transform)
-                : new Matrix4$1();
+                ? new Matrix4$2().fromArray(tilesetJson.root.transform)
+                : new Matrix4$2();
             if (tilesetJson.root.children.length == 1 && tilesetJson.root.children[0].transform) {
-                const childTransform = new Matrix4$1().fromArray(tilesetJson.root.children[0].transform);
+                const childTransform = new Matrix4$2().fromArray(tilesetJson.root.children[0].transform);
                 tileTrasnform.multiply(childTransform);
             }
             // TODO: Originally the tileset is moved by loaders.gl to its WGS84 matching coordiate. In here, we negate that and bring it back to 0,0,0 with an optional initial transform. If we want to combine the tileset with other geographic layers we might need to go back to those original coordiates
             threeMat.copy(tileTrasnform).invert();
             const resetTransform = threeMat.clone();
             threeMat.premultiply(options.initialTransform);
-            let modelMatrix = new Matrix4(threeMat.toArray());
+            let modelMatrix = new Matrix4$1(threeMat.toArray());
             const pointcloudUniforms = {
                 pointSize: { type: 'f', value: 1.0 },
                 gradient: { type: 't', value: gradientTexture },
                 grayscale: { type: 't', value: grayscaleTexture },
-                rootCenter: { type: 'vec3', value: new Vector3$1() },
-                rootNormal: { type: 'vec3', value: new Vector3$1() },
+                rootCenter: { type: 'vec3', value: new Vector3$2() },
+                rootNormal: { type: 'vec3', value: new Vector3$2() },
                 coloring: { type: 'i', value: options.pointCloudColoring },
                 hideGround: { type: 'b', value: true },
                 elevationRange: { type: 'vec2', value: new Vector2$1(0, 400) },
@@ -19322,18 +20573,18 @@ class Loader3DTiles {
                         loadGLTF: options.loadersGlGltf,
                     } }) }));
             let disposeFlag = false;
-            const rootCenter = new Vector3$1().setFromMatrixPosition(options.initialTransform);
+            const rootCenter = new Vector3$2().setFromMatrixPosition(options.initialTransform);
             pointcloudUniforms.rootCenter.value.copy(rootCenter);
-            pointcloudUniforms.rootNormal.value.copy(new Vector3$1(0, 0, 1).applyMatrix4(options.initialTransform).normalize());
+            pointcloudUniforms.rootNormal.value.copy(new Vector3$2(0, 0, 1).applyMatrix4(options.initialTransform).normalize());
             root.applyMatrix4(options.initialTransform);
             // Extra stats
             tileset.stats.get('Loader concurrency').count = options.maxConcurrency;
             tileset.stats.get('Maximum SSE').count = options.maximumScreenSpaceError;
             tileset.stats.get('Maximum mem usage').count = options.maximumMemoryUsage;
             let timer = 0;
-            const lastCameraTransform = new Matrix4$1().makeTranslation(Infinity, Infinity, Infinity);
+            const lastCameraTransform = new Matrix4$2().makeTranslation(Infinity, Infinity, Infinity);
             let lastCameraAspect = null;
-            const lastCameraPosition = new Vector3$1(Infinity, Infinity, Infinity);
+            const lastCameraPosition = new Vector3$2(Infinity, Infinity, Infinity);
             let sseDenominator = null;
             function tilesetUpdate(tileset, renderMap, renderer, camera) {
                 if (disposeFlag) {
@@ -19457,7 +20708,7 @@ class Loader3DTiles {
                         pointcloudUniforms.intensityContrast.value = contrast;
                     },
                     getLatLongHeightFromPosition: (position) => {
-                        const cartographicPosition = tileset.ellipsoid.cartesianToCartographic(new Vector3$1().copy(position).applyMatrix4(new Matrix4$1().copy(threeMat).invert()).toArray());
+                        const cartographicPosition = tileset.ellipsoid.cartesianToCartographic(new Vector3$2().copy(position).applyMatrix4(new Matrix4$2().copy(threeMat).invert()).toArray());
                         return {
                             lat: cartographicPosition[1],
                             long: cartographicPosition[0],
@@ -19466,7 +20717,7 @@ class Loader3DTiles {
                     },
                     getPositionFromLatLongHeight: (coord) => {
                         const cartesianPosition = tileset.ellipsoid.cartographicToCartesian([coord.long, coord.lat, coord.height]);
-                        return new Vector3$1(...cartesianPosition).applyMatrix4(threeMat);
+                        return new Vector3$2(...cartesianPosition).applyMatrix4(threeMat);
                     },
                     getCameraFrustum: (camera) => {
                         const frustum = getCameraFrustum(camera);
@@ -19485,7 +20736,7 @@ class Loader3DTiles {
                         options.initialTransform = transform;
                         threeMat = resetTransform.clone();
                         threeMat.premultiply(options.initialTransform);
-                        modelMatrix = new Matrix4(threeMat.toArray());
+                        modelMatrix = new Matrix4$1(threeMat.toArray());
                         tileset.modelMatrix = modelMatrix;
                         root.matrix.copy(options.initialTransform);
                         root.matrix.decompose(root.position, root.quaternion, root.scale);
@@ -19527,7 +20778,7 @@ class Loader3DTiles {
 function createGLTFNodes(gltfLoader, tile, unlitMaterial, options) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, reject) => {
-            const rotateX = new Matrix4$1().makeRotationAxis(new Vector3$1(1, 0, 0), Math.PI / 2);
+            const rotateX = new Matrix4$2().makeRotationAxis(new Vector3$2(1, 0, 0), Math.PI / 2);
             gltfLoader.parse(options.loadersGlGltf ? tile.content.gltf : tile.content.gltfArrayBuffer, '', (gltf) => {
                 const tileContent = gltf.scenes[0].children[0];
                 tileContent.applyMatrix4(rotateX); // convert from GLTF Y-up to Z-up
@@ -19608,7 +20859,7 @@ function createPointNodes(tile, pointcloudUniforms) {
     const tileContent = new Points(geometry, pointcloudMaterial);
     if (d.rtc_center) {
         const c = d.rtc_center;
-        tileContent.applyMatrix4(new Matrix4$1().makeTranslation(c[0], c[1], c[2]));
+        tileContent.applyMatrix4(new Matrix4$2().makeTranslation(c[0], c[1], c[2]));
     }
     return tileContent;
 }

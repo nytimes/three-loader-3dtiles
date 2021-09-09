@@ -6,7 +6,7 @@ Following these guidelines helps to communicate that you respect the time of the
 
 There are many ways to contribute, from writing tutorials or blog posts, improving the documentation, submitting bug reports and feature requests or writing code which can be incorporated into the loader itself.
 
-**HINT**: Check the [Roadmap section](https://github.com/nytimes/threebird-loader-3d-tiles#roadmap) in the README, as well as `//TODO` comments within the code hinting at pending tasks.
+**HINT**: Check the [Roadmap section](https://github.com/nytimes/three-loader-3dtiles#roadmap) in the README, as well as `//TODO` comments within the code hinting at pending tasks.
 
 # Ground Rules
 

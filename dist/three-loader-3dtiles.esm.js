@@ -20884,4 +20884,4 @@ function disposeNode(node) {
 }
 
 export { Loader3DTiles, PointCloudColoring, Shading };
-//# sourceMappingURL=threebird-loader-3d-tiles.esm.js.map
+//# sourceMappingURL=three-loader-3dtiles.esm.js.map

@@ -27,9 +27,9 @@ module.exports = (env) => {
     ],
     resolve: {
       alias: {
-        '@threebird/loader-3d-tiles': path.resolve(
+        'three-loader-3dtiles': path.resolve(
             __dirname,
-          '../../../dist/threebird-loader-3d-tiles.esm.js'
+          '../../../dist/three-loader-3dtiles.esm.js'
         ),
         'three/examples/jsm/loaders/KTX2Loader': path.resolve(__dirname,'/node_modules/three/examples/jsm/loaders/KTX2Loader'),
         'three/examples/jsm/loaders/DRACOLoader': path.resolve(__dirname,'/node_modules/three/examples/jsm/loaders/DRACOLoader'),

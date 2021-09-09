@@ -90,9 +90,9 @@
         "three/examples/jsm/libs/stats.module.js": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/libs/stats.module",
         "@probe.gl/stats" : "https://cdn.skypack.dev/@probe.gl/stats@3.3.1",
         "@probe.gl/stats-widget" : "https://unpkg.com/@probe.gl/stats-widget@3.3.1/dist/es6",
-        "@threebird/loader-3d-tiles" : "../../../dist/threebird-loader-3d-tiles.esm.js",
+        "three-loader-3dtiles" : "../../../dist/three-loader-3dtiles.esm.js",
         "gsap": "https://cdn.skypack.dev/gsap@3.6.1",
-        "@threebird/controls" : "./threebird-controls.esm.min.js"
+        "three-story-controls" : "https://unpkg.com/three-story-controls@1.0.0/dist/three-story-controls.esm.min.js"
       }
     }
   </script>
@@ -108,8 +108,8 @@
     } from 'three';
 
 
-    import { Loader3DTiles } from '@threebird/loader-3d-tiles';
-    import { CameraRig, FreeMovementControls } from '@threebird/controls'
+    import { Loader3DTiles } from 'three-loader-3dtiles';
+    import { CameraRig, FreeMovementControls } from 'three-story-controls'
 
     import Stats from 'three/examples/jsm/libs/stats.module.js';
     import StatsWidget from '@probe.gl/stats-widget';
@@ -211,6 +211,6 @@
 
     render();
   </script>
-  <a id="button" target="_blank" href="https://github.com/nytimes/threebird-loader-3d-tiles/blob/master/examples/demos/realitycapture/index.html" title="View source code for demo" style=""><img src="../ic_code_black_24dp.svg"></a>
+  <a id="button" target="_blank" href="https://github.com/nytimes/three-loader-3dtiles/blob/master/examples/demos/realitycapture/index.html" title="View source code for demo" style=""><img src="../ic_code_black_24dp.svg"></a>
 </body>
 </html>

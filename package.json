@@ -1,10 +1,10 @@
 {
-  "name": "@threebird/loader-3d-tiles",
+  "name": "three-loader-3dtiles",
   "version": "1.0.0",
   "description": "A 3D Tiles loader for Three.js",
-  "main": "dist/threebird-loader-3d-tiles.npm.esm.min.js",
+  "main": "dist/three-loader-3dtiles.npm.esm.min.js",
   "module": "dist/threebird-loader-3d-tils.npm.esm.min.js",
-  "typings": "dist/threebird-loader-3d-tiles.d.ts",
+  "typings": "dist/three-loader-3dtiles.d.ts",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",

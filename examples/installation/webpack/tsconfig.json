@@ -11,7 +11,7 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "@threebird/loader-3d-tiles": ["../../../dist/threebird-loader-3d-tiles.d.ts"]
+      "three-loader-3dtiles": ["../../../dist/three-loader-3dtiles.d.ts"]
     }
   },
   "include": [

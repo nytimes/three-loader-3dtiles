@@ -8,7 +8,7 @@ import { getOcularConfig } from 'ocular-dev-tools';
 
 const { NODE_ENV } = process.env;
 const input = 'src/index.ts';
-const name = 'ThreebirdLoader3DTiles';
+const name = 'ThreeLoader3DTiles';
 const sourcemap = true;
 
 // If developing along with loaders.gl, use the source instead of the package from npm
@@ -72,7 +72,7 @@ const addSyntheticNamedExportsToSkippedNodeImports = () => ({
 const esmConfig = {
   input,
   output: {
-    file: `dist/threebird-loader-3d-tiles.esm${NODE_ENV == 'production' ? '.min' : ''}.js`,
+    file: `dist/three-loader-3dtiles.esm${NODE_ENV == 'production' ? '.min' : ''}.js`,
     format: 'es',
     name,
     sourcemap,

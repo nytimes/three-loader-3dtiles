@@ -8,5 +8,5 @@
 
 |  Package | Description |
 |  --- | --- |
-|  [@threebird/loader-3d-tiles](./loader-3d-tiles.md) |  |
+|  [three-loader-3dtiles](./loader-3d-tiles.md) |  |
 

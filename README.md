@@ -36,7 +36,7 @@ import {
   WebGLRenderer, 
   Clock 
 } from 'three'
-import { Loader3DTiles } from '@threebird/loader-3d-tiles';
+import { Loader3DTiles } from 'three-loader-3dtiles';
 
 const scene = new Scene()
 const camera = new PerspectiveCamera()
@@ -82,7 +82,7 @@ The library depends on [three.js](https://threejs.org/) r129 and uses its GLTF, 
 Refer to the `browserslist` field in [package.json](./package.json) for target browsers.
 
 ### 1. ES Module
-Download [dist/threebird-loader-3d-tiles.esm.min.js](dist/threebird-loader-3d-tiles.esm.min.js) and use an `importmap-shim` to import the dependencies. See [here](examples/installation/es-module) for a full example. The [demos](examples/demos) also use this method of installation:
+Download [dist/three-loader-3dtiles.esm.min.js](dist/three-loader-3dtiles.esm.min.js) and use an `importmap-shim` to import the dependencies. See [here](examples/installation/es-module) for a full example. The [demos](examples/demos) also use this method of installation:
 
 #### **`index.html`**
   ```html
@@ -94,7 +94,7 @@ Download [dist/threebird-loader-3d-tiles.esm.min.js](dist/threebird-loader-3d-ti
         "three/examples/jsm/loaders/GLTFLoader": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/loaders/GLTFLoader",
         "three/examples/jsm/loaders/DRACOLoader": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/loaders/DRACOLoader",
         "three/examples/jsm/loaders/KTX2Loader": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/loaders/KTX2Loader",
-        "@threebird/loader-3d-tiles" : "./threebird-loader-3d-tiles.esm.min.js"
+        "three-loader-3dtiles" : "./three-loader-3dtiles.esm.min.js"
       }
     }
   </script>
@@ -104,13 +104,13 @@ Download [dist/threebird-loader-3d-tiles.esm.min.js](dist/threebird-loader-3d-ti
 #### **`index.js`**
   ```javascript
   import { Scene, PerspectiveCamera } from 'three';
-  import { Loader3DTiles } from '@threebird/loader-3d-tiles';
+  import { Loader3DTiles } from 'three-loader-3dtiles';
   ```
 
 ### 3. NPM
 If you use a build system such as Webpack / Parcel / Rollup etc, you should also install the library along with three.js from npm:
 ```
-npm install -s three @threebird/loader-3d-tiles
+npm install -s three three-loader-3dtiles
 ```
 The application script would be the same as in the ES Module example (when using `importmap-shim`).
 

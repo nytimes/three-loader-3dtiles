@@ -8,5 +8,5 @@
 
 |  Package | Description |
 |  --- | --- |
-|  [three-loader-3dtiles](./loader-3d-tiles.md) |  |
+|  [three-loader-3dtiles](./three-loader-3dtiles.md) |  |
 

@@ -66,7 +66,7 @@ const defaultOptions: LoaderOptions = {
   loadersGlGltf: true
 };
 
-/** The Threebird 3D Tiles Loader */
+/** 3D Tiles Loader */
 class Loader3DTiles {
   /**
   * Loads a tileset of 3D Tiles according to the given {@link LoaderProps}

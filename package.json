@@ -5,11 +5,19 @@
   "main": "dist/threebird-loader-3d-tiles.npm.esm.min.js",
   "module": "dist/threebird-loader-3d-tils.npm.esm.min.js",
   "typings": "dist/threebird-loader-3d-tiles.d.ts",
-  "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nytimes/three-loader-3dtiles.git"
+  },
+  "homepage": "https://github.com/nytimes/three-loader-3dtiles",
   "directories": {
     "example": "examples"
   },
+  "files": [
+    "/src",
+    "dist"
+  ],
   "type": "module",
   "scripts": {
     "build": "rollup -c",

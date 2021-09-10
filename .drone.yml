@@ -8,21 +8,30 @@ steps:
     commands:
       - npm install
 
-  - name: docs
-    image: node:12
-    commands:
-      - npm run docs:production
-    when:
-      branch:
-      - main
-      - dev
-
   - name: build
     image: node:12
     commands:
       - npm run build
     environment:
       NODE_ENV: production
+    when:
+      branch:
+      - main
+      - dev
+
+  - name: test
+    image: node:12
+    commands:
+      - npm run test
+    when:
+      branch:
+      - main
+      - dev
+
+  - name: docs
+    image: node:12
+    commands:
+      - npm run docs:production
     when:
       branch:
       - main

@@ -1,5 +1,6 @@
 # three-loader-3d-tiles  
 ![license](https://img.shields.io/badge/License-Apache%202.0-yellow.svg) ![version](https://img.shields.io/badge/version-1.0.0-blue)
+[![Build Status](https://cloud.drone.io/api/badges/nytimes/three-loader-3dtiles/status.svg)](https://cloud.drone.io/nytimes/three-loader-3dtiles)
 
 [Demos](#demos) &mdash;
 [Usage](#basic-usage) &mdash;
@@ -152,7 +153,7 @@ npm run build:production
 ```
 And to build the API documentation run:
 ```
-npm run build:docs
+npm run docs
 ```
 
 

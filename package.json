@@ -25,8 +25,10 @@
     "dev": "concurrently \"npm run watch\"  \"http-server -c-1 -p 8000\"",
     "build:types": "tsc --declaration --emitDeclarationOnly --declarationMap --declarationDir lib/",
     "api:extract": "api-extractor run --local --verbose",
+    "api:extract:production": "api-extractor run",
     "api:generate": "api-documenter markdown --input-folder temp --output-folder docs/",
-    "build:docs": "npm run build:types && npm run api:extract && npm run api:generate",
+    "docs": "npm run build:types && npm run api:extract && npm run api:generate",
+    "docs:production": "npm run build:types && npm run api:extract:production && npm run api:generate",
     "build:production": "export NODE_ENV=production || set NODE_ENV=production && npm run build",
     "test": "mocha --experimental-specifier-resolution=node --loader=ts-node/esm test/**/*.spec.ts"
   },

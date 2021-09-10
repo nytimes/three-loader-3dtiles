@@ -1,0 +1,43 @@
+kind: pipeline
+type: docker
+name: default
+   
+steps:
+  - name: install
+    image: node:12
+    commands:
+      - npm install
+
+  - name: docs
+    image: node:12
+    commands:
+      - npm run docs:production
+    when:
+      branch:
+      - main
+      - dev
+
+  - name: build
+    image: node:12
+    commands:
+      - npm run build
+    environment:
+      NODE_ENV: production
+    when:
+      branch:
+      - main
+      - dev
+
+  - name: npm
+    image: plugins/npm
+    settings:
+      username: 
+        from_secret: npm_username
+      password:
+        from_secret: npm_password
+      email: 
+        from_secret: npm_email
+    when:
+      event:
+      - tag
+

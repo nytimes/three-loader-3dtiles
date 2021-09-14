@@ -1,7 +1,7 @@
 import { CanvasTexture, LinearFilter, RepeatWrapping, Frustum, Matrix4 as Matrix4$2, Group, PlaneGeometry, Vector3 as Vector3$2, MeshBasicMaterial, DoubleSide, Mesh, ArrowHelper, Color, BoxGeometry, EdgesGeometry, LineSegments, LineBasicMaterial, MeshStandardMaterial, Interpolant, Loader, LoaderUtils, FileLoader, SpotLight, PointLight, DirectionalLight, MeshPhysicalMaterial, Vector2 as Vector2$1, TangentSpaceNormalMap, ImageBitmapLoader, TextureLoader, InterleavedBuffer, InterleavedBufferAttribute, BufferAttribute, RGBFormat, LinearMipmapLinearFilter, PointsMaterial, Material, sRGBEncoding, PropertyBinding, BufferGeometry, SkinnedMesh, Line, LineLoop, Points, PerspectiveCamera, MathUtils, OrthographicCamera, InterpolateLinear, AnimationClip, Bone, Object3D, Skeleton, NearestFilter, NearestMipmapNearestFilter, LinearMipmapNearestFilter, NearestMipmapLinearFilter, ClampToEdgeWrapping, MirroredRepeatWrapping, InterpolateDiscrete, FrontSide, TriangleFanDrawMode, TriangleStripDrawMode, VectorKeyframeTrack, QuaternionKeyframeTrack, NumberKeyframeTrack, Box3, Sphere, ShaderMaterial, Float32BufferAttribute, Uint8BufferAttribute } from 'three';
-import { GLTFLoader as GLTFLoader$2 } from 'three/examples/jsm/loaders/GLTFLoader';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
-import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader';
+import { GLTFLoader as GLTFLoader$2 } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
+import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.

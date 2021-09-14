@@ -92,9 +92,9 @@ Download [dist/three-loader-3dtiles.esm.min.js](dist/three-loader-3dtiles.esm.mi
     {
       "imports": {
         "three": "https://cdn.skypack.dev/three@0.129.0",
-        "three/examples/jsm/loaders/GLTFLoader": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/loaders/GLTFLoader",
-        "three/examples/jsm/loaders/DRACOLoader": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/loaders/DRACOLoader",
-        "three/examples/jsm/loaders/KTX2Loader": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/loaders/KTX2Loader",
+        "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/loaders/GLTFLoader",
+        "three/examples/jsm/loaders/DRACOLoader.js": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/loaders/DRACOLoader",
+        "three/examples/jsm/loaders/KTX2Loader.js": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/loaders/KTX2Loader",
         "three-loader-3dtiles" : "./three-loader-3dtiles.esm.min.js"
       }
     }

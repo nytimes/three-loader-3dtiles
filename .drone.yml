@@ -16,6 +16,12 @@ steps:
       branch:
       - main
       - dev
+
+  - name: build-npm
+    image: node:12
+    commands:
+      - npm run build
+    when:
       event:
       - tag
 

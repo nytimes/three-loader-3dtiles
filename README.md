@@ -63,7 +63,7 @@ async function loadTileset() {
   scene.add(model)
 }
 
-function render(t) {
+function render() {
   const dt = clock.getDelta()
   if (tilesRuntime) {
     tilesRuntime.update(dt, renderer, camera)
@@ -72,6 +72,7 @@ function render(t) {
   window.requestAnimationFrame(render)
 }
 
+loadTileset()
 render()
 ```
 

@@ -1,5 +1,10 @@
 ## v1.0
 
+### v1.0.2
+
+- Fixes for NPM build.
+- Updates Webpack example.
+
 ### v1.0.1
 
 - Name change.

@@ -67,7 +67,7 @@ export declare interface LoaderOptions {
     /** When viewing b3dm (mesh) tiles, compute the vertex normals - Default: `false`. */
     computeNormals?: boolean;
     /** When viewing b3dm (mesh) tiles, use the loaders.gl GLTFLoader rather than the Three.hs GLTFLoader - Default: `true`. */
-    loadersGlGltf: boolean;
+    loadersGlGltf?: boolean;
     /** When viewing Point Cloud tiles, how should the points be colored ({@link PointCloudColoring}) - Default: `PointCloudColoring.White` */
     pointCloudColoring?: PointCloudColoring;
     /** Debug mode: Show tile bounding boxes. Make sure to add the boxes to the scene from {@link Runtime.getTileBoxes} - Default: `false` */

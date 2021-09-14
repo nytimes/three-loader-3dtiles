@@ -9,5 +9,5 @@ When viewing b3dm (mesh) tiles, use the loaders.gl GLTFLoader rather than the Th
 <b>Signature:</b>
 
 ```typescript
-loadersGlGltf: boolean;
+loadersGlGltf?: boolean;
 ```

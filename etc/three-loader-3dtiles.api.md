@@ -39,7 +39,7 @@ export interface LoaderOptions {
     debug?: boolean;
     dracoDecoderPath?: string;
     initialTransform?: Matrix4;
-    loadersGlGltf: boolean;
+    loadersGlGltf?: boolean;
     material?: Material;
     maxConcurrency?: number;
     maximumMemoryUsage?: number;

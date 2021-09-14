@@ -15,7 +15,7 @@ module.exports = (env) => {
     },
     mode: "development",
     devServer: {
-        contentBase: path.join(__dirname, "dist"),
+        static: path.join(__dirname, "dist"),
         port: 8000,
         hot: true
     },

@@ -12,12 +12,12 @@ steps:
     image: node:12
     commands:
       - npm run build
-    environment:
-      NODE_ENV: production
     when:
       branch:
       - main
       - dev
+      event:
+      - tag
 
   - name: test
     image: node:12

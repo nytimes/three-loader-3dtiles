@@ -1,4 +1,4 @@
-# three-loader-3d-tiles  
+# three-loader-3dtiles  
 ![license](https://img.shields.io/badge/License-Apache%202.0-yellow.svg) [![npm version](https://badge.fury.io/js/three-loader-3dtiles.svg)](https://badge.fury.io/js/three-loader-3dtiles)
 [![Build Status](https://cloud.drone.io/api/badges/nytimes/three-loader-3dtiles/status.svg)](https://cloud.drone.io/nytimes/three-loader-3dtiles)
 

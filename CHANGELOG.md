@@ -1,6 +1,6 @@
 ## v1.0
 
-### v1.0.2
+### v1.0.3
 
 - Fixes for NPM build.
 - Updates Webpack example.

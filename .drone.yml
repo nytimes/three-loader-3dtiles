@@ -11,7 +11,7 @@ steps:
   - name: build
     image: node:12
     commands:
-      - npm run build
+      - npm run build:production
     when:
       branch:
       - main
@@ -20,7 +20,7 @@ steps:
   - name: build-npm
     image: node:12
     commands:
-      - npm run build
+      - npm run build:production
     when:
       event:
       - tag

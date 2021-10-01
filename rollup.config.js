@@ -69,6 +69,29 @@ const addSyntheticNamedExportsToSkippedNodeImports = () => ({
   }
 });
 
+const umdConfig = {
+  input,
+  output: {
+    file: `dist/three-loader-3dtiles${NODE_ENV == 'production' ? '.min' : ''}.js`,
+    format: 'umd',
+    name,
+    sourcemap,
+    globals: {
+      three: 'THREE',
+      'three/examples/jsm/loaders/GLTFLoader.js' : 'THREE',
+      'three/examples/jsm/loaders/DRACOLoader.js' : 'THREE',
+      'three/examples/jsm/loaders/KTX2Loader.js' : 'THREE'
+    },
+  },
+  external: [
+  'three',
+  'three/examples/jsm/loaders/GLTFLoader.js',
+  'three/examples/jsm/loaders/DRACOLoader.js',
+  'three/examples/jsm/loaders/KTX2Loader.js'
+  ],
+  plugins: [...commonPlugins()],
+}
+
 const esmConfig = {
   input,
   output: {
@@ -80,6 +103,6 @@ const esmConfig = {
   plugins: [...commonPlugins()]
 }
 
-const config = [esmConfig];
+const config = [esmConfig, umdConfig];
 
 export default config;

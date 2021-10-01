@@ -1,5 +1,8 @@
 ## v1.0
 
+### v1.0.4
+- Added UMD build.
+
 ### v1.0.3
 
 - Fixes for NPM build.

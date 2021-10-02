@@ -23,6 +23,7 @@
     "build": "rollup -c",
     "watch": "rollup -w -c",
     "dev": "concurrently \"npm run watch\"  \"http-server -c-1 -p 8000\"",
+    "aframe-watcher": "npx aframe-watcher examples/aframe/**/*.html",
     "build:types": "tsc --declaration --emitDeclarationOnly --declarationMap --declarationDir lib/",
     "api:extract": "api-extractor run --local --verbose",
     "api:extract:production": "api-extractor run",

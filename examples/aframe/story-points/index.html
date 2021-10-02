@@ -1,0 +1,91 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Story Controls: A-Frame example</title>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://unpkg.com/gsap@3.6.1/dist/gsap.min.js"></script>
+  <script src='https://cdn.jsdelivr.net/npm/three-story-controls@1.0.1/dist/three-story-controls.min.js'></script>
+
+  <script>
+    window.gsap.TweenMax = TweenMax;
+  </script>
+  <script src='https://cdn.jsdelivr.net/npm/three@0.133.0/examples/js/utils/WorkerPool.js'></script>
+  <script src='https://cdn.jsdelivr.net/npm/three@0.133.0/examples/js/loaders/KTX2Loader.js'></script>
+  <script src='https://cdn.jsdelivr.net/npm/three-loader-3dtiles@1.0.4/dist/three-loader-3dtiles.min.js'></script>
+  <script src="../aframe-wrappers.js"></script>
+  <style>
+    .nav {
+      position: fixed;
+      top: 45%;
+      background-color: rgb(184, 184, 184);
+      padding: 1rem;
+      font-family: sans-serif;
+      font-size: 1rem;
+      font-weight: 100;
+      cursor: pointer;
+    }
+
+    .next {
+      right: 0;
+    }
+
+    .prev {
+      left: 0;
+    }
+  </style>
+</head>
+<body>
+  <a-scene background="color: #ECECEC">
+    <a-entity
+      id="story-rig"
+      story-rig
+      story-points-controls
+    >
+      <a-entity
+        id="camera"
+        camera
+      ></a-entity>
+    </a-entity>
+    <a-entity
+      camera
+      id="story-point-1" camera="active: true"
+      story-point="duration: 1; ease: bounce;"
+      position="0.65 0 9.7"
+      rotation="0 0 0"
+    >
+    </a-entity>
+    <a-entity
+      camera
+      id="story-point-2" story-point="duration: 7" rotation="-8.89 80 0.01" camera="active: true"
+      story-point
+      position="-0.38 0 7.29"
+    >
+    </a-entity>
+    <a-entity id="story-point-3" rotation="-27.82 -7.72 0" camera="active: true"
+      camera
+      story-point="duration: 8"
+      position="-0.28 0 -1.47"
+    >
+    </a-entity>
+    <a-entity
+      id="freeman-tiles"
+      3d-tiles="url: https://storage.googleapis.com/rd-big-files/tilesets/ONA360/TILESET/0731_FREEMAN_ALLEY_10M_A_36x8K__10K-PN_50P_DB/tileset_tileset.json; maximumSSE: 48;"
+    >
+    </a-entity>
+  </a-scene>
+  <div class='nav prev'> PREV </div>
+  <div class='nav next'> NEXT </div>
+  <script>
+    document.querySelector('.nav.next').addEventListener('click', () =>
+      document.querySelector('[story-points-controls]')
+      .emit('nextPOI')
+     )
+    document.querySelector('.nav.prev').addEventListener('click', () =>
+      document.querySelector('[story-points-controls]')
+      .emit('prevPOI')
+     )
+  </script>
+</body>
+</html>
+

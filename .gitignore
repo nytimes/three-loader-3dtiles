@@ -3,3 +3,5 @@
 node_modules
 lib
 temp
+dist/three-loader-3dtiles.esm.js*
+dist/three-loader-3dtiles.js*

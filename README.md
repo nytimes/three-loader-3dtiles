@@ -166,7 +166,7 @@ npm run test
 
 
 ## Docs
-* API documentation is available [here](docs/loader-3d-tiles.md). 
+* API documentation is available [here](docs/three-loader-3dtiles.md). 
 * Code for the demos is in [`examples/demos`](examples/demos).
 
 ## Alternatives

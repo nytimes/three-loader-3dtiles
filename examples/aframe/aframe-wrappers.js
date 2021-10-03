@@ -94,11 +94,12 @@ AFRAME.registerComponent('3d-tiles', {
     distanceScale: {type: 'number', default: 1.0},
     wireframe: {type: 'boolean', default: false},
     tilesetRotation: {type: 'vec3', default: {x: -Math.PI / 2, y: 0, z: 0}},
-    tilesetPosition: {type: 'vec3', default: {x: 0, y: 0, z: 0}}
+    tilesetPosition: {type: 'vec3', default: {x: 0, y: 0, z: 0}},
+    cesiumIONToken: {type: 'string'}
   },
   init: async function () {
     console.log("Init 3d-tiles", this.data.url);
-    this.camera = document.querySelector('[camera]').object3D.children[0];
+    this.camera = document.querySelector('a-scene').camera;
     this.originalCamera = this.camera;
     const {model, runtime} = await ThreeLoader3DTiles.Loader3DTiles.load({
         url: this.data.url,
@@ -106,6 +107,7 @@ AFRAME.registerComponent('3d-tiles', {
         options: {
           dracoDecoderPath: 'https://unpkg.com/three@0.133.0/examples/js/libs/draco',
           basisTranscoderPath: 'https://unpkg.com/three@0.133.0/examples/js/libs/basis',
+          cesiumIONToken: this.data.cesiumIONToken,
           maximumScreenSpaceError: this.data.maximumSSE,
           maximumMemoryUsage: this.data.maximumMem,
           viewDistanceScale: this.data.distanceScale,

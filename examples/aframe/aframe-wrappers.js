@@ -86,6 +86,32 @@ AFRAME.registerComponent('story-scroll-controls', {
   }
 });
 
+AFRAME.registerComponent('story-threedof-controls', {
+  dependencies: ['story-rig'],
+  schema: {
+    panFactor:  {type: 'number', default: Math.PI / 10},
+    tiltFactor:  {type: 'number', default: Math.PI / 10},
+    truckFactor:  {type: 'number', default: 0},
+    pedestalFactor:  {type: 'number', default: 0}
+  },
+  init: function () {
+    const rig = this.el.components['story-rig'].rig;
+    this.controls = new ThreeStoryControls.ThreeDOFControls(rig, {
+        panFactor: this.data.panFactor,
+        tiltFactor: this.data.tiltFactor,
+        truckFactor: this.data.truckFactor,
+        pedestalFactor: this.data.pedestalFactor,
+        domElement: document.querySelector('a-scene')
+    })
+    this.controls.enable();
+  },
+  tick: function () {
+    if (this.controls) {
+      this.controls.update();
+    }
+  }
+});
+
 AFRAME.registerComponent('3d-tiles', {
   schema: {
     url: {type: 'string'},

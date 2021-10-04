@@ -157,6 +157,8 @@ AFRAME.registerComponent('3d-tiles', {
     this.el.sceneEl.addEventListener('camera-set-active', (e) => { 
       // TODO: For some reason after closing the inspector this event is fired with an empty camera,
       // so revert to the original camera used.
+      //
+      // TODO: Does not provide the right Inspector perspective camera
       this.camera = e.detail.cameraEl.object3D.children[0] ?? this.originalCamera;
     }) 
   },

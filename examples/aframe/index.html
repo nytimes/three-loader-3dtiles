@@ -1,0 +1,43 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello 3DTiles: A-Frame example</title>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+
+  <script src='https://cdn.jsdelivr.net/npm/three@0.133.0/examples/js/utils/WorkerPool.js'></script>
+  <script src='https://cdn.jsdelivr.net/npm/three@0.133.0/examples/js/loaders/KTX2Loader.js'></script>
+  <script src='https://cdn.jsdelivr.net/npm/three-loader-3dtiles@1.0.4/dist/three-loader-3dtiles.min.js'></script>
+
+  <script src="./aframe-wrappers.js"></script>
+</head>
+<body>
+  <a-scene>
+    <a-entity
+      id="camera"
+      camera
+      wasd-controls
+      look-controls
+      position="0 1.6 0"
+    ></a-entity>
+    <a-entity
+    id="freeman-tiles"
+    3d-tiles="url: https://storage.googleapis.com/rd-big-files/tilesets/ONA360/TILESET/0731_FREEMAN_ALLEY_10M_A_36x8K__10K-PN_50P_DB/tileset_tileset.json;
+    maximumSSE: 48;
+    tilesetPosition: 0 1.2 -17.8;
+    tilesetRotation: 0 -187.7 0;"
+    position="0 1.2 -17.8"
+    rotation="0 -187.7 0"
+    ></a-entity>
+
+    <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+    <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+    <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+    <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+    <a-sky color="#ECECEC"></a-sky>
+
+  </a-scene>
+
+</body>
+</html>
+

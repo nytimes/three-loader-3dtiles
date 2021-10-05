@@ -3,10 +3,10 @@ const webpack = require('webpack');
 
 module.exports = (env) => {
   return {
-    entry: './src/index.ts',
+    entry: './src/index.tsx',
     devtool: 'inline-source-map',
     resolve: {
-      extensions: [ '.ts', '.js' ],
+      extensions: [ '.ts', '.js', '.tsx' ],
     },
     output: {
       path: path.resolve(__dirname, "dist"),

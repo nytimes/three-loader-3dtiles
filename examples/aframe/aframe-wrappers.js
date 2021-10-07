@@ -119,8 +119,6 @@ AFRAME.registerComponent('3d-tiles', {
     maximumMem: {type: 'int', default: 32},
     distanceScale: {type: 'number', default: 1.0},
     wireframe: {type: 'boolean', default: false},
-    tilesetRotation: {type: 'vec3', default: {x: -Math.PI / 2, y: 0, z: 0}},
-    tilesetPosition: {type: 'vec3', default: {x: 0, y: 0, z: 0}},
     cesiumIONToken: {type: 'string'}
   },
   init: async function () {
@@ -137,19 +135,7 @@ AFRAME.registerComponent('3d-tiles', {
           maximumScreenSpaceError: this.data.maximumSSE,
           maximumMemoryUsage: this.data.maximumMem,
           viewDistanceScale: this.data.distanceScale,
-          initialTransform:
-            new THREE.Matrix4()
-              .makeRotationFromEuler(new THREE.Euler(
-                this.data.tilesetRotation.x,
-                this.data.tilesetRotation.y,
-                this.data.tilesetRotation.z
-              ))
-              .setPosition(
-                this.data.tilesetPosition.x,
-                this.data.tilesetPosition.y,
-                this.data.tilesetPosition.z
-              )
-          
+          updateTransforms: true
         }
     })
     this.el.setObject3D('tileset', model);

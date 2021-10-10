@@ -1,0 +1,47 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Story Controls: A-Frame example</title>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src='https://cdn.jsdelivr.net/npm/three@0.133.0/examples/js/utils/WorkerPool.js'></script>
+  <script src='https://cdn.jsdelivr.net/npm/three@0.133.0/examples/js/loaders/KTX2Loader.js'></script>
+  <script src='../../../dist/three-loader-3dtiles.js'></script>
+  <script src="../aframe-wrappers.js"></script>
+  <style>
+    .inspect {
+      position: absolute;
+      top: 1vh;
+      background-color: darkslateblue;
+      color: white;
+      padding: 10px;
+      border-radius: 10px;
+      right: 1vw;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <a-scene background="color: #ECECEC">
+    <a-entity
+      id="camera"
+      camera
+      look-controls
+      wasd-controls="acceleration:15"
+    ></a-entity>
+    <a-entity
+      id="freeman-tiles"
+      rotation="-90 0 0"
+      3d-tiles="url: https://storage.googleapis.com/rd-big-files/tilesets/ONA360/TILESET/0731_FREEMAN_ALLEY_10M_A_36x8K__10K-PN_50P_DB/tileset_tileset.json; maximumSSE: 48;"
+    >
+    </a-entity>
+  </a-scene>
+  <div class='inspect'>Inspect</div>
+  <script>
+    document.querySelector('.inspect').addEventListener('click', () => {
+      document.querySelector('a-scene').components.inspector.openInspector();
+    });
+  </script>
+</body>
+</html>
+

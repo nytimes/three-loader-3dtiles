@@ -255,6 +255,8 @@ class Loader3DTiles {
     const lastCameraPosition = new Vector3(Infinity, Infinity, Infinity);
     let sseDenominator = null;
 
+    const lastRootTransform:Matrix4 = new Matrix4().copy(root.matrixWorld)
+
     function tilesetUpdate(tileset, renderMap, renderer, camera) {
       if (disposeFlag) {
         return;
@@ -414,33 +416,33 @@ class Loader3DTiles {
 
           return model;
         },
-        getTransform: () => {
-          return options.initialTransform;
-        },
-        setTransform: (transform: Matrix4) => {
-          options.initialTransform = transform;
-          threeMat = resetTransform.clone();
-          threeMat.premultiply(options.initialTransform);
-          modelMatrix = new MathGLMatrix4(threeMat.toArray());
-          tileset.modelMatrix = modelMatrix;
-          root.matrix.copy(options.initialTransform);
-          root.matrix.decompose(root.position, root.quaternion, root.scale);
-        },
         update: function (dt: number, renderer: WebGLRenderer, camera: Camera) {
-          const cameraChanged: boolean =
-            !camera.matrixWorld.equals(lastCameraTransform) ||
-            !((<PerspectiveCamera>camera).aspect == lastCameraAspect);
           cameraReference = camera;
           rendererReference = renderer;
 
           timer += dt;
 
-          if (tileset && timer >= UPDATE_INTERVAL && cameraChanged) {
-            timer = 0;
-            tileset._frameNumber++;
-            camera.getWorldPosition(lastCameraPosition);
-            lastCameraTransform.copy(camera.matrixWorld);
-            tilesetUpdate(tileset, renderMap, renderer, camera);
+          if (tileset && timer >= UPDATE_INTERVAL) {
+            if (!lastRootTransform.equals(root.matrixWorld)) {
+              lastRootTransform.copy(root.matrixWorld);
+              threeMat = resetTransform.clone();
+              threeMat.premultiply(lastRootTransform);
+              modelMatrix = new MathGLMatrix4(threeMat.toArray());
+              tileset.modelMatrix = modelMatrix;
+            }
+
+            const cameraChanged: boolean =
+              !camera.matrixWorld.equals(lastCameraTransform) ||
+              !((<PerspectiveCamera>camera).aspect == lastCameraAspect);
+
+            if (cameraChanged) {
+              timer = 0;
+              tileset._frameNumber++;
+              camera.getWorldPosition(lastCameraPosition);
+              lastCameraTransform.copy(camera.matrixWorld);
+              tilesetUpdate(tileset, renderMap, renderer, camera);
+            }
+
           }
         },
         dispose: function () {

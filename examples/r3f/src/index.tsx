@@ -27,12 +27,8 @@ function App() {
               </mesh>
             }>
               <Loader3DTilesR3FAsset
+                 rotation={new Euler(-Math.PI / 2, 0, 0)}
                  url="https://int.nyt.com/data/3dscenes/ONA360/TILESET/0731_FREEMAN_ALLEY_10M_A_36x8K__10K-PN_50P_DB/tileset_tileset.json"
-                initialTransform={
-                  new Matrix4()
-                    .makeRotationFromEuler(new Euler(-Math.PI / 2, 0, 0))
-                    .setPosition(0, 0, 0)
-                }
                 maximumScreenSpaceError={48}
               />
             </Suspense>

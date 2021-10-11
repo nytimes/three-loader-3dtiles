@@ -9,7 +9,10 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "jsx": "react-jsx",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@math.gl/culling": ["./node_modules/@math.gl/culling/src/index.js"]
+    }
   },
   "include": [
     "./src/**/*"

@@ -27,21 +27,21 @@ class Loader3DTilesBridge extends Loader {
   }
 };
 
-function Loader3DTilesR3FAsset(options) {
+function Loader3DTilesR3FAsset(props) {
   const threeState = useThree();
-  const props = {
+  const loaderProps = {
     renderer: threeState.gl,
     options: {
       dracoDecoderPath: 'https://unpkg.com/three@0.129.0/examples/js/libs/draco',
       basisTranscoderPath: 'https://unpkg.com/three@0.129.0/examples/js/libs/basis',
-      ...options
+      ...props
     }
   }
 
   // TODO: Getting type error
   // @ts-ignore
-  const { model, runtime } = useLoader(Loader3DTilesBridge, options.url, (loader:Loader3DTilesBridge) => {
-    loader.setProps(props);    
+  const { model, runtime } = useLoader(Loader3DTilesBridge, props.url, (loader:Loader3DTilesBridge) => {
+    loader.setProps(loaderProps);    
   })
 
   useFrame(({ gl, camera }, dt) => {
@@ -50,7 +50,7 @@ function Loader3DTilesR3FAsset(options) {
 
   // TODO: Disposal throws an error from updateCacheStats
   return (
-    <group dispose={runtime.dispose}>
+    <group {...props} dispose={runtime.dispose}>
       <primitive object={model} />
     </group>
   )

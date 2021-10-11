@@ -4,7 +4,7 @@
 
 ## LoaderOptions.updateTransforms property
 
-Whether to check if the tileset was transformed, set to `true` if the model is changes position in runtime. Default: `false`
+Whether to check if the tileset was transformed, set to `true` if the model is changes position in runtime. Default: `true`
 
 <b>Signature:</b>
 

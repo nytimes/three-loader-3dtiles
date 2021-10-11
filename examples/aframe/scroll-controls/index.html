@@ -11,7 +11,7 @@
   <script src='https://cdn.jsdelivr.net/npm/three-story-controls@1.0.1/dist/three-story-controls.min.js'></script>
   <script src='https://cdn.jsdelivr.net/npm/three@0.133.0/examples/js/utils/WorkerPool.js'></script>
   <script src='https://cdn.jsdelivr.net/npm/three@0.133.0/examples/js/loaders/KTX2Loader.js'></script>
-  <script src='https://cdn.jsdelivr.net/npm/three-loader-3dtiles@1.0.4/dist/three-loader-3dtiles.min.js'></script>
+  <script src='../../../dist/three-loader-3dtiles.js'></script>
   <script src="../aframe-wrappers.js"></script>
   <style>
     body {
@@ -93,6 +93,7 @@
     </a-entity>
     <a-entity
       id="freeman-tiles"
+      rotation="-90 0 0"
       3d-tiles="url: https://storage.googleapis.com/rd-big-files/tilesets/ONA360/TILESET/0731_FREEMAN_ALLEY_10M_A_36x8K__10K-PN_50P_DB/tileset_tileset.json; maximumSSE: 48"
     >
     </a-entity>

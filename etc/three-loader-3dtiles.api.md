@@ -89,7 +89,6 @@ export interface Runtime {
     getStats(): Stats;
     getTileBoxes(): Object3D;
     getTileset(): Tileset3D;
-    getTransform(): Matrix4;
     setDebug(boolean: any): void;
     setElevationRange(range: ReadonlyArray<number>): void;
     setHideGround(boolean: any): void;
@@ -97,7 +96,6 @@ export interface Runtime {
     setMaxIntensity(number: any): void;
     setPointCloudColoring(PointCloudColoring: any): void;
     setShading(Shading: any): void;
-    setTransform(Matrix4: any): void;
     setViewDistanceScale(number: any): void;
     setWireframe(boolean: any): void;
     showTiles(boolean: any): void;

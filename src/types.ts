@@ -44,7 +44,7 @@ interface LoaderOptions {
   cesiumIONToken?: string;
   /** The initial transformation of the tileset -  Default: `Matrix4.Identity`. */
   initialTransform?: Matrix4;
-  /** Whether to check if the tileset was transformed, set to `true` if the model is changes position in runtime. Default: `false` */
+  /** Whether to check if the tileset was transformed, set to `true` if the model is changes position in runtime. Default: `true` */
   updateTransforms?: boolean;
   /** Interval in seconds for the traverser to check in an update is needed - Default: `0.1`. */
   updateInterval?: number;
@@ -134,10 +134,6 @@ interface Runtime {
   getPositionFromLatLongHeight(GeoCoord): Vector3;
   /** Get the current camera frustum as mesh planes (for debugging purposes). */
   getCameraFrustum(Camera): Object3D;
-  /** Get the current tileset transform. */
-  getTransform(): Matrix4;
-  /** Set the tileset transform. Make sure `updateTransforms` is set to `true` (in {@link LoaderOptions}). */
-  setTransform(Matrix4): void;
   /** Update the tileset for rendering. */
   update(number, WebGLRenderer, Camera): void;
   /** Dispose of all of the tileset's assets in memory. */

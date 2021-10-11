@@ -115,7 +115,7 @@ AFRAME.registerComponent('story-threedof-controls', {
 AFRAME.registerComponent('3d-tiles', {
   schema: {
     url: {type: 'string'},
-    cameraEntity: {type: 'selector'},
+    cameraEl: {type: 'selector'},
     maximumSSE: {type: 'int', default: 16},
     maximumMem: {type: 'int', default: 32},
     distanceScale: {type: 'number', default: 1.0},
@@ -123,9 +123,9 @@ AFRAME.registerComponent('3d-tiles', {
     cesiumIONToken: {type: 'string'}
   },
   init: async function () {
-    this.camera = this.data.cameraEntity?.object3D.children[0] ?? document.querySelector('a-scene').camera;
+    this.camera = this.data.cameraEl?.object3D.children[0] ?? document.querySelector('a-scene').camera;
     if (!this.camera) {
-      throw new Error("3D-Tils: Please specifiy the target camera via the cameraEntity property")
+      throw new Error("3D Tiles: Please add an active camera or specifiy the target camera via the cameraEl property")
     }
     this.originalCamera = this.camera;
     const {model, runtime} = await ThreeLoader3DTiles.Loader3DTiles.load({

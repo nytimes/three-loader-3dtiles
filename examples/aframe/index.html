@@ -11,10 +11,18 @@
 
   <script src='../../dist/three-loader-3dtiles.js'></script>
   <script src="./aframe-wrappers.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aframe-blink-controls/dist/aframe-blink-controls.min.js"></script>
+
 </head>
 <body>
   <a-scene>
-    <a-camera></a-camera>
+    <a-entity id="player">
+      <!-- camera -->
+      <a-entity id="camera" camera wasd-controls look-controls></a-entity>
+      <!-- hand controls -->
+      <a-entity id="left-hand" oculus-touch-controls="hand: left" blink-controls></a-entity>
+      <a-entity id="right-hand" oculus-touch-controls="hand: right"></a-entity>
+    </a-entity>
     <a-entity
       id="freeman-tiles"
       position="-3 1.65 -24"

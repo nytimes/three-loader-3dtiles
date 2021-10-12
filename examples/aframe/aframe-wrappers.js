@@ -150,6 +150,15 @@ AFRAME.registerComponent('3d-tiles', {
       // TODO: Does not provide the right Inspector perspective camera
       this.camera = e.detail.cameraEl.object3D.children[0] ?? this.originalCamera;
     }) 
+    this.el.sceneEl.addEventListener('enter-vr', (e) => { 
+      // TODO: Three.JS Docs: "The camera's fov is currently not used and does not reflect the fov of the XR camera. If you need the fov on app level, you have to compute in manually from the XR camera's projection matrices."
+      // https://threejs.org/docs/#api/zh/renderers/webxr/WebXRManager
+      this.originalCamera = this.camera;
+      this.camera = this.el.sceneEl.renderer.xr.getCamera(this.camera);
+    }) 
+    this.el.sceneEl.addEventListener('exit-vr', (e) => { 
+      this.camera = this.originalCamera;
+    }) 
   },
   update: function() {
     if (this.runtime) {

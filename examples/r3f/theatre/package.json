@@ -1,0 +1,35 @@
+{
+  "name": "webpack-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "dev": "webpack serve",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@react-three/drei": "^7.12.6",
+    "@react-three/fiber": "^7.0.9",
+    "@theatre/core": "^0.4.6",
+    "react-dom": "^17.0.2",
+    "react-hooks-fetch": "^0.14.0",
+    "three": "^0.129.0",
+    "three-loader-3dtiles": "^1.0.6",
+    "three-stdlib": "^2.4.2"
+  },
+  "devDependencies": {
+    "@theatre/r3f": "^0.4.0-dev.20",
+    "@theatre/studio": "^0.4.6",
+    "@types/react": "^17.0.27",
+    "@types/react-dom": "^17.0.9",
+    "react": "^17.0.2",
+    "ts-loader": "^9.2.3",
+    "typescript": "^4.4.3",
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.0",
+    "webpack-dev-server": "^4.2.1"
+  }
+}

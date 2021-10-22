@@ -19,7 +19,8 @@ AFRAME.registerComponent('story-points-controls', {
           position: el.object3D.position,
           quaternion: el.object3D.quaternion,
           duration: el.getAttribute('story-point').duration,
-          ease: el.getAttribute('story-point').ease
+          ease: el.getAttribute('story-point').ease,
+          useSlerp: false
       }));
     }
 
@@ -35,6 +36,7 @@ AFRAME.registerComponent('story-points-controls', {
     this.el.addEventListener('prevPOI', function (event) {
       controls.prevPOI();
     });
+    
     document.querySelectorAll('[story-point]').forEach(item => {
       item.addEventListener('storyPointUpdated', event => {
         controls.pois = makePOIs();
@@ -151,10 +153,18 @@ AFRAME.registerComponent('3d-tiles', {
       this.camera = e.detail.cameraEl.object3D.children[0] ?? this.originalCamera;
     }) 
     this.el.sceneEl.addEventListener('enter-vr', (e) => { 
-      // TODO: Three.JS Docs: "The camera's fov is currently not used and does not reflect the fov of the XR camera. If you need the fov on app level, you have to compute in manually from the XR camera's projection matrices."
-      // https://threejs.org/docs/#api/zh/renderers/webxr/WebXRManager
       this.originalCamera = this.camera;
       this.camera = this.el.sceneEl.renderer.xr.getCamera(this.camera);
+
+      // FOV Code from https://github.com/mrdoob/three.js/issues/21869
+      this.el.sceneEl.renderer.xr.getSession().requestAnimationFrame((time, frame) => {
+        const ref = this.el.sceneEl.renderer.xr.getReferenceSpace();
+        const pose= frame.getViewerPose(ref);
+        if (pose) {
+          const fovi = pose.views[0].projectionMatrix[5];
+          this.camera.fov = Math.atan2(1, fovi) * 2 * 180 / Math.PI;
+        }
+      })
     }) 
     this.el.sceneEl.addEventListener('exit-vr', (e) => { 
       this.camera = this.originalCamera;

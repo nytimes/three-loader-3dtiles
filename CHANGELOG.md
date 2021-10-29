@@ -1,5 +1,8 @@
 ## v1.0
 
+### v1.0.7
+Set tile transform by the root object3d's transform. Update transforms by default.
+
 ### v1.0.6
 - Added UMD build.
 

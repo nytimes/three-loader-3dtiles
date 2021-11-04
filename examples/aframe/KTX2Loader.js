@@ -546,3 +546,4 @@
 	THREE.KTX2Loader = KTX2Loader;
 
 } )();
+

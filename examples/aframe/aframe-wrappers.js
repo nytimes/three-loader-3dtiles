@@ -178,9 +178,6 @@ AFRAME.registerComponent('3d-tiles', {
   },
   tick: function(t,dt) {
     if (this.runtime) {
-      if (!this.camera) {
-        console.log("Camera lost");
-      }
       this.runtime.update(dt, this.el.sceneEl.renderer, this.camera);
     }
   },

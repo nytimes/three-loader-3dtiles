@@ -3,9 +3,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Story Controls: A-Frame example</title>
-  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@a2aacc8b1458bdc02a2a67a5048c31a922cfedf1/dist/aframe-master.min.js"></script>
   <script src='https://cdn.jsdelivr.net/npm/three@0.133.0/examples/js/utils/WorkerPool.js'></script>
-  <script src='https://cdn.jsdelivr.net/npm/three@0.133.0/examples/js/loaders/KTX2Loader.js'></script>
+  <script src='../KTX2Loader.js'></script>
   <script src='../../../dist/three-loader-3dtiles.min.js'></script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-blink-controls/dist/aframe-blink-controls.min.js"></script>
   <script src="../aframe-wrappers.js"></script>
@@ -22,7 +22,7 @@
       position="-3 2.2 -30"
       rotation="-90 180 0"
       scale="2 2 2"
-      3d-tiles="url: https://storage.googleapis.com/rd-big-files/tilesets/ONA360/TILESET/0731_FREEMAN_ALLEY_10M_A_36x8K__10K-PN_50P_DB/tileset_tileset.json; maximumSSE: 48; cameraEl:[camera]"
+      3d-tiles="url: https://storage.googleapis.com/rd-big-files/tilesets/ONA360/TILESET/0731_FREEMAN_ALLEY_10M_A_36x8K__10K-PN_50P_DB/tileset_tileset.json; maximumSSE: 48; maximumMem: 24; cameraEl:[camera]"
     >
     </a-entity>
     <a-sky color="#a8caff"></a-sky>

@@ -23,6 +23,7 @@ import {
   Camera,
   PerspectiveCamera,
   WebGLRenderer,
+  Texture
 } from 'three';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -152,6 +153,7 @@ class Loader3DTiles {
       const ktx2Loader = new KTX2Loader();
       ktx2Loader.detectSupport(props.renderer);
       ktx2Loader.setTranscoderPath(options.basisTranscoderPath + '/');
+      ktx2Loader.setWorkerLimit(1);
 
       gltfLoader.setKTX2Loader(ktx2Loader);
     }
@@ -564,10 +566,14 @@ function disposeNode(node) {
       object.geometry.dispose();
 
       if (object.material.isMaterial) {
+        ((object.material as ShaderMaterial).uniforms.map.value as Texture)?.dispose();
         object.material.dispose();
       } else {
         // an array of materials
-        for (const material of object.material) material.dispose();
+        for (const material of object.material) {
+         ((material as ShaderMaterial).uniforms.map.value as Texture)?.dispose();
+          material.dispose();
+        } 
       }
     }
   });

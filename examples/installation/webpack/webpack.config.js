@@ -7,6 +7,9 @@ module.exports = (env) => {
     devtool: 'inline-source-map',
     resolve: {
       extensions: [ '.ts', '.js' ],
+      alias: process.env.USE_SRC && {
+        'three-loader-3dtiles': path.resolve(__dirname, '../../../src')
+      }
     },
     output: {
       path: path.resolve(__dirname, "dist"),
@@ -16,8 +19,7 @@ module.exports = (env) => {
     mode: "development",
     devServer: {
         static: path.join(__dirname, "dist"),
-        port: 8000,
-        hot: true
+        port: 8000
     },
     plugins: [
        new webpack.HotModuleReplacementPlugin()

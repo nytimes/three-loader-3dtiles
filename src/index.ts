@@ -478,11 +478,15 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options): Promis
         tileContent.applyMatrix4(rotateX); // convert from GLTF Y-up to Z-up
         tileContent.traverse((object) => {
           if (object instanceof Mesh) {
-            const originalMap = (object.material as MeshStandardMaterial).map;
+            const originalMaterial = (object.material as MeshStandardMaterial);
+            const originalMap = originalMaterial.map;
+
             if (options.material) {
               object.material = options.material.clone();
+              originalMaterial.dispose();
             } else if (options.shading == Shading.FlatTexture) {
               object.material = unlitMaterial.clone();
+              originalMaterial.dispose();
             }
 
             if (options.shading != Shading.ShadedNoTexture) {
@@ -492,6 +496,7 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options): Promis
                 object.material.map = originalMap;
               }
             } else {
+              originalMap.dispose();
               object.material.map = null;
             }
 

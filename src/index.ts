@@ -23,6 +23,7 @@ import {
   Camera,
   PerspectiveCamera,
   WebGLRenderer,
+  Texture
 } from 'three';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -152,6 +153,7 @@ class Loader3DTiles {
       const ktx2Loader = new KTX2Loader();
       ktx2Loader.detectSupport(props.renderer);
       ktx2Loader.setTranscoderPath(options.basisTranscoderPath + '/');
+      ktx2Loader.setWorkerLimit(1);
 
       gltfLoader.setKTX2Loader(ktx2Loader);
     }
@@ -476,11 +478,15 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options): Promis
         tileContent.applyMatrix4(rotateX); // convert from GLTF Y-up to Z-up
         tileContent.traverse((object) => {
           if (object instanceof Mesh) {
-            const originalMap = (object.material as MeshStandardMaterial).map;
+            const originalMaterial = (object.material as MeshStandardMaterial);
+            const originalMap = originalMaterial.map;
+
             if (options.material) {
               object.material = options.material.clone();
+              originalMaterial.dispose();
             } else if (options.shading == Shading.FlatTexture) {
               object.material = unlitMaterial.clone();
+              originalMaterial.dispose();
             }
 
             if (options.shading != Shading.ShadedNoTexture) {
@@ -490,6 +496,7 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options): Promis
                 object.material.map = originalMap;
               }
             } else {
+              originalMap.dispose();
               object.material.map = null;
             }
 
@@ -564,10 +571,14 @@ function disposeNode(node) {
       object.geometry.dispose();
 
       if (object.material.isMaterial) {
+        ((object.material as ShaderMaterial).uniforms.map.value as Texture)?.dispose();
         object.material.dispose();
       } else {
         // an array of materials
-        for (const material of object.material) material.dispose();
+        for (const material of object.material) {
+         ((material as ShaderMaterial).uniforms.map.value as Texture)?.dispose();
+          material.dispose();
+        } 
       }
     }
   });

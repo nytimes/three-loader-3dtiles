@@ -11,6 +11,7 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
+      "@math.gl/culling": ["../../../node_modules/@math.gl/culling/src/index.js"],
       "three-loader-3dtiles": ["../../../dist/three-loader-3dtiles.d.ts"]
     }
   },

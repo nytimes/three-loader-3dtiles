@@ -1,21 +1,26 @@
 import { Loader3DTiles } from 'three-loader-3dtiles'
-
-console.log(Loader3DTiles);
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import {
   Scene,
   PerspectiveCamera,
+  Euler,
   WebGLRenderer,
   Clock
 } from 'three'
 
 const scene = new Scene()
-const camera = new PerspectiveCamera()
+const camera = new PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
+camera.position.y = 5;
+
 const renderer = new WebGLRenderer()
 const clock = new Clock()
 
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
+
+const controls = new OrbitControls( camera, renderer.domElement);
+controls.update();
 
 let tilesRuntime = null;
 
@@ -31,12 +36,14 @@ async function loadTileset() {
   }
   )
   const {model, runtime} = result
+  model.rotation.copy(new Euler(-90 * Math.PI / 180, 0, 0));
   tilesRuntime = runtime
   scene.add(model)
 }
 
 function render() {
   const dt = clock.getDelta()
+  controls.update();
   if (tilesRuntime) {
     tilesRuntime.update(dt, renderer, camera)
   }

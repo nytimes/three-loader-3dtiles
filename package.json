@@ -22,7 +22,7 @@
   "scripts": {
     "build": "rollup -c",
     "watch": "rollup -w -c",
-    "dev": "concurrently \"npm run watch\"  \"http-server -c-1 -p 8000\"",
+    "dev": "concurrently \"npm run watch\"  \"http-server -c-1 -p 5000 -a 0.0.0.0 -S\"",
     "aframe-watcher": "npx aframe-watcher examples/aframe/**/*.html",
     "build:types": "tsc --declaration --emitDeclarationOnly --declarationMap --declarationDir lib/",
     "api:extract": "api-extractor run --local --verbose",

@@ -169,6 +169,11 @@ AFRAME.registerComponent('3d-tiles', {
     this.el.sceneEl.addEventListener('exit-vr', (e) => { 
       this.camera = this.originalCamera;
     }) 
+    if (THREE.Cache.enabled) {
+      console.warn("3D Tiles loader cannot work with THREE.Cache, disabling.")
+      THREE.Cache.enabled = false;
+    }
+
   },
   update: function() {
     if (this.runtime) {
@@ -178,9 +183,6 @@ AFRAME.registerComponent('3d-tiles', {
   },
   tick: function(t,dt) {
     if (this.runtime) {
-      if (!this.camera) {
-        console.log("Camera lost");
-      }
       this.runtime.update(dt, this.el.sceneEl.renderer, this.camera);
     }
   },

@@ -1,6 +1,6 @@
 {
   "name": "three-loader-3dtiles",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "A 3D Tiles loader for Three.js",
   "main": "dist/three-loader-3dtiles.esm.min.js",
   "module": "dist/three-loader-3dtiles.esm.min.js",

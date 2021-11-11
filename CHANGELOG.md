@@ -1,5 +1,8 @@
 ## v1.0
 
+### v1.0.8
+Better disposal of materials and textures.
+
 ### v1.0.7
 Set tile transform by the root object3d's transform. Update transforms by default.
 

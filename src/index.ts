@@ -429,6 +429,11 @@ class Loader3DTiles {
               lastRootTransform.copy(root.matrixWorld);
               threeMat = resetTransform.clone();
               threeMat.premultiply(lastRootTransform);
+              
+              const rootCenter = new Vector3().setFromMatrixPosition(lastRootTransform);
+              pointcloudUniforms.rootCenter.value.copy(rootCenter);
+              pointcloudUniforms.rootNormal.value.copy(new Vector3(0, 0, 1).applyMatrix4(lastRootTransform).normalize());
+
               modelMatrix = new MathGLMatrix4(threeMat.toArray());
               tileset.modelMatrix = modelMatrix;
             }

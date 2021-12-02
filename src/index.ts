@@ -477,7 +477,7 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options): Promis
     const rotateX = new Matrix4().makeRotationAxis(new Vector3(1, 0, 0), Math.PI / 2);
     gltfLoader.parse(
       options.loadersGlGltf ? tile.content.gltf : tile.content.gltfArrayBuffer,
-      '',
+      tile.contentUrl ? tile.contentUrl.substr(0,tile.contentUrl.lastIndexOf('/') + 1) : '',
       (gltf) => {
         const tileContent = gltf.scenes[0].children[0] as Object3D;
         tileContent.applyMatrix4(rotateX); // convert from GLTF Y-up to Z-up
@@ -501,7 +501,9 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options): Promis
                 object.material.map = originalMap;
               }
             } else {
-              originalMap.dispose();
+              if (originalMap) {
+                originalMap.dispose();
+              }
               object.material.map = null;
             }
 

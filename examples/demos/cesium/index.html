@@ -69,12 +69,12 @@
   <script type="importmap-shim">
     {
       "imports": {
-        "three": "https://cdn.skypack.dev/three@0.129.0",
-        "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/loaders/GLTFLoader",
-        "three/examples/jsm/loaders/DRACOLoader.js": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/loaders/DRACOLoader",
-        "three/examples/jsm/loaders/KTX2Loader.js": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/loaders/KTX2Loader",
-        "three/examples/jsm/loaders/OrbitControls": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/controls/OrbitControls",
-        "three/examples/jsm/libs/stats.module.js": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/libs/stats.module",
+        "three": "https://cdn.skypack.dev/three@0.133.0",
+        "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.skypack.dev/three@v0.133.0/examples/jsm/loaders/GLTFLoader",
+        "three/examples/jsm/loaders/DRACOLoader.js": "https://cdn.skypack.dev/three@v0.133.0/examples/jsm/loaders/DRACOLoader",
+        "three/examples/jsm/loaders/KTX2Loader.js": "https://cdn.skypack.dev/three@v0.133.0/examples/jsm/loaders/KTX2Loader",
+        "three/examples/jsm/loaders/OrbitControls": "https://cdn.skypack.dev/three@v0.133.0/examples/jsm/controls/OrbitControls",
+        "three/examples/jsm/libs/stats.module.js": "https://cdn.skypack.dev/three@v0.133.0/examples/jsm/libs/stats.module",
         "@probe.gl/stats" : "https://cdn.skypack.dev/@probe.gl/stats@3.3.1",
         "@probe.gl/stats-widget" : "https://unpkg.com/@probe.gl/stats-widget@3.3.1/dist/es6",
         "three-loader-3dtiles" : "../../../dist/three-loader-3dtiles.esm.min.js"
@@ -139,19 +139,16 @@
           renderer: renderer,
           options: {
             cesiumIONToken: ION_TOKEN, 
-            dracoDecoderPath: 'https://unpkg.com/three@0.129.0/examples/js/libs/draco',
+            dracoDecoderPath: 'https://unpkg.com/three@0.133.0/examples/js/libs/draco',
             pointCloudColoring: PointCloudColoring.RGB,
-            maximumScreenSpaceError: 6,
-            initialTransform:
-              new Matrix4()
-                .makeRotationFromEuler(new Euler(-Math.PI / 2, 0, 0))
-                .setPosition(0, 0, 0)
-            
+            maximumScreenSpaceError: 6
           }
         }
       );
 
       const {model, runtime} = result;
+      model.rotation.set(-Math.PI / 2, 0, 0);
+
       tilesRuntime = runtime;
       scene.add(model);
 

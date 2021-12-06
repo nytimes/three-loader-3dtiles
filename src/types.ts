@@ -3,7 +3,6 @@ import { Tileset3D } from '@loaders.gl/tiles';
 import {
   Object3D,
   Vector3,
-  Matrix4,
   Material,
   Shader,
   WebGLRenderer,
@@ -42,8 +41,6 @@ interface LoaderProps {
 interface LoaderOptions {
   /** A Cesium ION access token when loading tilesets from Cesium ION. */
   cesiumIONToken?: string;
-  /** The initial transformation of the tileset -  Default: `Matrix4.Identity`. */
-  initialTransform?: Matrix4;
   /** Whether to check if the tileset was transformed, set to `true` if the model is changes position in runtime. Default: `true` */
   updateTransforms?: boolean;
   /** Interval in seconds for the traverser to check in an update is needed - Default: `0.1`. */
@@ -74,8 +71,6 @@ interface LoaderOptions {
   wireframe?: boolean;
   /** When viewing b3dm (mesh) tiles, compute the vertex normals - Default: `false`. */
   computeNormals?: boolean;
-  /** When viewing b3dm (mesh) tiles, use the loaders.gl GLTFLoader rather than the Three.hs GLTFLoader - Default: `true`. */
-  loadersGlGltf?: boolean;
   /** When viewing Point Cloud tiles, how should the points be colored ({@link PointCloudColoring}) - Default: `PointCloudColoring.White` */
   pointCloudColoring?: PointCloudColoring;
   /** Debug mode: Show tile bounding boxes. Make sure to add the boxes to the scene from {@link Runtime.getTileBoxes} - Default: `false` */

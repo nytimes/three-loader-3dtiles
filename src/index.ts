@@ -27,7 +27,6 @@ import {
 } from 'three';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { GLTFLoader as RDGLTFLoader } from './RDGLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
 
@@ -44,7 +43,6 @@ const grayscale = Gradients.GRAYSCALE;
 const grayscaleTexture = typeof document != 'undefined' ? Util.generateGradientTexture(grayscale) : null;
 
 const defaultOptions: LoaderOptions = {
-  initialTransform: new Matrix4(),
   throttleRequests: true,
   maxRequests: 64,
   updateInterval: 0.1,
@@ -63,8 +61,7 @@ const defaultOptions: LoaderOptions = {
   dracoDecoderPath: null,
   material: null,
   computeNormals: false,
-  shaderCallback: null,
-  loadersGlGltf: true
+  shaderCallback: null
 };
 
 /** 3D Tiles Loader */
@@ -110,27 +107,6 @@ class Loader3DTiles {
       //root.add(tileBoxes)
     }
 
-    // transformations
-    let threeMat = new Matrix4();
-
-    // TODO: This handles the situation where not the root tile is transformed, but one child below the root. There should be a more generic way to handle this...
-    const tileTrasnform = tilesetJson.root.transform
-      ? new Matrix4().fromArray(tilesetJson.root.transform)
-      : new Matrix4();
-    if (tilesetJson.root.children.length == 1 && tilesetJson.root.children[0].transform) {
-      const childTransform = new Matrix4().fromArray(tilesetJson.root.children[0].transform);
-      tileTrasnform.multiply(childTransform);
-    }
-
-    // TODO: Originally the tileset is moved by loaders.gl to its WGS84 matching coordiate. In here, we negate that and bring it back to 0,0,0 with an optional initial transform. If we want to combine the tileset with other geographic layers we might need to go back to those original coordiates
-    threeMat.copy(tileTrasnform).invert();
-
-    const resetTransform = threeMat.clone();
-
-    threeMat.premultiply(options.initialTransform);
-
-    let modelMatrix = new MathGLMatrix4(threeMat.toArray());
-
     const pointcloudUniforms = {
       pointSize: { type: 'f', value: 1.0 },
       gradient: { type: 't', value: gradientTexture },
@@ -147,7 +123,7 @@ class Loader3DTiles {
     let cameraReference = null;
     let rendererReference = null;
 
-    const gltfLoader = options.loadersGlGltf ? new RDGLTFLoader() : new GLTFLoader();
+    const gltfLoader = new GLTFLoader();
 
     if (options.basisTranscoderPath) {
       const ktx2Loader = new KTX2Loader();
@@ -158,7 +134,7 @@ class Loader3DTiles {
       gltfLoader.setKTX2Loader(ktx2Loader);
     }
 
-    if (!options.loadersGlGltf && options.dracoDecoderPath) {
+    if (options.dracoDecoderPath) {
       const dracoLoader = new DRACOLoader();
       dracoLoader.setDecoderPath(options.dracoDecoderPath + '/');
       dracoLoader.setWorkerLimit(options.maxConcurrency);
@@ -172,7 +148,6 @@ class Loader3DTiles {
     });
 
     const tileOptions = {
-      modelMatrix: modelMatrix,
       maximumMemoryUsage: options.maximumMemoryUsage,
       maximumScreenSpaceError: options.maximumScreenSpaceError,
       viewDistanceScale: options.viewDistanceScale,
@@ -229,19 +204,39 @@ class Loader3DTiles {
           loadImages: false,
         },
         '3d-tiles': {
-          loadGLTF: options.loadersGlGltf,
+          loadGLTF: false
         },
       },
     });
+    //
+    // transformations
+    let threeMat = new Matrix4();
+
+    
+    const tileTrasnform = tileset.root.transform
+      ? new Matrix4().fromArray(tileset.root.transform)
+      : new Matrix4();
+    if (tilesetJson.root.children.length == 1 && tileset.root.children[0].transform) {
+      const childTransform = new Matrix4().fromArray(tileset.root.children[0].transform);
+      tileTrasnform.multiply(childTransform);
+    }
+
+
+    // TODO: Originally the tileset is moved by loaders.gl to its WGS84 matching coordiate. In here, we negate that and bring it back to 0,0,0 with an optional initial transform. If we want to combine the tileset with other geographic layers we might need to go back to those original coordiates
+    threeMat.copy(tileTrasnform).invert();
+
+    const resetTransform = threeMat.clone();
+
+    let modelMatrix = new MathGLMatrix4(threeMat.toArray());
+    tileset.modelMatrix = modelMatrix;
+
 
     let disposeFlag = false;
 
-    const rootCenter = new Vector3().setFromMatrixPosition(options.initialTransform);
+    const rootCenter = new Vector3();
 
     pointcloudUniforms.rootCenter.value.copy(rootCenter);
-    pointcloudUniforms.rootNormal.value.copy(new Vector3(0, 0, 1).applyMatrix4(options.initialTransform).normalize());
-
-    root.applyMatrix4(options.initialTransform);
+    pointcloudUniforms.rootNormal.value.copy(new Vector3(0, 0, 1).normalize());
 
     // Extra stats
     tileset.stats.get('Loader concurrency').count = options.maxConcurrency
@@ -321,6 +316,7 @@ class Loader3DTiles {
       }
       while (unloadQueue.length > 0) {
         const tile = unloadQueue.pop();
+        console.log("Dispose", tile);
         if (renderMap[tile.id] && tile.contentState == TILE_CONTENT_STATE.UNLOADED) {
           root.remove(renderMap[tile.id]);
           disposeNode(renderMap[tile.id]);
@@ -475,12 +471,16 @@ class Loader3DTiles {
 async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options): Promise<Object3D> {
   return new Promise((resolve, reject) => {
     const rotateX = new Matrix4().makeRotationAxis(new Vector3(1, 0, 0), Math.PI / 2);
+    const shouldRotate = tile.tileset.asset?.gltfUpAxis !== "Z";
+
     gltfLoader.parse(
-      options.loadersGlGltf ? tile.content.gltf : tile.content.gltfArrayBuffer,
+      tile.content.gltfArrayBuffer,
       tile.contentUrl ? tile.contentUrl.substr(0,tile.contentUrl.lastIndexOf('/') + 1) : '',
       (gltf) => {
-        const tileContent = gltf.scenes[0].children[0] as Object3D;
-        tileContent.applyMatrix4(rotateX); // convert from GLTF Y-up to Z-up
+        const tileContent = gltf.scenes[0] as Group;
+        if (shouldRotate) {
+          tileContent.applyMatrix4(rotateX); // convert from GLTF Y-up to Z-up
+        }
         tileContent.traverse((object) => {
           if (object instanceof Mesh) {
             const originalMaterial = (object.material as MeshStandardMaterial);
@@ -572,19 +572,29 @@ function createPointNodes(tile, pointcloudUniforms) {
   return tileContent;
 }
 
+
+function disposeMaterial(material) {
+
+  if ((material as ShaderMaterial)?.uniforms?.map) {
+    ((material as ShaderMaterial)?.uniforms?.map.value as Texture)?.dispose();
+  }
+  else if (material.map) {
+    (material.map as Texture)?.dispose();
+  }
+  material.dispose();
+}
+
 function disposeNode(node) {
   node.traverse((object) => {
     if (object.isMesh) {
       object.geometry.dispose();
 
       if (object.material.isMaterial) {
-        ((object.material as ShaderMaterial).uniforms.map.value as Texture)?.dispose();
-        object.material.dispose();
+        disposeMaterial(object.material);   
       } else {
         // an array of materials
         for (const material of object.material) {
-         ((material as ShaderMaterial).uniforms.map.value as Texture)?.dispose();
-          material.dispose();
+          disposeMaterial(material);
         } 
       }
     }

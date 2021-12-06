@@ -316,7 +316,6 @@ class Loader3DTiles {
       }
       while (unloadQueue.length > 0) {
         const tile = unloadQueue.pop();
-        console.log("Dispose", tile);
         if (renderMap[tile.id] && tile.contentState == TILE_CONTENT_STATE.UNLOADED) {
           root.remove(renderMap[tile.id]);
           disposeNode(renderMap[tile.id]);

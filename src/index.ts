@@ -159,12 +159,12 @@ class Loader3DTiles {
         let tileContent = null;
         switch (tile.type) {
           case TILE_TYPE.POINTCLOUD: {
-            tileContent = createPointNodes(tile, pointcloudUniforms);
+            tileContent = createPointNodes(tile, pointcloudUniforms, threeMat);
             break;
           }
           case TILE_TYPE.SCENEGRAPH:
           case TILE_TYPE.MESH: {
-            tileContent = await createGLTFNodes(gltfLoader, tile, unlitMaterial, options);
+            tileContent = await createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTransformInverse);
             break;
           }
           default:
@@ -212,7 +212,6 @@ class Loader3DTiles {
     // transformations
     let threeMat = new Matrix4();
 
-    
     const tileTrasnform = tileset.root.transform
       ? new Matrix4().fromArray(tileset.root.transform)
       : new Matrix4();
@@ -220,6 +219,9 @@ class Loader3DTiles {
       const childTransform = new Matrix4().fromArray(tileset.root.children[0].transform);
       tileTrasnform.multiply(childTransform);
     }
+
+    // TODO: Handle region type bounding volumes
+    //tileTrasnform.setPosition(new Vector3(...tileset.root.boundingVolume.center));
 
 
     // TODO: Originally the tileset is moved by loaders.gl to its WGS84 matching coordiate. In here, we negate that and bring it back to 0,0,0 with an optional initial transform. If we want to combine the tileset with other geographic layers we might need to go back to those original coordiates
@@ -253,6 +255,7 @@ class Loader3DTiles {
     let sseDenominator = null;
 
     const lastRootTransform:Matrix4 = new Matrix4().copy(root.matrixWorld)
+    const rootTransformInverse = new Matrix4().copy(lastRootTransform).invert();
 
     function tilesetUpdate(tileset, renderMap, renderer, camera) {
       if (disposeFlag) {
@@ -429,6 +432,7 @@ class Loader3DTiles {
               pointcloudUniforms.rootCenter.value.copy(rootCenter);
               pointcloudUniforms.rootNormal.value.copy(new Vector3(0, 0, 1).applyMatrix4(lastRootTransform).normalize());
 
+              rootTransformInverse.copy(lastRootTransform).invert(); 
               modelMatrix = new MathGLMatrix4(threeMat.toArray());
               tileset.modelMatrix = modelMatrix;
             }
@@ -467,19 +471,25 @@ class Loader3DTiles {
   }
 }
 
-async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options): Promise<Object3D> {
+async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTransformInverse): Promise<Object3D> {
   return new Promise((resolve, reject) => {
     const rotateX = new Matrix4().makeRotationAxis(new Vector3(1, 0, 0), Math.PI / 2);
     const shouldRotate = tile.tileset.asset?.gltfUpAxis !== "Z";
+
+    // The computed trasnform already contains the root's transform, so we have to invert it
+    const contentTransform = new Matrix4().fromArray(tile.computedTransform).premultiply(rootTransformInverse);
+
+    if (shouldRotate) {
+      contentTransform.multiply(rotateX); // convert from GLTF Y-up to Z-up
+    }
 
     gltfLoader.parse(
       tile.content.gltfArrayBuffer,
       tile.contentUrl ? tile.contentUrl.substr(0,tile.contentUrl.lastIndexOf('/') + 1) : '',
       (gltf) => {
         const tileContent = gltf.scenes[0] as Group;
-        if (shouldRotate) {
-          tileContent.applyMatrix4(rotateX); // convert from GLTF Y-up to Z-up
-        }
+        tileContent.applyMatrix4(contentTransform); 
+
         tileContent.traverse((object) => {
           if (object instanceof Mesh) {
             const originalMaterial = (object.material as MeshStandardMaterial);
@@ -524,7 +534,7 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options): Promis
     );
   });
 }
-function createPointNodes(tile, pointcloudUniforms) {
+function createPointNodes(tile, pointcloudUniforms, threeMat) {
   const d = {
     rtc_center: tile.content.rtcCenter, // eslint-disable-line camelcase
     points: tile.content.attributes.positions,
@@ -566,7 +576,7 @@ function createPointNodes(tile, pointcloudUniforms) {
   const tileContent = new Points(geometry, pointcloudMaterial);
   if (d.rtc_center) {
     const c = d.rtc_center;
-    tileContent.applyMatrix4(new Matrix4().makeTranslation(c[0], c[1], c[2]));
+    tileContent.applyMatrix4(new Matrix4().makeTranslation(c[0], c[1], c[2]).multiply(threeMat));
   }
   return tileContent;
 }

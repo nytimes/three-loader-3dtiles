@@ -105,7 +105,8 @@ function loadersPlaneToMesh(plane: MathGLPlane): Group {
 function loadersBoundingBoxToMesh(tile: Tile3D): LineSegments {
   // Create a basic rectangle geometry from math.gl half-axes
 
-  const box = tile.boundingVolume;
+  const { boundingVolume } = tile;
+
   let redColor = 0;
   if (tile.content) {
     redColor = Math.min(tile.content.byteLength / 500000, 1.0);
@@ -114,12 +115,18 @@ function loadersBoundingBoxToMesh(tile: Tile3D): LineSegments {
   const boxColor = new Color(redColor, 1.0, 0.0);
 
   const boxGeometry = new BoxGeometry(1, 1, 1);
-  const boxRotate = getMatrix4FromHalfAxes(box.halfAxes);
+  const boxTransform = new Matrix4();
 
-  boxGeometry.applyMatrix4(boxRotate);
+  if (boundingVolume.halfAxes) {
+    boxTransform.copy(getMatrix4FromHalfAxes(boundingVolume.halfAxes));
+  } else if (boundingVolume.radius) {
+    boxGeometry.scale(boundingVolume.radius * 2, boundingVolume.radius * 2, boundingVolume.radius * 2);    
+  }
+
+  boxGeometry.applyMatrix4(boxTransform);
   const edges = new EdgesGeometry(boxGeometry);
   const dispPlane = new LineSegments(edges, new LineBasicMaterial({ color: boxColor }));
-  dispPlane.position.copy(new Vector3(...box.center));
+  dispPlane.position.copy(new Vector3(...boundingVolume.center));
   return dispPlane;
 }
 

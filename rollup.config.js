@@ -13,7 +13,7 @@ const sourcemap = true;
 
 // If developing along with loaders.gl, use the source instead of the package from npm
 
-const commonPlugins = () => {
+const commonPlugins = (env) => {
   const plugins = [
     externals(),
     alias({
@@ -34,8 +34,7 @@ const commonPlugins = () => {
       extensions: ['.js', '.ts'],
       browser: true
     }),
-    // TODO: Internal RDGLTFLoader should be converted to typescript
-    eslint({filterExclude: ['src/RDGLTFLoader.js', 'node_modules/**']}),
+    eslint({filterExclude: ['node_modules/**']}),
     typescript({
       tsconfigDefaults: {
         compilerOptions: {
@@ -53,7 +52,7 @@ const commonPlugins = () => {
       }
     })
   ];
-  if (NODE_ENV === 'production') {
+  if (env === 'production') {
     plugins.push(terser());
   }
   return plugins;
@@ -69,10 +68,10 @@ const addSyntheticNamedExportsToSkippedNodeImports = () => ({
   }
 });
 
-const umdConfig = {
+const umdConfig = (env) => ({
   input,
   output: {
-    file: `dist/three-loader-3dtiles${NODE_ENV == 'production' ? '.min' : ''}.js`,
+    file: `dist/three-loader-3dtiles${env == 'production' ? '.min' : ''}.js`,
     format: 'umd',
     name,
     sourcemap,
@@ -89,20 +88,23 @@ const umdConfig = {
   'three/examples/jsm/loaders/DRACOLoader.js',
   'three/examples/jsm/loaders/KTX2Loader.js'
   ],
-  plugins: [...commonPlugins()],
-}
+  plugins: [...commonPlugins(env)],
+})
 
-const esmConfig = {
+const esmConfig = (env) => ({
   input,
   output: {
-    file: `dist/three-loader-3dtiles.esm${NODE_ENV == 'production' ? '.min' : ''}.js`,
+    file: `dist/three-loader-3dtiles.esm${env == 'production' ? '.min' : ''}.js`,
     format: 'es',
     name,
     sourcemap,
   },
-  plugins: [...commonPlugins()]
-}
+  plugins: [...commonPlugins(env)]
+})
 
-const config = [esmConfig, umdConfig];
+const config = [esmConfig('development'), umdConfig('development')];
+if (NODE_ENV === 'production') {
+  config.push(esmConfig('production'), umdConfig('production'))
+}
 
 export default config;

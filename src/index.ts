@@ -159,7 +159,7 @@ class Loader3DTiles {
         let tileContent = null;
         switch (tile.type) {
           case TILE_TYPE.POINTCLOUD: {
-            tileContent = createPointNodes(tile, pointcloudUniforms, threeMat);
+            tileContent = createPointNodes(tile, pointcloudUniforms);
             break;
           }
           case TILE_TYPE.SCENEGRAPH:
@@ -231,7 +231,6 @@ class Loader3DTiles {
 
     let modelMatrix = new MathGLMatrix4(threeMat.toArray());
     tileset.modelMatrix = modelMatrix;
-
 
     let disposeFlag = false;
 
@@ -534,7 +533,7 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTra
     );
   });
 }
-function createPointNodes(tile, pointcloudUniforms, threeMat) {
+function createPointNodes(tile, pointcloudUniforms) {
   const d = {
     rtc_center: tile.content.rtcCenter, // eslint-disable-line camelcase
     points: tile.content.attributes.positions,
@@ -576,7 +575,9 @@ function createPointNodes(tile, pointcloudUniforms, threeMat) {
   const tileContent = new Points(geometry, pointcloudMaterial);
   if (d.rtc_center) {
     const c = d.rtc_center;
-    tileContent.applyMatrix4(new Matrix4().makeTranslation(c[0], c[1], c[2]).multiply(threeMat));
+
+    // TODO: In the case of entwine/region bounding volume the modelMatrix also needs to be applied?
+    tileContent.applyMatrix4(new Matrix4().makeTranslation(c[0], c[1], c[2]));//.multiply(threeMat));
   }
   return tileContent;
 }

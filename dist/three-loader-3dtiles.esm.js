@@ -9575,7 +9575,7 @@ function createBoundingVolume(boundingVolumeHeader, transform, result) {
     const southEast = Ellipsoid.WGS84.cartographicToCartesian([degrees$1(east), degrees$1(south), maxHeight], scratchSouthEast);
     const centerInCartesian = new Vector3$1().addVectors(northWest, southEast).multiplyScalar(0.5);
     const radius = new Vector3$1().subVectors(northWest, southEast).len() / 2.0;
-    return createSphere([centerInCartesian[0], centerInCartesian[1], centerInCartesian[2], radius],transform);
+    return createSphere([centerInCartesian[0], centerInCartesian[1], centerInCartesian[2], radius], new Matrix4$1());
   }
 
   if (boundingVolumeHeader.sphere) {
@@ -17262,15 +17262,23 @@ class Loader3DTiles {
             //
             // transformations
             let threeMat = new Matrix4$2();
-            const tileTrasnform = tileset.root.transform
-                ? new Matrix4$2().fromArray(tileset.root.transform)
-                : new Matrix4$2();
-            if (tilesetJson.root.children.length == 1 && tileset.root.children[0].transform) {
-                const childTransform = new Matrix4$2().fromArray(tileset.root.children[0].transform);
-                tileTrasnform.multiply(childTransform);
+            const tileTrasnform = new Matrix4$2();
+            if (tileset.root.header.transform) {
+                tileTrasnform.copy(new Matrix4$2().fromArray(tileset.root.transform));
+                if (tilesetJson.root.children.length == 1 && tileset.root.children[0].transform) {
+                    const childTransform = new Matrix4$2().fromArray(tileset.root.children[0].transform);
+                    tileTrasnform.multiply(childTransform);
+                }
             }
-            // TODO: Handle region type bounding volumes
-            //tileTrasnform.setPosition(new Vector3(...tileset.root.boundingVolume.center));
+            else {
+                if (tileset.root.header.boundingVolume.region) {
+                    // TODO: Handle region type bounding volumes
+                    console.warn("Cannot apply a model matrix to bounding volumes of type region. Tileset stays in place.");
+                }
+                else {
+                    tileTrasnform.setPosition(new Vector3$2(...tileset.root.boundingVolume.center));
+                }
+            }
             // TODO: Originally the tileset is moved by loaders.gl to its WGS84 matching coordiate. In here, we negate that and bring it back to 0,0,0 with an optional initial transform. If we want to combine the tileset with other geographic layers we might need to go back to those original coordiates
             threeMat.copy(tileTrasnform).invert();
             const resetTransform = threeMat.clone();

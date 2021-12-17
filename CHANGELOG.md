@@ -1,6 +1,5 @@
 ## v1.0
 
-
 ### v1.0.9
 Orientation bug fix for point cloud elevation shader.
 

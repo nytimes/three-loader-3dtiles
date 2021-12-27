@@ -9,7 +9,6 @@
 [Docs](#docs) &mdash;
 [Alternatives](#alternatives)
 
-
 This is a [Three.js](https://threejs.org/) loader module for handling [OGC 3D Tiles](https://www.ogc.org/standards/3DTiles), created by [Cesium](https://github.com/CesiumGS/3d-tiles). It currently supports the two main formats:
 
 1. Batched 3D Model (b3dm) - based on glTF.

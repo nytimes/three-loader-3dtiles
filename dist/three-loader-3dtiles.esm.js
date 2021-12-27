@@ -17317,17 +17317,17 @@ class Loader3DTiles {
             // transformations
             let threeMat = new Matrix4$1();
             const tileTrasnform = new Matrix4$1();
-            if (tileset.root.header.transform) {
-                tileTrasnform.copy(new Matrix4$1().fromArray(tileset.root.transform));
-                if (tileset.root.children.length == 1 && tileset.root.children[0].transform) {
-                    const childTransform = new Matrix4$1().fromArray(tileset.root.children[0].transform);
-                    tileTrasnform.multiply(childTransform);
-                }
+            if (tileset.root.transform) {
+                tileTrasnform.multiply(new Matrix4$1().fromArray(tileset.root.transform));
             }
-            else {
+            if (tileset.root.children.length == 1 && tileset.root.children[0].transform) {
+                const childTransform = new Matrix4$1().fromArray(tileset.root.children[0].transform);
+                tileTrasnform.multiply(childTransform);
+            }
+            if (tileTrasnform.equals(new Matrix4$1().identity()) && tileset.root.header.boundingVolume) {
                 if (tileset.root.header.boundingVolume.region) {
                     // TODO: Handle region type bounding volumes
-                    console.warn("Cannot apply a model matrix to bounding volumes of type region. Tileset stays in place.");
+                    console.warn("Cannot apply a model matrix to bounding volumes of type region. Tileset stays in original geo-coordinates.");
                 }
                 else {
                     tileTrasnform.setPosition(new Vector3$1(...tileset.root.boundingVolume.center));

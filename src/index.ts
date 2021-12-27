@@ -217,7 +217,7 @@ class Loader3DTiles {
     if (tileset.root.header.transform) {
       tileTrasnform.copy(new Matrix4().fromArray(tileset.root.transform));
 
-      if (tilesetJson.root.children.length == 1 && tileset.root.children[0].transform) {
+      if (tileset.root.children.length == 1 && tileset.root.children[0].transform) {
         const childTransform = new Matrix4().fromArray(tileset.root.children[0].transform);
         tileTrasnform.multiply(childTransform);
       }

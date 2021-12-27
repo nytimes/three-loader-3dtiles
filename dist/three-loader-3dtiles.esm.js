@@ -1,4 +1,4 @@
-import { CanvasTexture, LinearFilter, RepeatWrapping, Frustum, Matrix4 as Matrix4$2, Group, PlaneGeometry, Vector3 as Vector3$2, MeshBasicMaterial, DoubleSide, Mesh, ArrowHelper, Color, BoxGeometry, EdgesGeometry, LineSegments, LineBasicMaterial, Vector2 as Vector2$1, ShaderMaterial, BufferGeometry, Float32BufferAttribute, Uint8BufferAttribute, Points } from 'three';
+import { CanvasTexture, LinearFilter, RepeatWrapping, Frustum, Matrix4 as Matrix4$1, Group, PlaneGeometry, Vector3 as Vector3$1, MeshBasicMaterial, DoubleSide, Mesh, ArrowHelper, Color, BoxGeometry, EdgesGeometry, LineSegments, LineBasicMaterial, Vector2 as Vector2$1, ShaderMaterial, BufferGeometry, Float32BufferAttribute, Uint8BufferAttribute, Points } from 'three';
 import { GLTFLoader as GLTFLoader$1 } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
@@ -28,43 +28,36 @@ function __awaiter(thisArg, _arguments, P, generator) {
     });
 }
 
-function assert$9(condition, message) {
+function assert$7(condition, message) {
   if (!condition) {
     throw new Error(message || 'loader assertion failed.');
   }
 }
 
-const globals$3 = {
-  self: typeof self !== 'undefined' && self,
-  window: typeof window !== 'undefined' && window,
-  global: typeof global !== 'undefined' && global,
-  document: typeof document !== 'undefined' && document
-};
-const global_$2 = globals$3.global || globals$3.self || globals$3.window || {};
-const isBrowser$4 = typeof process !== 'object' || String(process) !== '[object process]' || process.browser;
-const matches$2 = typeof process !== 'undefined' && process.version && /v([0-9]*)/.exec(process.version);
-matches$2 && parseFloat(matches$2[1]) || 0;
+const isBrowser$2 = Boolean(typeof process !== 'object' || String(process) !== '[object process]' || process.browser);
+const matches$1 = typeof process !== 'undefined' && process.version && /v([0-9]*)/.exec(process.version);
+matches$1 && parseFloat(matches$1[1]) || 0;
 
-const VERSION$6 = "3.0.10" ;
+const VERSION$8 = "3.1.4" ;
 
-function assert$8(condition, message) {
+function assert$6(condition, message) {
   if (!condition) {
     throw new Error(message || 'loaders.gl assertion failed.');
   }
 }
 
-const globals$2 = {
+const globals$1 = {
   self: typeof self !== 'undefined' && self,
   window: typeof window !== 'undefined' && window,
   global: typeof global !== 'undefined' && global,
   document: typeof document !== 'undefined' && document
 };
-const global_$1 = globals$2.global || globals$2.self || globals$2.window || {};
-const isBrowser$3 = typeof process !== 'object' || String(process) !== '[object process]' || process.browser;
+const global_ = globals$1.global || globals$1.self || globals$1.window || {};
+const isBrowser$1 = typeof process !== 'object' || String(process) !== '[object process]' || process.browser;
 const isWorker = typeof importScripts === 'function';
 const isMobile = typeof window !== 'undefined' && typeof window.orientation !== 'undefined';
-const matches$1 = typeof process !== 'undefined' && process.version && /v([0-9]*)/.exec(process.version);
-matches$1 && parseFloat(matches$1[1]) || 0;
+const matches = typeof process !== 'undefined' && process.version && /v([0-9]*)/.exec(process.version);
+matches && parseFloat(matches[1]) || 0;
 
 function _defineProperty(obj, key, value) {
   if (key in obj) {
@@ -118,14 +111,14 @@ class WorkerJob {
   }
 
   done(value) {
-    assert$8(this.isRunning);
+    assert$6(this.isRunning);
     this.isRunning = false;
 
     this._resolve(value);
   }
 
   error(error) {
-    assert$8(this.isRunning);
+    assert$6(this.isRunning);
     this.isRunning = false;
 
     this._reject(error);
@@ -135,7 +128,7 @@ class WorkerJob {
 
 const workerURLCache = new Map();
 function getLoadableWorkerURL(props) {
-  assert$8(props.source && !props.url || !props.source && props.url);
+  assert$6(props.source && !props.url || !props.source && props.url);
   let workerURL = workerURLCache.get(props.source || props.url);
 
   if (!workerURL) {
@@ -150,7 +143,7 @@ function getLoadableWorkerURL(props) {
     }
   }
 
-  assert$8(workerURL);
+  assert$6(workerURL);
   return workerURL;
 }
 
@@ -171,13 +164,7 @@ function getLoadableWorkerURLFromSource(workerSource) {
 }
 
 function buildScriptSource(workerUrl) {
-  return `\
-try {
-  importScripts('${workerUrl}');
-} catch (error) {
-  console.error(error);
-  throw error;
-}`;
+  return "try {\n  importScripts('".concat(workerUrl, "');\n} catch (error) {\n  console.error(error);\n  throw error;\n}");
 }
 
 function getTransferList(object, recursive = true, transfers) {
@@ -249,7 +236,7 @@ class WorkerThread {
       source,
       url
     } = props;
-    assert$8(source || url);
+    assert$6(source || url);
     this.name = name;
     this.source = source;
     this.url = url;
@@ -278,14 +265,14 @@ class WorkerThread {
 
   _getErrorFromErrorEvent(event) {
     let message = 'Failed to load ';
-    message += `worker ${this.name}. `;
+    message += "worker ".concat(this.name, " from ").concat(this.url, ". ");
 
     if (event.message) {
-      message += `${event.message} in `;
+      message += "".concat(event.message, " in ");
     }
 
     if (event.lineno) {
-      message += `:${event.lineno}:${event.colno}`;
+      message += ":".concat(event.lineno, ":").concat(event.colno);
     }
 
     return new Error(message);
@@ -456,7 +443,7 @@ class WorkerPool {
 
     if (this.count < this._getMaxConcurrency()) {
       this.count++;
-      const name = `${this.name.toLowerCase()} (#${this.count} of ${this.maxConcurrency})`;
+      const name = "".concat(this.name.toLowerCase(), " (#").concat(this.count, " of ").concat(this.maxConcurrency, ")");
       return new WorkerThread({
         name,
         source: this.source,
@@ -556,11 +543,15 @@ _defineProperty(WorkerFarm, "_workerFarm", void 0);
 const NPM_TAG = 'latest';
 function getWorkerURL(worker, options = {}) {
   const workerOptions = options[worker.id] || {};
-  const workerFile = `${worker.id}-worker.js`;
+  const workerFile = "".concat(worker.id, "-worker.js");
   let url = workerOptions.workerUrl;
 
+  if (!url && worker.id === 'compression') {
+    url = options.workerUrl;
+  }
+
   if (options._workerType === 'test') {
-    url = `modules/${worker.module}/dist/${workerFile}`;
+    url = "modules/".concat(worker.module, "/dist/").concat(workerFile);
   }
 
   if (!url) {
@@ -570,16 +561,16 @@ function getWorkerURL(worker, options = {}) {
       version = NPM_TAG;
     }
 
-    const versionTag = version ? `@${version}` : '';
-    url = `https://unpkg.com/@loaders.gl/${worker.module}${versionTag}/dist/${workerFile}`;
+    const versionTag = version ? "@".concat(version) : '';
+    url = "https://unpkg.com/@loaders.gl/".concat(worker.module).concat(versionTag, "/dist/").concat(workerFile);
   }
 
-  assert$8(url);
+  assert$6(url);
   return url;
 }
 
-function validateWorkerVersion(worker, coreVersion = VERSION$6) {
-  assert$8(worker, 'no worker provided');
+function validateWorkerVersion(worker, coreVersion = VERSION$8) {
+  assert$6(worker, 'no worker provided');
   const workerVersion = worker.version;
 
   if (!coreVersion || !workerVersion) {
@@ -589,9 +580,13 @@ function validateWorkerVersion(worker, coreVersion = VERSION$6) {
   return true;
 }
 
-var makeNodeStream = {};
+var ChildProcessProxy = {};
 
-const VERSION$5 = "3.0.10" ;
+var node = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.assign(/*#__PURE__*/Object.create(null), ChildProcessProxy, {
+    'default': ChildProcessProxy
+}));
+
+const VERSION$7 = "3.1.4" ;
 const loadLibraryPromises = {};
 async function loadLibrary(libraryUrl, moduleName = null, options = {}) {
   if (moduleName) {
@@ -612,20 +607,20 @@ function getLibraryUrl(library, moduleName, options) {
     return modules[library];
   }
 
-  if (!isBrowser$3) {
-    return `modules/${moduleName}/dist/libs/${library}`;
+  if (!isBrowser$1) {
+    return "modules/".concat(moduleName, "/dist/libs/").concat(library);
   }
 
   if (options.CDN) {
-    assert$8(options.CDN.startsWith('http'));
-    return `${options.CDN}/${moduleName}@${VERSION$5}/dist/libs/${library}`;
+    assert$6(options.CDN.startsWith('http'));
+    return "".concat(options.CDN, "/").concat(moduleName, "@").concat(VERSION$7, "/dist/libs/").concat(library);
   }
 
   if (isWorker) {
-    return `../src/libs/${library}`;
+    return "../src/libs/".concat(library);
   }
 
-  return `modules/${moduleName}/src/libs/${library}`;
+  return "modules/".concat(moduleName, "/src/libs/").concat(library);
 }
 
 async function loadLibraryFromFile(libraryUrl) {
@@ -634,8 +629,12 @@ async function loadLibraryFromFile(libraryUrl) {
     return await response.arrayBuffer();
   }
 
-  if (!isBrowser$3) {
-    return makeNodeStream.requireFromFile && (await makeNodeStream.requireFromFile(libraryUrl));
+  if (!isBrowser$1) {
+    try {
+      return node && ChildProcessProxy.requireFromFile && (await ChildProcessProxy.requireFromFile(libraryUrl));
+    } catch {
+      return null;
+    }
   }
 
   if (isWorker) {
@@ -648,12 +647,12 @@ async function loadLibraryFromFile(libraryUrl) {
 }
 
 function loadLibraryFromString(scriptSource, id) {
-  if (!isBrowser$3) {
-    return makeNodeStream.requireFromString && makeNodeStream.requireFromString(scriptSource, id);
+  if (!isBrowser$1) {
+    return ChildProcessProxy.requireFromString && ChildProcessProxy.requireFromString(scriptSource, id);
   }
 
   if (isWorker) {
-    eval.call(global_$1, scriptSource);
+    eval.call(global_, scriptSource);
     return null;
   }
 
@@ -702,7 +701,7 @@ async function onMessage(parseOnMainThread, job, type, payload) {
       break;
 
     case 'error':
-      job.error(payload.error);
+      job.error(new Error(payload.error));
       break;
 
     case 'process':
@@ -729,7 +728,7 @@ async function onMessage(parseOnMainThread, job, type, payload) {
       break;
 
     default:
-      console.warn(`parse-with-worker unknown message ${type}`);
+      console.warn("parse-with-worker unknown message ".concat(type));
   }
 }
 
@@ -764,13 +763,25 @@ function parseJSON(string) {
   try {
     return JSON.parse(string);
   } catch (_) {
-    throw new Error(`Failed to parse JSON from data starting with "${getFirstCharacters$1(string)}"`);
+    throw new Error("Failed to parse JSON from data starting with \"".concat(getFirstCharacters$1(string), "\""));
   }
 }
 
+function isBuffer$1(value) {
+  return value && typeof value === 'object' && value.isBuffer;
+}
+function bufferToArrayBuffer(buffer) {
+  if (isBuffer$1(buffer)) {
+    const typedArray = new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.length);
+    return typedArray.slice().buffer;
+  }
+
+  return buffer;
+}
+
 function toArrayBuffer(data) {
-  if (makeNodeStream.toArrayBuffer) {
-    data = makeNodeStream.toArrayBuffer(data);
+  if (isBuffer$1(data)) {
+    return bufferToArrayBuffer(data);
   }
 
   if (data instanceof ArrayBuffer) {
@@ -778,7 +789,11 @@ function toArrayBuffer(data) {
   }
 
   if (ArrayBuffer.isView(data)) {
-    return data.buffer;
+    if (data.byteOffset === 0 && data.byteLength === data.buffer.byteLength) {
+      return data.buffer;
+    }
+
+    return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);
   }
 
   if (typeof data === 'string') {
@@ -831,8 +846,8 @@ function sliceArrayBuffer(arrayBuffer, byteOffset, byteLength) {
 }
 
 function padToNBytes(byteLength, padding) {
-  assert$9(byteLength >= 0);
-  assert$9(padding > 0);
+  assert$7(byteLength >= 0);
+  assert$7(padding > 0);
   return byteLength + (padding - 1) & ~(padding - 1);
 }
 function copyToArray(source, target, targetOffset) {
@@ -877,9 +892,36 @@ function getHiResTimestamp$1() {
 
 class Stat {
   constructor(name, type) {
+    _defineProperty(this, "name", void 0);
+
+    _defineProperty(this, "type", void 0);
+
+    _defineProperty(this, "sampleSize", 1);
+
+    _defineProperty(this, "time", void 0);
+
+    _defineProperty(this, "count", void 0);
+
+    _defineProperty(this, "samples", void 0);
+
+    _defineProperty(this, "lastTiming", void 0);
+
+    _defineProperty(this, "lastSampleTime", void 0);
+
+    _defineProperty(this, "lastSampleCount", void 0);
+
+    _defineProperty(this, "_count", 0);
+
+    _defineProperty(this, "_time", 0);
+
+    _defineProperty(this, "_samples", 0);
+
+    _defineProperty(this, "_startTime", 0);
+
+    _defineProperty(this, "_timerPending", false);
+
     this.name = name;
     this.type = type;
-    this.sampleSize = 1;
     this.reset();
   }
 
@@ -1000,19 +1042,21 @@ class Stat {
 }
 
 class Stats {
-  constructor({
-    id,
-    stats
-  }) {
-    this.id = id;
+  constructor(options) {
+    _defineProperty(this, "id", void 0);
+
+    _defineProperty(this, "stats", {});
+
+    this.id = options.id;
     this.stats = {};
 
-    this._initializeStats(stats);
+    this._initializeStats(options.stats);
 
     Object.seal(this);
   }
 
-  get(name, type = 'count') {
+  get(name) {
+    let type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'count';
     return this._getOrCreate({
       name,
       type
@@ -1050,7 +1094,8 @@ class Stats {
     return table;
   }
 
-  _initializeStats(stats = []) {
+  _initializeStats() {
+    let stats = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
     stats.forEach(stat => this._getOrCreate(stat));
   }
 
@@ -1221,11 +1266,6 @@ class RequestScheduler {
 
 }
 
-function dirname(url) {
-  const slashIndex = url && url.lastIndexOf('/');
-  return slashIndex >= 0 ? url.substr(0, slashIndex) : '';
-}
-
 let pathPrefix = '';
 const fileAliases = {};
 function resolvePath(filename) {
@@ -1237,10 +1277,19 @@ function resolvePath(filename) {
   }
 
   if (!filename.startsWith('http://') && !filename.startsWith('https://')) {
-    filename = `${pathPrefix}${filename}`;
+    filename = "".concat(pathPrefix).concat(filename);
   }
 
   return filename;
+}
+
+function filename(url) {
+  const slashIndex = url && url.lastIndexOf('/');
+  return slashIndex >= 0 ? url.substr(slashIndex + 1) : '';
+}
+function dirname(url) {
+  const slashIndex = url && url.lastIndexOf('/');
+  return slashIndex >= 0 ? url.substr(0, slashIndex) : '';
 }
 
 const isBoolean = x => typeof x === 'boolean';
@@ -1253,8 +1302,8 @@ const isIterable = x => x && typeof x[Symbol.iterator] === 'function';
 const isAsyncIterable = x => x && typeof x[Symbol.asyncIterator] === 'function';
 const isResponse = x => typeof Response !== 'undefined' && x instanceof Response || x && x.arrayBuffer && x.text && x.json;
 const isBlob = x => typeof Blob !== 'undefined' && x instanceof Blob;
-const isReadableDOMStream = x => typeof ReadableStream !== 'undefined' && x instanceof ReadableStream || isObject(x) && isFunction(x.tee) && isFunction(x.cancel) && isFunction(x.getReader);
 const isBuffer = x => x && typeof x === 'object' && x.isBuffer;
+const isReadableDOMStream = x => typeof ReadableStream !== 'undefined' && x instanceof ReadableStream || isObject(x) && isFunction(x.tee) && isFunction(x.cancel) && isFunction(x.getReader);
 const isReadableNodeStream = x => isObject(x) && isFunction(x.read) && isFunction(x.pipe) && isBoolean(x.readable);
 const isReadableStream = x => isReadableDOMStream(x) || isReadableNodeStream(x);
 
@@ -1384,18 +1433,18 @@ async function checkResponse(response) {
 }
 
 async function getResponseError(response) {
-  let message = `Failed to fetch resource ${response.url} (${response.status}): `;
+  let message = "Failed to fetch resource ".concat(response.url, " (").concat(response.status, "): ");
 
   try {
     const contentType = response.headers.get('Content-Type');
     let text = response.statusText;
 
     if (contentType.includes('application/json')) {
-      text += ` ${await response.text()}`;
+      text += " ".concat(await response.text());
     }
 
     message += text;
-    message = message.length > 60 ? `${message.slice(60)}...` : message;
+    message = message.length > 60 ? "".concat(message.slice(60), "...") : message;
   } catch (error) {}
 
   return message;
@@ -1405,7 +1454,7 @@ async function getInitialDataUrl(resource) {
   const INITIAL_DATA_LENGTH = 5;
 
   if (typeof resource === 'string') {
-    return `data:,${resource.slice(0, INITIAL_DATA_LENGTH)}`;
+    return "data:,".concat(resource.slice(0, INITIAL_DATA_LENGTH));
   }
 
   if (resource instanceof Blob) {
@@ -1426,7 +1475,7 @@ async function getInitialDataUrl(resource) {
   if (resource instanceof ArrayBuffer) {
     const slice = resource.slice(0, INITIAL_DATA_LENGTH);
     const base64 = arrayBufferToBase64(slice);
-    return `data:base64,${base64}`;
+    return "data:base64,".concat(base64);
   }
 
   return null;
@@ -1477,23 +1526,23 @@ function isElectron(mockUserAgent) {
   return false;
 }
 
-function isBrowser$2() {
+function isBrowser() {
   const isNode = typeof process === 'object' && String(process) === '[object process]' && !process.browser;
   return !isNode || isElectron();
 }
 
-const globals$1 = {
+const globals = {
   self: typeof self !== 'undefined' && self,
   window: typeof window !== 'undefined' && window,
   global: typeof global !== 'undefined' && global,
   document: typeof document !== 'undefined' && document,
   process: typeof process === 'object' && process
 };
-const window_ = globals$1.window || globals$1.self || globals$1.global;
-const process_ = globals$1.process || {};
+const window_ = globals.window || globals.self || globals.global;
+const process_ = globals.process || {};
 
-const VERSION$4 = typeof __VERSION__ !== 'undefined' ? __VERSION__ : 'untranspiled source';
-const isBrowser$1 = isBrowser$2();
+const VERSION$6 = typeof __VERSION__ !== 'undefined' ? __VERSION__ : 'untranspiled source';
+isBrowser();
 
 function getStorage(type) {
   try {
@@ -1508,7 +1557,16 @@ function getStorage(type) {
 }
 
 class LocalStorage {
-  constructor(id, defaultSettings, type = 'sessionStorage') {
+  constructor(id) {
+    let defaultSettings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    let type = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'sessionStorage';
+
+    _defineProperty(this, "storage", void 0);
+
+    _defineProperty(this, "id", void 0);
+
+    _defineProperty(this, "config", {});
+
     this.storage = getStorage(type);
     this.id = id;
     this.config = {};
@@ -1566,12 +1624,14 @@ function formatTime(ms) {
 
   return formatted;
 }
-function leftPad(string, length = 8) {
+function leftPad(string) {
+  let length = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 8;
   const padLength = Math.max(length - string.length, 0);
   return "".concat(' '.repeat(padLength)).concat(string);
 }
 
-function formatImage(image, message, scale, maxWidth = 600) {
+function formatImage(image, message, scale) {
+  let maxWidth = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 600;
   const imageUrl = image.src.replace(/\(/g, '%28').replace(/\)/g, '%29');
 
   if (image.width > maxWidth) {
@@ -1584,31 +1644,33 @@ function formatImage(image, message, scale, maxWidth = 600) {
   return ["".concat(message, " %c+"), style];
 }
 
-const COLOR = {
-  BLACK: 30,
-  RED: 31,
-  GREEN: 32,
-  YELLOW: 33,
-  BLUE: 34,
-  MAGENTA: 35,
-  CYAN: 36,
-  WHITE: 37,
-  BRIGHT_BLACK: 90,
-  BRIGHT_RED: 91,
-  BRIGHT_GREEN: 92,
-  BRIGHT_YELLOW: 93,
-  BRIGHT_BLUE: 94,
-  BRIGHT_MAGENTA: 95,
-  BRIGHT_CYAN: 96,
-  BRIGHT_WHITE: 97
-};
+let COLOR;
+
+(function (COLOR) {
+  COLOR[COLOR["BLACK"] = 30] = "BLACK";
+  COLOR[COLOR["RED"] = 31] = "RED";
+  COLOR[COLOR["GREEN"] = 32] = "GREEN";
+  COLOR[COLOR["YELLOW"] = 33] = "YELLOW";
+  COLOR[COLOR["BLUE"] = 34] = "BLUE";
+  COLOR[COLOR["MAGENTA"] = 35] = "MAGENTA";
+  COLOR[COLOR["CYAN"] = 36] = "CYAN";
+  COLOR[COLOR["WHITE"] = 37] = "WHITE";
+  COLOR[COLOR["BRIGHT_BLACK"] = 90] = "BRIGHT_BLACK";
+  COLOR[COLOR["BRIGHT_RED"] = 91] = "BRIGHT_RED";
+  COLOR[COLOR["BRIGHT_GREEN"] = 92] = "BRIGHT_GREEN";
+  COLOR[COLOR["BRIGHT_YELLOW"] = 93] = "BRIGHT_YELLOW";
+  COLOR[COLOR["BRIGHT_BLUE"] = 94] = "BRIGHT_BLUE";
+  COLOR[COLOR["BRIGHT_MAGENTA"] = 95] = "BRIGHT_MAGENTA";
+  COLOR[COLOR["BRIGHT_CYAN"] = 96] = "BRIGHT_CYAN";
+  COLOR[COLOR["BRIGHT_WHITE"] = 97] = "BRIGHT_WHITE";
+})(COLOR || (COLOR = {}));
 
 function getColor(color) {
   return typeof color === 'string' ? COLOR[color.toUpperCase()] || COLOR.WHITE : color;
 }
 
 function addColor(string, color, background) {
-  if (!isBrowser$1 && typeof string === 'string') {
+  if (!isBrowser && typeof string === 'string') {
     if (color) {
       color = getColor(color);
       string = "\x1B[".concat(color, "m").concat(string, "\x1B[39m");
@@ -1623,7 +1685,8 @@ function addColor(string, color, background) {
   return string;
 }
 
-function autobind(obj, predefined = ['constructor']) {
+function autobind(obj) {
+  let predefined = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : ['constructor'];
   const proto = Object.getPrototypeOf(obj);
   const propNames = Object.getOwnPropertyNames(proto);
 
@@ -1636,7 +1699,7 @@ function autobind(obj, predefined = ['constructor']) {
   }
 }
 
-function assert$7(condition, message) {
+function assert$5(condition, message) {
   if (!condition) {
     throw new Error(message || 'Assertion failed');
   }
@@ -1645,10 +1708,14 @@ function assert$7(condition, message) {
 function getHiResTimestamp() {
   let timestamp;
 
-  if (isBrowser$1 && window_.performance) {
-    timestamp = window_.performance.now();
-  } else if (process_.hrtime) {
-    const timeParts = process_.hrtime();
+  if (isBrowser && 'performance' in window_) {
+    var _window$performance, _window$performance$n;
+
+    timestamp = window_ === null || window_ === void 0 ? void 0 : (_window$performance = window_.performance) === null || _window$performance === void 0 ? void 0 : (_window$performance$n = _window$performance.now) === null || _window$performance$n === void 0 ? void 0 : _window$performance$n.call(_window$performance);
+  } else if ('hrtime' in process_) {
+    var _process$hrtime;
+
+    const timeParts = process_ === null || process_ === void 0 ? void 0 : (_process$hrtime = process_.hrtime) === null || _process$hrtime === void 0 ? void 0 : _process$hrtime.call(process_);
     timestamp = timeParts[0] * 1000 + timeParts[1] / 1e6;
   } else {
     timestamp = Date.now();
@@ -1658,7 +1725,7 @@ function getHiResTimestamp() {
 }
 
 const originalConsole = {
-  debug: isBrowser$1 ? console.debug || console.log : console.log,
+  debug: isBrowser ? console.debug || console.log : console.log,
   log: console.log,
   info: console.info,
   warn: console.warn,
@@ -1675,28 +1742,29 @@ const cache = {};
 const ONCE = {
   once: true
 };
-
-function getTableHeader(table) {
-  for (const key in table) {
-    for (const title in table[key]) {
-      return title || 'untitled';
-    }
-  }
-
-  return 'empty';
-}
-
 class Log {
-  constructor({
-    id
-  } = {
-    id: ''
-  }) {
+  constructor() {
+    let {
+      id
+    } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
+      id: ''
+    };
+
+    _defineProperty(this, "id", void 0);
+
+    _defineProperty(this, "VERSION", VERSION$6);
+
+    _defineProperty(this, "_startTs", getHiResTimestamp());
+
+    _defineProperty(this, "_deltaTs", getHiResTimestamp());
+
+    _defineProperty(this, "_storage", void 0);
+
+    _defineProperty(this, "userData", {});
+
+    _defineProperty(this, "LOG_THROTTLE_TIMEOUT", 0);
+
     this.id = id;
-    this.VERSION = VERSION$4;
-    this._startTs = getHiResTimestamp();
-    this._deltaTs = getHiResTimestamp();
-    this.LOG_THROTTLE_TIMEOUT = 0;
     this._storage = new LocalStorage("__probe-".concat(this.id, "__"), DEFAULT_SETTINGS);
     this.userData = {};
     this.timeStamp("".concat(this.id, " started"));
@@ -1740,7 +1808,9 @@ class Log {
     return this.level;
   }
 
-  enable(enabled = true) {
+  enable() {
+    let enabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
     this._storage.updateConfiguration({
       enabled
     });
@@ -1756,8 +1826,26 @@ class Log {
     return this;
   }
 
+  get(setting) {
+    return this._storage.config[setting];
+  }
+
+  set(setting, value) {
+    this._storage.updateConfiguration({
+      [setting]: value
+    });
+  }
+
+  settings() {
+    if (console.table) {
+      console.table(this._storage.config);
+    } else {
+      console.log(this._storage.config);
+    }
+  }
+
   assert(condition, message) {
-    assert$7(condition, message);
+    assert$5(condition, message);
   }
 
   warn(message) {
@@ -1792,6 +1880,10 @@ class Log {
   }
 
   once(logLevel, message) {
+    for (var _len = arguments.length, args = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+      args[_key - 2] = arguments[_key];
+    }
+
     return this._getLogFunction(logLevel, message, originalConsole.debug || originalConsole.info, arguments, ONCE);
   }
 
@@ -1805,18 +1897,20 @@ class Log {
     return noop$1;
   }
 
-  image({
-    logLevel,
-    priority,
-    image,
-    message = '',
-    scale = 1
-  }) {
+  image(_ref) {
+    let {
+      logLevel,
+      priority,
+      image,
+      message = '',
+      scale = 1
+    } = _ref;
+
     if (!this._shouldLog(logLevel || priority)) {
       return noop$1;
     }
 
-    return isBrowser$1 ? logImageInBrowser({
+    return isBrowser ? logImageInBrowser({
       image,
       message,
       scale
@@ -1824,24 +1918,6 @@ class Log {
       image,
       message,
       scale
-    });
-  }
-
-  settings() {
-    if (console.table) {
-      console.table(this._storage.config);
-    } else {
-      console.log(this._storage.config);
-    }
-  }
-
-  get(setting) {
-    return this._storage.config[setting];
-  }
-
-  set(setting, value) {
-    this._storage.updateConfiguration({
-      [setting]: value
     });
   }
 
@@ -1857,10 +1933,11 @@ class Log {
     return this._getLogFunction(logLevel, message, console.timeStamp || noop$1);
   }
 
-  group(logLevel, message, opts = {
-    collapsed: false
-  }) {
-    opts = normalizeArguments({
+  group(logLevel, message) {
+    let opts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {
+      collapsed: false
+    };
+    const options = normalizeArguments({
       logLevel,
       message,
       opts
@@ -1868,11 +1945,12 @@ class Log {
     const {
       collapsed
     } = opts;
-    opts.method = (collapsed ? console.groupCollapsed : console.group) || console.info;
-    return this._getLogFunction(opts);
+    options.method = (collapsed ? console.groupCollapsed : console.group) || console.info;
+    return this._getLogFunction(options);
   }
 
-  groupCollapsed(logLevel, message, opts = {}) {
+  groupCollapsed(logLevel, message) {
+    let opts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     return this.group(logLevel, message, Object.assign({}, opts, {
       collapsed: true
     }));
@@ -1902,7 +1980,7 @@ class Log {
     return this.isEnabled() && this.getLevel() >= normalizeLogLevel(logLevel);
   }
 
-  _getLogFunction(logLevel, message, method, args = [], opts) {
+  _getLogFunction(logLevel, message, method, args, opts) {
     if (this._shouldLog(logLevel)) {
       opts = normalizeArguments({
         logLevel,
@@ -1911,7 +1989,7 @@ class Log {
         opts
       });
       method = method || opts.method;
-      assert$7(method);
+      assert$5(method);
       opts.total = this.getTotal();
       opts.delta = this.getDelta();
       this._deltaTs = getHiResTimestamp();
@@ -1933,7 +2011,8 @@ class Log {
   }
 
 }
-Log.VERSION = VERSION$4;
+
+_defineProperty(Log, "VERSION", VERSION$6);
 
 function normalizeLogLevel(logLevel) {
   if (!logLevel) {
@@ -1955,7 +2034,7 @@ function normalizeLogLevel(logLevel) {
       return 0;
   }
 
-  assert$7(Number.isFinite(resolvedLevel) && resolvedLevel >= 0);
+  assert$5(Number.isFinite(resolvedLevel) && resolvedLevel >= 0);
   return resolvedLevel;
 }
 
@@ -1968,8 +2047,6 @@ function normalizeArguments(opts) {
   const args = opts.args ? Array.from(opts.args) : [];
 
   while (args.length && args.shift() !== message) {}
-
-  opts.args = args;
 
   switch (typeof logLevel) {
     case 'string':
@@ -1991,8 +2068,10 @@ function normalizeArguments(opts) {
   }
 
   const messageType = typeof opts.message;
-  assert$7(messageType === 'string' || messageType === 'object');
-  return Object.assign(opts, opts.opts);
+  assert$5(messageType === 'string' || messageType === 'object');
+  return Object.assign(opts, {
+    args
+  }, opts.opts);
 }
 
 function decorateMessage(id, message, opts) {
@@ -2005,11 +2084,12 @@ function decorateMessage(id, message, opts) {
   return message;
 }
 
-function logImageInNode({
-  image,
-  message = '',
-  scale = 1
-}) {
+function logImageInNode(_ref2) {
+  let {
+    image,
+    message = '',
+    scale = 1
+  } = _ref2;
   let asciify = null;
 
   try {
@@ -2026,11 +2106,13 @@ function logImageInNode({
   return noop$1;
 }
 
-function logImageInBrowser({
-  image,
-  message = '',
-  scale = 1
-}) {
+function logImageInBrowser(_ref3) {
+  let {
+    image,
+    message = '',
+    scale = 1
+  } = _ref3;
+
   if (typeof image === 'string') {
     const img = new Image();
 
@@ -2060,6 +2142,16 @@ function logImageInBrowser({
   }
 
   return noop$1;
+}
+
+function getTableHeader(table) {
+  for (const key in table) {
+    for (const title in table[key]) {
+      return title || 'untitled';
+    }
+  }
+
+  return 'empty';
 }
 
 const probeLog = new Log({
@@ -2145,10 +2237,10 @@ const REMOVED_LOADER_OPTIONS = {
 };
 
 function getGlobalLoaderState() {
-  global_$2.loaders = global_$2.loaders || {};
+  globalThis.loaders = globalThis.loaders || {};
   const {
     loaders
-  } = global_$2;
+  } = globalThis;
   loaders._state = loaders._state || {};
   return loaders._state;
 }
@@ -2197,7 +2289,7 @@ function validateOptions(options, loaders) {
 
 function validateOptionsObject(options, id, defaultOptions, deprecatedOptions, loaders) {
   const loaderName = id || 'Top level';
-  const prefix = id ? `${id}.` : '';
+  const prefix = id ? "".concat(id, ".") : '';
 
   for (const key in options) {
     const isSubOptions = !id && isObject(options[key]);
@@ -2206,10 +2298,10 @@ function validateOptionsObject(options, id, defaultOptions, deprecatedOptions, l
 
     if (!(key in defaultOptions) && !isBaseUriOption && !isWorkerUrlOption) {
       if (key in deprecatedOptions) {
-        probeLog.warn(`${loaderName} loader option \'${prefix}${key}\' no longer supported, use \'${deprecatedOptions[key]}\'`)();
+        probeLog.warn("".concat(loaderName, " loader option '").concat(prefix).concat(key, "' no longer supported, use '").concat(deprecatedOptions[key], "'"))();
       } else if (!isSubOptions) {
         const suggestion = findSimilarOption(key, loaders);
-        probeLog.warn(`${loaderName} loader option \'${prefix}${key}\' not recognized. ${suggestion}`)();
+        probeLog.warn("".concat(loaderName, " loader option '").concat(prefix).concat(key, "' not recognized. ").concat(suggestion))();
       }
     }
   }
@@ -2222,14 +2314,14 @@ function findSimilarOption(optionKey, loaders) {
   for (const loader of loaders) {
     for (const key in loader.options) {
       if (optionKey === key) {
-        return `Did you mean \'${loader.id}.${key}\'?`;
+        return "Did you mean '".concat(loader.id, ".").concat(key, "'?");
       }
 
       const lowerCaseKey = key.toLowerCase();
       const isPartialMatch = lowerCaseOptionKey.startsWith(lowerCaseKey) || lowerCaseKey.startsWith(lowerCaseOptionKey);
 
       if (isPartialMatch) {
-        bestSuggestion = bestSuggestion || `Did you mean \'${loader.id}.${key}\'?`;
+        bestSuggestion = bestSuggestion || "Did you mean '".concat(loader.id, ".").concat(key, "'?");
       }
     }
   }
@@ -2291,8 +2383,8 @@ function isLoaderObject(loader) {
 function normalizeLoader(loader) {
   var _loader2, _loader3;
 
-  assert$9(loader, 'null loader');
-  assert$9(isLoaderObject(loader), 'invalid loader');
+  assert$7(loader, 'null loader');
+  assert$7(isLoaderObject(loader), 'invalid loader');
   let options;
 
   if (Array.isArray(loader)) {
@@ -2413,16 +2505,12 @@ function getNoValidLoaderMessage(data) {
     url,
     type
   } = getResourceUrlAndType(data);
-  let message = 'No valid loader found';
-
-  if (data) {
-    message += ` data: "${getFirstCharacters(data)}", contentType: "${type}"`;
-  }
-
-  if (url) {
-    message += ` url: ${url}`;
-  }
-
+  let message = 'No valid loader found (';
+  message += url ? "".concat(filename(url), ", ") : 'no url provided, ';
+  message += "MIME type: ".concat(type ? "\"".concat(type, "\"") : 'not provided', ", ");
+  const firstCharacters = data ? getFirstCharacters(data) : '';
+  message += firstCharacters ? " first bytes: \"".concat(firstCharacters, "\"") : 'first bytes: not available';
+  message += ')';
   return message;
 }
 
@@ -2458,7 +2546,7 @@ function findLoaderByMIMEType(loaders, mimeType) {
       return loader;
     }
 
-    if (mimeType === `application/x.${loader.id}`) {
+    if (mimeType === "application/x.".concat(loader.id)) {
       return loader;
     }
   }
@@ -2598,7 +2686,7 @@ async function* makeBlobIterator(blob, options) {
 }
 
 function makeStreamIterator(stream, options) {
-  return isBrowser$4 ? makeBrowserStreamIterator(stream, options) : makeNodeStreamIterator(stream);
+  return isBrowser$2 ? makeBrowserStreamIterator(stream, options) : makeNodeStreamIterator(stream);
 }
 
 async function* makeBrowserStreamIterator(stream, options) {
@@ -2763,7 +2851,7 @@ function getLoadersFromContext(loaders, context) {
 }
 
 async function parse$3(data, loaders, options, context) {
-  assert$8(!context || typeof context === 'object');
+  assert$6(!context || typeof context === 'object');
 
   if (loaders && !Array.isArray(loaders) && !isLoaderObject(loaders)) {
     context = undefined;
@@ -2814,8 +2902,8 @@ async function parseWithLoader(loader, data, options, context) {
     return await loader.parse(data, options, context, loader);
   }
 
-  assert$8(!loader.parseSync);
-  throw new Error(`${loader.id} loader - no parser found and worker is disabled`);
+  assert$6(!loader.parseSync);
+  throw new Error("".concat(loader.id, " loader - no parser found and worker is disabled"));
 }
 
 async function load(url, loaders, options, context) {
@@ -2838,43 +2926,43 @@ async function load(url, loaders, options, context) {
   return await parse$3(data, loaders, options);
 }
 
-function assert$6(condition, message) {
+function assert$4(condition, message) {
   if (!condition) {
     throw new Error("math.gl assertion ".concat(message));
   }
 }
 
-const RADIANS_TO_DEGREES$1 = 1 / Math.PI * 180;
-const DEGREES_TO_RADIANS$1 = 1 / 180 * Math.PI;
-const config$1 = {};
-config$1.EPSILON = 1e-12;
-config$1.debug = false;
-config$1.precision = 4;
-config$1.printTypes = false;
-config$1.printDegrees = false;
-config$1.printRowMajor = true;
+const RADIANS_TO_DEGREES = 1 / Math.PI * 180;
+const DEGREES_TO_RADIANS = 1 / 180 * Math.PI;
+const config = {};
+config.EPSILON = 1e-12;
+config.debug = false;
+config.precision = 4;
+config.printTypes = false;
+config.printDegrees = false;
+config.printRowMajor = true;
 
-function round$1(value) {
-  return Math.round(value / config$1.EPSILON) * config$1.EPSILON;
+function round(value) {
+  return Math.round(value / config.EPSILON) * config.EPSILON;
 }
 
-function formatValue$1(value, {
-  precision = config$1.precision || 4
+function formatValue(value, {
+  precision = config.precision || 4
 } = {}) {
-  value = round$1(value);
+  value = round(value);
   return "".concat(parseFloat(value.toPrecision(precision)));
 }
-function isArray$1(value) {
+function isArray(value) {
   return Array.isArray(value) || ArrayBuffer.isView(value) && !(value instanceof DataView);
 }
 
-function duplicateArray$1(array) {
+function duplicateArray(array) {
   return array.clone ? array.clone() : new Array(array.length);
 }
 
-function map$3(value, func, result) {
-  if (isArray$1(value)) {
-    result = result || duplicateArray$1(value);
+function map$1(value, func, result) {
+  if (isArray(value)) {
+    result = result || duplicateArray(value);
 
     for (let i = 0; i < result.length && i < value.length; ++i) {
       result[i] = func(value[i], i, result);
@@ -2886,23 +2974,26 @@ function map$3(value, func, result) {
   return func(value);
 }
 
-function toRadians$1(degrees) {
-  return radians$1(degrees);
+function toRadians(degrees) {
+  return radians(degrees);
 }
-function radians$1(degrees, result) {
-  return map$3(degrees, degrees => degrees * DEGREES_TO_RADIANS$1, result);
+function toDegrees(radians) {
+  return degrees(radians);
 }
-function degrees$1(radians, result) {
-  return map$3(radians, radians => radians * RADIANS_TO_DEGREES$1, result);
+function radians(degrees, result) {
+  return map$1(degrees, degrees => degrees * DEGREES_TO_RADIANS, result);
+}
+function degrees(radians, result) {
+  return map$1(radians, radians => radians * RADIANS_TO_DEGREES, result);
 }
 function clamp(value, min, max) {
-  return map$3(value, value => Math.max(min, Math.min(max, value)));
+  return map$1(value, value => Math.max(min, Math.min(max, value)));
 }
-function equals$1(a, b, epsilon) {
-  const oldEpsilon = config$1.EPSILON;
+function equals(a, b, epsilon) {
+  const oldEpsilon = config.EPSILON;
 
   if (epsilon) {
-    config$1.EPSILON = epsilon;
+    config.EPSILON = epsilon;
   }
 
   try {
@@ -2910,13 +3001,13 @@ function equals$1(a, b, epsilon) {
       return true;
     }
 
-    if (isArray$1(a) && isArray$1(b)) {
+    if (isArray(a) && isArray(b)) {
       if (a.length !== b.length) {
         return false;
       }
 
       for (let i = 0; i < a.length; ++i) {
-        if (!equals$1(a[i], b[i])) {
+        if (!equals(a[i], b[i])) {
           return false;
         }
       }
@@ -2933,16 +3024,16 @@ function equals$1(a, b, epsilon) {
     }
 
     if (Number.isFinite(a) && Number.isFinite(b)) {
-      return Math.abs(a - b) <= config$1.EPSILON * Math.max(1.0, Math.abs(a), Math.abs(b));
+      return Math.abs(a - b) <= config.EPSILON * Math.max(1.0, Math.abs(a), Math.abs(b));
     }
 
     return false;
   } finally {
-    config$1.EPSILON = oldEpsilon;
+    config.EPSILON = oldEpsilon;
   }
 }
 
-function _extendableBuiltin$1(cls) {
+function _extendableBuiltin(cls) {
   function ExtendableBuiltin() {
     var instance = Reflect.construct(cls, Array.from(arguments));
     Object.setPrototypeOf(instance, Object.getPrototypeOf(this));
@@ -2966,9 +3057,9 @@ function _extendableBuiltin$1(cls) {
 
   return ExtendableBuiltin;
 }
-class MathArray$1 extends _extendableBuiltin$1(Array) {
+class MathArray extends _extendableBuiltin(Array) {
   get ELEMENTS() {
-    assert$6(false);
+    assert$4(false);
     return 0;
   }
 
@@ -2993,7 +3084,7 @@ class MathArray$1 extends _extendableBuiltin$1(Array) {
       return this;
     }
 
-    return isArray$1(arrayOrObject) ? this.toArray(arrayOrObject) : this.toObject(arrayOrObject);
+    return isArray(arrayOrObject) ? this.toArray(arrayOrObject) : this.toObject(arrayOrObject);
   }
 
   toTarget(target) {
@@ -3013,14 +3104,14 @@ class MathArray$1 extends _extendableBuiltin$1(Array) {
   }
 
   toString() {
-    return this.formatString(config$1);
+    return this.formatString(config);
   }
 
   formatString(opts) {
     let string = '';
 
     for (let i = 0; i < this.ELEMENTS; ++i) {
-      string += (i > 0 ? ', ' : '') + formatValue$1(this[i], opts);
+      string += (i > 0 ? ', ' : '') + formatValue(this[i], opts);
     }
 
     return "".concat(opts.printTypes ? this.constructor.name : '', "[").concat(string, "]");
@@ -3032,7 +3123,7 @@ class MathArray$1 extends _extendableBuiltin$1(Array) {
     }
 
     for (let i = 0; i < this.ELEMENTS; ++i) {
-      if (!equals$1(this[i], array[i])) {
+      if (!equals(this[i], array[i])) {
         return false;
       }
     }
@@ -3186,7 +3277,7 @@ class MathArray$1 extends _extendableBuiltin$1(Array) {
   }
 
   check() {
-    if (config$1.debug && !this.validate()) {
+    if (config.debug && !this.validate()) {
       throw new Error("math.gl: ".concat(this.constructor.name, " some fields set to invalid numbers'"));
     }
 
@@ -3205,7 +3296,7 @@ class MathArray$1 extends _extendableBuiltin$1(Array) {
 
 }
 
-function validateVector$1(v, length) {
+function validateVector(v, length) {
   if (v.length !== length) {
     return false;
   }
@@ -3218,36 +3309,36 @@ function validateVector$1(v, length) {
 
   return true;
 }
-function checkNumber$1(value) {
+function checkNumber(value) {
   if (!Number.isFinite(value)) {
     throw new Error("Invalid number ".concat(value));
   }
 
   return value;
 }
-function checkVector$1(v, length, callerName = '') {
-  if (config$1.debug && !validateVector$1(v, length)) {
+function checkVector(v, length, callerName = '') {
+  if (config.debug && !validateVector(v, length)) {
     throw new Error("math.gl: ".concat(callerName, " some fields set to invalid numbers'"));
   }
 
   return v;
 }
-const map$2 = {};
-function deprecated$1(method, version) {
-  if (!map$2[method]) {
-    map$2[method] = true;
+const map = {};
+function deprecated(method, version) {
+  if (!map[method]) {
+    map[method] = true;
     console.warn("".concat(method, " has been removed in version ").concat(version, ", see upgrade guide for more information"));
   }
 }
 
-class Vector$1 extends MathArray$1 {
+class Vector extends MathArray {
   get ELEMENTS() {
-    assert$6(false);
+    assert$4(false);
     return 0;
   }
 
   copy(vector) {
-    assert$6(false);
+    assert$4(false);
     return this;
   }
 
@@ -3256,7 +3347,7 @@ class Vector$1 extends MathArray$1 {
   }
 
   set x(value) {
-    this[0] = checkNumber$1(value);
+    this[0] = checkNumber(value);
   }
 
   get y() {
@@ -3264,7 +3355,7 @@ class Vector$1 extends MathArray$1 {
   }
 
   set y(value) {
-    this[1] = checkNumber$1(value);
+    this[1] = checkNumber(value);
   }
 
   len() {
@@ -3301,7 +3392,7 @@ class Vector$1 extends MathArray$1 {
       length += dist * dist;
     }
 
-    return checkNumber$1(length);
+    return checkNumber(length);
   }
 
   dot(mathArray) {
@@ -3311,7 +3402,7 @@ class Vector$1 extends MathArray$1 {
       product += this[i] * mathArray[i];
     }
 
-    return checkNumber$1(product);
+    return checkNumber(product);
   }
 
   normalize() {
@@ -3359,12 +3450,12 @@ class Vector$1 extends MathArray$1 {
   }
 
   getComponent(i) {
-    assert$6(i >= 0 && i < this.ELEMENTS, 'index is out of range');
-    return checkNumber$1(this[i]);
+    assert$4(i >= 0 && i < this.ELEMENTS, 'index is out of range');
+    return checkNumber(this[i]);
   }
 
   setComponent(i, value) {
-    assert$6(i >= 0 && i < this.ELEMENTS, 'index is out of range');
+    assert$4(i >= 0 && i < this.ELEMENTS, 'index is out of range');
     this[i] = value;
     return this.check();
   }
@@ -3537,7 +3628,7 @@ function transformMat4$2(out, a, m) {
   };
 })();
 
-function vec2_transformMat4AsVector$1(out, a, m) {
+function vec2_transformMat4AsVector(out, a, m) {
   const x = a[0];
   const y = a[1];
   const w = m[3] * x + m[7] * y || 1.0;
@@ -3545,7 +3636,7 @@ function vec2_transformMat4AsVector$1(out, a, m) {
   out[1] = (m[1] * x + m[5] * y) / w;
   return out;
 }
-function vec3_transformMat4AsVector$1(out, a, m) {
+function vec3_transformMat4AsVector(out, a, m) {
   const x = a[0];
   const y = a[1];
   const z = a[2];
@@ -3555,7 +3646,7 @@ function vec3_transformMat4AsVector$1(out, a, m) {
   out[2] = (m[2] * x + m[6] * y + m[10] * z) / w;
   return out;
 }
-function vec3_transformMat2$1(out, a, m) {
+function vec3_transformMat2(out, a, m) {
   const x = a[0];
   const y = a[1];
   out[0] = m[0] * x + m[2] * y;
@@ -3574,16 +3665,16 @@ function vec4_transformMat3(out, a, m) {
   return out;
 }
 
-class Vector2 extends Vector$1 {
+class Vector2 extends Vector {
   constructor(x = 0, y = 0) {
     super(2);
 
-    if (isArray$1(x) && arguments.length === 1) {
+    if (isArray(x) && arguments.length === 1) {
       this.copy(x);
     } else {
-      if (config$1.debug) {
-        checkNumber$1(x);
-        checkNumber$1(y);
+      if (config.debug) {
+        checkNumber(x);
+        checkNumber(y);
       }
 
       this[0] = x;
@@ -3604,9 +3695,9 @@ class Vector2 extends Vector$1 {
   }
 
   fromObject(object) {
-    if (config$1.debug) {
-      checkNumber$1(object.x);
-      checkNumber$1(object.y);
+    if (config.debug) {
+      checkNumber(object.x);
+      checkNumber(object.y);
     }
 
     this[0] = object.x;
@@ -3642,7 +3733,7 @@ class Vector2 extends Vector$1 {
   }
 
   transformAsVector(matrix4) {
-    vec2_transformMat4AsVector$1(this, this, matrix4);
+    vec2_transformMat4AsVector(this, this, matrix4);
     return this.check();
   }
 
@@ -4002,23 +4093,23 @@ var len = length$2;
   };
 })();
 
-const ORIGIN$1 = [0, 0, 0];
-const constants$4 = {};
-class Vector3$1 extends Vector$1 {
+const ORIGIN = [0, 0, 0];
+const constants$2 = {};
+class Vector3 extends Vector {
   static get ZERO() {
-    return constants$4.ZERO = constants$4.ZERO || Object.freeze(new Vector3$1(0, 0, 0, 0));
+    return constants$2.ZERO = constants$2.ZERO || Object.freeze(new Vector3(0, 0, 0, 0));
   }
 
   constructor(x = 0, y = 0, z = 0) {
     super(-0, -0, -0);
 
-    if (arguments.length === 1 && isArray$1(x)) {
+    if (arguments.length === 1 && isArray(x)) {
       this.copy(x);
     } else {
-      if (config$1.debug) {
-        checkNumber$1(x);
-        checkNumber$1(y);
-        checkNumber$1(z);
+      if (config.debug) {
+        checkNumber(x);
+        checkNumber(y);
+        checkNumber(z);
       }
 
       this[0] = x;
@@ -4042,10 +4133,10 @@ class Vector3$1 extends Vector$1 {
   }
 
   fromObject(object) {
-    if (config$1.debug) {
-      checkNumber$1(object.x);
-      checkNumber$1(object.y);
-      checkNumber$1(object.z);
+    if (config.debug) {
+      checkNumber(object.x);
+      checkNumber(object.y);
+      checkNumber(object.z);
     }
 
     this[0] = object.x;
@@ -4070,7 +4161,7 @@ class Vector3$1 extends Vector$1 {
   }
 
   set z(value) {
-    this[2] = checkNumber$1(value);
+    this[2] = checkNumber(value);
   }
 
   angle(vector) {
@@ -4084,7 +4175,7 @@ class Vector3$1 extends Vector$1 {
 
   rotateX({
     radians,
-    origin = ORIGIN$1
+    origin = ORIGIN
   }) {
     rotateX$2(this, this, origin, radians);
     return this.check();
@@ -4092,7 +4183,7 @@ class Vector3$1 extends Vector$1 {
 
   rotateY({
     radians,
-    origin = ORIGIN$1
+    origin = ORIGIN
   }) {
     rotateY$2(this, this, origin, radians);
     return this.check();
@@ -4100,7 +4191,7 @@ class Vector3$1 extends Vector$1 {
 
   rotateZ({
     radians,
-    origin = ORIGIN$1
+    origin = ORIGIN
   }) {
     rotateZ$2(this, this, origin, radians);
     return this.check();
@@ -4116,7 +4207,7 @@ class Vector3$1 extends Vector$1 {
   }
 
   transformAsVector(matrix4) {
-    vec3_transformMat4AsVector$1(this, this, matrix4);
+    vec3_transformMat4AsVector(this, this, matrix4);
     return this.check();
   }
 
@@ -4126,7 +4217,7 @@ class Vector3$1 extends Vector$1 {
   }
 
   transformByMatrix2(matrix2) {
-    vec3_transformMat2$1(this, this, matrix2);
+    vec3_transformMat2(this, this, matrix2);
     return this.check();
   }
 
@@ -4137,21 +4228,21 @@ class Vector3$1 extends Vector$1 {
 
 }
 
-class Matrix$1 extends MathArray$1 {
+class Matrix extends MathArray {
   get ELEMENTS() {
-    assert$6(false);
+    assert$4(false);
     return 0;
   }
 
   get RANK() {
-    assert$6(false);
+    assert$4(false);
     return 0;
   }
 
   toString() {
     let string = '[';
 
-    if (config$1.printRowMajor) {
+    if (config.printRowMajor) {
       string += 'row-major:';
 
       for (let row = 0; row < this.RANK; ++row) {
@@ -4180,7 +4271,7 @@ class Matrix$1 extends MathArray$1 {
   }
 
   setElement(row, col, value) {
-    this[col * this.RANK + row] = checkNumber$1(value);
+    this[col * this.RANK + row] = checkNumber(value);
     return this;
   }
 
@@ -4491,9 +4582,9 @@ function fromQuat$1(out, q) {
   return out;
 }
 
-const IDENTITY$2 = Object.freeze([1, 0, 0, 0, 1, 0, 0, 0, 1]);
-const ZERO$2 = Object.freeze([0, 0, 0, 0, 0, 0, 0, 0, 0]);
-const INDICES$2 = Object.freeze({
+const IDENTITY$1 = Object.freeze([1, 0, 0, 0, 1, 0, 0, 0, 1]);
+const ZERO$1 = Object.freeze([0, 0, 0, 0, 0, 0, 0, 0, 0]);
+const INDICES$1 = Object.freeze({
   COL0ROW0: 0,
   COL0ROW1: 1,
   COL0ROW2: 2,
@@ -4504,16 +4595,16 @@ const INDICES$2 = Object.freeze({
   COL2ROW1: 7,
   COL2ROW2: 8
 });
-const constants$3 = {};
-class Matrix3 extends Matrix$1 {
+const constants$1 = {};
+class Matrix3 extends Matrix {
   static get IDENTITY() {
-    constants$3.IDENTITY = constants$3.IDENTITY || Object.freeze(new Matrix3(IDENTITY$2));
-    return constants$3.IDENTITY;
+    constants$1.IDENTITY = constants$1.IDENTITY || Object.freeze(new Matrix3(IDENTITY$1));
+    return constants$1.IDENTITY;
   }
 
   static get ZERO() {
-    constants$3.ZERO = constants$3.ZERO || Object.freeze(new Matrix3(ZERO$2));
-    return constants$3.ZERO;
+    constants$1.ZERO = constants$1.ZERO || Object.freeze(new Matrix3(ZERO$1));
+    return constants$1.ZERO;
   }
 
   get ELEMENTS() {
@@ -4525,7 +4616,7 @@ class Matrix3 extends Matrix$1 {
   }
 
   get INDICES() {
-    return INDICES$2;
+    return INDICES$1;
   }
 
   constructor(array) {
@@ -4582,7 +4673,7 @@ class Matrix3 extends Matrix$1 {
   }
 
   identity() {
-    return this.copy(IDENTITY$2);
+    return this.copy(IDENTITY$1);
   }
 
   fromQuaternion(q) {
@@ -4648,22 +4739,22 @@ class Matrix3 extends Matrix$1 {
         throw new Error('Illegal vector');
     }
 
-    checkVector$1(result, vector.length);
+    checkVector(result, vector.length);
     return result;
   }
 
   transformVector(vector, result) {
-    deprecated$1('Matrix3.transformVector');
+    deprecated('Matrix3.transformVector');
     return this.transform(vector, result);
   }
 
   transformVector2(vector, result) {
-    deprecated$1('Matrix3.transformVector');
+    deprecated('Matrix3.transformVector');
     return this.transform(vector, result);
   }
 
   transformVector3(vector, result) {
-    deprecated$1('Matrix3.transformVector');
+    deprecated('Matrix3.transformVector');
     return this.transform(vector, result);
   }
 
@@ -5709,9 +5800,9 @@ function transformQuat(out, a, q) {
   };
 })();
 
-const IDENTITY$1 = Object.freeze([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
-const ZERO$1 = Object.freeze([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-const INDICES$1 = Object.freeze({
+const IDENTITY = Object.freeze([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+const ZERO = Object.freeze([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+const INDICES = Object.freeze({
   COL0ROW0: 0,
   COL0ROW1: 1,
   COL0ROW2: 2,
@@ -5729,20 +5820,20 @@ const INDICES$1 = Object.freeze({
   COL3ROW2: 14,
   COL3ROW3: 15
 });
-const constants$2 = {};
-class Matrix4$1 extends Matrix$1 {
+const constants = {};
+class Matrix4 extends Matrix {
   static get IDENTITY() {
-    constants$2.IDENTITY = constants$2.IDENTITY || Object.freeze(new Matrix4$1(IDENTITY$1));
-    return constants$2.IDENTITY;
+    constants.IDENTITY = constants.IDENTITY || Object.freeze(new Matrix4(IDENTITY));
+    return constants.IDENTITY;
   }
 
   static get ZERO() {
-    constants$2.ZERO = constants$2.ZERO || Object.freeze(new Matrix4$1(ZERO$1));
-    return constants$2.ZERO;
+    constants.ZERO = constants.ZERO || Object.freeze(new Matrix4(ZERO));
+    return constants.ZERO;
   }
 
   get INDICES() {
-    return INDICES$1;
+    return INDICES;
   }
 
   get ELEMENTS() {
@@ -5844,7 +5935,7 @@ class Matrix4$1 extends Matrix$1 {
   }
 
   identity() {
-    return this.copy(IDENTITY$1);
+    return this.copy(IDENTITY);
   }
 
   fromQuaternion(q) {
@@ -5861,7 +5952,7 @@ class Matrix4$1 extends Matrix$1 {
     far
   }) {
     if (far === Infinity) {
-      Matrix4$1._computeInfinitePerspectiveOffCenter(this, left, right, bottom, top, near);
+      Matrix4._computeInfinitePerspectiveOffCenter(this, left, right, bottom, top, near);
     } else {
       frustum(this, left, right, bottom, top, near, far);
     }
@@ -5937,7 +6028,7 @@ class Matrix4$1 extends Matrix$1 {
     const halfY = fovy / 2;
     const top = focalDistance * Math.tan(halfY);
     const right = top * aspect;
-    return new Matrix4$1().ortho({
+    return new Matrix4().ortho({
       left: -right,
       right,
       bottom: -top,
@@ -6085,7 +6176,7 @@ class Matrix4$1 extends Matrix$1 {
   transform(vector, result) {
     if (vector.length === 4) {
       result = transformMat4(result || [-0, -0, -0, -0], vector, this);
-      checkVector$1(result, 4);
+      checkVector(result, 4);
       return result;
     }
 
@@ -6110,25 +6201,25 @@ class Matrix4$1 extends Matrix$1 {
         throw new Error('Illegal vector');
     }
 
-    checkVector$1(result, vector.length);
+    checkVector(result, vector.length);
     return result;
   }
 
   transformAsVector(vector, result) {
     switch (vector.length) {
       case 2:
-        result = vec2_transformMat4AsVector$1(result || [-0, -0], vector, this);
+        result = vec2_transformMat4AsVector(result || [-0, -0], vector, this);
         break;
 
       case 3:
-        result = vec3_transformMat4AsVector$1(result || [-0, -0, -0], vector, this);
+        result = vec3_transformMat4AsVector(result || [-0, -0, -0], vector, this);
         break;
 
       default:
         throw new Error('Illegal vector');
     }
 
-    checkVector$1(result, vector.length);
+    checkVector(result, vector.length);
     return result;
   }
 
@@ -6141,17 +6232,17 @@ class Matrix4$1 extends Matrix$1 {
   }
 
   transformPoint(vector, result) {
-    deprecated$1('Matrix4.transformPoint', '3.0');
+    deprecated('Matrix4.transformPoint', '3.0');
     return this.transformAsPoint(vector, result);
   }
 
   transformVector(vector, result) {
-    deprecated$1('Matrix4.transformVector', '3.0');
+    deprecated('Matrix4.transformVector', '3.0');
     return this.transformAsPoint(vector, result);
   }
 
   transformDirection(vector, result) {
-    deprecated$1('Matrix4.transformDirection', '3.0');
+    deprecated('Matrix4.transformDirection', '3.0');
     return this.transformAsVector(vector, result);
   }
 
@@ -6625,7 +6716,7 @@ var rotationTo = function () {
 })();
 
 const IDENTITY_QUATERNION = [0, 0, 0, 1];
-class Quaternion extends MathArray$1 {
+class Quaternion extends MathArray {
   constructor(x = 0, y = 0, z = 0, w = 1) {
     super(-0, -0, -0, -0);
 
@@ -6680,7 +6771,7 @@ class Quaternion extends MathArray$1 {
   }
 
   set x(value) {
-    this[0] = checkNumber$1(value);
+    this[0] = checkNumber(value);
   }
 
   get y() {
@@ -6688,7 +6779,7 @@ class Quaternion extends MathArray$1 {
   }
 
   set y(value) {
-    this[1] = checkNumber$1(value);
+    this[1] = checkNumber(value);
   }
 
   get z() {
@@ -6696,7 +6787,7 @@ class Quaternion extends MathArray$1 {
   }
 
   set z(value) {
-    this[2] = checkNumber$1(value);
+    this[2] = checkNumber(value);
   }
 
   get w() {
@@ -6704,7 +6795,7 @@ class Quaternion extends MathArray$1 {
   }
 
   set w(value) {
-    this[3] = checkNumber$1(value);
+    this[3] = checkNumber(value);
   }
 
   len() {
@@ -6758,13 +6849,13 @@ class Quaternion extends MathArray$1 {
   }
 
   multiplyRight(a, b) {
-    assert$6(!b);
+    assert$4(!b);
     multiply(this, this, a);
     return this.check();
   }
 
   multiplyLeft(a, b) {
-    assert$6(!b);
+    assert$4(!b);
     multiply(this, a, this);
     return this.check();
   }
@@ -6826,7 +6917,7 @@ class Quaternion extends MathArray$1 {
 
   transformVector4(vector, result = vector) {
     transformQuat(result, vector, this);
-    return checkVector$1(result, 4);
+    return checkVector(result, 4);
   }
 
   lengthSq() {
@@ -6843,1234 +6934,6 @@ class Quaternion extends MathArray$1 {
 
   multiply(a, b) {
     return this.multiplyRight(a, b);
-  }
-
-}
-
-function assert$5(condition, message) {
-  if (!condition) {
-    throw new Error(`math.gl assertion ${message}`);
-  }
-}
-
-const RADIANS_TO_DEGREES = 1 / Math.PI * 180;
-const DEGREES_TO_RADIANS = 1 / 180 * Math.PI;
-const config = {};
-config.EPSILON = 1e-12;
-config.debug = false;
-config.precision = 4;
-config.printTypes = false;
-config.printDegrees = false;
-config.printRowMajor = true;
-
-function round(value) {
-  return Math.round(value / config.EPSILON) * config.EPSILON;
-}
-
-function formatValue(value, {
-  precision = config.precision || 4
-} = {}) {
-  value = round(value);
-  return `${parseFloat(value.toPrecision(precision))}`;
-}
-function isArray(value) {
-  return Array.isArray(value) || ArrayBuffer.isView(value) && !(value instanceof DataView);
-}
-
-function duplicateArray(array) {
-  return array.clone ? array.clone() : new Array(array.length);
-}
-
-function map$1(value, func, result) {
-  if (isArray(value)) {
-    result = result || duplicateArray(value);
-
-    for (let i = 0; i < result.length && i < value.length; ++i) {
-      result[i] = func(value[i], i, result);
-    }
-
-    return result;
-  }
-
-  return func(value);
-}
-
-function toRadians(degrees) {
-  return radians(degrees);
-}
-function toDegrees(radians) {
-  return degrees(radians);
-}
-function radians(degrees, result) {
-  return map$1(degrees, degrees => degrees * DEGREES_TO_RADIANS, result);
-}
-function degrees(radians, result) {
-  return map$1(radians, radians => radians * RADIANS_TO_DEGREES, result);
-}
-function equals(a, b, epsilon) {
-  const oldEpsilon = config.EPSILON;
-
-  if (epsilon) {
-    config.EPSILON = epsilon;
-  }
-
-  try {
-    if (a === b) {
-      return true;
-    }
-
-    if (isArray(a) && isArray(b)) {
-      if (a.length !== b.length) {
-        return false;
-      }
-
-      for (let i = 0; i < a.length; ++i) {
-        if (!equals(a[i], b[i])) {
-          return false;
-        }
-      }
-
-      return true;
-    }
-
-    if (a && a.equals) {
-      return a.equals(b);
-    }
-
-    if (b && b.equals) {
-      return b.equals(a);
-    }
-
-    if (Number.isFinite(a) && Number.isFinite(b)) {
-      return Math.abs(a - b) <= config.EPSILON * Math.max(1.0, Math.abs(a), Math.abs(b));
-    }
-
-    return false;
-  } finally {
-    config.EPSILON = oldEpsilon;
-  }
-}
-
-function _extendableBuiltin(cls) {
-  function ExtendableBuiltin() {
-    var instance = Reflect.construct(cls, Array.from(arguments));
-    Object.setPrototypeOf(instance, Object.getPrototypeOf(this));
-    return instance;
-  }
-
-  ExtendableBuiltin.prototype = Object.create(cls.prototype, {
-    constructor: {
-      value: cls,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    }
-  });
-
-  if (Object.setPrototypeOf) {
-    Object.setPrototypeOf(ExtendableBuiltin, cls);
-  } else {
-    ExtendableBuiltin.__proto__ = cls;
-  }
-
-  return ExtendableBuiltin;
-}
-class MathArray extends _extendableBuiltin(Array) {
-  get ELEMENTS() {
-    assert$5(false);
-    return 0;
-  }
-
-  clone() {
-    return new this.constructor().copy(this);
-  }
-
-  from(arrayOrObject) {
-    return Array.isArray(arrayOrObject) ? this.copy(arrayOrObject) : this.fromObject(arrayOrObject);
-  }
-
-  fromArray(array, offset = 0) {
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      this[i] = array[i + offset];
-    }
-
-    return this.check();
-  }
-
-  to(arrayOrObject) {
-    if (arrayOrObject === this) {
-      return this;
-    }
-
-    return isArray(arrayOrObject) ? this.toArray(arrayOrObject) : this.toObject(arrayOrObject);
-  }
-
-  toTarget(target) {
-    return target ? this.to(target) : this;
-  }
-
-  toArray(array = [], offset = 0) {
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      array[offset + i] = this[i];
-    }
-
-    return array;
-  }
-
-  toFloat32Array() {
-    return new Float32Array(this);
-  }
-
-  toString() {
-    return this.formatString(config);
-  }
-
-  formatString(opts) {
-    let string = '';
-
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      string += (i > 0 ? ', ' : '') + formatValue(this[i], opts);
-    }
-
-    return `${opts.printTypes ? this.constructor.name : ''}[${string}]`;
-  }
-
-  equals(array) {
-    if (!array || this.length !== array.length) {
-      return false;
-    }
-
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      if (!equals(this[i], array[i])) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  exactEquals(array) {
-    if (!array || this.length !== array.length) {
-      return false;
-    }
-
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      if (this[i] !== array[i]) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  negate() {
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      this[i] = -this[i];
-    }
-
-    return this.check();
-  }
-
-  lerp(a, b, t) {
-    if (t === undefined) {
-      t = b;
-      b = a;
-      a = this;
-    }
-
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      const ai = a[i];
-      this[i] = ai + t * (b[i] - ai);
-    }
-
-    return this.check();
-  }
-
-  min(vector) {
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      this[i] = Math.min(vector[i], this[i]);
-    }
-
-    return this.check();
-  }
-
-  max(vector) {
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      this[i] = Math.max(vector[i], this[i]);
-    }
-
-    return this.check();
-  }
-
-  clamp(minVector, maxVector) {
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      this[i] = Math.min(Math.max(this[i], minVector[i]), maxVector[i]);
-    }
-
-    return this.check();
-  }
-
-  add(...vectors) {
-    for (const vector of vectors) {
-      for (let i = 0; i < this.ELEMENTS; ++i) {
-        this[i] += vector[i];
-      }
-    }
-
-    return this.check();
-  }
-
-  subtract(...vectors) {
-    for (const vector of vectors) {
-      for (let i = 0; i < this.ELEMENTS; ++i) {
-        this[i] -= vector[i];
-      }
-    }
-
-    return this.check();
-  }
-
-  scale(scale) {
-    if (Array.isArray(scale)) {
-      return this.multiply(scale);
-    }
-
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      this[i] *= scale;
-    }
-
-    return this.check();
-  }
-
-  sub(a) {
-    return this.subtract(a);
-  }
-
-  setScalar(a) {
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      this[i] = a;
-    }
-
-    return this.check();
-  }
-
-  addScalar(a) {
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      this[i] += a;
-    }
-
-    return this.check();
-  }
-
-  subScalar(a) {
-    return this.addScalar(-a);
-  }
-
-  multiplyScalar(scalar) {
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      this[i] *= scalar;
-    }
-
-    return this.check();
-  }
-
-  divideScalar(a) {
-    return this.scale(1 / a);
-  }
-
-  clampScalar(min, max) {
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      this[i] = Math.min(Math.max(this[i], min), max);
-    }
-
-    return this.check();
-  }
-
-  multiplyByScalar(scalar) {
-    return this.scale(scalar);
-  }
-
-  get elements() {
-    return this;
-  }
-
-  check() {
-    if (config.debug && !this.validate()) {
-      throw new Error(`math.gl: ${this.constructor.name} some fields set to invalid numbers'`);
-    }
-
-    return this;
-  }
-
-  validate() {
-    let valid = this.length === this.ELEMENTS;
-
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      valid = valid && Number.isFinite(this[i]);
-    }
-
-    return valid;
-  }
-
-}
-
-function validateVector(v, length) {
-  if (v.length !== length) {
-    return false;
-  }
-
-  for (let i = 0; i < v.length; ++i) {
-    if (!Number.isFinite(v[i])) {
-      return false;
-    }
-  }
-
-  return true;
-}
-function checkNumber(value) {
-  if (!Number.isFinite(value)) {
-    throw new Error(`Invalid number ${value}`);
-  }
-
-  return value;
-}
-function checkVector(v, length, callerName = '') {
-  if (config.debug && !validateVector(v, length)) {
-    throw new Error(`math.gl: ${callerName} some fields set to invalid numbers'`);
-  }
-
-  return v;
-}
-const map = {};
-function deprecated(method, version) {
-  if (!map[method]) {
-    map[method] = true;
-    console.warn(`${method} has been removed in version ${version}, see upgrade guide for more information`);
-  }
-}
-
-class Vector extends MathArray {
-  get ELEMENTS() {
-    assert$5(false);
-    return 0;
-  }
-
-  copy(vector) {
-    assert$5(false);
-    return this;
-  }
-
-  get x() {
-    return this[0];
-  }
-
-  set x(value) {
-    this[0] = checkNumber(value);
-  }
-
-  get y() {
-    return this[1];
-  }
-
-  set y(value) {
-    this[1] = checkNumber(value);
-  }
-
-  len() {
-    return Math.sqrt(this.lengthSquared());
-  }
-
-  magnitude() {
-    return this.len();
-  }
-
-  lengthSquared() {
-    let length = 0;
-
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      length += this[i] * this[i];
-    }
-
-    return length;
-  }
-
-  magnitudeSquared() {
-    return this.lengthSquared();
-  }
-
-  distance(mathArray) {
-    return Math.sqrt(this.distanceSquared(mathArray));
-  }
-
-  distanceSquared(mathArray) {
-    let length = 0;
-
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      const dist = this[i] - mathArray[i];
-      length += dist * dist;
-    }
-
-    return checkNumber(length);
-  }
-
-  dot(mathArray) {
-    let product = 0;
-
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      product += this[i] * mathArray[i];
-    }
-
-    return checkNumber(product);
-  }
-
-  normalize() {
-    const length = this.magnitude();
-
-    if (length !== 0) {
-      for (let i = 0; i < this.ELEMENTS; ++i) {
-        this[i] /= length;
-      }
-    }
-
-    return this.check();
-  }
-
-  multiply(...vectors) {
-    for (const vector of vectors) {
-      for (let i = 0; i < this.ELEMENTS; ++i) {
-        this[i] *= vector[i];
-      }
-    }
-
-    return this.check();
-  }
-
-  divide(...vectors) {
-    for (const vector of vectors) {
-      for (let i = 0; i < this.ELEMENTS; ++i) {
-        this[i] /= vector[i];
-      }
-    }
-
-    return this.check();
-  }
-
-  lengthSq() {
-    return this.lengthSquared();
-  }
-
-  distanceTo(vector) {
-    return this.distance(vector);
-  }
-
-  distanceToSquared(vector) {
-    return this.distanceSquared(vector);
-  }
-
-  getComponent(i) {
-    assert$5(i >= 0 && i < this.ELEMENTS, 'index is out of range');
-    return checkNumber(this[i]);
-  }
-
-  setComponent(i, value) {
-    assert$5(i >= 0 && i < this.ELEMENTS, 'index is out of range');
-    this[i] = value;
-    return this.check();
-  }
-
-  addVectors(a, b) {
-    return this.copy(a).add(b);
-  }
-
-  subVectors(a, b) {
-    return this.copy(a).subtract(b);
-  }
-
-  multiplyVectors(a, b) {
-    return this.copy(a).multiply(b);
-  }
-
-  addScaledVector(a, b) {
-    return this.add(new this.constructor(a).multiplyScalar(b));
-  }
-
-}
-
-function vec2_transformMat4AsVector(out, a, m) {
-  const x = a[0];
-  const y = a[1];
-  const w = m[3] * x + m[7] * y || 1.0;
-  out[0] = (m[0] * x + m[4] * y) / w;
-  out[1] = (m[1] * x + m[5] * y) / w;
-  return out;
-}
-function vec3_transformMat4AsVector(out, a, m) {
-  const x = a[0];
-  const y = a[1];
-  const z = a[2];
-  const w = m[3] * x + m[7] * y + m[11] * z || 1.0;
-  out[0] = (m[0] * x + m[4] * y + m[8] * z) / w;
-  out[1] = (m[1] * x + m[5] * y + m[9] * z) / w;
-  out[2] = (m[2] * x + m[6] * y + m[10] * z) / w;
-  return out;
-}
-function vec3_transformMat2(out, a, m) {
-  const x = a[0];
-  const y = a[1];
-  out[0] = m[0] * x + m[2] * y;
-  out[1] = m[1] * x + m[3] * y;
-  out[2] = a[2];
-  return out;
-}
-
-const ORIGIN = [0, 0, 0];
-const constants$1 = {};
-class Vector3 extends Vector {
-  static get ZERO() {
-    return constants$1.ZERO = constants$1.ZERO || Object.freeze(new Vector3(0, 0, 0, 0));
-  }
-
-  constructor(x = 0, y = 0, z = 0) {
-    super(-0, -0, -0);
-
-    if (arguments.length === 1 && isArray(x)) {
-      this.copy(x);
-    } else {
-      if (config.debug) {
-        checkNumber(x);
-        checkNumber(y);
-        checkNumber(z);
-      }
-
-      this[0] = x;
-      this[1] = y;
-      this[2] = z;
-    }
-  }
-
-  set(x, y, z) {
-    this[0] = x;
-    this[1] = y;
-    this[2] = z;
-    return this.check();
-  }
-
-  copy(array) {
-    this[0] = array[0];
-    this[1] = array[1];
-    this[2] = array[2];
-    return this.check();
-  }
-
-  fromObject(object) {
-    if (config.debug) {
-      checkNumber(object.x);
-      checkNumber(object.y);
-      checkNumber(object.z);
-    }
-
-    this[0] = object.x;
-    this[1] = object.y;
-    this[2] = object.z;
-    return this.check();
-  }
-
-  toObject(object) {
-    object.x = this[0];
-    object.y = this[1];
-    object.z = this[2];
-    return object;
-  }
-
-  get ELEMENTS() {
-    return 3;
-  }
-
-  get z() {
-    return this[2];
-  }
-
-  set z(value) {
-    this[2] = checkNumber(value);
-  }
-
-  angle(vector) {
-    return angle(this, vector);
-  }
-
-  cross(vector) {
-    cross(this, this, vector);
-    return this.check();
-  }
-
-  rotateX({
-    radians,
-    origin = ORIGIN
-  }) {
-    rotateX$2(this, this, origin, radians);
-    return this.check();
-  }
-
-  rotateY({
-    radians,
-    origin = ORIGIN
-  }) {
-    rotateY$2(this, this, origin, radians);
-    return this.check();
-  }
-
-  rotateZ({
-    radians,
-    origin = ORIGIN
-  }) {
-    rotateZ$2(this, this, origin, radians);
-    return this.check();
-  }
-
-  transform(matrix4) {
-    return this.transformAsPoint(matrix4);
-  }
-
-  transformAsPoint(matrix4) {
-    transformMat4$1(this, this, matrix4);
-    return this.check();
-  }
-
-  transformAsVector(matrix4) {
-    vec3_transformMat4AsVector(this, this, matrix4);
-    return this.check();
-  }
-
-  transformByMatrix3(matrix3) {
-    transformMat3(this, this, matrix3);
-    return this.check();
-  }
-
-  transformByMatrix2(matrix2) {
-    vec3_transformMat2(this, this, matrix2);
-    return this.check();
-  }
-
-  transformByQuaternion(quaternion) {
-    transformQuat$1(this, this, quaternion);
-    return this.check();
-  }
-
-}
-
-class Matrix extends MathArray {
-  get ELEMENTS() {
-    assert$5(false);
-    return 0;
-  }
-
-  get RANK() {
-    assert$5(false);
-    return 0;
-  }
-
-  toString() {
-    let string = '[';
-
-    if (config.printRowMajor) {
-      string += 'row-major:';
-
-      for (let row = 0; row < this.RANK; ++row) {
-        for (let col = 0; col < this.RANK; ++col) {
-          string += ` ${this[col * this.RANK + row]}`;
-        }
-      }
-    } else {
-      string += 'column-major:';
-
-      for (let i = 0; i < this.ELEMENTS; ++i) {
-        string += ` ${this[i]}`;
-      }
-    }
-
-    string += ']';
-    return string;
-  }
-
-  getElementIndex(row, col) {
-    return col * this.RANK + row;
-  }
-
-  getElement(row, col) {
-    return this[col * this.RANK + row];
-  }
-
-  setElement(row, col, value) {
-    this[col * this.RANK + row] = checkNumber(value);
-    return this;
-  }
-
-  getColumn(columnIndex, result = new Array(this.RANK).fill(-0)) {
-    const firstIndex = columnIndex * this.RANK;
-
-    for (let i = 0; i < this.RANK; ++i) {
-      result[i] = this[firstIndex + i];
-    }
-
-    return result;
-  }
-
-  setColumn(columnIndex, columnVector) {
-    const firstIndex = columnIndex * this.RANK;
-
-    for (let i = 0; i < this.RANK; ++i) {
-      this[firstIndex + i] = columnVector[i];
-    }
-
-    return this;
-  }
-
-}
-
-const IDENTITY = Object.freeze([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
-const ZERO = Object.freeze([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-const INDICES = Object.freeze({
-  COL0ROW0: 0,
-  COL0ROW1: 1,
-  COL0ROW2: 2,
-  COL0ROW3: 3,
-  COL1ROW0: 4,
-  COL1ROW1: 5,
-  COL1ROW2: 6,
-  COL1ROW3: 7,
-  COL2ROW0: 8,
-  COL2ROW1: 9,
-  COL2ROW2: 10,
-  COL2ROW3: 11,
-  COL3ROW0: 12,
-  COL3ROW1: 13,
-  COL3ROW2: 14,
-  COL3ROW3: 15
-});
-const constants = {};
-class Matrix4 extends Matrix {
-  static get IDENTITY() {
-    constants.IDENTITY = constants.IDENTITY || Object.freeze(new Matrix4(IDENTITY));
-    return constants.IDENTITY;
-  }
-
-  static get ZERO() {
-    constants.ZERO = constants.ZERO || Object.freeze(new Matrix4(ZERO));
-    return constants.ZERO;
-  }
-
-  get INDICES() {
-    return INDICES;
-  }
-
-  get ELEMENTS() {
-    return 16;
-  }
-
-  get RANK() {
-    return 4;
-  }
-
-  constructor(array) {
-    super(-0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0);
-
-    if (arguments.length === 1 && Array.isArray(array)) {
-      this.copy(array);
-    } else {
-      this.identity();
-    }
-  }
-
-  copy(array) {
-    this[0] = array[0];
-    this[1] = array[1];
-    this[2] = array[2];
-    this[3] = array[3];
-    this[4] = array[4];
-    this[5] = array[5];
-    this[6] = array[6];
-    this[7] = array[7];
-    this[8] = array[8];
-    this[9] = array[9];
-    this[10] = array[10];
-    this[11] = array[11];
-    this[12] = array[12];
-    this[13] = array[13];
-    this[14] = array[14];
-    this[15] = array[15];
-    return this.check();
-  }
-
-  set(m00, m10, m20, m30, m01, m11, m21, m31, m02, m12, m22, m32, m03, m13, m23, m33) {
-    this[0] = m00;
-    this[1] = m10;
-    this[2] = m20;
-    this[3] = m30;
-    this[4] = m01;
-    this[5] = m11;
-    this[6] = m21;
-    this[7] = m31;
-    this[8] = m02;
-    this[9] = m12;
-    this[10] = m22;
-    this[11] = m32;
-    this[12] = m03;
-    this[13] = m13;
-    this[14] = m23;
-    this[15] = m33;
-    return this.check();
-  }
-
-  setRowMajor(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {
-    this[0] = m00;
-    this[1] = m10;
-    this[2] = m20;
-    this[3] = m30;
-    this[4] = m01;
-    this[5] = m11;
-    this[6] = m21;
-    this[7] = m31;
-    this[8] = m02;
-    this[9] = m12;
-    this[10] = m22;
-    this[11] = m32;
-    this[12] = m03;
-    this[13] = m13;
-    this[14] = m23;
-    this[15] = m33;
-    return this.check();
-  }
-
-  toRowMajor(result) {
-    result[0] = this[0];
-    result[1] = this[4];
-    result[2] = this[8];
-    result[3] = this[12];
-    result[4] = this[1];
-    result[5] = this[5];
-    result[6] = this[9];
-    result[7] = this[13];
-    result[8] = this[2];
-    result[9] = this[6];
-    result[10] = this[10];
-    result[11] = this[14];
-    result[12] = this[3];
-    result[13] = this[7];
-    result[14] = this[11];
-    result[15] = this[15];
-    return result;
-  }
-
-  identity() {
-    return this.copy(IDENTITY);
-  }
-
-  fromQuaternion(q) {
-    fromQuat(this, q);
-    return this.check();
-  }
-
-  frustum({
-    left,
-    right,
-    bottom,
-    top,
-    near,
-    far
-  }) {
-    if (far === Infinity) {
-      Matrix4._computeInfinitePerspectiveOffCenter(this, left, right, bottom, top, near);
-    } else {
-      frustum(this, left, right, bottom, top, near, far);
-    }
-
-    return this.check();
-  }
-
-  static _computeInfinitePerspectiveOffCenter(result, left, right, bottom, top, near) {
-    const column0Row0 = 2.0 * near / (right - left);
-    const column1Row1 = 2.0 * near / (top - bottom);
-    const column2Row0 = (right + left) / (right - left);
-    const column2Row1 = (top + bottom) / (top - bottom);
-    const column2Row2 = -1.0;
-    const column2Row3 = -1.0;
-    const column3Row2 = -2.0 * near;
-    result[0] = column0Row0;
-    result[1] = 0.0;
-    result[2] = 0.0;
-    result[3] = 0.0;
-    result[4] = 0.0;
-    result[5] = column1Row1;
-    result[6] = 0.0;
-    result[7] = 0.0;
-    result[8] = column2Row0;
-    result[9] = column2Row1;
-    result[10] = column2Row2;
-    result[11] = column2Row3;
-    result[12] = 0.0;
-    result[13] = 0.0;
-    result[14] = column3Row2;
-    result[15] = 0.0;
-    return result;
-  }
-
-  lookAt(eye, center, up) {
-    if (arguments.length === 1) {
-      ({
-        eye,
-        center,
-        up
-      } = eye);
-    }
-
-    center = center || [0, 0, 0];
-    up = up || [0, 1, 0];
-    lookAt(this, eye, center, up);
-    return this.check();
-  }
-
-  ortho({
-    left,
-    right,
-    bottom,
-    top,
-    near = 0.1,
-    far = 500
-  }) {
-    ortho(this, left, right, bottom, top, near, far);
-    return this.check();
-  }
-
-  orthographic({
-    fovy = 45 * Math.PI / 180,
-    aspect = 1,
-    focalDistance = 1,
-    near = 0.1,
-    far = 500
-  }) {
-    if (fovy > Math.PI * 2) {
-      throw Error('radians');
-    }
-
-    const halfY = fovy / 2;
-    const top = focalDistance * Math.tan(halfY);
-    const right = top * aspect;
-    return new Matrix4().ortho({
-      left: -right,
-      right,
-      bottom: -top,
-      top,
-      near,
-      far
-    });
-  }
-
-  perspective({
-    fovy = undefined,
-    fov = 45 * Math.PI / 180,
-    aspect = 1,
-    near = 0.1,
-    far = 500
-  } = {}) {
-    fovy = fovy || fov;
-
-    if (fovy > Math.PI * 2) {
-      throw Error('radians');
-    }
-
-    perspective(this, fovy, aspect, near, far);
-    return this.check();
-  }
-
-  determinant() {
-    return determinant(this);
-  }
-
-  getScale(result = [-0, -0, -0]) {
-    result[0] = Math.sqrt(this[0] * this[0] + this[1] * this[1] + this[2] * this[2]);
-    result[1] = Math.sqrt(this[4] * this[4] + this[5] * this[5] + this[6] * this[6]);
-    result[2] = Math.sqrt(this[8] * this[8] + this[9] * this[9] + this[10] * this[10]);
-    return result;
-  }
-
-  getTranslation(result = [-0, -0, -0]) {
-    result[0] = this[12];
-    result[1] = this[13];
-    result[2] = this[14];
-    return result;
-  }
-
-  getRotation(result = [-0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0], scaleResult = null) {
-    const scale = this.getScale(scaleResult || [-0, -0, -0]);
-    const inverseScale0 = 1 / scale[0];
-    const inverseScale1 = 1 / scale[1];
-    const inverseScale2 = 1 / scale[2];
-    result[0] = this[0] * inverseScale0;
-    result[1] = this[1] * inverseScale1;
-    result[2] = this[2] * inverseScale2;
-    result[3] = 0;
-    result[4] = this[4] * inverseScale0;
-    result[5] = this[5] * inverseScale1;
-    result[6] = this[6] * inverseScale2;
-    result[7] = 0;
-    result[8] = this[8] * inverseScale0;
-    result[9] = this[9] * inverseScale1;
-    result[10] = this[10] * inverseScale2;
-    result[11] = 0;
-    result[12] = 0;
-    result[13] = 0;
-    result[14] = 0;
-    result[15] = 1;
-    return result;
-  }
-
-  getRotationMatrix3(result = [-0, -0, -0, -0, -0, -0, -0, -0, -0], scaleResult = null) {
-    const scale = this.getScale(scaleResult || [-0, -0, -0]);
-    const inverseScale0 = 1 / scale[0];
-    const inverseScale1 = 1 / scale[1];
-    const inverseScale2 = 1 / scale[2];
-    result[0] = this[0] * inverseScale0;
-    result[1] = this[1] * inverseScale1;
-    result[2] = this[2] * inverseScale2;
-    result[3] = this[4] * inverseScale0;
-    result[4] = this[5] * inverseScale1;
-    result[5] = this[6] * inverseScale2;
-    result[6] = this[8] * inverseScale0;
-    result[7] = this[9] * inverseScale1;
-    result[8] = this[10] * inverseScale2;
-    return result;
-  }
-
-  transpose() {
-    transpose(this, this);
-    return this.check();
-  }
-
-  invert() {
-    invert$1(this, this);
-    return this.check();
-  }
-
-  multiplyLeft(a) {
-    multiply$1(this, a, this);
-    return this.check();
-  }
-
-  multiplyRight(a) {
-    multiply$1(this, this, a);
-    return this.check();
-  }
-
-  rotateX(radians) {
-    rotateX$1(this, this, radians);
-    return this.check();
-  }
-
-  rotateY(radians) {
-    rotateY$1(this, this, radians);
-    return this.check();
-  }
-
-  rotateZ(radians) {
-    rotateZ$1(this, this, radians);
-    return this.check();
-  }
-
-  rotateXYZ([rx, ry, rz]) {
-    return this.rotateX(rx).rotateY(ry).rotateZ(rz);
-  }
-
-  rotateAxis(radians, axis) {
-    rotate(this, this, radians, axis);
-    return this.check();
-  }
-
-  scale(factor) {
-    if (Array.isArray(factor)) {
-      scale$2(this, this, factor);
-    } else {
-      scale$2(this, this, [factor, factor, factor]);
-    }
-
-    return this.check();
-  }
-
-  translate(vec) {
-    translate(this, this, vec);
-    return this.check();
-  }
-
-  transform(vector, result) {
-    if (vector.length === 4) {
-      result = transformMat4(result || [-0, -0, -0, -0], vector, this);
-      checkVector(result, 4);
-      return result;
-    }
-
-    return this.transformAsPoint(vector, result);
-  }
-
-  transformAsPoint(vector, result) {
-    const {
-      length
-    } = vector;
-
-    switch (length) {
-      case 2:
-        result = transformMat4$2(result || [-0, -0], vector, this);
-        break;
-
-      case 3:
-        result = transformMat4$1(result || [-0, -0, -0], vector, this);
-        break;
-
-      default:
-        throw new Error('Illegal vector');
-    }
-
-    checkVector(result, vector.length);
-    return result;
-  }
-
-  transformAsVector(vector, result) {
-    switch (vector.length) {
-      case 2:
-        result = vec2_transformMat4AsVector(result || [-0, -0], vector, this);
-        break;
-
-      case 3:
-        result = vec3_transformMat4AsVector(result || [-0, -0, -0], vector, this);
-        break;
-
-      default:
-        throw new Error('Illegal vector');
-    }
-
-    checkVector(result, vector.length);
-    return result;
-  }
-
-  makeRotationX(radians) {
-    return this.identity().rotateX(radians);
-  }
-
-  makeTranslation(x, y, z) {
-    return this.identity().translate([x, y, z]);
-  }
-
-  transformPoint(vector, result) {
-    deprecated('Matrix4.transformPoint', '3.0');
-    return this.transformAsPoint(vector, result);
-  }
-
-  transformVector(vector, result) {
-    deprecated('Matrix4.transformVector', '3.0');
-    return this.transformAsPoint(vector, result);
-  }
-
-  transformDirection(vector, result) {
-    deprecated('Matrix4.transformDirection', '3.0');
-    return this.transformAsVector(vector, result);
   }
 
 }
@@ -8102,7 +6965,7 @@ var _MathUtils = {
   TWO_PI: Math.PI * 2
 };
 
-const WGS84_RADIUS_X$2 = 6378137.0;
+const WGS84_RADIUS_X$1 = 6378137.0;
 const WGS84_RADIUS_Y$1 = 6378137.0;
 const WGS84_RADIUS_Z$1 = 6356752.3142451793;
 
@@ -8276,7 +7139,7 @@ const scratchVector2$1 = new Vector3();
 const scratchVector3$1 = new Vector3();
 function localFrameToFixedFrame(ellipsoid, firstAxis, secondAxis, thirdAxis, cartesianOrigin, result) {
   const thirdAxisInferred = VECTOR_PRODUCT_LOCAL_FRAME[firstAxis] && VECTOR_PRODUCT_LOCAL_FRAME[firstAxis][secondAxis];
-  assert$5(thirdAxisInferred && (!thirdAxis || thirdAxis === thirdAxisInferred));
+  assert$4(thirdAxisInferred && (!thirdAxis || thirdAxis === thirdAxisInferred));
   let firstAxisVector;
   let secondAxisVector;
   let thirdAxisVector;
@@ -8352,14 +7215,14 @@ const scratchCartesian = new Vector3();
 let wgs84;
 class Ellipsoid {
   static get WGS84() {
-    wgs84 = wgs84 || new Ellipsoid(WGS84_RADIUS_X$2, WGS84_RADIUS_Y$1, WGS84_RADIUS_Z$1);
+    wgs84 = wgs84 || new Ellipsoid(WGS84_RADIUS_X$1, WGS84_RADIUS_Y$1, WGS84_RADIUS_Z$1);
     return wgs84;
   }
 
   constructor(x = 0.0, y = 0.0, z = 0.0) {
-    assert$5(x >= 0.0);
-    assert$5(y >= 0.0);
-    assert$5(z >= 0.0);
+    assert$4(x >= 0.0);
+    assert$4(y >= 0.0);
+    assert$4(z >= 0.0);
     this.radii = new Vector3(x, y, z);
     this.radiiSquared = new Vector3(x * x, y * y, z * z);
     this.radiiToTheFourth = new Vector3(x * x * x * x, y * y * y * y, z * z * z * z);
@@ -8462,8 +7325,8 @@ class Ellipsoid {
   }
 
   getSurfaceNormalIntersectionWithZAxis(position, buffer = 0.0, result = [0, 0, 0]) {
-    assert$5(equals(this.radii.x, this.radii.y, _MathUtils.EPSILON15));
-    assert$5(this.radii.z > 0);
+    assert$4(equals(this.radii.x, this.radii.y, _MathUtils.EPSILON15));
+    assert$4(this.radii.z > 0);
     scratchPosition$2.from(position);
     const z = scratchPosition$2.z * (1 - this.squaredXOverSquaredZ);
 
@@ -8478,6 +7341,12 @@ class Ellipsoid {
 
 class DoublyLinkedListNode {
   constructor(item, previous, next) {
+    _defineProperty(this, "item", void 0);
+
+    _defineProperty(this, "previous", void 0);
+
+    _defineProperty(this, "next", void 0);
+
     this.item = item;
     this.previous = previous;
     this.next = next;
@@ -8487,9 +7356,11 @@ class DoublyLinkedListNode {
 
 class DoublyLinkedList {
   constructor() {
-    this.head = null;
-    this.tail = null;
-    this._length = 0;
+    _defineProperty(this, "head", null);
+
+    _defineProperty(this, "tail", null);
+
+    _defineProperty(this, "_length", 0);
   }
 
   get length() {
@@ -8639,8 +7510,8 @@ class TilesetCache {
 }
 
 function calculateTransformProps(tileHeader, tile) {
-  assert$9(tileHeader);
-  assert$9(tile);
+  assert$7(tileHeader);
+  assert$7(tile);
   const {
     rtcCenter,
     gltfUpAxis
@@ -8651,7 +7522,7 @@ function calculateTransformProps(tileHeader, tile) {
       center
     }
   } = tileHeader;
-  let modelMatrix = new Matrix4$1(computedTransform);
+  let modelMatrix = new Matrix4(computedTransform);
 
   if (rtcCenter) {
     modelMatrix.translate(rtcCenter);
@@ -8662,12 +7533,12 @@ function calculateTransformProps(tileHeader, tile) {
       break;
 
     case 'Y':
-      const rotationY = new Matrix4$1().rotateX(Math.PI / 2);
+      const rotationY = new Matrix4().rotateX(Math.PI / 2);
       modelMatrix = modelMatrix.multiplyRight(rotationY);
       break;
 
     case 'X':
-      const rotationX = new Matrix4$1().rotateY(-Math.PI / 2);
+      const rotationX = new Matrix4().rotateY(-Math.PI / 2);
       modelMatrix = modelMatrix.multiplyRight(rotationX);
       break;
   }
@@ -8676,15 +7547,18 @@ function calculateTransformProps(tileHeader, tile) {
     modelMatrix.translate(tile.quantizedVolumeOffset).scale(tile.quantizedVolumeScale);
   }
 
-  const cartesianOrigin = new Vector3$1(center);
+  const cartesianOrigin = new Vector3(center);
   tile.cartesianModelMatrix = modelMatrix;
   tile.cartesianOrigin = cartesianOrigin;
-  const cartographicOrigin = Ellipsoid.WGS84.cartesianToCartographic(cartesianOrigin, new Vector3$1());
+  const cartographicOrigin = Ellipsoid.WGS84.cartesianToCartographic(cartesianOrigin, new Vector3());
   const fromFixedFrameMatrix = Ellipsoid.WGS84.eastNorthUpToFixedFrame(cartesianOrigin);
   const toFixedFrameMatrix = fromFixedFrameMatrix.invert();
   tile.cartographicModelMatrix = toFixedFrameMatrix.multiplyRight(modelMatrix);
   tile.cartographicOrigin = cartographicOrigin;
-  tile.modelMatrix = tile.cartographicModelMatrix;
+
+  if (!tile.coordinateSystem) {
+    tile.modelMatrix = tile.cartographicModelMatrix;
+  }
 }
 
 const INTERSECTION = Object.freeze({
@@ -8693,15 +7567,15 @@ const INTERSECTION = Object.freeze({
   INSIDE: 1
 });
 
-new Vector3$1();
-new Vector3$1();
+new Vector3();
+new Vector3();
 
-const scratchVector$3 = new Vector3$1();
-const scratchVector2 = new Vector3$1();
+const scratchVector$3 = new Vector3();
+const scratchVector2 = new Vector3();
 class BoundingSphere {
   constructor(center = [0, 0, 0], radius = 0.0) {
     this.radius = -0;
-    this.center = new Vector3$1();
+    this.center = new Vector3();
     this.fromCenterRadius(center, radius);
   }
 
@@ -8713,7 +7587,7 @@ class BoundingSphere {
 
   fromCornerPoints(corner, oppositeCorner) {
     oppositeCorner = scratchVector$3.from(oppositeCorner);
-    this.center = new Vector3$1().from(corner).add(oppositeCorner).scale(0.5);
+    this.center = new Vector3().from(corner).add(oppositeCorner).scale(0.5);
     this.radius = this.center.distance(oppositeCorner);
     return this;
   }
@@ -8768,13 +7642,14 @@ class BoundingSphere {
   }
 
   distanceSquaredTo(point) {
-    point = scratchVector$3.from(point);
-    const delta = point.subtract(this.center);
-    return delta.lengthSquared() - this.radius * this.radius;
+    const d = this.distanceTo(point);
+    return d * d;
   }
 
   distanceTo(point) {
-    return Math.sqrt(this.distanceSquaredTo(point));
+    point = scratchVector$3.from(point);
+    const delta = point.subtract(this.center);
+    return Math.max(0, delta.len() - this.radius);
   }
 
   intersectPlane(plane) {
@@ -8796,13 +7671,13 @@ class BoundingSphere {
 
 }
 
-const scratchVector3 = new Vector3$1();
-const scratchOffset = new Vector3$1();
-const scratchVectorU = new Vector3$1();
-const scratchVectorV = new Vector3$1();
-const scratchVectorW = new Vector3$1();
-const scratchCorner = new Vector3$1();
-const scratchToCenter = new Vector3$1();
+const scratchVector3 = new Vector3();
+const scratchOffset = new Vector3();
+const scratchVectorU = new Vector3();
+const scratchVectorV = new Vector3();
+const scratchVectorW = new Vector3();
+const scratchCorner = new Vector3();
+const scratchToCenter = new Vector3();
 const MATRIX3 = {
   COLUMN0ROW0: 0,
   COLUMN0ROW1: 1,
@@ -8816,7 +7691,7 @@ const MATRIX3 = {
 };
 class OrientedBoundingBox {
   constructor(center = [0, 0, 0], halfAxes = [0, 0, 0, 0, 0, 0, 0, 0, 0]) {
-    this.center = new Vector3$1().from(center);
+    this.center = new Vector3().from(center);
     this.halfAxes = new Matrix3(halfAxes);
   }
 
@@ -8824,16 +7699,16 @@ class OrientedBoundingBox {
     const xAxis = this.halfAxes.getColumn(0);
     const yAxis = this.halfAxes.getColumn(1);
     const zAxis = this.halfAxes.getColumn(2);
-    return [new Vector3$1(xAxis).len(), new Vector3$1(yAxis).len(), new Vector3$1(zAxis).len()];
+    return [new Vector3(xAxis).len(), new Vector3(yAxis).len(), new Vector3(zAxis).len()];
   }
 
   get quaternion() {
     const xAxis = this.halfAxes.getColumn(0);
     const yAxis = this.halfAxes.getColumn(1);
     const zAxis = this.halfAxes.getColumn(2);
-    const normXAxis = new Vector3$1(xAxis).normalize();
-    const normYAxis = new Vector3$1(yAxis).normalize();
-    const normZAxis = new Vector3$1(zAxis).normalize();
+    const normXAxis = new Vector3(xAxis).normalize();
+    const normYAxis = new Vector3(yAxis).normalize();
+    const normZAxis = new Vector3(zAxis).normalize();
     return new Quaternion().fromMatrix3(new Matrix3([...normXAxis, ...normYAxis, ...normZAxis]));
   }
 
@@ -8849,7 +7724,7 @@ class OrientedBoundingBox {
     directionsMatrix[6] = directionsMatrix[6] * halfSize[2];
     directionsMatrix[7] = directionsMatrix[7] * halfSize[2];
     directionsMatrix[8] = directionsMatrix[8] * halfSize[2];
-    this.center = new Vector3$1().from(center);
+    this.center = new Vector3().from(center);
     this.halfAxes = directionsMatrix;
     return this;
   }
@@ -9002,17 +7877,17 @@ class OrientedBoundingBox {
 
 }
 
-const scratchPosition$1 = new Vector3$1();
-const scratchNormal$1 = new Vector3$1();
+const scratchPosition$1 = new Vector3();
+const scratchNormal$1 = new Vector3();
 class Plane {
   constructor(normal = [0, 0, 1], distance = 0) {
-    this.normal = new Vector3$1();
+    this.normal = new Vector3();
     this.distance = -0;
     this.fromNormalDistance(normal, distance);
   }
 
   fromNormalDistance(normal, distance) {
-    assert$6(Number.isFinite(distance));
+    assert$4(Number.isFinite(distance));
     this.normal.from(normal).normalize();
     this.distance = distance;
     return this;
@@ -9028,7 +7903,7 @@ class Plane {
 
   fromCoefficients(a, b, c, d) {
     this.normal.set(a, b, c);
-    assert$6(equals$1(this.normal.len(), 1));
+    assert$4(equals(this.normal.len(), 1));
     this.distance = d;
     return this;
   }
@@ -9038,7 +7913,7 @@ class Plane {
   }
 
   equals(right) {
-    return equals$1(this.distance, right.distance) && equals$1(this.normal, right.normal);
+    return equals(this.distance, right.distance) && equals(this.normal, right.normal);
   }
 
   getPointDistance(point) {
@@ -9060,10 +7935,10 @@ class Plane {
 
 }
 
-const faces = [new Vector3$1([1, 0, 0]), new Vector3$1([0, 1, 0]), new Vector3$1([0, 0, 1])];
-const scratchPlaneCenter = new Vector3$1();
-const scratchPlaneNormal$1 = new Vector3$1();
-new Plane(new Vector3$1(1.0, 0.0, 0.0), 0.0);
+const faces = [new Vector3([1, 0, 0]), new Vector3([0, 1, 0]), new Vector3([0, 0, 1])];
+const scratchPlaneCenter = new Vector3();
+const scratchPlaneNormal$1 = new Vector3();
+new Plane(new Vector3(1.0, 0.0, 0.0), 0.0);
 class CullingVolume {
   static get MASK_OUTSIDE() {
     return 0xffffffff;
@@ -9079,7 +7954,7 @@ class CullingVolume {
 
   constructor(planes = []) {
     this.planes = planes;
-    assert$6(this.planes.every(plane => plane instanceof Plane));
+    assert$4(this.planes.every(plane => plane instanceof Plane));
   }
 
   fromBoundingSphere(boundingSphere) {
@@ -9114,7 +7989,7 @@ class CullingVolume {
   }
 
   computeVisibility(boundingVolume) {
-    assert$6(boundingVolume);
+    assert$4(boundingVolume);
     let intersect = INTERSECTION.INSIDE;
 
     for (const plane of this.planes) {
@@ -9134,8 +8009,8 @@ class CullingVolume {
   }
 
   computeVisibilityWithPlaneMask(boundingVolume, parentPlaneMask) {
-    assert$6(boundingVolume, 'boundingVolume is required.');
-    assert$6(Number.isFinite(parentPlaneMask), 'parentPlaneMask is required.');
+    assert$4(boundingVolume, 'boundingVolume is required.');
+    assert$4(Number.isFinite(parentPlaneMask), 'parentPlaneMask is required.');
 
     if (parentPlaneMask === CullingVolume.MASK_OUTSIDE || parentPlaneMask === CullingVolume.MASK_INSIDE) {
       return parentPlaneMask;
@@ -9166,11 +8041,11 @@ class CullingVolume {
 
 }
 
-const scratchPlaneUpVector = new Vector3$1();
-const scratchPlaneRightVector = new Vector3$1();
-const scratchPlaneNearCenter = new Vector3$1();
-const scratchPlaneFarCenter = new Vector3$1();
-const scratchPlaneNormal = new Vector3$1();
+const scratchPlaneUpVector = new Vector3();
+const scratchPlaneRightVector = new Vector3();
+const scratchPlaneNearCenter = new Vector3();
+const scratchPlaneFarCenter = new Vector3();
+const scratchPlaneNormal = new Vector3();
 class PerspectiveOffCenterFrustum {
   constructor(options = {}) {
     options = {
@@ -9191,8 +8066,8 @@ class PerspectiveOffCenterFrustum {
     this.far = options.far;
     this._far = this.far;
     this._cullingVolume = new CullingVolume([new Plane(), new Plane(), new Plane(), new Plane(), new Plane(), new Plane()]);
-    this._perspectiveMatrix = new Matrix4$1();
-    this._infinitePerspective = new Matrix4$1();
+    this._perspectiveMatrix = new Matrix4();
+    this._infinitePerspective = new Matrix4();
   }
 
   clone() {
@@ -9221,9 +8096,9 @@ class PerspectiveOffCenterFrustum {
   }
 
   computeCullingVolume(position, direction, up) {
-    assert$6(position, 'position is required.');
-    assert$6(direction, 'direction is required.');
-    assert$6(up, 'up is required.');
+    assert$4(position, 'position is required.');
+    assert$4(direction, 'direction is required.');
+    assert$4(up, 'up is required.');
     const planes = this._cullingVolume.planes;
     up = scratchPlaneUpVector.copy(up).normalize();
     const right = scratchPlaneRightVector.copy(direction).cross(up).normalize();
@@ -9238,7 +8113,7 @@ class PerspectiveOffCenterFrustum {
     planes[2].fromPointNormal(position, normal);
     normal.copy(up).multiplyByScalar(this.top).add(nearCenter).subtract(position).cross(right);
     planes[3].fromPointNormal(position, normal);
-    normal = new Vector3$1().copy(direction);
+    normal = new Vector3().copy(direction);
     planes[4].fromPointNormal(nearCenter, normal);
     normal.negate();
     planes[5].fromPointNormal(farCenter, normal);
@@ -9247,11 +8122,11 @@ class PerspectiveOffCenterFrustum {
 
   getPixelDimensions(drawingBufferWidth, drawingBufferHeight, distance, result) {
     update$1(this);
-    assert$6(Number.isFinite(drawingBufferWidth) && Number.isFinite(drawingBufferHeight));
-    assert$6(drawingBufferWidth > 0);
-    assert$6(drawingBufferHeight > 0);
-    assert$6(distance > 0);
-    assert$6(result);
+    assert$4(Number.isFinite(drawingBufferWidth) && Number.isFinite(drawingBufferHeight));
+    assert$4(drawingBufferWidth > 0);
+    assert$4(drawingBufferHeight > 0);
+    assert$4(distance > 0);
+    assert$4(result);
     const inverseNear = 1.0 / this.near;
     let tanTheta = this.top * inverseNear;
     const pixelHeight = 2.0 * distance * tanTheta / drawingBufferHeight;
@@ -9265,7 +8140,7 @@ class PerspectiveOffCenterFrustum {
 }
 
 function update$1(frustum) {
-  assert$6(Number.isFinite(frustum.right) && Number.isFinite(frustum.left) && Number.isFinite(frustum.top) && Number.isFinite(frustum.bottom) && Number.isFinite(frustum.near) && Number.isFinite(frustum.far));
+  assert$4(Number.isFinite(frustum.right) && Number.isFinite(frustum.left) && Number.isFinite(frustum.top) && Number.isFinite(frustum.bottom) && Number.isFinite(frustum.near) && Number.isFinite(frustum.far));
   const {
     top,
     bottom,
@@ -9276,14 +8151,14 @@ function update$1(frustum) {
   } = frustum;
 
   if (top !== frustum._top || bottom !== frustum._bottom || left !== frustum._left || right !== frustum._right || near !== frustum._near || far !== frustum._far) {
-    assert$6(frustum.near > 0 && frustum.near < frustum.far, 'near must be greater than zero and less than far.');
+    assert$4(frustum.near > 0 && frustum.near < frustum.far, 'near must be greater than zero and less than far.');
     frustum._left = left;
     frustum._right = right;
     frustum._top = top;
     frustum._bottom = bottom;
     frustum._near = near;
     frustum._far = far;
-    frustum._perspectiveMatrix = new Matrix4$1().frustum({
+    frustum._perspectiveMatrix = new Matrix4().frustum({
       left,
       right,
       bottom,
@@ -9291,7 +8166,7 @@ function update$1(frustum) {
       near,
       far
     });
-    frustum._infinitePerspective = new Matrix4$1().frustum({
+    frustum._infinitePerspective = new Matrix4().frustum({
       left,
       right,
       bottom,
@@ -9382,13 +8257,13 @@ class PerspectiveFrustum {
 }
 
 function update(frustum) {
-  assert$6(Number.isFinite(frustum.fov) && Number.isFinite(frustum.aspectRatio) && Number.isFinite(frustum.near) && Number.isFinite(frustum.far));
+  assert$4(Number.isFinite(frustum.fov) && Number.isFinite(frustum.aspectRatio) && Number.isFinite(frustum.near) && Number.isFinite(frustum.far));
   const f = frustum._offCenterFrustum;
 
   if (frustum.fov !== frustum._fov || frustum.aspectRatio !== frustum._aspectRatio || frustum.near !== frustum._near || frustum.far !== frustum._far || frustum.xOffset !== frustum._xOffset || frustum.yOffset !== frustum._yOffset) {
-    assert$6(frustum.fov >= 0 && frustum.fov < Math.PI);
-    assert$6(frustum.aspectRatio > 0);
-    assert$6(frustum.near >= 0 && frustum.near < frustum.far);
+    assert$4(frustum.fov >= 0 && frustum.fov < Math.PI);
+    assert$4(frustum.aspectRatio > 0);
+    assert$4(frustum.near >= 0 && frustum.near < frustum.far);
     frustum._aspectRatio = frustum.aspectRatio;
     frustum._fov = frustum.fov;
     frustum._fovy = frustum.aspectRatio <= 1 ? frustum.fov : Math.atan(Math.tan(frustum.fov * 0.5) / frustum.aspectRatio) * 2.0;
@@ -9410,18 +8285,18 @@ function update(frustum) {
   }
 }
 
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
+new Vector3();
+new Vector3();
+new Vector3();
+new Vector3();
+new Vector3();
+new Vector3();
+new Vector3();
+new Vector3();
+new Vector3();
+new Vector3();
+new Vector3();
+new Vector3();
 
 new Matrix3();
 new Matrix3();
@@ -9429,19 +8304,19 @@ new Matrix3();
 new Matrix3();
 new Matrix3();
 
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
+new Vector3();
+new Vector3();
+new Vector3();
+new Vector3();
+new Vector3();
 new Matrix3();
 ({
   diagonal: new Matrix3(),
   unitary: new Matrix3()
 });
 
-const scratchVector$2 = new Vector3$1();
-const scratchPosition = new Vector3$1();
+const scratchVector$2 = new Vector3();
+const scratchPosition = new Vector3();
 const cullingVolume = new CullingVolume([new Plane(), new Plane(), new Plane(), new Plane(), new Plane(), new Plane()]);
 function getFrameState(viewport, frameNumber) {
   const {
@@ -9452,13 +8327,13 @@ function getFrameState(viewport, frameNumber) {
   const {
     metersPerUnit
   } = viewport.distanceScales;
-  const viewportCenterCartographic = [viewport.longitude, viewport.latitude, 0];
-  const viewportCenterCartesian = Ellipsoid.WGS84.cartographicToCartesian(viewportCenterCartographic, new Vector3$1());
+  const viewportCenterCartographic = viewport.unprojectPosition(viewport.center);
+  const viewportCenterCartesian = Ellipsoid.WGS84.cartographicToCartesian(viewportCenterCartographic, new Vector3());
   const enuToFixedTransform = Ellipsoid.WGS84.eastNorthUpToFixedFrame(viewportCenterCartesian);
   const cameraPositionCartographic = viewport.unprojectPosition(viewport.cameraPosition);
-  const cameraPositionCartesian = Ellipsoid.WGS84.cartographicToCartesian(cameraPositionCartographic, new Vector3$1());
-  const cameraDirectionCartesian = new Vector3$1(enuToFixedTransform.transformAsVector(new Vector3$1(cameraDirection).scale(metersPerUnit))).normalize();
-  const cameraUpCartesian = new Vector3$1(enuToFixedTransform.transformAsVector(new Vector3$1(cameraUp).scale(metersPerUnit))).normalize();
+  const cameraPositionCartesian = Ellipsoid.WGS84.cartographicToCartesian(cameraPositionCartographic, new Vector3());
+  const cameraDirectionCartesian = new Vector3(enuToFixedTransform.transformAsVector(new Vector3(cameraDirection).scale(metersPerUnit))).normalize();
+  const cameraUpCartesian = new Vector3(enuToFixedTransform.transformAsVector(new Vector3(cameraUp).scale(metersPerUnit))).normalize();
   commonSpacePlanesToWGS84(viewport, viewportCenterCartesian);
   return {
     camera: {
@@ -9483,15 +8358,15 @@ function commonSpacePlanesToWGS84(viewport, viewportCenterCartesian) {
     const distanceToCenter = plane.normal.dot(viewport.center);
     scratchPosition.copy(plane.normal).scale(plane.distance - distanceToCenter).add(viewport.center);
     const cartographicPos = viewport.unprojectPosition(scratchPosition);
-    const cartesianPos = Ellipsoid.WGS84.cartographicToCartesian(cartographicPos, new Vector3$1());
+    const cartesianPos = Ellipsoid.WGS84.cartographicToCartesian(cartographicPos, new Vector3());
     cullingVolume.planes[i++].fromPointNormal(cartesianPos, scratchVector$2.copy(viewportCenterCartesian).subtract(cartesianPos));
   }
 }
 
-const WGS84_RADIUS_X$1 = 6378137.0;
+const WGS84_RADIUS_X = 6378137.0;
 const WGS84_RADIUS_Y = 6378137.0;
 const WGS84_RADIUS_Z = 6356752.3142451793;
-const scratchVector$1 = new Vector3$1();
+const scratchVector$1 = new Vector3();
 function getZoomFromBoundingVolume(boundingVolume) {
   const {
     halfAxes,
@@ -9506,7 +8381,7 @@ function getZoomFromBoundingVolume(boundingVolume) {
   } else if (radius) {
     return Math.log2(WGS84_RADIUS_Z / radius);
   } else if (height && width) {
-    const zoomX = Math.log2(WGS84_RADIUS_X$1 / width);
+    const zoomX = Math.log2(WGS84_RADIUS_X / width);
     const zoomY = Math.log2(WGS84_RADIUS_Y / height);
     return (zoomX + zoomY) / 2;
   }
@@ -9559,11 +8434,11 @@ function defined$3(x) {
   return x !== undefined && x !== null;
 }
 
-const scratchScale = new Vector3$1();
-const scratchNorthWest = new Vector3$1();
-const scratchSouthEast = new Vector3$1();
+const scratchScale = new Vector3();
+const scratchNorthWest = new Vector3();
+const scratchSouthEast = new Vector3();
 function createBoundingVolume(boundingVolumeHeader, transform, result) {
-  assert$9(boundingVolumeHeader, '3D Tile: boundingVolume must be defined');
+  assert$7(boundingVolumeHeader, '3D Tile: boundingVolume must be defined');
 
   if (boundingVolumeHeader.box) {
     return createBox(boundingVolumeHeader.box, transform, result);
@@ -9571,11 +8446,11 @@ function createBoundingVolume(boundingVolumeHeader, transform, result) {
 
   if (boundingVolumeHeader.region) {
     const [west, south, east, north, minHeight, maxHeight] = boundingVolumeHeader.region;
-    const northWest = Ellipsoid.WGS84.cartographicToCartesian([degrees$1(west), degrees$1(north), minHeight], scratchNorthWest);
-    const southEast = Ellipsoid.WGS84.cartographicToCartesian([degrees$1(east), degrees$1(south), maxHeight], scratchSouthEast);
-    const centerInCartesian = new Vector3$1().addVectors(northWest, southEast).multiplyScalar(0.5);
-    const radius = new Vector3$1().subVectors(northWest, southEast).len() / 2.0;
-    return createSphere([centerInCartesian[0], centerInCartesian[1], centerInCartesian[2], radius], new Matrix4$1());
+    const northWest = Ellipsoid.WGS84.cartographicToCartesian([degrees(west), degrees(north), minHeight], scratchNorthWest);
+    const southEast = Ellipsoid.WGS84.cartographicToCartesian([degrees(east), degrees(south), maxHeight], scratchSouthEast);
+    const centerInCartesian = new Vector3().addVectors(northWest, southEast).multiplyScalar(0.5);
+    const radius = new Vector3().subVectors(northWest, southEast).len() / 2.0;
+    return createSphere([centerInCartesian[0], centerInCartesian[1], centerInCartesian[2], radius], new Matrix4());
   }
 
   if (boundingVolumeHeader.sphere) {
@@ -9586,7 +8461,7 @@ function createBoundingVolume(boundingVolumeHeader, transform, result) {
 }
 
 function createBox(box, transform, result) {
-  const center = new Vector3$1(box[0], box[1], box[2]);
+  const center = new Vector3(box[0], box[1], box[2]);
   transform.transform(center, center);
   let origin = [];
 
@@ -9594,9 +8469,9 @@ function createBox(box, transform, result) {
     const halfSize = box.slice(3, 6);
     const quaternion = new Quaternion();
     quaternion.fromArray(box, 6);
-    const x = new Vector3$1([1, 0, 0]);
-    const y = new Vector3$1([0, 1, 0]);
-    const z = new Vector3$1([0, 0, 1]);
+    const x = new Vector3([1, 0, 0]);
+    const y = new Vector3([0, 1, 0]);
+    const z = new Vector3([0, 0, 1]);
     x.transformByQuaternion(quaternion);
     x.scale(halfSize[0]);
     y.transformByQuaternion(quaternion);
@@ -9623,7 +8498,7 @@ function createBox(box, transform, result) {
 }
 
 function createSphere(sphere, transform, result) {
-  const center = new Vector3$1(sphere[0], sphere[1], sphere[2]);
+  const center = new Vector3(sphere[0], sphere[1], sphere[2]);
   transform.transform(center, center);
   const scale = transform.getScale(scratchScale);
   const uniformScale = Math.max(Math.max(scale[0], scale[1]), scale[2]);
@@ -9638,12 +8513,12 @@ function createSphere(sphere, transform, result) {
   return new BoundingSphere(center, radius);
 }
 
-new Vector3$1();
-new Vector3$1();
-new Matrix4$1();
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
+new Vector3();
+new Vector3();
+new Matrix4();
+new Vector3();
+new Vector3();
+new Vector3();
 function fog(distanceToCamera, density) {
   const scalar = distanceToCamera * density;
   return 1.0 - Math.exp(-(scalar * scalar));
@@ -9680,50 +8555,14 @@ function getTiles3DScreenSpaceError(tile, frameState, useParentLodMetric) {
   return error;
 }
 
-const WGS84_RADIUS_X = 6378137.0;
-const qualityFactor = Math.PI / 2;
-function lodJudge(tile, frameState) {
-  const viewport = frameState.viewport;
-  const metersPerPixel = viewport.metersPerPixel;
-  const mbsLat = tile.header.mbs[1];
-  const mbsLon = tile.header.mbs[0];
-  const mbsZ = tile.header.mbs[2];
-  const mbsR = tile.header.mbs[3];
-  const {
-    height,
-    width,
-    latitude,
-    longitude
-  } = viewport;
-  const viewportCenter = [longitude, latitude];
-  const mbsCenter = [mbsLon, mbsLat, mbsZ];
-  const mbsLatProjected = [longitude, mbsLat];
-  const mbsLonProjected = [mbsLon, latitude];
-  const diagonalInMeters = Math.sqrt(height * height + width * width) * metersPerPixel[0];
-  const distanceInMeters = getDistanceFromLatLon(viewportCenter, mbsCenter);
-  const visibleHeight = height * 0.5 + mbsR / WGS84_RADIUS_X;
-  const visibleWidth = width * 0.5 + mbsR / WGS84_RADIUS_X;
-
-  if (distanceInMeters > diagonalInMeters + mbsR / WGS84_RADIUS_X) {
-    return 'OUT';
-  }
-
-  if (getDistanceFromLatLon(viewportCenter, mbsLatProjected) > visibleHeight) {
-    return 'OUT';
-  }
-
-  if (getDistanceFromLatLon(viewportCenter, mbsLonProjected) > visibleWidth) {
-    return 'OUT';
-  }
-
-  if (tile.lodMetricValue === 0) {
+function getLodStatus(tile, frameState) {
+  if (tile.lodMetricValue === 0 || isNaN(tile.lodMetricValue)) {
     return 'DIG';
   }
 
-  let screenSize = getI3ScreenSize(tile, frameState);
-  screenSize *= qualityFactor;
+  const screenSize = 2 * getProjectedRadius(tile, frameState);
 
-  if (screenSize < 0.5) {
+  if (screenSize < 2) {
     return 'OUT';
   }
 
@@ -9735,56 +8574,50 @@ function lodJudge(tile, frameState) {
 
   return 'OUT';
 }
-
-function projectVertexToSphere([x, y, z]) {
-  const azim = toRadians$1(x);
-  const incl = toRadians$1(y);
-  const radius = 1.0 + z / WGS84_RADIUS_X;
-  const radCosInc = radius * Math.cos(incl);
-  x = radCosInc * Math.cos(azim);
-  y = radCosInc * Math.sin(azim);
-  z = radius * Math.sin(incl);
-  return [x, y, z];
-}
-
-function getDistanceFromLatLon(observer, center) {
-  const [observerLon, observerLat, observerZ = 0.0] = observer;
-  const [centerLon, centerLat, centerZ = 0.0] = center;
-  const projectedCenter = projectVertexToSphere([centerLon, centerLat, centerZ]);
-  const projectedObserver = projectVertexToSphere([observerLon, observerLat, observerZ]);
-  const dx = projectedObserver[0] - projectedCenter[0];
-  const dy = projectedObserver[1] - projectedCenter[1];
-  const dz = projectedObserver[2] - projectedCenter[2];
-  return dx * dx + dy * dy + dz * dz;
-}
-
-function getI3ScreenSize(tile, frameState) {
-  const viewport = frameState.viewport;
+function getProjectedRadius(tile, frameState) {
+  const originalViewport = frameState.viewport;
+  const ViewportClass = originalViewport.constructor;
+  const {
+    longitude,
+    latitude,
+    height,
+    width,
+    bearing,
+    zoom
+  } = originalViewport;
+  const viewport = new ViewportClass({
+    longitude,
+    latitude,
+    height,
+    width,
+    bearing,
+    zoom,
+    pitch: 0
+  });
   const mbsLat = tile.header.mbs[1];
   const mbsLon = tile.header.mbs[0];
   const mbsZ = tile.header.mbs[2];
   const mbsR = tile.header.mbs[3];
-  const mbsCenter = [mbsLon, mbsLat, mbsZ];
+  const mbsCenterCartesian = [...tile.boundingVolume.center];
   const cameraPositionCartographic = viewport.unprojectPosition(viewport.cameraPosition);
-  const dSquared = getDistanceFromLatLon(cameraPositionCartographic, mbsCenter);
-  const mbsRNormalized = mbsR / WGS84_RADIUS_X;
-  const d = dSquared - mbsRNormalized * mbsRNormalized;
-  const fltMax = 3.4028235e38;
-
-  if (d <= 0.0) {
-    return 0.5 * fltMax;
-  }
-
-  const screenSizeFactor = getTanOfHalfVFAngle(frameState) * mbsRNormalized / Math.sqrt(d) * 300;
-  return screenSizeFactor;
-}
-
-function getTanOfHalfVFAngle(frameState) {
-  const {
-    projectionMatrix
-  } = frameState.viewport;
-  const t = projectionMatrix[5];
-  return t;
+  const cameraPositionCartesian = Ellipsoid.WGS84.cartographicToCartesian(cameraPositionCartographic, new Vector3());
+  const toEye = new Vector3(cameraPositionCartesian).subtract(mbsCenterCartesian).normalize();
+  const enuToCartesianMatrix = new Matrix4();
+  Ellipsoid.WGS84.eastNorthUpToFixedFrame(mbsCenterCartesian, enuToCartesianMatrix);
+  const cartesianToEnuMatrix = new Matrix4(enuToCartesianMatrix).invert();
+  const cameraPositionEnu = new Vector3(cameraPositionCartesian).transform(cartesianToEnuMatrix);
+  const projection = Math.sqrt(cameraPositionEnu[0] * cameraPositionEnu[0] + cameraPositionEnu[1] * cameraPositionEnu[1]);
+  const extraZ = projection * projection / cameraPositionEnu[2];
+  const extraVertexEnu = new Vector3([cameraPositionEnu[0], cameraPositionEnu[1], extraZ]);
+  const extraVertexCartesian = extraVertexEnu.transform(enuToCartesianMatrix);
+  const extraVectorCartesian = new Vector3(extraVertexCartesian).subtract(mbsCenterCartesian).normalize();
+  const radiusVector = toEye.cross(extraVectorCartesian).normalize().scale(mbsR);
+  const sphereMbsBorderVertexCartesian = new Vector3(mbsCenterCartesian).add(radiusVector);
+  const sphereMbsBorderVertexCartographic = Ellipsoid.WGS84.cartesianToCartographic(sphereMbsBorderVertexCartesian);
+  const projectedOrigin = viewport.project([mbsLon, mbsLat, mbsZ]);
+  const projectedMbsBorderVertex = viewport.project(sphereMbsBorderVertexCartographic);
+  const projectedRadius = new Vector3(projectedOrigin).subtract(projectedMbsBorderVertex).magnitude();
+  return projectedRadius;
 }
 
 function get3dTilesOptions(tileset) {
@@ -9795,8 +8628,13 @@ function get3dTilesOptions(tileset) {
 
 class ManagedArray {
   constructor(length = 0) {
+    _defineProperty(this, "_map", new Map());
+
+    _defineProperty(this, "_array", void 0);
+
+    _defineProperty(this, "_length", void 0);
+
     this._array = new Array(length);
-    this._map = new Map();
     this._length = length;
   }
 
@@ -9817,12 +8655,12 @@ class ManagedArray {
   }
 
   get(index) {
-    assert$9(index < this._array.length);
+    assert$7(index < this._array.length);
     return this._array[index];
   }
 
   set(index, element) {
-    assert$9(index >= 0);
+    assert$7(index >= 0);
 
     if (index >= this.length) {
       this.length = index + 1;
@@ -9871,7 +8709,7 @@ class ManagedArray {
   }
 
   reserve(length) {
-    assert$9(length >= 0);
+    assert$7(length >= 0);
 
     if (length > this._array.length) {
       this._array.length = length;
@@ -9879,7 +8717,7 @@ class ManagedArray {
   }
 
   resize(length) {
-    assert$9(length >= 0);
+    assert$7(length >= 0);
     this.length = length;
   }
 
@@ -10196,7 +9034,7 @@ class TilesetTraverser {
 
 }
 
-const scratchVector = new Vector3$1();
+const scratchVector = new Vector3();
 
 function defined$2(x) {
   return x !== undefined && x !== null;
@@ -10239,6 +9077,8 @@ class TileHeader {
     _defineProperty(this, "viewportIds", void 0);
 
     _defineProperty(this, "transform", void 0);
+
+    _defineProperty(this, "extensions", void 0);
 
     _defineProperty(this, "userData", void 0);
 
@@ -10314,6 +9154,7 @@ class TileHeader {
     this.depth = 0;
     this.viewportIds = [];
     this.userData = {};
+    this.extensions = null;
     this._priority = 0;
     this._touchedFrame = 0;
     this._visitedFrame = 0;
@@ -10331,8 +9172,8 @@ class TileHeader {
     this._inRequestVolume = false;
     this._stackLength = 0;
     this._selectionDepth = 0;
-    this._initialTransform = new Matrix4$1();
-    this.transform = new Matrix4$1();
+    this._initialTransform = new Matrix4();
+    this.transform = new Matrix4();
 
     this._initializeLodMetric(header);
 
@@ -10405,7 +9246,7 @@ class TileHeader {
   getScreenSpaceError(frameState, useParentLodMetric) {
     switch (this.tileset.type) {
       case TILESET_TYPE.I3S:
-        return getI3ScreenSize(this, frameState);
+        return getProjectedRadius(this, frameState);
 
       case TILESET_TYPE.TILES3D:
         return getTiles3DScreenSpaceError(this, frameState, useParentLodMetric);
@@ -10587,7 +9428,7 @@ class TileHeader {
       this.lodMetricType = header.lodMetricType;
     } else {
       this.lodMetricType = this.parent && this.parent.lodMetricType || this.tileset.lodMetricType;
-      console.warn(`3D Tile: Required prop lodMetricType is undefined. Using parent lodMetricType`);
+      console.warn("3D Tile: Required prop lodMetricType is undefined. Using parent lodMetricType");
     }
 
     if ('lodMetricValue' in header) {
@@ -10599,13 +9440,13 @@ class TileHeader {
   }
 
   _initializeTransforms(tileHeader) {
-    this.transform = tileHeader.transform ? new Matrix4$1(tileHeader.transform) : new Matrix4$1();
+    this.transform = tileHeader.transform ? new Matrix4(tileHeader.transform) : new Matrix4();
     const parent = this.parent;
     const tileset = this.tileset;
     const parentTransform = parent && parent.computedTransform ? parent.computedTransform.clone() : tileset.modelMatrix.clone();
-    this.computedTransform = new Matrix4$1(parentTransform).multiplyRight(this.transform);
-    const parentInitialTransform = parent && parent._initialTransform ? parent._initialTransform.clone() : new Matrix4$1();
-    this._initialTransform = new Matrix4$1(parentInitialTransform).multiplyRight(this.transform);
+    this.computedTransform = new Matrix4(parentTransform).multiplyRight(this.transform);
+    const parentInitialTransform = parent && parent._initialTransform ? parent._initialTransform.clone() : new Matrix4();
+    this._initialTransform = new Matrix4(parentInitialTransform).multiplyRight(this.transform);
   }
 
   _initializeBoundingVolumes(tileHeader) {
@@ -10687,7 +9528,7 @@ class TileHeader {
     }
   }
 
-  _updateTransform(parentTransform = new Matrix4$1()) {
+  _updateTransform(parentTransform = new Matrix4()) {
     const computedTransform = parentTransform.clone().multiplyRight(this.transform);
     const didTransformChange = !computedTransform.equals(this.computedTransform);
 
@@ -10823,7 +9664,7 @@ class I3STilesetTraverser extends TilesetTraverser {
   }
 
   shouldRefine(tile, frameState) {
-    tile._lodJudge = lodJudge(tile, frameState);
+    tile._lodJudge = getLodStatus(tile, frameState);
     return tile._lodJudge === 'DIG';
   }
 
@@ -10833,7 +9674,7 @@ class I3STilesetTraverser extends TilesetTraverser {
     const tileset = tile.tileset;
 
     for (const child of children) {
-      const extendedId = `${child.id}-${frameState.viewport.id}`;
+      const extendedId = "".concat(child.id, "-").concat(frameState.viewport.id);
       const childTile = childTiles && childTiles.find(t => t.id === extendedId);
 
       if (!childTile) {
@@ -10862,7 +9703,7 @@ class I3STilesetTraverser extends TilesetTraverser {
     const {
       loader
     } = tileset;
-    const nodeUrl = tileset.getTileUrl(`${tileset.url}/nodes/${nodeId}`);
+    const nodeUrl = tileset.getTileUrl("".concat(tileset.url, "/nodes/").concat(nodeId));
     const options = { ...tileset.loadOptions,
       i3s: { ...tileset.loadOptions.i3s,
         isTileHeader: true,
@@ -10890,7 +9731,7 @@ class I3STilesetTraverser extends TilesetTraverser {
 const DEFAULT_PROPS = {
   description: '',
   ellipsoid: Ellipsoid.WGS84,
-  modelMatrix: new Matrix4$1(),
+  modelMatrix: new Matrix4(),
   throttleRequests: true,
   maxRequests: 64,
   maximumMemoryUsage: 32,
@@ -11011,7 +9852,7 @@ class Tileset3D {
 
     _defineProperty(this, "maximumMemoryUsage", void 0);
 
-    assert$9(json);
+    assert$7(json);
     this.options = { ...DEFAULT_PROPS,
       ...options
     };
@@ -11111,7 +9952,7 @@ class Tileset3D {
       return tilePath;
     }
 
-    return `${tilePath}${this.queryParams}`;
+    return "".concat(tilePath).concat(this.queryParams);
   }
 
   hasExtension(extensionName) {
@@ -11293,19 +10134,19 @@ class Tileset3D {
 
   _calculateViewProps() {
     const root = this.root;
-    assert$9(root);
+    assert$7(root);
     const {
       center
     } = root.boundingVolume;
 
     if (!center) {
       console.warn('center was not pre-calculated for the root tile');
-      this.cartographicCenter = new Vector3$1();
+      this.cartographicCenter = new Vector3();
       this.zoom = 1;
       return;
     }
 
-    this.cartographicCenter = Ellipsoid.WGS84.cartesianToCartographic(center, new Vector3$1());
+    this.cartographicCenter = Ellipsoid.WGS84.cartesianToCartographic(center, new Vector3());
     this.cartesianCenter = center;
     this.zoom = getZoomFromBoundingVolume(root.boundingVolume);
   }
@@ -11399,7 +10240,7 @@ class Tileset3D {
     this.stats.get(TILES_LOAD_FAILED).incrementCount();
     const message = error.message || error.toString();
     const url = tile.url;
-    console.error(`A 3D tile failed to load: ${tile.url} ${message}`);
+    console.error("A 3D tile failed to load: ".concat(tile.url, " ").concat(message));
     this.options.onTileError(tile, message, url);
   }
 
@@ -11532,7 +10373,7 @@ function getQueryParamString(queryParams) {
   const queryParamStrings = [];
 
   for (const key of Object.keys(queryParams)) {
-    queryParamStrings.push(`${key}=${queryParams[key]}`);
+    queryParamStrings.push("".concat(key, "=").concat(queryParams[key]));
   }
 
   switch (queryParamStrings.length) {
@@ -11540,14 +10381,14 @@ function getQueryParamString(queryParams) {
       return '';
 
     case 1:
-      return `?${queryParamStrings[0]}`;
+      return "?".concat(queryParamStrings[0]);
 
     default:
-      return `?${queryParamStrings.join('&')}`;
+      return "?".concat(queryParamStrings.join('&'));
   }
 }
 
-const VERSION$3 = "3.0.10" ;
+const VERSION$5 = "3.1.4" ;
 
 const TILE3D_TYPE = {
   COMPOSITE: 'cmpt',
@@ -11555,11 +10396,12 @@ const TILE3D_TYPE = {
   BATCHED_3D_MODEL: 'b3dm',
   INSTANCED_3D_MODEL: 'i3dm',
   GEOMETRY: 'geom',
-  VECTOR: 'vect'
+  VECTOR: 'vect',
+  GLTF: 'glTF'
 };
 
 function getStringFromArrayBuffer(arrayBuffer, byteOffset, byteLength) {
-  assert$9(arrayBuffer instanceof ArrayBuffer);
+  assert$7(arrayBuffer instanceof ArrayBuffer);
   const textDecoder = new TextDecoder('utf8');
   const typedArray = new Uint8Array(arrayBuffer, byteOffset, byteLength);
   const string = textDecoder.decode(typedArray);
@@ -11567,14 +10409,10 @@ function getStringFromArrayBuffer(arrayBuffer, byteOffset, byteLength) {
 }
 function getMagicString$1(arrayBuffer, byteOffset = 0) {
   const dataView = new DataView(arrayBuffer);
-  return `\
-${String.fromCharCode(dataView.getUint8(byteOffset + 0))}\
-${String.fromCharCode(dataView.getUint8(byteOffset + 1))}\
-${String.fromCharCode(dataView.getUint8(byteOffset + 2))}\
-${String.fromCharCode(dataView.getUint8(byteOffset + 3))}`;
+  return "".concat(String.fromCharCode(dataView.getUint8(byteOffset + 0))).concat(String.fromCharCode(dataView.getUint8(byteOffset + 1))).concat(String.fromCharCode(dataView.getUint8(byteOffset + 2))).concat(String.fromCharCode(dataView.getUint8(byteOffset + 3)));
 }
 
-const VERSION$2 = "3.0.10" ;
+const VERSION$4 = "3.1.4" ;
 
 const DEFAULT_DRACO_OPTIONS = {
   draco: {
@@ -11588,7 +10426,8 @@ const DracoLoader$1 = {
   name: 'Draco',
   id: 'draco',
   module: 'draco',
-  version: VERSION$2,
+  shapes: ['mesh'],
+  version: VERSION$4,
   worker: true,
   extensions: ['drc'],
   mimeTypes: ['application/octet-stream'],
@@ -11622,7 +10461,7 @@ function getMeshBoundingBox(attributes) {
   return [[minX, minY, minZ], [maxX, maxY, maxZ]];
 }
 
-function assert$4(condition, message) {
+function assert$3(condition, message) {
   if (!condition) {
     throw new Error(message || 'loader assertion failed.');
   }
@@ -11634,7 +10473,7 @@ class Schema {
 
     _defineProperty(this, "metadata", void 0);
 
-    assert$4(Array.isArray(fields));
+    assert$3(Array.isArray(fields));
     checkNames(fields);
     this.fields = fields;
     this.metadata = metadata || new Map();
@@ -11747,7 +10586,7 @@ class Field {
   }
 
   toString() {
-    return `${this.type}${this.nullable ? ', nullable' : ''}${this.metadata ? `, metadata: ${this.metadata}` : ''}`;
+    return "".concat(this.type).concat(this.nullable ? ', nullable' : '').concat(this.metadata ? ", metadata: ".concat(this.metadata) : '');
   }
 
 }
@@ -11906,7 +10745,7 @@ class Int extends DataType {
   }
 
   toString() {
-    return `${this.isSigned ? 'I' : 'Ui'}nt${this.bitWidth}`;
+    return "".concat(this.isSigned ? 'I' : 'Ui', "nt").concat(this.bitWidth);
   }
 
 }
@@ -11970,7 +10809,7 @@ class Float extends DataType {
   }
 
   toString() {
-    return `Float${this.precision}`;
+    return "Float".concat(this.precision);
   }
 
 }
@@ -12016,7 +10855,7 @@ class FixedSizeList extends DataType {
   }
 
   toString() {
-    return `FixedSizeList[${this.listSize}]<${this.valueType}>`;
+    return "FixedSizeList[".concat(this.listSize, "]<").concat(this.valueType, ">");
   }
 
 }
@@ -12052,7 +10891,32 @@ function getArrowTypeFromTypedArray(array) {
   }
 }
 
-function makeSchemaFromAttributes(attributes, loaderData, indices) {
+function deduceMeshField(attributeName, attribute, optionalMetadata) {
+  const type = getArrowTypeFromTypedArray(attribute.value);
+  const metadata = optionalMetadata ? optionalMetadata : makeMeshAttributeMetadata(attribute);
+  const field = new Field(attributeName, new FixedSizeList(attribute.size, new Field('value', type)), false, metadata);
+  return field;
+}
+
+function makeMeshAttributeMetadata(attribute) {
+  const result = new Map();
+
+  if ('byteOffset' in attribute) {
+    result.set('byteOffset', attribute.byteOffset.toString(10));
+  }
+
+  if ('byteStride' in attribute) {
+    result.set('byteStride', attribute.byteStride.toString(10));
+  }
+
+  if ('normalized' in attribute) {
+    result.set('normalized', attribute.normalized.toString());
+  }
+
+  return result;
+}
+
+function getDracoSchema(attributes, loaderData, indices) {
   const metadataMap = makeMetadata(loaderData.metadata);
   const fields = [];
   const namedLoaderDataAttributes = transformAttributesLoaderData(loaderData.attributes);
@@ -12084,15 +10948,15 @@ function transformAttributesLoaderData(loaderData) {
 
 function getArrowFieldFromAttribute(attributeName, attribute, loaderData) {
   const metadataMap = loaderData ? makeMetadata(loaderData.metadata) : undefined;
-  const type = getArrowTypeFromTypedArray(attribute.value);
-  return new Field(attributeName, new FixedSizeList(attribute.size, new Field('value', type)), false, metadataMap);
+  const field = deduceMeshField(attributeName, attribute, metadataMap);
+  return field;
 }
 
 function makeMetadata(metadata) {
   const metadataMap = new Map();
 
   for (const key in metadata) {
-    metadataMap.set(`${key}.string`, JSON.stringify(metadata[key]));
+    metadataMap.set("".concat(key, ".string"), JSON.stringify(metadata[key]));
   }
 
   return metadataMap;
@@ -12158,7 +11022,7 @@ class DracoParser {
       }
 
       if (!dracoStatus.ok() || !dracoGeometry.ptr) {
-        const message = `DRACO decompression failed: ${dracoStatus.error_msg()}`;
+        const message = "DRACO decompression failed: ".concat(dracoStatus.error_msg());
         throw new Error(message);
       }
 
@@ -12167,7 +11031,7 @@ class DracoParser {
       const geometry = this._getMeshData(dracoGeometry, loaderData, options);
 
       const boundingBox = getMeshBoundingBox(geometry.attributes);
-      const schema = makeSchemaFromAttributes(geometry.attributes, loaderData, geometry.indices);
+      const schema = getDracoSchema(geometry.attributes, loaderData, geometry.indices);
       const data = {
         loader: 'draco',
         loaderData,
@@ -12383,7 +11247,7 @@ class DracoParser {
       return attribute.metadata[entryName].string;
     }
 
-    return `CUSTOM_ATTRIBUTE_${uniqueId}`;
+    return "CUSTOM_ATTRIBUTE_".concat(uniqueId);
   }
 
   _getTopLevelMetadata(dracoGeometry) {
@@ -12544,9 +11408,9 @@ function getUint32Array(dracoArray) {
 }
 
 const DRACO_VERSION = '1.4.1';
-const DRACO_JS_DECODER_URL = `https://www.gstatic.com/draco/versioned/decoders/${DRACO_VERSION}/draco_decoder.js`;
-const DRACO_WASM_WRAPPER_URL = `https://www.gstatic.com/draco/versioned/decoders/${DRACO_VERSION}/draco_wasm_wrapper.js`;
-const DRACO_WASM_DECODER_URL = `https://www.gstatic.com/draco/versioned/decoders/${DRACO_VERSION}/draco_decoder.wasm`;
+const DRACO_JS_DECODER_URL = "https://www.gstatic.com/draco/versioned/decoders/".concat(DRACO_VERSION, "/draco_decoder.js");
+const DRACO_WASM_WRAPPER_URL = "https://www.gstatic.com/draco/versioned/decoders/".concat(DRACO_VERSION, "/draco_wasm_wrapper.js");
+const DRACO_WASM_DECODER_URL = "https://www.gstatic.com/draco/versioned/decoders/".concat(DRACO_VERSION, "/draco_decoder.wasm");
 let loadDecoderPromise;
 async function loadDracoDecoderModule(options) {
   const modules = options.modules || {};
@@ -12722,9 +11586,9 @@ class GLType {
 
 }
 
-function assert$3(condition, message) {
+function assert$2(condition, message) {
   if (!condition) {
-    throw new Error(`math.gl assertion failed. ${message}`);
+    throw new Error("math.gl assertion failed. ".concat(message));
   }
 }
 
@@ -12739,7 +11603,7 @@ function decodeRGB565(rgb565, target = [0, 0, 0]) {
 }
 
 new Vector2();
-new Vector3$1();
+new Vector3();
 new Vector2();
 new Vector2();
 
@@ -12751,10 +11615,10 @@ function signNotZero(value) {
   return value < 0.0 ? -1.0 : 1.0;
 }
 function octDecodeInRange(x, y, rangeMax, result) {
-  assert$3(result);
+  assert$2(result);
 
   if (x < 0 || x > rangeMax || y < 0 || y > rangeMax) {
-    throw new Error(`x and y must be unsigned normalized integers between 0 and ${rangeMax}`);
+    throw new Error("x and y must be unsigned normalized integers between 0 and ".concat(rangeMax));
   }
 
   result.x = fromSNorm(x, rangeMax);
@@ -12775,10 +11639,16 @@ function octDecode(x, y, result) {
 
 class Tile3DFeatureTable {
   constructor(featureTableJson, featureTableBinary) {
+    _defineProperty(this, "json", void 0);
+
+    _defineProperty(this, "buffer", void 0);
+
+    _defineProperty(this, "featuresLength", 0);
+
+    _defineProperty(this, "_cachedTypedArrays", {});
+
     this.json = featureTableJson;
     this.buffer = featureTableBinary;
-    this.featuresLength = 0;
-    this._cachedTypedArrays = {};
   }
 
   getExtension(extensionName) {
@@ -12937,7 +11807,7 @@ function createTypedArrayFromAccessor(tile3DAccessor, buffer, byteOffset, length
   const {
     componentType
   } = tile3DAccessor;
-  assert$9(tile3DAccessor.componentType);
+  assert$7(tile3DAccessor.componentType);
   const type = typeof componentType === 'string' ? GLType.fromName(componentType) : componentType;
   const size = COMPONENTS_PER_ATTRIBUTE[tile3DAccessor.type];
   const unpacker = UNPACKER[tile3DAccessor.type];
@@ -13150,7 +12020,7 @@ function validateInstance(hierarchy, instanceIndex, stack) {
     return;
   }
 
-  assert(instanceIndex < instancesLength, `Parent index ${instanceIndex} exceeds the total number of instances: ${instancesLength}`);
+  assert(instanceIndex < instancesLength, "Parent index ".concat(instanceIndex, " exceeds the total number of instances: ").concat(instancesLength));
   assert(stack.indexOf(instanceIndex) === -1, 'Circular dependency detected in the batch table hierarchy.');
   stack.push(instanceIndex);
   const parentCount = defined$1(parentCounts) ? parentCounts[instanceIndex] : 1;
@@ -13182,7 +12052,21 @@ class Tile3DBatchTableParser {
   constructor(json, binary, featureCount, options = {}) {
     var _this$json;
 
-    assert$9(featureCount >= 0);
+    _defineProperty(this, "json", void 0);
+
+    _defineProperty(this, "binary", void 0);
+
+    _defineProperty(this, "featureCount", void 0);
+
+    _defineProperty(this, "_extensions", void 0);
+
+    _defineProperty(this, "_properties", void 0);
+
+    _defineProperty(this, "_binaryProperties", void 0);
+
+    _defineProperty(this, "_hierarchy", void 0);
+
+    assert$7(featureCount >= 0);
     this.json = json || {};
     this.binary = binary;
     this.featureCount = featureCount;
@@ -13213,7 +12097,7 @@ class Tile3DBatchTableParser {
   isClass(batchId, className) {
     this._checkBatchId(batchId);
 
-    assert$9(typeof className === 'string', className);
+    assert$7(typeof className === 'string', className);
 
     if (this._hierarchy) {
       const result = traverseHierarchy(this._hierarchy, batchId, (hierarchy, instanceIndex) => {
@@ -13228,7 +12112,7 @@ class Tile3DBatchTableParser {
   }
 
   isExactClass(batchId, className) {
-    assert$9(typeof className === 'string', className);
+    assert$7(typeof className === 'string', className);
     return this.getExactClassName(batchId) === className;
   }
 
@@ -13247,7 +12131,7 @@ class Tile3DBatchTableParser {
   hasProperty(batchId, name) {
     this._checkBatchId(batchId);
 
-    assert$9(typeof name === 'string', name);
+    assert$7(typeof name === 'string', name);
     return defined(this._properties[name]) || this._hasPropertyInHierarchy(batchId, name);
   }
 
@@ -13269,7 +12153,7 @@ class Tile3DBatchTableParser {
   getProperty(batchId, name) {
     this._checkBatchId(batchId);
 
-    assert$9(typeof name === 'string', name);
+    assert$7(typeof name === 'string', name);
 
     if (this._binaryProperties) {
       const binaryProperty = this._binaryProperties[name];
@@ -13301,7 +12185,7 @@ class Tile3DBatchTableParser {
 
     this._checkBatchId(batchId);
 
-    assert$9(typeof name === 'string', name);
+    assert$7(typeof name === 'string', name);
 
     if (this._binaryProperties) {
       const binaryProperty = this._binaryProperties[name];
@@ -13333,7 +12217,7 @@ class Tile3DBatchTableParser {
     const valid = batchId >= 0 && batchId < this.featureCount;
 
     if (!valid) {
-      throw new Error(`batchId not in range [0, featureCount - 1].`);
+      throw new Error('batchId not in range [0, featureCount - 1].');
     }
   }
 
@@ -13365,8 +12249,8 @@ class Tile3DBatchTableParser {
   _initializeBinaryProperty(name, property) {
     if ('byteOffset' in property) {
       const tile3DAccessor = property;
-      assert$9(this.binary, `Property ${name} requires a batch table binary.`);
-      assert$9(tile3DAccessor.type, `Property ${name} requires a type.`);
+      assert$7(this.binary, "Property ".concat(name, " requires a batch table binary."));
+      assert$7(tile3DAccessor.type, "Property ".concat(name, " requires a type."));
       const accessor = createTypedArrayFromAccessor(tile3DAccessor, this.binary.buffer, this.binary.byteOffset | 0, this.featureCount);
       return {
         typedArray: accessor.values,
@@ -13434,7 +12318,7 @@ class Tile3DBatchTableParser {
       const propertyValues = instanceClass.instances[name];
 
       if (defined(propertyValues)) {
-        assert$9(instanceIndex === batchId, `Inherited property "${name}" is read-only.`);
+        assert$7(instanceIndex === batchId, "Inherited property \"".concat(name, "\" is read-only."));
 
         if (defined(propertyValues.typedArray)) {
           this._setBinaryProperty(propertyValues, indexInClass, value);
@@ -13463,14 +12347,14 @@ function parse3DTileHeaderSync(tile, arrayBuffer, byteOffset = 0) {
   byteOffset += SIZEOF_UINT32$1;
 
   if (tile.version !== 1) {
-    throw new Error(`3D Tile Version ${tile.version} not supported`);
+    throw new Error("3D Tile Version ".concat(tile.version, " not supported"));
   }
 
   return byteOffset;
 }
 
 const SIZEOF_UINT32 = 4;
-const DEPRECATION_WARNING = `b3dm tile in legacy format.`;
+const DEPRECATION_WARNING = 'b3dm tile in legacy format.';
 function parse3DTileTablesHeaderSync(tile, arrayBuffer, byteOffset) {
   const view = new DataView(arrayBuffer);
   let batchLength;
@@ -13623,7 +12507,7 @@ function normalize3DTileColorAttribute(tile, colors, batchTable) {
   };
 }
 
-const scratchNormal = new Vector3$1();
+const scratchNormal = new Vector3();
 function normalize3DTileNormalAttribute(tile, normals) {
   if (!normals) {
     return null;
@@ -13670,7 +12554,7 @@ function normalize3DTilePositionAttribute(tile, positions, options) {
 }
 
 function decodeQuantizedPositions(tile, positions) {
-  const scratchPosition = new Vector3$1();
+  const scratchPosition = new Vector3();
   const decodedArray = new Float32Array(tile.pointCount * 3);
 
   for (let i = 0; i < tile.pointCount; i++) {
@@ -13885,8 +12769,8 @@ async function loadDraco(tile, dracoData, options, context) {
   if (isQuantizedDraco) {
     const quantization = data.POSITION.data.quantization;
     const range = quantization.range;
-    tile.quantizedVolumeScale = new Vector3$1(range, range, range);
-    tile.quantizedVolumeOffset = new Vector3$1(quantization.minValues);
+    tile.quantizedVolumeScale = new Vector3(range, range, range);
+    tile.quantizedVolumeOffset = new Vector3(quantization.minValues);
     tile.quantizedRange = (1 << quantization.quantizationBits) - 1.0;
     tile.isQuantizedDraco = true;
   }
@@ -13908,47 +12792,503 @@ async function loadDraco(tile, dracoData, options, context) {
 
   tile.attributes = {
     positions: decodedPositions,
-    colors: normalize3DTileColorAttribute(tile, decodedColors),
+    colors: normalize3DTileColorAttribute(tile, decodedColors, undefined),
     normals: decodedNormals,
     batchIds: decodedBatchIds,
     ...batchTableAttributes
   };
 }
 
-const KHR_BINARY_GLTF = 'KHR_binary_glTF';
-const KHR_DRACO_MESH_COMPRESSION = 'KHR_draco_mesh_compression';
-const KHR_LIGHTS_PUNCTUAL = 'KHR_lights_punctual';
-const KHR_MATERIALS_UNLIT = 'KHR_materials_unlit';
-const KHR_TECHNIQUES_WEBGL = 'KHR_techniques_webgl';
+const VERSION$3 = "3.1.4" ;
 
-const VERSION$1 = "3.0.10" ;
+const VERSION$2 = "3.1.4" ;
 
-const VERSION = "3.0.10" ;
+const VERSION$1 = "3.1.4" ;
+const BASIS_CDN_ENCODER_WASM = "https://unpkg.com/@loaders.gl/textures@".concat(VERSION$1, "/dist/libs/basis_encoder.wasm");
+const BASIS_CDN_ENCODER_JS = "https://unpkg.com/@loaders.gl/textures@".concat(VERSION$1, "/dist/libs/basis_encoder.js");
+let loadBasisTranscoderPromise;
+async function loadBasisTrascoderModule(options) {
+  const modules = options.modules || {};
 
-function assert$2(condition, message) {
-  if (!condition) {
-    throw new Error(message);
+  if (modules.basis) {
+    return modules.basis;
+  }
+
+  loadBasisTranscoderPromise = loadBasisTranscoderPromise || loadBasisTrascoder(options);
+  return await loadBasisTranscoderPromise;
+}
+
+async function loadBasisTrascoder(options) {
+  let BASIS = null;
+  let wasmBinary = null;
+  [BASIS, wasmBinary] = await Promise.all([await loadLibrary('basis_transcoder.js', 'textures', options), await loadLibrary('basis_transcoder.wasm', 'textures', options)]);
+  BASIS = BASIS || globalThis.BASIS;
+  return await initializeBasisTrascoderModule(BASIS, wasmBinary);
+}
+
+function initializeBasisTrascoderModule(BasisModule, wasmBinary) {
+  const options = {};
+
+  if (wasmBinary) {
+    options.wasmBinary = wasmBinary;
+  }
+
+  return new Promise(resolve => {
+    BasisModule(options).then(module => {
+      const {
+        BasisFile,
+        initializeBasis
+      } = module;
+      initializeBasis();
+      resolve({
+        BasisFile
+      });
+    });
+  });
+}
+
+let loadBasisEncoderPromise;
+async function loadBasisEncoderModule(options) {
+  const modules = options.modules || {};
+
+  if (modules.basisEncoder) {
+    return modules.basisEncoder;
+  }
+
+  loadBasisEncoderPromise = loadBasisEncoderPromise || loadBasisEncoder(options);
+  return await loadBasisEncoderPromise;
+}
+
+async function loadBasisEncoder(options) {
+  let BASIS_ENCODER = null;
+  let wasmBinary = null;
+  [BASIS_ENCODER, wasmBinary] = await Promise.all([await loadLibrary(BASIS_CDN_ENCODER_JS, 'textures', options), await loadLibrary(BASIS_CDN_ENCODER_WASM, 'textures', options)]);
+  BASIS_ENCODER = BASIS_ENCODER || globalThis.BASIS;
+  return await initializeBasisEncoderModule(BASIS_ENCODER, wasmBinary);
+}
+
+function initializeBasisEncoderModule(BasisEncoderModule, wasmBinary) {
+  const options = {};
+
+  if (wasmBinary) {
+    options.wasmBinary = wasmBinary;
+  }
+
+  return new Promise(resolve => {
+    BasisEncoderModule(options).then(module => {
+      const {
+        BasisFile,
+        KTX2File,
+        initializeBasis,
+        BasisEncoder
+      } = module;
+      initializeBasis();
+      resolve({
+        BasisFile,
+        KTX2File,
+        BasisEncoder
+      });
+    });
+  });
+}
+
+const GL_EXTENSIONS_CONSTANTS = {
+  COMPRESSED_RGB_S3TC_DXT1_EXT: 0x83f0,
+  COMPRESSED_RGBA_S3TC_DXT1_EXT: 0x83f1,
+  COMPRESSED_RGBA_S3TC_DXT3_EXT: 0x83f2,
+  COMPRESSED_RGBA_S3TC_DXT5_EXT: 0x83f3,
+  COMPRESSED_R11_EAC: 0x9270,
+  COMPRESSED_SIGNED_R11_EAC: 0x9271,
+  COMPRESSED_RG11_EAC: 0x9272,
+  COMPRESSED_SIGNED_RG11_EAC: 0x9273,
+  COMPRESSED_RGB8_ETC2: 0x9274,
+  COMPRESSED_RGBA8_ETC2_EAC: 0x9275,
+  COMPRESSED_SRGB8_ETC2: 0x9276,
+  COMPRESSED_SRGB8_ALPHA8_ETC2_EAC: 0x9277,
+  COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2: 0x9278,
+  COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2: 0x9279,
+  COMPRESSED_RGB_PVRTC_4BPPV1_IMG: 0x8c00,
+  COMPRESSED_RGBA_PVRTC_4BPPV1_IMG: 0x8c02,
+  COMPRESSED_RGB_PVRTC_2BPPV1_IMG: 0x8c01,
+  COMPRESSED_RGBA_PVRTC_2BPPV1_IMG: 0x8c03,
+  COMPRESSED_RGB_ETC1_WEBGL: 0x8d64,
+  COMPRESSED_RGB_ATC_WEBGL: 0x8c92,
+  COMPRESSED_RGBA_ATC_EXPLICIT_ALPHA_WEBGL: 0x8c93,
+  COMPRESSED_RGBA_ATC_INTERPOLATED_ALPHA_WEBGL: 0x87ee,
+  COMPRESSED_RGBA_ASTC_4X4_KHR: 0x93b0,
+  COMPRESSED_RGBA_ASTC_5X4_KHR: 0x93b1,
+  COMPRESSED_RGBA_ASTC_5X5_KHR: 0x93b2,
+  COMPRESSED_RGBA_ASTC_6X5_KHR: 0x93b3,
+  COMPRESSED_RGBA_ASTC_6X6_KHR: 0x93b4,
+  COMPRESSED_RGBA_ASTC_8X5_KHR: 0x93b5,
+  COMPRESSED_RGBA_ASTC_8X6_KHR: 0x93b6,
+  COMPRESSED_RGBA_ASTC_8X8_KHR: 0x93b7,
+  COMPRESSED_RGBA_ASTC_10X5_KHR: 0x93b8,
+  COMPRESSED_RGBA_ASTC_10X6_KHR: 0x93b9,
+  COMPRESSED_RGBA_ASTC_10X8_KHR: 0x93ba,
+  COMPRESSED_RGBA_ASTC_10X10_KHR: 0x93bb,
+  COMPRESSED_RGBA_ASTC_12X10_KHR: 0x93bc,
+  COMPRESSED_RGBA_ASTC_12X12_KHR: 0x93bd,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_4X4_KHR: 0x93d0,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_5X4_KHR: 0x93d1,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_5X5_KHR: 0x93d2,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_6X5_KHR: 0x93d3,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_6X6_KHR: 0x93d4,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_8X5_KHR: 0x93d5,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_8X6_KHR: 0x93d6,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_8X8_KHR: 0x93d7,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_10X5_KHR: 0x93d8,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_10X6_KHR: 0x93d9,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_10X8_KHR: 0x93da,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_10X10_KHR: 0x93db,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_12X10_KHR: 0x93dc,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_12X12_KHR: 0x93dd,
+  COMPRESSED_RED_RGTC1_EXT: 0x8dbb,
+  COMPRESSED_SIGNED_RED_RGTC1_EXT: 0x8dbc,
+  COMPRESSED_RED_GREEN_RGTC2_EXT: 0x8dbd,
+  COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT: 0x8dbe,
+  COMPRESSED_SRGB_S3TC_DXT1_EXT: 0x8c4c,
+  COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT: 0x8c4d,
+  COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT: 0x8c4e,
+  COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT: 0x8c4f
+};
+
+const BROWSER_PREFIXES = ['', 'WEBKIT_', 'MOZ_'];
+const WEBGL_EXTENSIONS = {
+  WEBGL_compressed_texture_s3tc: 'dxt',
+  WEBGL_compressed_texture_s3tc_srgb: 'dxt-srgb',
+  WEBGL_compressed_texture_etc1: 'etc1',
+  WEBGL_compressed_texture_etc: 'etc2',
+  WEBGL_compressed_texture_pvrtc: 'pvrtc',
+  WEBGL_compressed_texture_atc: 'atc',
+  WEBGL_compressed_texture_astc: 'astc',
+  EXT_texture_compression_rgtc: 'rgtc'
+};
+let formats = null;
+function getSupportedGPUTextureFormats(gl) {
+  if (!formats) {
+    gl = gl || getWebGLContext() || undefined;
+    formats = new Set();
+
+    for (const prefix of BROWSER_PREFIXES) {
+      for (const extension in WEBGL_EXTENSIONS) {
+        if (gl && gl.getExtension("".concat(prefix).concat(extension))) {
+          const gpuTextureFormat = WEBGL_EXTENSIONS[extension];
+          formats.add(gpuTextureFormat);
+        }
+      }
+    }
+  }
+
+  return formats;
+}
+
+function getWebGLContext() {
+  try {
+    const canvas = document.createElement('canvas');
+    return canvas.getContext('webgl');
+  } catch (error) {
+    return null;
   }
 }
 
-const globals = {
-  self: typeof self !== 'undefined' && self,
-  window: typeof window !== 'undefined' && window,
-  global: typeof global !== 'undefined' && global,
-  document: typeof document !== 'undefined' && document
+var n,i,s,a,r,o,l,f;!function(t){t[t.NONE=0]="NONE",t[t.BASISLZ=1]="BASISLZ",t[t.ZSTD=2]="ZSTD",t[t.ZLIB=3]="ZLIB";}(n||(n={})),function(t){t[t.BASICFORMAT=0]="BASICFORMAT";}(i||(i={})),function(t){t[t.UNSPECIFIED=0]="UNSPECIFIED",t[t.ETC1S=163]="ETC1S",t[t.UASTC=166]="UASTC";}(s||(s={})),function(t){t[t.UNSPECIFIED=0]="UNSPECIFIED",t[t.SRGB=1]="SRGB";}(a||(a={})),function(t){t[t.UNSPECIFIED=0]="UNSPECIFIED",t[t.LINEAR=1]="LINEAR",t[t.SRGB=2]="SRGB",t[t.ITU=3]="ITU",t[t.NTSC=4]="NTSC",t[t.SLOG=5]="SLOG",t[t.SLOG2=6]="SLOG2";}(r||(r={})),function(t){t[t.ALPHA_STRAIGHT=0]="ALPHA_STRAIGHT",t[t.ALPHA_PREMULTIPLIED=1]="ALPHA_PREMULTIPLIED";}(o||(o={})),function(t){t[t.RGB=0]="RGB",t[t.RRR=3]="RRR",t[t.GGG=4]="GGG",t[t.AAA=15]="AAA";}(l||(l={})),function(t){t[t.RGB=0]="RGB",t[t.RGBA=3]="RGBA",t[t.RRR=4]="RRR",t[t.RRRG=5]="RRRG";}(f||(f={}));
+
+const KTX2_ID = [0xab, 0x4b, 0x54, 0x58, 0x20, 0x32, 0x30, 0xbb, 0x0d, 0x0a, 0x1a, 0x0a];
+function isKTX(data) {
+  const id = new Uint8Array(data);
+  const notKTX = id.byteLength < KTX2_ID.length || id[0] !== KTX2_ID[0] || id[1] !== KTX2_ID[1] || id[2] !== KTX2_ID[2] || id[3] !== KTX2_ID[3] || id[4] !== KTX2_ID[4] || id[5] !== KTX2_ID[5] || id[6] !== KTX2_ID[6] || id[7] !== KTX2_ID[7] || id[8] !== KTX2_ID[8] || id[9] !== KTX2_ID[9] || id[10] !== KTX2_ID[10] || id[11] !== KTX2_ID[11];
+  return !notKTX;
+}
+
+const OutputFormat = {
+  etc1: {
+    basisFormat: 0,
+    compressed: true,
+    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGB_ETC1_WEBGL
+  },
+  etc2: {
+    basisFormat: 1,
+    compressed: true
+  },
+  bc1: {
+    basisFormat: 2,
+    compressed: true,
+    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGB_S3TC_DXT1_EXT
+  },
+  bc3: {
+    basisFormat: 3,
+    compressed: true,
+    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGBA_S3TC_DXT5_EXT
+  },
+  bc4: {
+    basisFormat: 4,
+    compressed: true
+  },
+  bc5: {
+    basisFormat: 5,
+    compressed: true
+  },
+  'bc7-m6-opaque-only': {
+    basisFormat: 6,
+    compressed: true
+  },
+  'bc7-m5': {
+    basisFormat: 7,
+    compressed: true
+  },
+  'pvrtc1-4-rgb': {
+    basisFormat: 8,
+    compressed: true,
+    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGB_PVRTC_4BPPV1_IMG
+  },
+  'pvrtc1-4-rgba': {
+    basisFormat: 9,
+    compressed: true,
+    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG
+  },
+  'astc-4x4': {
+    basisFormat: 10,
+    compressed: true,
+    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGBA_ASTC_4X4_KHR
+  },
+  'atc-rgb': {
+    basisFormat: 11,
+    compressed: true
+  },
+  'atc-rgba-interpolated-alpha': {
+    basisFormat: 12,
+    compressed: true
+  },
+  rgba32: {
+    basisFormat: 13,
+    compressed: false
+  },
+  rgb565: {
+    basisFormat: 14,
+    compressed: false
+  },
+  bgr565: {
+    basisFormat: 15,
+    compressed: false
+  },
+  rgba4444: {
+    basisFormat: 16,
+    compressed: false
+  }
 };
-const global_ = globals.global || globals.self || globals.window;
-const isBrowser = typeof process !== 'object' || String(process) !== '[object process]' || process.browser;
-const matches = typeof process !== 'undefined' && process.version && /v([0-9]*)/.exec(process.version);
-matches && parseFloat(matches[1]) || 0;
+async function parseBasis(data, options) {
+  if (options.basis.containerFormat === 'auto') {
+    if (isKTX(data)) {
+      const fileConstructors = await loadBasisEncoderModule(options);
+      return parseKTX2File(fileConstructors.KTX2File, data, options);
+    }
+
+    const {
+      BasisFile
+    } = await loadBasisTrascoderModule(options);
+    return parseBasisFile(BasisFile, data, options);
+  }
+
+  switch (options.basis.module) {
+    case 'encoder':
+      const fileConstructors = await loadBasisEncoderModule(options);
+
+      switch (options.basis.containerFormat) {
+        case 'ktx2':
+          return parseKTX2File(fileConstructors.KTX2File, data, options);
+
+        case 'basis':
+        default:
+          return parseBasisFile(fileConstructors.BasisFile, data, options);
+      }
+
+    case 'transcoder':
+    default:
+      const {
+        BasisFile
+      } = await loadBasisTrascoderModule(options);
+      return parseBasisFile(BasisFile, data, options);
+  }
+}
+
+function parseBasisFile(BasisFile, data, options) {
+  const basisFile = new BasisFile(new Uint8Array(data));
+
+  try {
+    if (!basisFile.startTranscoding()) {
+      return null;
+    }
+
+    const imageCount = basisFile.getNumImages();
+    const images = [];
+
+    for (let imageIndex = 0; imageIndex < imageCount; imageIndex++) {
+      const levelsCount = basisFile.getNumLevels(imageIndex);
+      const levels = [];
+
+      for (let levelIndex = 0; levelIndex < levelsCount; levelIndex++) {
+        levels.push(transcodeImage(basisFile, imageIndex, levelIndex, options));
+      }
+
+      images.push(levels);
+    }
+
+    return images;
+  } finally {
+    basisFile.close();
+    basisFile.delete();
+  }
+}
+
+function transcodeImage(basisFile, imageIndex, levelIndex, options) {
+  const width = basisFile.getImageWidth(imageIndex, levelIndex);
+  const height = basisFile.getImageHeight(imageIndex, levelIndex);
+  const hasAlpha = basisFile.getHasAlpha();
+  const {
+    compressed,
+    format,
+    basisFormat
+  } = getBasisOptions(options, hasAlpha);
+  const decodedSize = basisFile.getImageTranscodedSizeInBytes(imageIndex, levelIndex, basisFormat);
+  const decodedData = new Uint8Array(decodedSize);
+
+  if (!basisFile.transcodeImage(decodedData, imageIndex, levelIndex, basisFormat, 0, 0)) {
+    return null;
+  }
+
+  return {
+    width,
+    height,
+    data: decodedData,
+    compressed,
+    hasAlpha,
+    format
+  };
+}
+
+function parseKTX2File(KTX2File, data, options) {
+  const ktx2File = new KTX2File(new Uint8Array(data));
+
+  try {
+    if (!ktx2File.startTranscoding()) {
+      return null;
+    }
+
+    const levelsCount = ktx2File.getLevels();
+    const levels = [];
+
+    for (let levelIndex = 0; levelIndex < levelsCount; levelIndex++) {
+      levels.push(transcodeKTX2Image(ktx2File, levelIndex, options));
+      break;
+    }
+
+    return levels;
+  } finally {
+    ktx2File.close();
+    ktx2File.delete();
+  }
+}
+
+function transcodeKTX2Image(ktx2File, levelIndex, options) {
+  const {
+    alphaFlag,
+    height,
+    width
+  } = ktx2File.getImageLevelInfo(levelIndex, 0, 0);
+  const {
+    compressed,
+    format,
+    basisFormat
+  } = getBasisOptions(options, alphaFlag);
+  const decodedSize = ktx2File.getImageTranscodedSizeInBytes(levelIndex, 0, 0, basisFormat);
+  const decodedData = new Uint8Array(decodedSize);
+
+  if (!ktx2File.transcodeImage(decodedData, levelIndex, 0, 0, basisFormat, 0, -1, -1)) {
+    return null;
+  }
+
+  return {
+    width,
+    height,
+    data: decodedData,
+    compressed,
+    alphaFlag,
+    format
+  };
+}
+
+function getBasisOptions(options, hasAlpha) {
+  let format = options && options.basis && options.basis.format;
+
+  if (format === 'auto') {
+    format = selectSupportedBasisFormat();
+  }
+
+  if (typeof format === 'object') {
+    format = hasAlpha ? format.alpha : format.noAlpha;
+  }
+
+  format = format.toLowerCase();
+  return OutputFormat[format];
+}
+
+function selectSupportedBasisFormat() {
+  const supportedFormats = getSupportedGPUTextureFormats();
+
+  if (supportedFormats.has('astc')) {
+    return 'astc-4x4';
+  } else if (supportedFormats.has('dxt')) {
+    return {
+      alpha: 'bc3',
+      noAlpha: 'bc1'
+    };
+  } else if (supportedFormats.has('pvrtc')) {
+    return {
+      alpha: 'pvrtc1-4-rgba',
+      noAlpha: 'pvrtc1-4-rgb'
+    };
+  } else if (supportedFormats.has('etc1')) {
+    return 'etc1';
+  } else if (supportedFormats.has('etc2')) {
+    return 'etc2';
+  }
+
+  return 'rgb565';
+}
+
+const BasisWorkerLoader = {
+  name: 'Basis',
+  id: 'basis',
+  module: 'textures',
+  version: VERSION$2,
+  worker: true,
+  extensions: ['basis', 'ktx2'],
+  mimeTypes: ['application/octet-stream', 'image/ktx2'],
+  tests: ['sB'],
+  binary: true,
+  options: {
+    basis: {
+      format: 'auto',
+      libraryPath: 'libs/',
+      containerFormat: 'auto',
+      module: 'transcoder'
+    }
+  }
+};
+const BasisLoader = { ...BasisWorkerLoader,
+  parse: parseBasis
+};
+
+const VERSION = "3.1.4" ;
 
 const {
   _parseImageNode
-} = global_;
+} = globalThis;
 const IMAGE_SUPPORTED = typeof Image !== 'undefined';
 const IMAGE_BITMAP_SUPPORTED = typeof ImageBitmap !== 'undefined';
 const NODE_IMAGE_SUPPORTED = Boolean(_parseImageNode);
-const DATA_SUPPORTED = isBrowser ? true : NODE_IMAGE_SUPPORTED;
+const DATA_SUPPORTED = isBrowser$2 ? true : NODE_IMAGE_SUPPORTED;
 function isImageTypeSupported(type) {
   switch (type) {
     case 'auto':
@@ -13964,7 +13304,7 @@ function isImageTypeSupported(type) {
       return DATA_SUPPORTED;
 
     default:
-      throw new Error(`@loaders.gl/images: image ${type} not supported in this environment`);
+      throw new Error("@loaders.gl/images: image ".concat(type, " not supported in this environment"));
   }
 }
 function getDefaultImageType() {
@@ -14050,7 +13390,7 @@ function getBlobOrSVGDataUrl(arrayBuffer, url) {
       throw new Error(error.message);
     }
 
-    const src = `data:image/svg+xml;base64,${btoa(xmlText)}`;
+    const src = "data:image/svg+xml;base64,".concat(btoa(xmlText));
     return src;
   }
 
@@ -14090,7 +13430,7 @@ async function loadToImage(url, options) {
     try {
       image.onload = () => resolve(image);
 
-      image.onerror = err => reject(new Error(`Could not load image ${url}: ${err}`));
+      image.onerror = err => reject(new Error("Could not load image ".concat(url, ": ").concat(err)));
     } catch (error) {
       reject(error);
     }
@@ -14256,15 +13596,13 @@ function toDataView(data) {
   throw new Error('toDataView');
 }
 
-function parseToNodeImage(arrayBuffer, options) {
+async function parseToNodeImage(arrayBuffer, options) {
   const {
     mimeType
   } = getBinaryImageMetadata(arrayBuffer) || {};
-  const {
-    _parseImageNode
-  } = global_;
-  assert$2(_parseImageNode);
-  return _parseImageNode(arrayBuffer, mimeType, options);
+  const _parseImageNode = globalThis._parseImageNode;
+  assert$7(_parseImageNode);
+  return await _parseImageNode(arrayBuffer, mimeType);
 }
 
 async function parseImage(arrayBuffer, options, context) {
@@ -14287,11 +13625,11 @@ async function parseImage(arrayBuffer, options, context) {
       break;
 
     case 'data':
-      image = await parseToNodeImage(arrayBuffer, options);
+      image = await parseToNodeImage(arrayBuffer);
       break;
 
     default:
-      assert$2(false);
+      assert$7(false);
   }
 
   if (imageType === 'data') {
@@ -14315,6 +13653,12 @@ function getLoadableImageType(type) {
 
 const EXTENSIONS$1 = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'ico', 'svg'];
 const MIME_TYPES = ['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/bmp', 'image/vnd.microsoft.icon', 'image/svg+xml'];
+const DEFAULT_IMAGE_LOADER_OPTIONS = {
+  image: {
+    type: 'auto',
+    decode: true
+  }
+};
 const ImageLoader = {
   id: 'image',
   module: 'images',
@@ -14324,13 +13668,51 @@ const ImageLoader = {
   extensions: EXTENSIONS$1,
   parse: parseImage,
   tests: [arrayBuffer => Boolean(getBinaryImageMetadata(new DataView(arrayBuffer)))],
-  options: {
-    image: {
-      type: 'auto',
-      decode: true
-    }
-  }
+  options: DEFAULT_IMAGE_LOADER_OPTIONS
 };
+
+const NODE_FORMAT_SUPPORT = ['image/png', 'image/jpeg', 'image/gif'];
+const mimeTypeSupported = {};
+function _isImageFormatSupported(mimeType) {
+  if (mimeTypeSupported[mimeType] === undefined) {
+    mimeTypeSupported[mimeType] = checkFormatSupport(mimeType);
+  }
+
+  return mimeTypeSupported[mimeType];
+}
+
+function checkFormatSupport(mimeType) {
+  switch (mimeType) {
+    case 'image/webp':
+      return checkWebPSupport();
+
+    case 'image/svg':
+      return isBrowser$2;
+
+    default:
+      if (!isBrowser$2) {
+        const {
+          _parseImageNode
+        } = globalThis;
+        return Boolean(_parseImageNode) && NODE_FORMAT_SUPPORT.includes(mimeType);
+      }
+
+      return true;
+  }
+}
+
+function checkWebPSupport() {
+  if (!isBrowser$2) {
+    return false;
+  }
+
+  try {
+    const element = document.createElement('canvas');
+    return element.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+  } catch {
+    return false;
+  }
+}
 
 function assert$1(condition, message) {
   if (!condition) {
@@ -14348,7 +13730,7 @@ function resolveUrl(url, options) {
   const baseUrl = options.baseUri || options.uri;
 
   if (!baseUrl) {
-    throw new Error(`'baseUri' must be provided to resolve relative url ${url}`);
+    throw new Error("'baseUri' must be provided to resolve relative url ".concat(url));
   }
 
   return baseUrl.substr(0, baseUrl.lastIndexOf('/') + 1) + url;
@@ -14538,7 +13920,7 @@ class GLTFScenegraph {
     const object = this.json[array] && this.json[array][index];
 
     if (!object) {
-      throw new Error(`glTF file error: Could not find ${array}[${index}]`);
+      throw new Error("glTF file error: Could not find ".concat(array, "[").concat(index, "]"));
     }
 
     return object;
@@ -14929,6 +14311,217 @@ class GLTFScenegraph {
 
 }
 
+const isWebAssemblySupported = typeof WebAssembly !== 'object';
+const wasm_base = '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';
+const wasm_simd = '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';
+const detector = new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 4, 1, 96, 0, 0, 3, 3, 2, 0, 0, 5, 3, 1, 0, 1, 12, 1, 0, 10, 22, 2, 12, 0, 65, 0, 65, 0, 65, 0, 252, 10, 0, 0, 11, 7, 0, 65, 0, 253, 15, 26, 11]);
+const wasmpack = new Uint8Array([32, 0, 65, 253, 3, 1, 2, 34, 4, 106, 6, 5, 11, 8, 7, 20, 13, 33, 12, 16, 128, 9, 116, 64, 19, 113, 127, 15, 10, 21, 22, 14, 255, 66, 24, 54, 136, 107, 18, 23, 192, 26, 114, 118, 132, 17, 77, 101, 130, 144, 27, 87, 131, 44, 45, 74, 156, 154, 70, 167]);
+const FILTERS = {
+  0: '',
+  1: 'meshopt_decodeFilterOct',
+  2: 'meshopt_decodeFilterQuat',
+  3: 'meshopt_decodeFilterExp',
+  NONE: '',
+  OCTAHEDRAL: 'meshopt_decodeFilterOct',
+  QUATERNION: 'meshopt_decodeFilterQuat',
+  EXPONENTIAL: 'meshopt_decodeFilterExp'
+};
+const DECODERS = {
+  0: 'meshopt_decodeVertexBuffer',
+  1: 'meshopt_decodeIndexBuffer',
+  2: 'meshopt_decodeIndexSequence',
+  ATTRIBUTES: 'meshopt_decodeVertexBuffer',
+  TRIANGLES: 'meshopt_decodeIndexBuffer',
+  INDICES: 'meshopt_decodeIndexSequence'
+};
+function isMeshoptSupported() {
+  return isWebAssemblySupported;
+}
+async function meshoptDecodeGltfBuffer(target, count, size, source, mode, filter = 'NONE') {
+  const instance = await loadWasmInstance();
+  decode$5(instance, instance.exports[DECODERS[mode]], target, count, size, source, instance.exports[FILTERS[filter || 'NONE']]);
+}
+let wasmPromise;
+
+async function loadWasmInstance() {
+  if (!wasmPromise) {
+    wasmPromise = loadWasmModule();
+  }
+
+  return wasmPromise;
+}
+
+async function loadWasmModule() {
+  let wasm = wasm_base;
+
+  if (WebAssembly.validate(detector)) {
+    wasm = wasm_simd;
+    console.log('Warning: meshopt_decoder is using experimental SIMD support');
+  }
+
+  const result = await WebAssembly.instantiate(unpack(wasm), {});
+  await result.instance.exports.__wasm_call_ctors();
+  return result.instance;
+}
+
+function unpack(data) {
+  const result = new Uint8Array(data.length);
+
+  for (let i = 0; i < data.length; ++i) {
+    const ch = data.charCodeAt(i);
+    result[i] = ch > 96 ? ch - 71 : ch > 64 ? ch - 65 : ch > 47 ? ch + 4 : ch > 46 ? 63 : 62;
+  }
+
+  let write = 0;
+
+  for (let i = 0; i < data.length; ++i) {
+    result[write++] = result[i] < 60 ? wasmpack[result[i]] : (result[i] - 60) * 64 + result[++i];
+  }
+
+  return result.buffer.slice(0, write);
+}
+
+function decode$5(instance, fun, target, count, size, source, filter) {
+  const sbrk = instance.exports.sbrk;
+  const count4 = count + 3 & ~3;
+  const tp = sbrk(count4 * size);
+  const sp = sbrk(source.length);
+  const heap = new Uint8Array(instance.exports.memory.buffer);
+  heap.set(source, sp);
+  const res = fun(tp, count, size, sp, source.length);
+
+  if (res === 0 && filter) {
+    filter(tp, count4, size);
+  }
+
+  target.set(heap.subarray(tp, tp + count * size));
+  sbrk(tp - sbrk(0));
+
+  if (res !== 0) {
+    throw new Error("Malformed buffer data: ".concat(res));
+  }
+}
+
+const EXT_MESHOPT_COMPRESSION = 'EXT_meshopt_compression';
+const name$6 = EXT_MESHOPT_COMPRESSION;
+function preprocess$4(gltfData) {
+  const scenegraph = new GLTFScenegraph(gltfData);
+
+  if (scenegraph.getRequiredExtensions().includes(EXT_MESHOPT_COMPRESSION) && !isMeshoptSupported()) {
+    throw new Error("gltf: Required extension ".concat(EXT_MESHOPT_COMPRESSION, " not supported by browser"));
+  }
+}
+async function decode$4(gltfData, options) {
+  var _options$gltf;
+
+  const scenegraph = new GLTFScenegraph(gltfData);
+
+  if (!(options !== null && options !== void 0 && (_options$gltf = options.gltf) !== null && _options$gltf !== void 0 && _options$gltf.decompressMeshes)) {
+    return;
+  }
+
+  const promises = [];
+
+  for (const bufferViewIndex of gltfData.json.bufferViews || []) {
+    promises.push(decodeMeshoptBufferView(scenegraph, bufferViewIndex));
+  }
+
+  await Promise.all(promises);
+  scenegraph.removeExtension(EXT_MESHOPT_COMPRESSION);
+}
+
+async function decodeMeshoptBufferView(scenegraph, bufferView) {
+  const meshoptExtension = scenegraph.getObjectExtension(bufferView, EXT_MESHOPT_COMPRESSION);
+
+  if (meshoptExtension) {
+    const buffer = bufferView.buffer;
+    const {
+      byteOffset = 0,
+      byteLength = 0,
+      byteStride,
+      count,
+      mode,
+      filter = 'NONE'
+    } = meshoptExtension;
+    const source = new Uint8Array(buffer, byteOffset, byteLength);
+    const result = new ArrayBuffer(count * byteStride);
+    await meshoptDecodeGltfBuffer(new Uint8Array(result), count, byteStride, source, mode, filter);
+    return result;
+  }
+
+  return null;
+}
+
+var EXT_meshopt_compression = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    name: name$6,
+    preprocess: preprocess$4,
+    decode: decode$4
+});
+
+const EXT_TEXTURE_WEBP = 'EXT_texture_webp';
+const name$5 = EXT_TEXTURE_WEBP;
+function preprocess$3(gltfData, options) {
+  const scenegraph = new GLTFScenegraph(gltfData);
+
+  if (!_isImageFormatSupported('image/webp')) {
+    if (scenegraph.getRequiredExtensions().includes(EXT_TEXTURE_WEBP)) {
+      throw new Error("gltf: Required extension ".concat(EXT_TEXTURE_WEBP, " not supported by browser"));
+    }
+
+    return;
+  }
+
+  const {
+    json
+  } = scenegraph;
+
+  for (const texture of json.textures || []) {
+    const extension = scenegraph.getObjectExtension(texture, EXT_TEXTURE_WEBP);
+
+    if (extension) {
+      texture.source = extension.source;
+    }
+
+    scenegraph.removeObjectExtension(texture, EXT_TEXTURE_WEBP);
+  }
+
+  scenegraph.removeExtension(EXT_TEXTURE_WEBP);
+}
+
+var EXT_texture_webp = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    name: name$5,
+    preprocess: preprocess$3
+});
+
+const KHR_TEXTURE_BASISU = 'KHR_texture_basisu';
+const name$4 = KHR_TEXTURE_BASISU;
+function preprocess$2(gltfData, options) {
+  const scene = new GLTFScenegraph(gltfData);
+  const {
+    json
+  } = scene;
+
+  for (const texture of json.textures || []) {
+    const extension = scene.getObjectExtension(texture, KHR_TEXTURE_BASISU);
+
+    if (extension) {
+      texture.source = extension.source;
+    }
+
+    scene.removeObjectExtension(texture, KHR_TEXTURE_BASISU);
+  }
+
+  scene.removeExtension(KHR_TEXTURE_BASISU);
+}
+
+var KHR_texture_basisu = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    name: name$4,
+    preprocess: preprocess$2
+});
+
 function getGLTFAccessors(attributes) {
   const accessors = {};
 
@@ -15001,7 +14594,16 @@ function toTypedArray(array, ArrayType, convertTypedArrays = false) {
   return array;
 }
 
-async function decode$4(gltfData, options, context) {
+const KHR_DRACO_MESH_COMPRESSION = 'KHR_draco_mesh_compression';
+const name$3 = KHR_DRACO_MESH_COMPRESSION;
+function preprocess$1(gltfData, options, context) {
+  const scenegraph = new GLTFScenegraph(gltfData);
+
+  for (const primitive of makeMeshPrimitiveIterator(scenegraph)) {
+    if (scenegraph.getObjectExtension(primitive, KHR_DRACO_MESH_COMPRESSION)) ;
+  }
+}
+async function decode$3(gltfData, options, context) {
   var _options$gltf;
 
   if (!(options !== null && options !== void 0 && (_options$gltf = options.gltf) !== null && _options$gltf !== void 0 && _options$gltf.decompressMeshes)) {
@@ -15116,50 +14718,14 @@ function* makeMeshPrimitiveIterator(scenegraph) {
 
 var KHR_draco_mesh_compression = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    decode: decode$4,
+    name: name$3,
+    preprocess: preprocess$1,
+    decode: decode$3,
     encode: encode$3
 });
 
-async function decode$3(gltfData) {
-  const gltfScenegraph = new GLTFScenegraph(gltfData);
-  const {
-    json
-  } = gltfScenegraph;
-  gltfScenegraph.removeExtension(KHR_MATERIALS_UNLIT);
-
-  for (const material of json.materials || []) {
-    const extension = material.extensions && material.extensions.KHR_materials_unlit;
-
-    if (extension) {
-      material.unlit = true;
-    }
-
-    gltfScenegraph.removeObjectExtension(material, KHR_MATERIALS_UNLIT);
-  }
-}
-function encode$2(gltfData) {
-  const gltfScenegraph = new GLTFScenegraph(gltfData);
-  const {
-    json
-  } = gltfScenegraph;
-
-  if (gltfScenegraph.materials) {
-    for (const material of json.materials || []) {
-      if (material.unlit) {
-        delete material.unlit;
-        gltfScenegraph.addObjectExtension(material, KHR_MATERIALS_UNLIT, {});
-        gltfScenegraph.addExtension(KHR_MATERIALS_UNLIT);
-      }
-    }
-  }
-}
-
-var KHR_materials_unlit = /*#__PURE__*/Object.freeze({
-    __proto__: null,
-    decode: decode$3,
-    encode: encode$2
-});
-
+const KHR_LIGHTS_PUNCTUAL = 'KHR_lights_punctual';
+const name$2 = KHR_LIGHTS_PUNCTUAL;
 async function decode$2(gltfData) {
   const gltfScenegraph = new GLTFScenegraph(gltfData);
   const {
@@ -15182,7 +14748,7 @@ async function decode$2(gltfData) {
     gltfScenegraph.removeObjectExtension(node, KHR_LIGHTS_PUNCTUAL);
   }
 }
-async function encode$1(gltfData) {
+async function encode$2(gltfData) {
   const gltfScenegraph = new GLTFScenegraph(gltfData);
   const {
     json
@@ -15207,11 +14773,57 @@ async function encode$1(gltfData) {
 
 var KHR_lights_punctual = /*#__PURE__*/Object.freeze({
     __proto__: null,
+    name: name$2,
     decode: decode$2,
+    encode: encode$2
+});
+
+const KHR_MATERIALS_UNLIT = 'KHR_materials_unlit';
+const name$1 = KHR_MATERIALS_UNLIT;
+async function decode$1(gltfData) {
+  const gltfScenegraph = new GLTFScenegraph(gltfData);
+  const {
+    json
+  } = gltfScenegraph;
+  gltfScenegraph.removeExtension(KHR_MATERIALS_UNLIT);
+
+  for (const material of json.materials || []) {
+    const extension = material.extensions && material.extensions.KHR_materials_unlit;
+
+    if (extension) {
+      material.unlit = true;
+    }
+
+    gltfScenegraph.removeObjectExtension(material, KHR_MATERIALS_UNLIT);
+  }
+}
+function encode$1(gltfData) {
+  const gltfScenegraph = new GLTFScenegraph(gltfData);
+  const {
+    json
+  } = gltfScenegraph;
+
+  if (gltfScenegraph.materials) {
+    for (const material of json.materials || []) {
+      if (material.unlit) {
+        delete material.unlit;
+        gltfScenegraph.addObjectExtension(material, KHR_MATERIALS_UNLIT, {});
+        gltfScenegraph.addExtension(KHR_MATERIALS_UNLIT);
+      }
+    }
+  }
+}
+
+var KHR_materials_unlit = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    name: name$1,
+    decode: decode$1,
     encode: encode$1
 });
 
-async function decode$1(gltfData) {
+const KHR_TECHNIQUES_WEBGL = 'KHR_techniques_webgl';
+const name = KHR_TECHNIQUES_WEBGL;
+async function decode(gltfData) {
   const gltfScenegraph = new GLTFScenegraph(gltfData);
   const {
     json
@@ -15278,42 +14890,54 @@ function resolveValues(technique, gltfScenegraph) {
 
 var KHR_techniques_webgl = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    decode: decode$1,
+    name: name,
+    decode: decode,
     encode: encode
 });
 
-const EXTENSIONS = {
-  KHR_draco_mesh_compression,
-  KHR_materials_unlit,
-  KHR_lights_punctual,
-  KHR_techniques_webgl
-};
+const EXTENSIONS = [EXT_meshopt_compression, EXT_texture_webp, KHR_texture_basisu, KHR_draco_mesh_compression, KHR_lights_punctual, KHR_materials_unlit, KHR_techniques_webgl];
+function preprocessExtensions(gltf, options = {}, context) {
+  const extensions = EXTENSIONS.filter(extension => useExtension(extension.name, options));
+
+  for (const extension of extensions) {
+    var _extension$preprocess;
+
+    (_extension$preprocess = extension.preprocess) === null || _extension$preprocess === void 0 ? void 0 : _extension$preprocess.call(extension, gltf, options, context);
+  }
+}
 async function decodeExtensions(gltf, options = {}, context) {
-  for (const extensionName in EXTENSIONS) {
-    var _options$gltf;
+  const extensions = EXTENSIONS.filter(extension => useExtension(extension.name, options));
 
-    const excludes = (options === null || options === void 0 ? void 0 : (_options$gltf = options.gltf) === null || _options$gltf === void 0 ? void 0 : _options$gltf.excludeExtensions) || {};
-    const exclude = extensionName in excludes && !excludes[extensionName];
+  for (const extension of extensions) {
+    var _extension$decode;
 
-    if (!exclude) {
-      const extension = EXTENSIONS[extensionName];
-      await extension.decode(gltf, options, context);
-    }
+    await ((_extension$decode = extension.decode) === null || _extension$decode === void 0 ? void 0 : _extension$decode.call(extension, gltf, options, context));
   }
 }
 
-function decode(gltfData) {
+function useExtension(extensionName, options) {
+  var _options$gltf;
+
+  const excludes = (options === null || options === void 0 ? void 0 : (_options$gltf = options.gltf) === null || _options$gltf === void 0 ? void 0 : _options$gltf.excludeExtensions) || {};
+  const exclude = extensionName in excludes && !excludes[extensionName];
+  return !exclude;
+}
+
+const KHR_BINARY_GLTF = 'KHR_binary_glTF';
+function preprocess(gltfData) {
   const gltfScenegraph = new GLTFScenegraph(gltfData);
   const {
     json
   } = gltfScenegraph;
 
-  for (const node of json.images || []) {
-    const extension = gltfScenegraph.removeObjectExtension(node, KHR_BINARY_GLTF);
+  for (const image of json.images || []) {
+    const extension = gltfScenegraph.getObjectExtension(image, KHR_BINARY_GLTF);
 
     if (extension) {
-      Object.assign(node, extension);
+      Object.assign(image, extension);
     }
+
+    gltfScenegraph.removeObjectExtension(image, KHR_BINARY_GLTF);
   }
 
   if (json.buffers && json.buffers[0]) {
@@ -15353,8 +14977,8 @@ const GLTF_KEYS = {
 };
 
 class GLTFV1Normalizer {
-  constructor(gltf) {
-    this.idToIndexMap = {
+  constructor() {
+    _defineProperty(this, "idToIndexMap", {
       animations: {},
       accessors: {},
       buffers: {},
@@ -15367,7 +14991,9 @@ class GLTFV1Normalizer {
       scenes: {},
       skins: {},
       textures: {}
-    };
+    });
+
+    _defineProperty(this, "json", void 0);
   }
 
   normalize(gltf, options) {
@@ -15383,7 +15009,7 @@ class GLTFV1Normalizer {
         break;
 
       default:
-        console.warn(`glTF: Unknown version ${json.asset.version}`);
+        console.warn("glTF: Unknown version ".concat(json.asset.version));
         return;
     }
 
@@ -15397,7 +15023,7 @@ class GLTFV1Normalizer {
 
     this._convertTopLevelObjectsToArrays(json);
 
-    decode(gltf);
+    preprocess(gltf);
 
     this._convertObjectIdsToArrayIndices(json);
 
@@ -15508,7 +15134,7 @@ class GLTFV1Normalizer {
 
   _convertIdsToIndices(json, topLevelArrayName) {
     if (!json[topLevelArrayName]) {
-      console.warn(`gltf v1: json doesn't contain attribute ${topLevelArrayName}`);
+      console.warn("gltf v1: json doesn't contain attribute ".concat(topLevelArrayName));
       json[topLevelArrayName] = [];
     }
 
@@ -15530,7 +15156,7 @@ class GLTFV1Normalizer {
       const index = this.idToIndexMap[arrayName][id];
 
       if (!Number.isFinite(index)) {
-        throw new Error(`gltf v1: failed to resolve ${key} with id ${id}`);
+        throw new Error("gltf v1: failed to resolve ".concat(key, " with id ").concat(id));
       }
 
       return index;
@@ -15605,7 +15231,7 @@ const DEFAULT_SAMPLER = {
   [GL_SAMPLER.TEXTURE_MAG_FILTER]: GL_SAMPLER.LINEAR,
   [GL_SAMPLER.TEXTURE_MIN_FILTER]: GL_SAMPLER.NEAREST_MIPMAP_LINEAR,
   [GL_SAMPLER.TEXTURE_WRAP_S]: GL_SAMPLER.REPEAT,
-  [GL_SAMPLER.TEXTURE_WRAP_]: GL_SAMPLER.REPEAT
+  [GL_SAMPLER.TEXTURE_WRAP_T]: GL_SAMPLER.REPEAT
 };
 
 function getBytesFromComponentType(componentType) {
@@ -15617,6 +15243,16 @@ function getSizeFromAccessorType(type) {
 }
 
 class GLTFPostProcessor {
+  constructor() {
+    _defineProperty(this, "baseUri", '');
+
+    _defineProperty(this, "json", {});
+
+    _defineProperty(this, "buffers", []);
+
+    _defineProperty(this, "images", []);
+  }
+
   postProcess(gltf, options = {}) {
     const {
       json,
@@ -15737,20 +15373,20 @@ class GLTFPostProcessor {
     const object = this.json[array] && this.json[array][index];
 
     if (!object) {
-      console.warn(`glTF file error: Could not find ${array}[${index}]`);
+      console.warn("glTF file error: Could not find ".concat(array, "[").concat(index, "]"));
     }
 
     return object;
   }
 
   _resolveScene(scene, index) {
-    scene.id = scene.id || `scene-${index}`;
+    scene.id = scene.id || "scene-".concat(index);
     scene.nodes = (scene.nodes || []).map(node => this.getNode(node));
     return scene;
   }
 
   _resolveNode(node, index) {
-    node.id = node.id || `node-${index}`;
+    node.id = node.id || "node-".concat(index);
 
     if (node.children) {
       node.children = node.children.map(child => this.getNode(child));
@@ -15781,13 +15417,13 @@ class GLTFPostProcessor {
   }
 
   _resolveSkin(skin, index) {
-    skin.id = skin.id || `skin-${index}`;
+    skin.id = skin.id || "skin-".concat(index);
     skin.inverseBindMatrices = this.getAccessor(skin.inverseBindMatrices);
     return skin;
   }
 
   _resolveMesh(mesh, index) {
-    mesh.id = mesh.id || `mesh-${index}`;
+    mesh.id = mesh.id || "mesh-".concat(index);
 
     if (mesh.primitives) {
       mesh.primitives = mesh.primitives.map(primitive => {
@@ -15816,7 +15452,7 @@ class GLTFPostProcessor {
   }
 
   _resolveMaterial(material, index) {
-    material.id = material.id || `material-${index}`;
+    material.id = material.id || "material-".concat(index);
 
     if (material.normalTexture) {
       material.normalTexture = { ...material.normalTexture
@@ -15862,7 +15498,7 @@ class GLTFPostProcessor {
   }
 
   _resolveAccessor(accessor, index) {
-    accessor.id = accessor.id || `accessor-${index}`;
+    accessor.id = accessor.id || "accessor-".concat(index);
 
     if (accessor.bufferView !== undefined) {
       accessor.bufferView = this.getBufferView(accessor.bufferView);
@@ -15879,22 +15515,38 @@ class GLTFPostProcessor {
         byteLength
       } = getAccessorArrayTypeAndLength(accessor, accessor.bufferView);
       const byteOffset = (accessor.bufferView.byteOffset || 0) + (accessor.byteOffset || 0) + buffer.byteOffset;
-      const cutBufffer = buffer.arrayBuffer.slice(byteOffset, byteOffset + byteLength);
-      accessor.value = new ArrayType(cutBufffer);
+      let cutBuffer = buffer.arrayBuffer.slice(byteOffset, byteOffset + byteLength);
+
+      if (accessor.bufferView.byteStride) {
+        cutBuffer = this._getValueFromInterleavedBuffer(buffer, byteOffset, accessor.bufferView.byteStride, accessor.bytesPerElement, accessor.count);
+      }
+
+      accessor.value = new ArrayType(cutBuffer);
     }
 
     return accessor;
   }
 
+  _getValueFromInterleavedBuffer(buffer, byteOffset, byteStride, bytesPerElement, count) {
+    const result = new Uint8Array(count * bytesPerElement);
+
+    for (let i = 0; i < count; i++) {
+      const elementOffset = byteOffset + i * byteStride;
+      result.set(new Uint8Array(buffer.arrayBuffer.slice(elementOffset, elementOffset + bytesPerElement)), i * bytesPerElement);
+    }
+
+    return result.buffer;
+  }
+
   _resolveTexture(texture, index) {
-    texture.id = texture.id || `texture-${index}`;
+    texture.id = texture.id || "texture-".concat(index);
     texture.sampler = 'sampler' in texture ? this.getSampler(texture.sampler) : DEFAULT_SAMPLER;
     texture.source = this.getImage(texture.source);
     return texture;
   }
 
   _resolveSampler(sampler, index) {
-    sampler.id = sampler.id || `sampler-${index}`;
+    sampler.id = sampler.id || "sampler-".concat(index);
     sampler.parameters = {};
 
     for (const key in sampler) {
@@ -15913,7 +15565,7 @@ class GLTFPostProcessor {
   }
 
   _resolveImage(image, index) {
-    image.id = image.id || `image-${index}`;
+    image.id = image.id || "image-".concat(index);
 
     if (image.bufferView !== undefined) {
       image.bufferView = this.getBufferView(image.bufferView);
@@ -15929,9 +15581,12 @@ class GLTFPostProcessor {
   }
 
   _resolveBufferView(bufferView, index) {
-    bufferView.id = bufferView.id || `bufferView-${index}`;
     const bufferIndex = bufferView.buffer;
-    bufferView.buffer = this.buffers[bufferIndex];
+    const result = {
+      id: "bufferView-".concat(index),
+      ...bufferView,
+      buffer: this.buffers[bufferIndex]
+    };
     const arrayBuffer = this.buffers[bufferIndex].arrayBuffer;
     let byteOffset = this.buffers[bufferIndex].byteOffset || 0;
 
@@ -15939,12 +15594,12 @@ class GLTFPostProcessor {
       byteOffset += bufferView.byteOffset;
     }
 
-    bufferView.data = new Uint8Array(arrayBuffer, byteOffset, bufferView.byteLength);
-    return bufferView;
+    result.data = new Uint8Array(arrayBuffer, byteOffset, bufferView.byteLength);
+    return result;
   }
 
   _resolveCamera(camera, index) {
-    camera.id = camera.id || `camera-${index}`;
+    camera.id = camera.id || "camera-".concat(index);
 
     if (camera.perspective) ;
 
@@ -15970,11 +15625,7 @@ const GLB_V1_CONTENT_FORMAT_JSON = 0x0;
 const LE = true;
 
 function getMagicString(dataView, byteOffset = 0) {
-  return `\
-${String.fromCharCode(dataView.getUint8(byteOffset + 0))}\
-${String.fromCharCode(dataView.getUint8(byteOffset + 1))}\
-${String.fromCharCode(dataView.getUint8(byteOffset + 2))}\
-${String.fromCharCode(dataView.getUint8(byteOffset + 3))}`;
+  return "".concat(String.fromCharCode(dataView.getUint8(byteOffset + 0))).concat(String.fromCharCode(dataView.getUint8(byteOffset + 1))).concat(String.fromCharCode(dataView.getUint8(byteOffset + 2))).concat(String.fromCharCode(dataView.getUint8(byteOffset + 3)));
 }
 
 function isGLB(arrayBuffer, byteOffset = 0, options = {}) {
@@ -16011,16 +15662,16 @@ function parseGLBSync(glb, arrayBuffer, byteOffset = 0, options = {}) {
       return parseGLBV2(glb, dataView, byteOffset, options = {});
 
     default:
-      throw new Error(`Invalid GLB version ${glb.version}. Only supports v1 and v2.`);
+      throw new Error("Invalid GLB version ".concat(glb.version, ". Only supports v1 and v2."));
   }
 }
 
 function parseGLBV1(glb, dataView, byteOffset) {
-  assert$9(glb.header.byteLength > GLB_FILE_HEADER_SIZE + GLB_CHUNK_HEADER_SIZE);
+  assert$7(glb.header.byteLength > GLB_FILE_HEADER_SIZE + GLB_CHUNK_HEADER_SIZE);
   const contentLength = dataView.getUint32(byteOffset + 0, LE);
   const contentFormat = dataView.getUint32(byteOffset + 4, LE);
   byteOffset += GLB_CHUNK_HEADER_SIZE;
-  assert$9(contentFormat === GLB_V1_CONTENT_FORMAT_JSON);
+  assert$7(contentFormat === GLB_V1_CONTENT_FORMAT_JSON);
   parseJSONChunk(glb, dataView, byteOffset, contentLength);
   byteOffset += contentLength;
   byteOffset += parseBINChunk(glb, dataView, byteOffset, glb.header.byteLength);
@@ -16028,7 +15679,7 @@ function parseGLBV1(glb, dataView, byteOffset) {
 }
 
 function parseGLBV2(glb, dataView, byteOffset, options) {
-  assert$9(glb.header.byteLength > GLB_FILE_HEADER_SIZE + GLB_CHUNK_HEADER_SIZE);
+  assert$7(glb.header.byteLength > GLB_FILE_HEADER_SIZE + GLB_CHUNK_HEADER_SIZE);
   parseGLBChunksSync(glb, dataView, byteOffset, options);
   return byteOffset + glb.header.byteLength;
 }
@@ -16094,6 +15745,7 @@ async function parseGLTF(gltf, arrayBufferOrString, byteOffset = 0, options, con
   normalizeGLTFV1(gltf, {
     normalize: options === null || options === void 0 ? void 0 : (_options$gltf = options.gltf) === null || _options$gltf === void 0 ? void 0 : _options$gltf.normalize
   });
+  preprocessExtensions(gltf, options, context);
   const promises = [];
 
   if (options !== null && options !== void 0 && (_options$gltf2 = options.gltf) !== null && _options$gltf2 !== void 0 && _options$gltf2.loadBuffers && gltf.json.buffers) {
@@ -16126,7 +15778,7 @@ function parseGLTFContainerSync(gltf, data, byteOffset, options) {
   } else if (data instanceof ArrayBuffer) {
     const glb = {};
     byteOffset = parseGLBSync(glb, data, byteOffset, options.glb);
-    assert$1(glb.type === 'glTF', `Invalid GLB magic string ${glb.type}`);
+    assert$1(glb.type === 'glTF', "Invalid GLB magic string ".concat(glb.type));
     gltf._glb = glb;
     gltf.json = glb.json;
   } else {
@@ -16152,8 +15804,10 @@ function parseGLTFContainerSync(gltf, data, byteOffset, options) {
 }
 
 async function loadBuffers(gltf, options, context) {
-  for (let i = 0; i < gltf.json.buffers.length; ++i) {
-    const buffer = gltf.json.buffers[i];
+  const buffers = gltf.json.buffers || [];
+
+  for (let i = 0; i < buffers.length; ++i) {
+    const buffer = buffers[i];
 
     if (buffer.uri) {
       var _context$fetch, _response$arrayBuffer;
@@ -16176,14 +15830,28 @@ async function loadBuffers(gltf, options, context) {
 }
 
 async function loadImages(gltf, options, context) {
+  const imageIndices = getReferencesImageIndices(gltf);
   const images = gltf.json.images || [];
   const promises = [];
 
-  for (let i = 0; i < images.length; ++i) {
-    promises.push(loadImage(gltf, images[i], i, options, context));
+  for (const imageIndex of imageIndices) {
+    promises.push(loadImage(gltf, images[imageIndex], imageIndex, options, context));
   }
 
   return await Promise.all(promises);
+}
+
+function getReferencesImageIndices(gltf) {
+  const imageIndices = new Set();
+  const textures = gltf.json.textures || [];
+
+  for (const texture of textures) {
+    if (texture.source !== undefined) {
+      imageIndices.add(texture.source);
+    }
+  }
+
+  return Array.from(imageIndices).sort();
 }
 
 async function loadImage(gltf, image, index, options, context) {
@@ -16205,7 +15873,24 @@ async function loadImage(gltf, image, index, options, context) {
   }
 
   assert$1(arrayBuffer, 'glTF image has no data');
-  const parsedImage = await parse(arrayBuffer, ImageLoader, {}, context);
+  let parsedImage = await parse(arrayBuffer, [ImageLoader, BasisLoader], {
+    mimeType: image.mimeType,
+    basis: options.basis || {
+      format: selectSupportedBasisFormat()
+    }
+  }, context);
+
+  if (parsedImage && parsedImage[0]) {
+    parsedImage = {
+      compressed: true,
+      mipmaps: false,
+      width: parsedImage[0].width,
+      height: parsedImage[0].height,
+      data: parsedImage
+    };
+  }
+
+  gltf.images = gltf.images || [];
   gltf.images[index] = parsedImage;
 }
 
@@ -16213,7 +15898,7 @@ const GLTFLoader = {
   name: 'glTF',
   id: 'gltf',
   module: 'gltf',
-  version: VERSION$1,
+  version: VERSION$3,
   extensions: ['gltf', 'glb'],
   mimeTypes: ['model/gltf+json', 'model/gltf-binary'],
   text: true,
@@ -16272,7 +15957,7 @@ function parse3DTileGLTFViewSync(tile, arrayBuffer, byteOffset, options) {
   tile.gltfByteLength = gltfByteLength;
 
   if (byteOffset % 4 === 0) ; else {
-    console.warn(`${tile.type}: embedded glb is not aligned to a 4-byte boundary.`);
+    console.warn("".concat(tile.type, ": embedded glb is not aligned to a 4-byte boundary."));
   }
 
   return tile.byteOffset + tile.byteLength;
@@ -16317,7 +16002,7 @@ function extractGLTFBufferOrURL(tile, gltfFormat, options) {
       break;
 
     default:
-      throw new Error(`b3dm: Illegal glTF format field`);
+      throw new Error('b3dm: Illegal glTF format field');
   }
 }
 
@@ -16355,7 +16040,7 @@ function parseInstancedModel(tile, arrayBuffer, byteOffset, options, context) {
   byteOffset = parse3DTileHeaderSync(tile, arrayBuffer, byteOffset);
 
   if (tile.version !== 1) {
-    throw new Error(`Instanced 3D Model version ${tile.version} is not supported`);
+    throw new Error("Instanced 3D Model version ".concat(tile.version, " is not supported"));
   }
 
   byteOffset = parse3DTileTablesHeaderSync(tile, arrayBuffer, byteOffset);
@@ -16396,19 +16081,19 @@ function extractInstancedAttributes(tile, featureTable, batchTable, instancesLen
     forwardAxis: [1, 0, 0]
   };
   const instances = collectionOptions.instances;
-  const instancePosition = new Vector3$1();
-  new Vector3$1();
-  new Vector3$1();
-  new Vector3$1();
+  const instancePosition = new Vector3();
+  new Vector3();
+  new Vector3();
+  new Vector3();
   const instanceRotation = new Matrix3();
   const instanceQuaternion = new Quaternion();
-  const instanceScale = new Vector3$1();
+  const instanceScale = new Vector3();
   const instanceTranslationRotationScale = {};
-  const instanceTransform = new Matrix4$1();
+  const instanceTransform = new Matrix4();
   const scratch1 = [];
   const scratch2 = [];
-  const scratchVector1 = new Vector3$1();
-  const scratchVector2 = new Vector3$1();
+  const scratchVector1 = new Vector3();
+  const scratchVector2 = new Vector3();
 
   for (let i = 0; i < instancesLength; i++) {
     let position;
@@ -16491,7 +16176,7 @@ function extractInstancedAttributes(tile, featureTable, batchTable, instancesLen
       batchId = i;
     }
 
-    const rotationMatrix = new Matrix4$1().fromQuaternion(instanceTranslationRotationScale.rotation);
+    const rotationMatrix = new Matrix4().fromQuaternion(instanceTranslationRotationScale.rotation);
     instanceTransform.identity();
     instanceTransform.translate(instanceTranslationRotationScale.translation);
     instanceTransform.multiplyRight(rotationMatrix);
@@ -16522,6 +16207,15 @@ async function parseComposite3DTile(tile, arrayBuffer, byteOffset, options, cont
   return byteOffset;
 }
 
+async function parseGltf3DTile(tile, arrayBuffer, options, context) {
+  tile.rotateYtoZ = true;
+  tile.gltfUpAxis = options['3d-tiles'] && options['3d-tiles'].assetGltfUpAxis ? options['3d-tiles'].assetGltfUpAxis : 'Y';
+  const {
+    parse
+  } = context;
+  tile.gltf = await parse(arrayBuffer, GLTFLoader, options, context);
+}
+
 async function parse3DTile(arrayBuffer, byteOffset = 0, options, context, tile = {}) {
   tile.byteOffset = byteOffset;
   tile.type = getMagicString$1(arrayBuffer, byteOffset);
@@ -16533,6 +16227,9 @@ async function parse3DTile(arrayBuffer, byteOffset = 0, options, context, tile =
     case TILE3D_TYPE.BATCHED_3D_MODEL:
       return await parseBatchedModel3DTile(tile, arrayBuffer, byteOffset, options, context);
 
+    case TILE3D_TYPE.GLTF:
+      return await parseGltf3DTile(tile, arrayBuffer, options, context);
+
     case TILE3D_TYPE.INSTANCED_3D_MODEL:
       return await parseInstancedModel3DTile(tile, arrayBuffer, byteOffset, options, context);
 
@@ -16540,8 +16237,286 @@ async function parse3DTile(arrayBuffer, byteOffset = 0, options, context, tile =
       return await parsePointCloud3DTile(tile, arrayBuffer, byteOffset, options, context);
 
     default:
-      throw new Error(`3DTileLoader: unknown type ${tile.type}`);
+      throw new Error("3DTileLoader: unknown type ".concat(tile.type));
   }
+}
+
+const SUBTREE_FILE_MAGIC = 0x74627573;
+const SUBTREE_FILE_VERSION = 1;
+async function parse3DTilesSubtree(data) {
+  const magic = new Uint32Array(data.slice(0, 4));
+
+  if (magic[0] !== SUBTREE_FILE_MAGIC) {
+    throw new Error('Wrong subtree file magic number');
+  }
+
+  const version = new Uint32Array(data.slice(4, 8));
+
+  if (version[0] !== SUBTREE_FILE_VERSION) {
+    throw new Error('Wrong subtree file verson, must be 1');
+  }
+
+  const jsonByteLength = parseUint64Value(data.slice(8, 16));
+  const stringAttribute = new Uint8Array(data, 24, jsonByteLength);
+  const textDecoder = new TextDecoder('utf8');
+  const string = textDecoder.decode(stringAttribute);
+  const subtree = JSON.parse(string);
+  const binaryByteLength = parseUint64Value(data.slice(16, 24));
+  let internalBinaryBuffer = new ArrayBuffer(0);
+
+  if (binaryByteLength) {
+    internalBinaryBuffer = data.slice(24 + jsonByteLength);
+  }
+
+  if ('bufferView' in subtree.tileAvailability) {
+    subtree.tileAvailability.explicitBitstream = await getExplicitBitstream(subtree, 'tileAvailability', internalBinaryBuffer);
+  }
+
+  if ('bufferView' in subtree.contentAvailability) {
+    subtree.contentAvailability.explicitBitstream = await getExplicitBitstream(subtree, 'contentAvailability', internalBinaryBuffer);
+  }
+
+  if ('bufferView' in subtree.childSubtreeAvailability) {
+    subtree.childSubtreeAvailability.explicitBitstream = await getExplicitBitstream(subtree, 'childSubtreeAvailability', internalBinaryBuffer);
+  }
+
+  return subtree;
+}
+
+async function getExplicitBitstream(subtree, name, internalBinaryBuffer) {
+  const bufferViewIndex = subtree[name].bufferView;
+  const bufferView = subtree.bufferViews[bufferViewIndex];
+  const buffer = subtree.buffers[bufferView.buffer];
+
+  if (buffer.uri) {
+    const response = await fetchFile(buffer.uri);
+    const data = await response.arrayBuffer();
+    return new Uint8Array(data, bufferView.byteOffset, bufferView.byteLength);
+  }
+
+  return new Uint8Array(internalBinaryBuffer, bufferView.byteOffset, bufferView.byteLength);
+}
+
+function parseUint64Value(buffer) {
+  const dataView = new DataView(buffer);
+  const left = dataView.getUint32(0, true);
+  const right = dataView.getUint32(4, true);
+  return left + 2 ** 32 * right;
+}
+
+const Tile3DSubtreeLoader = {
+  id: '3d-tiles-subtree',
+  name: '3D Tiles Subtree',
+  module: '3d-tiles',
+  version: VERSION$5,
+  extensions: ['subtree'],
+  mimeTypes: ['application/octet-stream'],
+  tests: ['subtree'],
+  parse: parse3DTilesSubtree,
+  options: {}
+};
+
+const QUADTREE_DEVISION_COUNT = 4;
+const OCTREE_DEVISION_COUNT = 8;
+const SUBDIVISION_COUNT_MAP = {
+  QUADTREE: QUADTREE_DEVISION_COUNT,
+  OCTREE: OCTREE_DEVISION_COUNT
+};
+async function parseImplicitTiles(subtree, options, parentData = {
+  mortonIndex: 0,
+  x: 0,
+  y: 0,
+  z: 0
+}, childIndex = 0, level = 0, globalData = {
+  level: 0,
+  mortonIndex: 0,
+  x: 0,
+  y: 0,
+  z: 0
+}) {
+  const {
+    subdivisionScheme,
+    subtreeLevels,
+    maximumLevel,
+    contentUrlTemplate,
+    subtreesUriTemplate,
+    basePath
+  } = options;
+  const tile = {
+    children: [],
+    lodMetricValue: 0,
+    contentUrl: ''
+  };
+  const childrenPerTile = SUBDIVISION_COUNT_MAP[subdivisionScheme];
+  const childX = childIndex & 0b01;
+  const childY = childIndex >> 1 & 0b01;
+  const childZ = childIndex >> 2 & 0b01;
+  const levelOffset = (childrenPerTile ** level - 1) / (childrenPerTile - 1);
+  let childTileMortonIndex = concatBits(parentData.mortonIndex, childIndex);
+  let tileAvailabilityIndex = levelOffset + childTileMortonIndex;
+  let childTileX = concatBits(parentData.x, childX);
+  let childTileY = concatBits(parentData.y, childY);
+  let childTileZ = concatBits(parentData.z, childZ);
+  let isChildSubtreeAvailable = false;
+
+  if (level + 1 > subtreeLevels) {
+    isChildSubtreeAvailable = getAvailabilityResult(subtree.childSubtreeAvailability, childTileMortonIndex);
+  }
+
+  const x = concatBits(globalData.x, childTileX);
+  const y = concatBits(globalData.y, childTileY);
+  const z = concatBits(globalData.z, childTileZ);
+  const lev = level + globalData.level;
+
+  if (isChildSubtreeAvailable) {
+    const subtreePath = "".concat(basePath, "/").concat(subtreesUriTemplate);
+    const childSubtreeUrl = replaceContentUrlTemplate(subtreePath, lev, x, y, z);
+    const childSubtree = await load(childSubtreeUrl, Tile3DSubtreeLoader);
+    subtree = childSubtree;
+    globalData.mortonIndex = childTileMortonIndex;
+    globalData.x = childTileX;
+    globalData.y = childTileY;
+    globalData.z = childTileZ;
+    globalData.level = level;
+    childTileMortonIndex = 0;
+    tileAvailabilityIndex = 0;
+    childTileX = 0;
+    childTileY = 0;
+    childTileZ = 0;
+    level = 0;
+  }
+
+  const isTileAvailable = getAvailabilityResult(subtree.tileAvailability, tileAvailabilityIndex);
+
+  if (!isTileAvailable || level > maximumLevel) {
+    return tile;
+  }
+
+  const isContentAvailable = getAvailabilityResult(subtree.contentAvailability, tileAvailabilityIndex);
+
+  if (isContentAvailable) {
+    tile.contentUrl = replaceContentUrlTemplate(contentUrlTemplate, lev, x, y, z);
+  }
+
+  const childTileLevel = level + 1;
+  const pData = {
+    mortonIndex: childTileMortonIndex,
+    x: childTileX,
+    y: childTileY,
+    z: childTileZ
+  };
+
+  for (let index = 0; index < childrenPerTile; index++) {
+    const currentTile = await parseImplicitTiles(subtree, options, pData, index, childTileLevel, globalData);
+
+    if (currentTile.contentUrl || currentTile.children.length) {
+      const globalLevel = lev + 1;
+      const childCoordinates = {
+        childTileX,
+        childTileY,
+        childTileZ
+      };
+      const formattedTile = formatTileData(currentTile, globalLevel, childCoordinates, options);
+      tile.children.push(formattedTile);
+    }
+  }
+
+  return tile;
+}
+
+function getAvailabilityResult(availabilityData, index) {
+  if ('constant' in availabilityData) {
+    return Boolean(availabilityData.constant);
+  }
+
+  if (availabilityData.explicitBitstream) {
+    return getBooleanValueFromBitstream(index, availabilityData.explicitBitstream);
+  }
+
+  return false;
+}
+
+function formatTileData(tile, level, childCoordinates, options) {
+  const {
+    basePath,
+    refine,
+    getRefine,
+    lodMetricType,
+    getTileType,
+    rootLodMetricValue,
+    rootBoundingVolume
+  } = options;
+  const uri = tile.contentUrl && tile.contentUrl.replace("".concat(basePath, "/"), '');
+  const lodMetricValue = rootLodMetricValue / 2 ** level;
+  const boundingVolume = calculateBoundingVolumeForChildTile(level, rootBoundingVolume, childCoordinates);
+  return {
+    children: tile.children,
+    contentUrl: tile.contentUrl,
+    content: {
+      uri
+    },
+    id: tile.contentUrl,
+    refine: getRefine(refine),
+    type: getTileType(tile),
+    lodMetricType,
+    lodMetricValue,
+    boundingVolume
+  };
+}
+
+function calculateBoundingVolumeForChildTile(level, rootBoundingVolume, childCoordinates) {
+  if (rootBoundingVolume.region) {
+    const {
+      childTileX,
+      childTileY,
+      childTileZ
+    } = childCoordinates;
+    const [west, south, east, north, minimumHeight, maximumHeight] = rootBoundingVolume.region;
+    const boundingVolumesCount = 2 ** level;
+    const sizeX = (east - west) / boundingVolumesCount;
+    const sizeY = (north - south) / boundingVolumesCount;
+    const sizeZ = (maximumHeight - minimumHeight) / boundingVolumesCount;
+    const [childWest, childEast] = [west + sizeX * childTileX, west + sizeX * (childTileX + 1)];
+    const [childSouth, childNorth] = [south + sizeY * childTileY, south + sizeY * (childTileY + 1)];
+    const [childMinimumHeight, childMaximumHeight] = [minimumHeight + sizeZ * childTileZ, minimumHeight + sizeZ * (childTileZ + 1)];
+    return {
+      region: [childWest, childSouth, childEast, childNorth, childMinimumHeight, childMaximumHeight]
+    };
+  }
+
+  console.warn('Unsupported bounding volume type: ', rootBoundingVolume);
+  return null;
+}
+
+function concatBits(first, second) {
+  return parseInt(first.toString(2) + second.toString(2), 2);
+}
+
+function replaceContentUrlTemplate(templateUrl, level, x, y, z) {
+  const mapUrl = generateMapUrl({
+    level,
+    x,
+    y,
+    z
+  });
+  return templateUrl.replace(/{level}|{x}|{y}|{z}/gi, matched => mapUrl[matched]);
+}
+
+function generateMapUrl(items) {
+  const mapUrl = {};
+
+  for (const key in items) {
+    mapUrl["{".concat(key, "}")] = items[key];
+  }
+
+  return mapUrl;
+}
+
+function getBooleanValueFromBitstream(availabilityIndex, availabilityBuffer) {
+  const byteIndex = Math.floor(availabilityIndex / 8);
+  const bitIndex = availabilityIndex % 8;
+  const bitValue = availabilityBuffer[byteIndex] >> bitIndex & 1;
+  return bitValue === 1;
 }
 
 function getTileType(tile) {
@@ -16558,6 +16533,8 @@ function getTileType(tile) {
 
     case 'i3dm':
     case 'b3dm':
+    case 'glb':
+    case 'gltf':
       return TILE_TYPE.SCENEGRAPH;
 
     default:
@@ -16581,9 +16558,13 @@ function getRefine(refine) {
 }
 
 function normalizeTileData(tile, options) {
+  if (!tile) {
+    return null;
+  }
+
   if (tile.content) {
     const contentUri = tile.content.uri || tile.content.url;
-    tile.contentUrl = `${options.basePath}/${contentUri}`;
+    tile.contentUrl = "".concat(options.basePath, "/").concat(contentUri);
   }
 
   tile.id = tile.contentUrl;
@@ -16601,7 +16582,7 @@ function normalizeTileHeaders(tileset) {
   stack.push(root);
 
   while (stack.length > 0) {
-    const tile = stack.pop();
+    const tile = stack.pop() || {};
     const children = tile.children || [];
 
     for (const childHeader of children) {
@@ -16614,12 +16595,77 @@ function normalizeTileHeaders(tileset) {
 
   return root;
 }
+async function normalizeImplicitTileHeaders(tileset) {
+  if (!tileset.root) {
+    return null;
+  }
 
+  const basePath = tileset.basePath;
+  const implicitTilingExtension = tileset.root.extensions['3DTILES_implicit_tiling'];
+  const {
+    subdivisionScheme,
+    maximumLevel,
+    subtreeLevels,
+    subtrees: {
+      uri: subtreesUriTemplate
+    }
+  } = implicitTilingExtension;
+  const subtreeUrl = replaceContentUrlTemplate(subtreesUriTemplate, 0, 0, 0, 0);
+  const rootSubtreeUrl = "".concat(basePath, "/").concat(subtreeUrl);
+  const rootSubtree = await load(rootSubtreeUrl, Tile3DSubtreeLoader);
+  const contentUrlTemplate = "".concat(basePath, "/").concat(tileset.root.content.uri);
+  const refine = tileset.root.refine;
+  const rootLodMetricValue = tileset.root.geometricError;
+  const rootBoundingVolume = tileset.root.boundingVolume;
+  const options = {
+    contentUrlTemplate,
+    subtreesUriTemplate,
+    subdivisionScheme,
+    subtreeLevels,
+    maximumLevel,
+    refine,
+    basePath,
+    lodMetricType: LOD_METRIC_TYPE.GEOMETRIC_ERROR,
+    rootLodMetricValue,
+    rootBoundingVolume,
+    getTileType,
+    getRefine
+  };
+  return await normalizeImplicitTileData(tileset.root, rootSubtree, options);
+}
+async function normalizeImplicitTileData(tile, rootSubtree, options) {
+  if (!tile) {
+    return null;
+  }
+
+  tile.lodMetricType = LOD_METRIC_TYPE.GEOMETRIC_ERROR;
+  tile.lodMetricValue = tile.geometricError;
+  tile.transformMatrix = tile.transform;
+  const {
+    children,
+    contentUrl
+  } = await parseImplicitTiles(rootSubtree, options);
+
+  if (contentUrl) {
+    tile.contentUrl = contentUrl;
+    tile.content = {
+      uri: contentUrl.replace("".concat(options.basePath, "/"), '')
+    };
+  }
+
+  tile.refine = getRefine(tile.refine);
+  tile.type = getTileType(tile);
+  tile.children = children;
+  tile.id = tile.contentUrl;
+  return tile;
+}
+
+const IMPLICIT_TILING_EXTENSION_NAME = '3DTILES_implicit_tiling';
 const Tiles3DLoader = {
   id: '3d-tiles',
   name: '3D Tiles',
   module: '3d-tiles',
-  version: VERSION$3,
+  version: VERSION$5,
   extensions: ['cmpt', 'pnts', 'b3dm', 'i3dm'],
   mimeTypes: ['application/octet-stream'],
   tests: ['cmpt', 'pnts', 'b3dm', 'i3dm'],
@@ -16650,14 +16696,16 @@ async function parseTile(arrayBuffer, options, context) {
 }
 
 async function parseTileset(data, options, context) {
+  var _tilesetJson$root;
+
   const tilesetJson = JSON.parse(new TextDecoder().decode(data));
   tilesetJson.loader = options.loader || Tiles3DLoader;
   tilesetJson.url = context.url;
   tilesetJson.basePath = getBaseUri(tilesetJson);
-  tilesetJson.root = normalizeTileHeaders(tilesetJson);
+  tilesetJson.root = hasImplicitTilingExtension(tilesetJson) ? await normalizeImplicitTileHeaders(tilesetJson) : normalizeTileHeaders(tilesetJson);
   tilesetJson.type = TILESET_TYPE.TILES3D;
   tilesetJson.lodMetricType = LOD_METRIC_TYPE.GEOMETRIC_ERROR;
-  tilesetJson.lodMetricValue = tilesetJson.root.lodMetricValue;
+  tilesetJson.lodMetricValue = ((_tilesetJson$root = tilesetJson.root) === null || _tilesetJson$root === void 0 ? void 0 : _tilesetJson$root.lodMetricValue) || 0;
   return tilesetJson;
 }
 
@@ -16680,6 +16728,12 @@ async function parse(data, options, context) {
   return data;
 }
 
+function hasImplicitTilingExtension(tilesetJson) {
+  var _tilesetJson$extensio, _tilesetJson$extensio2;
+
+  return (tilesetJson === null || tilesetJson === void 0 ? void 0 : (_tilesetJson$extensio = tilesetJson.extensionsRequired) === null || _tilesetJson$extensio === void 0 ? void 0 : _tilesetJson$extensio.includes(IMPLICIT_TILING_EXTENSION_NAME)) && (tilesetJson === null || tilesetJson === void 0 ? void 0 : (_tilesetJson$extensio2 = tilesetJson.extensionsUsed) === null || _tilesetJson$extensio2 === void 0 ? void 0 : _tilesetJson$extensio2.includes(IMPLICIT_TILING_EXTENSION_NAME));
+}
+
 const CESIUM_ION_URL = 'https://api.cesium.com/v1/assets';
 async function getIonTilesetMetadata(accessToken, assetId) {
   if (!assetId) {
@@ -16697,17 +16751,17 @@ async function getIonTilesetMetadata(accessToken, assetId) {
     type,
     url
   } = ionAssetMetadata;
-  assert$9(type === '3DTILES' && url);
+  assert$7(type === '3DTILES' && url);
   ionAssetMetadata.headers = {
-    Authorization: `Bearer ${ionAssetMetadata.accessToken}`
+    Authorization: "Bearer ".concat(ionAssetMetadata.accessToken)
   };
   return ionAssetMetadata;
 }
 async function getIonAssets(accessToken) {
-  assert$9(accessToken);
+  assert$7(accessToken);
   const url = CESIUM_ION_URL;
   const headers = {
-    Authorization: `Bearer ${accessToken}`
+    Authorization: "Bearer ".concat(accessToken)
   };
   const response = await fetchFile(url, {
     fetch: {
@@ -16722,12 +16776,12 @@ async function getIonAssets(accessToken) {
   return await response.json();
 }
 async function getIonAssetMetadata(accessToken, assetId) {
-  assert$9(accessToken, assetId);
+  assert$7(accessToken, assetId);
   const headers = {
-    Authorization: `Bearer ${accessToken}`
+    Authorization: "Bearer ".concat(accessToken)
   };
-  const url = `${CESIUM_ION_URL}/${assetId}`;
-  let response = await fetchFile(`${url}`, {
+  const url = "".concat(CESIUM_ION_URL, "/").concat(assetId);
+  let response = await fetchFile("".concat(url), {
     fetch: {
       headers
     }
@@ -16738,7 +16792,7 @@ async function getIonAssetMetadata(accessToken, assetId) {
   }
 
   let metadata = await response.json();
-  response = await fetchFile(`${url}/endpoint`, {
+  response = await fetchFile("".concat(url, "/endpoint"), {
     fetch: {
       headers
     }
@@ -16821,7 +16875,7 @@ function getCameraFrustum(camera) {
     camera.updateMatrixWorld(); // make sure camera's world matrix is updated
     camera.matrixWorldInverse.copy(camera.matrixWorld).invert();
     const frustum = new Frustum();
-    frustum.setFromProjectionMatrix(new Matrix4$2().multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse));
+    frustum.setFromProjectionMatrix(new Matrix4$1().multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse));
     return frustum;
 }
 function loadersPlaneToMesh(plane) {
@@ -16829,9 +16883,9 @@ function loadersPlaneToMesh(plane) {
     // Create a basic rectangle geometry from math.gl plane
     const planeGeometry = new PlaneGeometry(10, 5);
     // Align the geometry to the plane
-    const coplanarPoint = new Vector3$2(...plane.projectPointOntoPlane([0, 0, 0]));
-    const normal = new Vector3$2(plane.normal.x, plane.normal.y, plane.normal.z);
-    const focalPoint = new Vector3$2().copy(coplanarPoint).add(normal);
+    const coplanarPoint = new Vector3$1(...plane.projectPointOntoPlane([0, 0, 0]));
+    const normal = new Vector3$1(plane.normal.x, plane.normal.y, plane.normal.z);
+    const focalPoint = new Vector3$1().copy(coplanarPoint).add(normal);
     planeGeometry.lookAt(focalPoint);
     planeGeometry.translate(coplanarPoint.x, coplanarPoint.y, coplanarPoint.z);
     // Edges
@@ -16855,7 +16909,7 @@ function loadersBoundingBoxToMesh(tile) {
     }
     const boxColor = new Color(redColor, 1.0, 0.0);
     const boxGeometry = new BoxGeometry(1, 1, 1);
-    const boxTransform = new Matrix4$2();
+    const boxTransform = new Matrix4$1();
     if (boundingVolume.halfAxes) {
         boxTransform.copy(getMatrix4FromHalfAxes(boundingVolume.halfAxes));
     }
@@ -16865,12 +16919,12 @@ function loadersBoundingBoxToMesh(tile) {
     boxGeometry.applyMatrix4(boxTransform);
     const edges = new EdgesGeometry(boxGeometry);
     const dispPlane = new LineSegments(edges, new LineBasicMaterial({ color: boxColor }));
-    dispPlane.position.copy(new Vector3$2(...boundingVolume.center));
+    dispPlane.position.copy(new Vector3$1(...boundingVolume.center));
     return dispPlane;
 }
 function getMatrix4FromHalfAxes(halfAxes) {
     const m = halfAxes;
-    const rotateMatrix = new Matrix4$2().fromArray([
+    const rotateMatrix = new Matrix4$1().fromArray([
         m[0] * 2,
         m[1] * 2,
         m[2] * 2,
@@ -17180,8 +17234,8 @@ class Loader3DTiles {
                 pointSize: { type: 'f', value: 1.0 },
                 gradient: { type: 't', value: gradientTexture },
                 grayscale: { type: 't', value: grayscaleTexture },
-                rootCenter: { type: 'vec3', value: new Vector3$2() },
-                rootNormal: { type: 'vec3', value: new Vector3$2() },
+                rootCenter: { type: 'vec3', value: new Vector3$1() },
+                rootNormal: { type: 'vec3', value: new Vector3$1() },
                 coloring: { type: 'i', value: options.pointCloudColoring },
                 hideGround: { type: 'b', value: true },
                 elevationRange: { type: 'vec2', value: new Vector2$1(0, 400) },
@@ -17261,12 +17315,12 @@ class Loader3DTiles {
                     } }) }));
             //
             // transformations
-            let threeMat = new Matrix4$2();
-            const tileTrasnform = new Matrix4$2();
+            let threeMat = new Matrix4$1();
+            const tileTrasnform = new Matrix4$1();
             if (tileset.root.header.transform) {
-                tileTrasnform.copy(new Matrix4$2().fromArray(tileset.root.transform));
-                if (tilesetJson.root.children.length == 1 && tileset.root.children[0].transform) {
-                    const childTransform = new Matrix4$2().fromArray(tileset.root.children[0].transform);
+                tileTrasnform.copy(new Matrix4$1().fromArray(tileset.root.transform));
+                if (tileset.root.children.length == 1 && tileset.root.children[0].transform) {
+                    const childTransform = new Matrix4$1().fromArray(tileset.root.children[0].transform);
                     tileTrasnform.multiply(childTransform);
                 }
             }
@@ -17276,29 +17330,29 @@ class Loader3DTiles {
                     console.warn("Cannot apply a model matrix to bounding volumes of type region. Tileset stays in place.");
                 }
                 else {
-                    tileTrasnform.setPosition(new Vector3$2(...tileset.root.boundingVolume.center));
+                    tileTrasnform.setPosition(new Vector3$1(...tileset.root.boundingVolume.center));
                 }
             }
             // TODO: Originally the tileset is moved by loaders.gl to its WGS84 matching coordiate. In here, we negate that and bring it back to 0,0,0 with an optional initial transform. If we want to combine the tileset with other geographic layers we might need to go back to those original coordiates
             threeMat.copy(tileTrasnform).invert();
             const resetTransform = threeMat.clone();
-            let modelMatrix = new Matrix4$1(threeMat.toArray());
+            let modelMatrix = new Matrix4(threeMat.toArray());
             tileset.modelMatrix = modelMatrix;
             let disposeFlag = false;
-            const rootCenter = new Vector3$2();
+            const rootCenter = new Vector3$1();
             pointcloudUniforms.rootCenter.value.copy(rootCenter);
-            pointcloudUniforms.rootNormal.value.copy(new Vector3$2(0, 0, 1).normalize());
+            pointcloudUniforms.rootNormal.value.copy(new Vector3$1(0, 0, 1).normalize());
             // Extra stats
             tileset.stats.get('Loader concurrency').count = options.maxConcurrency;
             tileset.stats.get('Maximum SSE').count = options.maximumScreenSpaceError;
             tileset.stats.get('Maximum mem usage').count = options.maximumMemoryUsage;
             let timer = 0;
-            const lastCameraTransform = new Matrix4$2().makeTranslation(Infinity, Infinity, Infinity);
+            const lastCameraTransform = new Matrix4$1().makeTranslation(Infinity, Infinity, Infinity);
             let lastCameraAspect = null;
-            const lastCameraPosition = new Vector3$2(Infinity, Infinity, Infinity);
+            const lastCameraPosition = new Vector3$1(Infinity, Infinity, Infinity);
             let sseDenominator = null;
-            const lastRootTransform = new Matrix4$2().copy(root.matrixWorld);
-            const rootTransformInverse = new Matrix4$2().copy(lastRootTransform).invert();
+            const lastRootTransform = new Matrix4$1().copy(root.matrixWorld);
+            const rootTransformInverse = new Matrix4$1().copy(lastRootTransform).invert();
             function tilesetUpdate(tileset, renderMap, renderer, camera) {
                 if (disposeFlag) {
                     return;
@@ -17421,7 +17475,7 @@ class Loader3DTiles {
                         pointcloudUniforms.intensityContrast.value = contrast;
                     },
                     getLatLongHeightFromPosition: (position) => {
-                        const cartographicPosition = tileset.ellipsoid.cartesianToCartographic(new Vector3$2().copy(position).applyMatrix4(new Matrix4$2().copy(threeMat).invert()).toArray());
+                        const cartographicPosition = tileset.ellipsoid.cartesianToCartographic(new Vector3$1().copy(position).applyMatrix4(new Matrix4$1().copy(threeMat).invert()).toArray());
                         return {
                             lat: cartographicPosition[1],
                             long: cartographicPosition[0],
@@ -17430,7 +17484,7 @@ class Loader3DTiles {
                     },
                     getPositionFromLatLongHeight: (coord) => {
                         const cartesianPosition = tileset.ellipsoid.cartographicToCartesian([coord.long, coord.lat, coord.height]);
-                        return new Vector3$2(...cartesianPosition).applyMatrix4(threeMat);
+                        return new Vector3$1(...cartesianPosition).applyMatrix4(threeMat);
                     },
                     getCameraFrustum: (camera) => {
                         const frustum = getCameraFrustum(camera);
@@ -17451,11 +17505,11 @@ class Loader3DTiles {
                                 lastRootTransform.copy(root.matrixWorld);
                                 threeMat = resetTransform.clone();
                                 threeMat.premultiply(lastRootTransform);
-                                const rootCenter = new Vector3$2().setFromMatrixPosition(lastRootTransform);
+                                const rootCenter = new Vector3$1().setFromMatrixPosition(lastRootTransform);
                                 pointcloudUniforms.rootCenter.value.copy(rootCenter);
-                                pointcloudUniforms.rootNormal.value.copy(new Vector3$2(0, 0, 1).applyMatrix4(lastRootTransform).normalize());
+                                pointcloudUniforms.rootNormal.value.copy(new Vector3$1(0, 0, 1).applyMatrix4(lastRootTransform).normalize());
                                 rootTransformInverse.copy(lastRootTransform).invert();
-                                modelMatrix = new Matrix4$1(threeMat.toArray());
+                                modelMatrix = new Matrix4(threeMat.toArray());
                                 tileset.modelMatrix = modelMatrix;
                             }
                             const cameraChanged = !camera.matrixWorld.equals(lastCameraTransform) ||
@@ -17493,10 +17547,10 @@ function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTransform
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, reject) => {
             var _a;
-            const rotateX = new Matrix4$2().makeRotationAxis(new Vector3$2(1, 0, 0), Math.PI / 2);
+            const rotateX = new Matrix4$1().makeRotationAxis(new Vector3$1(1, 0, 0), Math.PI / 2);
             const shouldRotate = ((_a = tile.tileset.asset) === null || _a === void 0 ? void 0 : _a.gltfUpAxis) !== "Z";
             // The computed trasnform already contains the root's transform, so we have to invert it
-            const contentTransform = new Matrix4$2().fromArray(tile.computedTransform).premultiply(rootTransformInverse);
+            const contentTransform = new Matrix4$1().fromArray(tile.computedTransform).premultiply(rootTransformInverse);
             if (shouldRotate) {
                 contentTransform.multiply(rotateX); // convert from GLTF Y-up to Z-up
             }
@@ -17587,7 +17641,7 @@ function createPointNodes(tile, pointcloudUniforms) {
     if (d.rtc_center) {
         const c = d.rtc_center;
         // TODO: In the case of entwine/region bounding volume the modelMatrix also needs to be applied?
-        tileContent.applyMatrix4(new Matrix4$2().makeTranslation(c[0], c[1], c[2])); //.multiply(threeMat));
+        tileContent.applyMatrix4(new Matrix4$1().makeTranslation(c[0], c[1], c[2])); //.multiply(threeMat));
     }
     return tileContent;
 }

@@ -5,7 +5,6 @@
 ```ts
 
 import { Material } from 'three';
-import { Matrix4 } from 'three';
 import { Object3D } from 'three';
 import { Shader } from 'three';
 import { Stats } from '@probe.gl/stats';
@@ -38,8 +37,6 @@ export interface LoaderOptions {
     computeNormals?: boolean;
     debug?: boolean;
     dracoDecoderPath?: string;
-    initialTransform?: Matrix4;
-    loadersGlGltf?: boolean;
     material?: Material;
     maxConcurrency?: number;
     maximumMemoryUsage?: number;

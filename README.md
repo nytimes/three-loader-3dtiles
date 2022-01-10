@@ -9,7 +9,6 @@
 [Docs](#docs) &mdash;
 [Alternatives](#alternatives)
 
-
 This is a [Three.js](https://threejs.org/) loader module for handling [OGC 3D Tiles](https://www.ogc.org/standards/3DTiles), created by [Cesium](https://github.com/CesiumGS/3d-tiles). It currently supports the two main formats:
 
 1. Batched 3D Model (b3dm) - based on glTF.
@@ -54,8 +53,8 @@ async function loadTileset() {
       url: 'https://<TILESET URL>/tileset.json',
       renderer: renderer,
       options: {
-        dracoDecoderPath: 'https://unpkg.com/three@0.129.0/examples/js/libs/draco',
-        basisTranscoderPath: 'https://unpkg.com/three@0.129.0/examples/js/libs/basis'        
+        dracoDecoderPath: 'https://unpkg.com/three@0.133.0/examples/js/libs/draco',
+        basisTranscoderPath: 'https://unpkg.com/three@0.133.0/examples/js/libs/basis'        
       }
   )
   const {model, runtime} = result
@@ -80,7 +79,7 @@ render()
 
 ## Installation
 
-The library depends on [three.js](https://threejs.org/) r129 and uses its GLTF, Draco, and KTX2/Basis loaders.
+The library depends on [three.js](https://threejs.org/) r133 and uses its GLTF, Draco, and KTX2/Basis loaders.
 Refer to the `browserslist` field in [package.json](./package.json) for target browsers.
 
 ### 1. ES Module
@@ -92,10 +91,10 @@ Download [dist/three-loader-3dtiles.esm.min.js](dist/three-loader-3dtiles.esm.mi
   <script type="importmap-shim">
     {
       "imports": {
-        "three": "https://cdn.skypack.dev/three@0.129.0",
-        "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/loaders/GLTFLoader",
-        "three/examples/jsm/loaders/DRACOLoader.js": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/loaders/DRACOLoader",
-        "three/examples/jsm/loaders/KTX2Loader.js": "https://cdn.skypack.dev/three@v0.129.0/examples/jsm/loaders/KTX2Loader",
+        "three": "https://cdn.skypack.dev/three@0.133.0",
+        "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.skypack.dev/three@v0.133.0/examples/jsm/loaders/GLTFLoader",
+        "three/examples/jsm/loaders/DRACOLoader.js": "https://cdn.skypack.dev/three@v0.133.0/examples/jsm/loaders/DRACOLoader",
+        "three/examples/jsm/loaders/KTX2Loader.js": "https://cdn.skypack.dev/three@v0.133.0/examples/jsm/loaders/KTX2Loader",
         "three-loader-3dtiles" : "./three-loader-3dtiles.esm.min.js"
       }
     }

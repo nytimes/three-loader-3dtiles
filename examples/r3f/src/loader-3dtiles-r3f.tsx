@@ -1,7 +1,6 @@
 import { Loader3DTiles, LoaderProps, Runtime } from 'three-loader-3dtiles'
 import { useLoader, useThree, useFrame } from '@react-three/fiber'
 import { Loader, Object3D } from 'three'
-import {editable as e, SheetProvider, extension} from '@theatre/r3f'
 
 class Loader3DTilesBridge extends Loader {
   props: LoaderProps;
@@ -33,8 +32,6 @@ function Loader3DTilesR3FAsset(props) {
   const loaderProps = {
     renderer: threeState.gl,
     options: {
-      dracoDecoderPath: 'https://unpkg.com/three@0.129.0/examples/js/libs/draco',
-      basisTranscoderPath: 'https://unpkg.com/three@0.129.0/examples/js/libs/basis',
       ...props
     }
   }
@@ -49,11 +46,10 @@ function Loader3DTilesR3FAsset(props) {
     runtime.update(dt, gl, camera);
   });
 
-  // TODO: Disposal throws an error from updateCacheStats
   return (
-    <e.group {...props} dispose={runtime.dispose} uniqueName="tileset">
+    <group {...props} dispose={runtime.dispose}>
       <primitive object={model} />
-    </e.group>
+    </group>
   )
 }
 

@@ -117,6 +117,12 @@ The application script would be the same as in the ES Module example (when using
 
 See [here](examples/installation/webpack) for a complete webpack example.
 
+### 4. A-Frame
+Refer to our dedicated A-Frame component: [aframe-loader-3dtiles-component](https://github.com/nytimes/aframe-loader-3dtiles-component).
+
+### 5. React-Three-Fiber
+Refer to [examples/r3f](examples/r3f).
+
 ---
 ## Roadmap 
 

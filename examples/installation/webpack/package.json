@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "three": "^0.129.0"
+    "three": "^0.137.0"
   },
   "devDependencies": {
     "ts-loader": "^9.2.3",

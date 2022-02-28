@@ -53,8 +53,8 @@ async function loadTileset() {
       url: 'https://<TILESET URL>/tileset.json',
       renderer: renderer,
       options: {
-        dracoDecoderPath: 'https://unpkg.com/three@0.133.0/examples/js/libs/draco',
-        basisTranscoderPath: 'https://unpkg.com/three@0.133.0/examples/js/libs/basis'        
+        dracoDecoderPath: 'https://unpkg.com/three@0.137.0/examples/js/libs/draco',
+        basisTranscoderPath: 'https://unpkg.com/three@0.137.0/examples/js/libs/basis'        
       }
   )
   const {model, runtime} = result
@@ -79,27 +79,27 @@ render()
 
 ## Installation
 
-The library depends on [three.js](https://threejs.org/) r133 and uses its GLTF, Draco, and KTX2/Basis loaders.
+The library supports [three.js](https://threejs.org/) r137 and uses its GLTF, Draco, and KTX2/Basis loaders.
 Refer to the `browserslist` field in [package.json](./package.json) for target browsers.
 
 ### 1. ES Module
-Download [dist/three-loader-3dtiles.esm.min.js](dist/three-loader-3dtiles.esm.min.js) and use an `importmap-shim` to import the dependencies. See [here](examples/installation/es-module) for a full example. The [demos](examples/demos) also use this method of installation:
+Download [dist/three-loader-3dtiles.esm.min.js](dist/three-loader-3dtiles.esm.min.js) and use an `importmap` to import the dependencies. See [here](examples/installation/es-module) for a full example. The [demos](examples/demos) also use this method of installation:
 
 #### **`index.html`**
   ```html
-  <script async src="https://unpkg.com/es-module-shims@0.11.1/dist/es-module-shims.js"></script>
-  <script type="importmap-shim">
+  <script async src="https://ga.jspm.io/npm:es-module-shims@1.4.4/dist/es-module-shims.js"></script>
+  <script type="importmap">
     {
       "imports": {
-        "three": "https://cdn.skypack.dev/three@0.133.0",
-        "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.skypack.dev/three@v0.133.0/examples/jsm/loaders/GLTFLoader",
-        "three/examples/jsm/loaders/DRACOLoader.js": "https://cdn.skypack.dev/three@v0.133.0/examples/jsm/loaders/DRACOLoader",
-        "three/examples/jsm/loaders/KTX2Loader.js": "https://cdn.skypack.dev/three@v0.133.0/examples/jsm/loaders/KTX2Loader",
+        "three": "https://cdn.skypack.dev/three@0.137.0",
+        "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/loaders/GLTFLoader",
+        "three/examples/jsm/loaders/DRACOLoader.js": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/loaders/DRACOLoader",
+        "three/examples/jsm/loaders/KTX2Loader.js": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/loaders/KTX2Loader",
         "three-loader-3dtiles" : "./three-loader-3dtiles.esm.min.js"
       }
     }
   </script>
-  <script src='index.js' type='module-shim'>
+  <script src='index.js' type='module'>
 
   ```
 #### **`index.js`**
@@ -113,19 +113,27 @@ If you use a build system such as Webpack / Parcel / Rollup etc, you should also
 ```
 npm install -s three three-loader-3dtiles
 ```
-The application script would be the same as in the ES Module example (when using `importmap-shim`).
+The application script would be the same as in the ES Module example (when using `importmap`).
 
 See [here](examples/installation/webpack) for a complete webpack example.
+
+### 4. A-Frame
+Refer to our dedicated A-Frame component: [aframe-loader-3dtiles-component](https://github.com/nytimes/aframe-loader-3dtiles-component).
+
+### 5. React-Three-Fiber
+Refer to [examples/r3f](examples/r3f).
 
 ---
 ## Roadmap 
 
-### Geo-referencing and layering: WGS84.
+### Supporting 3D Tiles Next
+The [3D Tiles Next specification](https://cesium.com/blog/2021/11/10/introducing-3d-tiles-next/) is in the works, with some of the features already supported in loaders.gl. Supporting the new extensions opens up possibilities for new applications.
 
+### Geo-referencing and layering: WGS84.
 Currently the library does not use geo-referenced locations of tiled models, instead transforming them to Point `[0,0,0]`. We should support maintaining *WGS84* coordinates, so that models could be layered on top of maps and terrains.
 
-## Skip-traversal
-Implementing the [Skip traversal mechanism](https://cesium.com/blog/2017/05/05/skipping-levels-of-detail/) could greatly improve performance of b3dm (mesh) tiles, but requires a shader/Stencil buffer-based implementation which manually manges Z-culling. This is a very wanted features and contributions would be greatly appreciated.
+### Skip-traversal
+Implementing the [Skip traversal mechanism](https://cesium.com/blog/2017/05/05/skipping-levels-of-detail/) could greatly improve performance of b3dm (mesh) tiles, but requires a shader/Stencil buffer-based implementation which manually manges Z-culling. This is a very wanted feature and contributions would be greatly appreciated.
 
 
 ## Contributing

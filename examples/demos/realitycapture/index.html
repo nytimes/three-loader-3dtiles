@@ -79,15 +79,15 @@
     </p>
   </div>
 
-  <script async src="https://unpkg.com/es-module-shims@0.11.1/dist/es-module-shims.js"></script>
-  <script type="importmap-shim">
+  <script async src="https://ga.jspm.io/npm:es-module-shims@1.4.4/dist/es-module-shims.js"></script>
+  <script type="importmap">
     {
       "imports": {
-        "three": "https://cdn.skypack.dev/three@0.133.0",
-        "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.skypack.dev/three@v0.133.0/examples/jsm/loaders/GLTFLoader",
-        "three/examples/jsm/loaders/DRACOLoader.js": "https://cdn.skypack.dev/three@v0.133.0/examples/jsm/loaders/DRACOLoader",
-        "three/examples/jsm/loaders/KTX2Loader.js": "https://cdn.skypack.dev/three@v0.133.0/examples/jsm/loaders/KTX2Loader",
-        "three/examples/jsm/libs/stats.module.js": "https://cdn.skypack.dev/three@v0.133.0/examples/jsm/libs/stats.module",
+        "three": "https://cdn.skypack.dev/three@0.137.0",
+        "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/loaders/GLTFLoader",
+        "three/examples/jsm/loaders/DRACOLoader.js": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/loaders/DRACOLoader",
+        "three/examples/jsm/loaders/KTX2Loader.js": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/loaders/KTX2Loader",
+        "three/examples/jsm/libs/stats.module.js": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/libs/stats.module",
         "@probe.gl/stats" : "https://cdn.skypack.dev/@probe.gl/stats@3.3.1",
         "@probe.gl/stats-widget" : "https://unpkg.com/@probe.gl/stats-widget@3.3.1/dist/es6",
         "three-loader-3dtiles" : "../../../dist/three-loader-3dtiles.esm.js",
@@ -96,7 +96,7 @@
       }
     }
   </script>
-  <script type='module-shim'>
+  <script type='module'>
     import { 
       Scene, 
       PerspectiveCamera, 
@@ -104,6 +104,7 @@
       Clock,
       Matrix4,
       Euler,
+      sRGBEncoding,
       Math as ThreeMath
     } from 'three';
 
@@ -126,6 +127,8 @@
     );
 
     const renderer = new WebGLRenderer();
+    renderer.outputEncoding = sRGBEncoding;
+
     const clock = new Clock()
     const rig = new CameraRig(camera, scene)
     const controls = new FreeMovementControls(rig, {
@@ -161,12 +164,12 @@
       const result = await Loader3DTiles.load(
         {
           url:
-           queryParams.get('tilesetUrl') ??
-          'https://int.nyt.com/data/3dscenes/ONA360/TILESET/0731_FREEMAN_ALLEY_10M_A_36x8K__10K-PN_50P_DB/tileset_tileset.json',
+            queryParams.get('tilesetUrl') ??
+           'https://int.nyt.com/data/3dscenes/ONA360/TILESET/0731_FREEMAN_ALLEY_10M_A_36x8K__10K-PN_50P_DB/tileset_tileset.json',
           renderer: renderer,
           options: {
-            dracoDecoderPath: 'https://unpkg.com/three@0.133.0/examples/js/libs/draco',
-            basisTranscoderPath: 'https://unpkg.com/three@0.133.0/examples/js/libs/basis',
+            dracoDecoderPath: 'https://unpkg.com/three@0.137.0/examples/js/libs/draco',
+            basisTranscoderPath: 'https://unpkg.com/three@0.137.0/examples/js/libs/basis',
             maximumScreenSpaceError: queryParams.get('sse') ?? 48,
           }
         }

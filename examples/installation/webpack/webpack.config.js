@@ -7,6 +7,10 @@ module.exports = (env) => {
     devtool: 'inline-source-map',
     resolve: {
       extensions: [ '.ts', '.js' ],
+      alias: process.env.USE_SRC ? 
+      {
+        'three-loader-3dtiles': path.resolve(__dirname, '../../../src')
+      } : {}
     },
     output: {
       path: path.resolve(__dirname, "dist"),

@@ -1,20 +1,3 @@
-const MeshFS = `
-  uniform sampler2D map;
-  varying vec2 vUv;
-
-  void main() {
-    vec4 realColor = texture2D(map, vUv);
-    gl_FragColor = realColor;
-  }
-`;
-const MeshVS = `
-  varying vec2 vUv;
-  void main() {
-      vUv = uv;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-  }
-`;
-
 const PointCloudFS = `
   varying vec3 vColor;
   void main() {
@@ -100,4 +83,4 @@ const PointCloudVS = `
       gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
   }
 `;
-export { MeshFS, MeshVS, PointCloudFS, PointCloudVS };
+export { PointCloudFS, PointCloudVS };

@@ -1,4 +1,4 @@
-import { CanvasTexture, LinearFilter, RepeatWrapping, Frustum, Matrix4 as Matrix4$1, Group, PlaneGeometry, Vector3 as Vector3$1, MeshBasicMaterial, DoubleSide, Mesh, ArrowHelper, Color, BoxGeometry, EdgesGeometry, LineSegments, LineBasicMaterial, Vector2 as Vector2$1, ShaderMaterial, BufferGeometry, Float32BufferAttribute, Uint8BufferAttribute, Points } from 'three';
+import { CanvasTexture, LinearFilter, RepeatWrapping, Frustum, Matrix4 as Matrix4$1, Group, PlaneGeometry, Vector3 as Vector3$1, MeshBasicMaterial, DoubleSide, Mesh, ArrowHelper, Color, BoxGeometry, EdgesGeometry, LineSegments, LineBasicMaterial, Vector2 as Vector2$1, BufferGeometry, Float32BufferAttribute, ShaderMaterial, Uint8BufferAttribute, Points } from 'three';
 import { GLTFLoader as GLTFLoader$1 } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
@@ -17054,22 +17054,6 @@ const Gradients = {
     ],
 };
 
-const MeshFS = `
-  uniform sampler2D map;
-  varying vec2 vUv;
-
-  void main() {
-    vec4 realColor = texture2D(map, vUv);
-    gl_FragColor = realColor;
-  }
-`;
-const MeshVS = `
-  varying vec2 vUv;
-  void main() {
-      vUv = uv;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-  }
-`;
 const PointCloudFS = `
   varying vec3 vColor;
   void main() {
@@ -17258,11 +17242,7 @@ class Loader3DTiles {
                 dracoLoader.setWorkerLimit(options.maxConcurrency);
                 gltfLoader.setDRACOLoader(dracoLoader);
             }
-            const unlitMaterial = new ShaderMaterial({
-                uniforms: {},
-                vertexShader: MeshVS,
-                fragmentShader: MeshFS,
-            });
+            const unlitMaterial = new MeshBasicMaterial();
             const tileOptions = {
                 maximumMemoryUsage: options.maximumMemoryUsage,
                 maximumScreenSpaceError: options.maximumScreenSpaceError,

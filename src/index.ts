@@ -18,6 +18,7 @@ import {
   Material,
   Float32BufferAttribute,
   ShaderMaterial,
+  MeshBasicMaterial,
   Uint8BufferAttribute,
   Points,
   Camera,
@@ -32,7 +33,7 @@ import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
 
 import { Gradients } from './gradients';
 
-import { MeshFS, MeshVS, PointCloudFS, PointCloudVS } from './shaders';
+import { PointCloudFS, PointCloudVS } from './shaders';
 
 import { LoaderProps, LoaderOptions, Runtime, PointCloudColoring, Shading, GeoCoord } from './types';
 
@@ -141,11 +142,7 @@ class Loader3DTiles {
       gltfLoader.setDRACOLoader(dracoLoader);
     }
 
-    const unlitMaterial = new ShaderMaterial({
-      uniforms: {},
-      vertexShader: MeshVS,
-      fragmentShader: MeshFS,
-    });
+    const unlitMaterial = new MeshBasicMaterial();
 
     const tileOptions = {
       maximumMemoryUsage: options.maximumMemoryUsage,

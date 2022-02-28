@@ -1,5 +1,8 @@
 ## v1.1
 
+### v1.1.4
+ - Bump to Three.js r137.
+
 ### v1.1.3
  - Bump to Three.js r133 and loaders.gl 3.1.4 ([issue #12](https://github.com/nytimes/three-loader-3dtiles/issues/12)).
  - Remove `loadersGlGltf`, `RDGLTFLoader.js`: Now supporting glTF parsing only via Three.JS.

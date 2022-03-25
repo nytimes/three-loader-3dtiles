@@ -218,14 +218,25 @@ class Loader3DTiles {
         const childTransform = new Matrix4().fromArray(tileset.root.children[0].transform);
         tileTrasnform.multiply(childTransform);
     }
-    if (tileTrasnform.equals(new Matrix4().identity()) && tileset.root.header.boundingVolume) {
+    if (tileset.root.boundingVolume) {
       if (tileset.root.header.boundingVolume.region) {
         // TODO: Handle region type bounding volumes
         console.warn("Cannot apply a model matrix to bounding volumes of type region. Tileset stays in original geo-coordinates.")
       } else {
-        tileTrasnform.setPosition(new Vector3(...tileset.root.boundingVolume.center));
+        console.log("Applying bounding volume center");
       }
     }
+
+    tileTrasnform.copy(new Matrix4());
+    tileTrasnform.extractRotation(Util.getMatrix4FromHalfAxes(tileset.root.boundingVolume.halfAxes));
+    tileTrasnform.setPosition(
+      tileset.root.boundingVolume.center[0],
+      tileset.root.boundingVolume.center[1],
+      tileset.root.boundingVolume.center[3]
+    )
+
+    //tileTrasnform.setPosition(boundingCenter);
+    console.log("Final tile transform", tileTrasnform);
 
     // TODO: Originally the tileset is moved by loaders.gl to its WGS84 matching coordiate. In here, we negate that and bring it back to 0,0,0 with an optional initial transform. If we want to combine the tileset with other geographic layers we might need to go back to those original coordiates
     threeMat.copy(tileTrasnform).invert();

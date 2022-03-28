@@ -17255,7 +17255,7 @@ class Loader3DTiles {
                     let tileContent = null;
                     switch (tile.type) {
                         case TILE_TYPE.POINTCLOUD: {
-                            tileContent = createPointNodes(tile, pointcloudUniforms);
+                            tileContent = createPointNodes(tile, pointcloudUniforms, options);
                             break;
                         }
                         case TILE_TYPE.SCENEGRAPH:
@@ -17579,7 +17579,7 @@ function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTransform
         });
     });
 }
-function createPointNodes(tile, pointcloudUniforms) {
+function createPointNodes(tile, pointcloudUniforms, options) {
     const d = {
         rtc_center: tile.content.rtcCenter,
         points: tile.content.attributes.positions,
@@ -17617,7 +17617,7 @@ function createPointNodes(tile, pointcloudUniforms) {
     if (d.classifications) {
         geometry.setAttribute('classification', new Uint8BufferAttribute(d.classifications, 1, false));
     }
-    const tileContent = new Points(geometry, pointcloudMaterial);
+    const tileContent = new Points(geometry, options.material || pointcloudMaterial);
     if (d.rtc_center) {
         const c = d.rtc_center;
         // TODO: In the case of entwine/region bounding volume the modelMatrix also needs to be applied?

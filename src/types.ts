@@ -63,7 +63,7 @@ interface LoaderOptions {
   skipLevelOfDetail?: boolean;
   /** When viewing b3dm (mesh) tiles, which type of {@link Shading} is used - Default: `Shading.FlatTexture` */
   shading?: Shading;
-  /** When viewing b3dm (mesh) tiles, apply a custom material - Default: `undefined` **/
+  /** Apply a custom material, supports both b3dm (mesh) tiles and Point Cloud tiles - Default: `undefined` **/
   material?: Material;
   /** When viewing b3dm (mesh) tiles, a callback to update shader uniforms - Default: `undefined` */
   shaderCallback?: (shader: Shader, renderer: WebGLRenderer) => void;

@@ -156,7 +156,7 @@ class Loader3DTiles {
         let tileContent = null;
         switch (tile.type) {
           case TILE_TYPE.POINTCLOUD: {
-            tileContent = createPointNodes(tile, pointcloudUniforms);
+            tileContent = createPointNodes(tile, pointcloudUniforms, options);
             break;
           }
           case TILE_TYPE.SCENEGRAPH:
@@ -536,7 +536,7 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTra
     );
   });
 }
-function createPointNodes(tile, pointcloudUniforms) {
+function createPointNodes(tile, pointcloudUniforms, options) {
   const d = {
     rtc_center: tile.content.rtcCenter, // eslint-disable-line camelcase
     points: tile.content.attributes.positions,
@@ -575,7 +575,7 @@ function createPointNodes(tile, pointcloudUniforms) {
     geometry.setAttribute('classification', new Uint8BufferAttribute(d.classifications, 1, false));
   }
 
-  const tileContent = new Points(geometry, pointcloudMaterial);
+  const tileContent = new Points(geometry, options.material || pointcloudMaterial);
   if (d.rtc_center) {
     const c = d.rtc_center;
 

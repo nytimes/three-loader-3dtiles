@@ -17514,7 +17514,6 @@ class Loader3DTiles {
                             obj.material.dispose();
                         }
                         if (ktx2Loader) {
-                            console.log("DISPOSE KTX2!!");
                             ktx2Loader.dispose();
                         }
                         if (dracoLoader) {

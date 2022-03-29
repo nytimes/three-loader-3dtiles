@@ -4,7 +4,7 @@
 
 ## LoaderOptions.material property
 
-When viewing b3dm (mesh) tiles, apply a custom material - Default: `undefined` \*
+Apply a custom material, supports both b3dm (mesh) tiles and Point Cloud tiles - Default: `undefined` \*
 
 <b>Signature:</b>
 

@@ -1,5 +1,10 @@
 ## v1.1
 
+### v1.1.5
+ - Fixed a bug where tileset geo-transformations were not correctly reset to 0.
+ - Dispose KTX2 and DRACO loaders.
+ - Support the `material` option in point cloud tilesets.
+
 ### v1.1.4
  - Bump to Three.js r137.
 

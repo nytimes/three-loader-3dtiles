@@ -17229,15 +17229,17 @@ class Loader3DTiles {
             let cameraReference = null;
             let rendererReference = null;
             const gltfLoader = new GLTFLoader$1();
+            let ktx2Loader = undefined;
+            let dracoLoader = undefined;
             if (options.basisTranscoderPath) {
-                const ktx2Loader = new KTX2Loader();
+                ktx2Loader = new KTX2Loader();
                 ktx2Loader.detectSupport(props.renderer);
                 ktx2Loader.setTranscoderPath(options.basisTranscoderPath + '/');
                 ktx2Loader.setWorkerLimit(1);
                 gltfLoader.setKTX2Loader(ktx2Loader);
             }
             if (options.dracoDecoderPath) {
-                const dracoLoader = new DRACOLoader();
+                dracoLoader = new DRACOLoader();
                 dracoLoader.setDecoderPath(options.dracoDecoderPath + '/');
                 dracoLoader.setWorkerLimit(options.maxConcurrency);
                 gltfLoader.setDRACOLoader(dracoLoader);
@@ -17510,6 +17512,13 @@ class Loader3DTiles {
                             tileBoxes.remove(obj);
                             obj.geometry.dispose();
                             obj.material.dispose();
+                        }
+                        if (ktx2Loader) {
+                            console.log("DISPOSE KTX2!!");
+                            ktx2Loader.dispose();
+                        }
+                        if (dracoLoader) {
+                            dracoLoader.dispose();
                         }
                     },
                 },

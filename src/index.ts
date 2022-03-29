@@ -126,8 +126,11 @@ class Loader3DTiles {
 
     const gltfLoader = new GLTFLoader();
 
+    let ktx2Loader = undefined;
+    let dracoLoader = undefined;
+
     if (options.basisTranscoderPath) {
-      const ktx2Loader = new KTX2Loader();
+      ktx2Loader = new KTX2Loader();
       ktx2Loader.detectSupport(props.renderer);
       ktx2Loader.setTranscoderPath(options.basisTranscoderPath + '/');
       ktx2Loader.setWorkerLimit(1);
@@ -136,7 +139,7 @@ class Loader3DTiles {
     }
 
     if (options.dracoDecoderPath) {
-      const dracoLoader = new DRACOLoader();
+      dracoLoader = new DRACOLoader();
       dracoLoader.setDecoderPath(options.dracoDecoderPath + '/');
       dracoLoader.setWorkerLimit(options.maxConcurrency);
       gltfLoader.setDRACOLoader(dracoLoader);
@@ -463,6 +466,12 @@ class Loader3DTiles {
             tileBoxes.remove(obj);
             obj.geometry.dispose();
             (<Material>obj.material).dispose();
+          }
+          if (ktx2Loader) {
+            ktx2Loader.dispose();
+          }
+          if (dracoLoader) {
+            dracoLoader.dispose();
           }
         },
       },

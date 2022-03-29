@@ -88,6 +88,7 @@
         "three/examples/jsm/loaders/DRACOLoader.js": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/loaders/DRACOLoader",
         "three/examples/jsm/loaders/KTX2Loader.js": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/loaders/KTX2Loader",
         "three/examples/jsm/libs/stats.module.js": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/libs/stats.module",
+        "three/examples/jsm/controls/OrbitControls": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/controls/OrbitControls",
         "@probe.gl/stats" : "https://cdn.skypack.dev/@probe.gl/stats@3.3.1",
         "@probe.gl/stats-widget" : "https://unpkg.com/@probe.gl/stats-widget@3.3.1/dist/es6",
         "three-loader-3dtiles" : "../../../dist/three-loader-3dtiles.esm.js",
@@ -108,12 +109,15 @@
       Math as ThreeMath
     } from 'three';
 
+    import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
     import { Loader3DTiles } from 'three-loader-3dtiles';
     import { CameraRig, FreeMovementControls } from 'three-story-controls'
 
     import Stats from 'three/examples/jsm/libs/stats.module.js';
     import StatsWidget from '@probe.gl/stats-widget';
+
+    const queryParams = new URLSearchParams(document.location.search);
 
     const canvasParent = document.querySelector('#canvas-parent');
     const statsParent = document.querySelector('#stats-widget')
@@ -131,14 +135,24 @@
 
     const clock = new Clock()
     const rig = new CameraRig(camera, scene)
-    const controls = new FreeMovementControls(rig, {
-      panDegreeFactor: 2,
-      wheelScaleFactor: 0.01,
-      keyboardScaleFactor: 0.015,
-      keyboardDampFactor: 0
-    })
-    controls.enable()
+    
+    let controls = undefined;
 
+    if (queryParams.get('orbit')) {
+      controls = new OrbitControls( camera, canvasParent);
+      controls.listenToKeyEvents( document.body );
+      camera.position.set(0,200,0);
+      controls.update();
+    } else {
+      controls = new FreeMovementControls(rig, {
+        panDegreeFactor: 2,
+        wheelScaleFactor: 0.01,
+        keyboardScaleFactor: 0.015,
+        keyboardDampFactor: 0
+      });
+      controls.enable();
+    }
+    
     canvasParent.appendChild(renderer.domElement);
 
     const threeJsStats = new Stats();
@@ -148,7 +162,6 @@
 
     canvasParent.appendChild( threeJsStats.domElement );
 
-    const queryParams = new URLSearchParams(document.location.search);
 
     let tilesRuntime = undefined;
     let statsRuntime = undefined;
@@ -176,7 +189,11 @@
       );
 
       const {model, runtime} = result;
-      model.rotation.set(-Math.PI / 2, 0, 0);
+      model.rotation.set(-Math.PI / 2, 0, Math.PI / 2);
+
+      if (!queryParams.get('tilesetUrl')) {
+        model.position.set(-1, 4, -16);
+      }
 
       tilesRuntime = runtime;
       scene.add(model);

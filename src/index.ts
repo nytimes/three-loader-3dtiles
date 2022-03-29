@@ -215,8 +215,6 @@ class Loader3DTiles {
         // TODO: Handle region type bounding volumes
         console.warn("Cannot apply a model matrix to bounding volumes of type region. Tileset stays in original geo-coordinates.")
       } else {
-        console.log("Applying bounding volume center");
-
         tileTrasnform.copy(new Matrix4());
         tileTrasnform.extractRotation(Util.getMatrix4FromHalfAxes(tileset.root.boundingVolume.halfAxes));
         tileTrasnform.setPosition(

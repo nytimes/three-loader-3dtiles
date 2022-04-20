@@ -19,8 +19,7 @@ module.exports = (env) => {
     mode: "development",
     devServer: {
         static: path.join(__dirname, "dist"),
-        port: 8000,
-        hot: true
+        port: 8000
     },
     plugins: [
        new webpack.HotModuleReplacementPlugin()

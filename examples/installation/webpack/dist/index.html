@@ -14,9 +14,15 @@
       word-break: break-all;
       visibility: hidden;
     }
+    #canvas-parent {
+      width: 100vw;
+      height: 100vh;
+      touch-action: none;
+    }
   </style>
 </head>
 <body>
+  <div id="canvas-parent"></div>
   <div id="stats-widget"></div>
   <script src="bundle.js"></script>
 </body>

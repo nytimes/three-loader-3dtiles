@@ -37,6 +37,9 @@ import { PointCloudFS, PointCloudVS } from './shaders';
 
 import { LoaderProps, LoaderOptions, Runtime, PointCloudColoring, Shading, GeoCoord } from './types';
 
+//import { lngLatToWorld, getDistanceScales } from '@math.gl/web-mercator'
+import { UnitsUtils } from 'geo-three'
+
 const gradient = Gradients.RAINBOW;
 const gradientTexture = typeof document != 'undefined' ? Util.generateGradientTexture(gradient) : null;
 
@@ -62,7 +65,8 @@ const defaultOptions: LoaderOptions = {
   dracoDecoderPath: null,
   material: null,
   computeNormals: false,
-  shaderCallback: null
+  shaderCallback: null,
+  resetGeoTransform: true
 };
 
 /** 3D Tiles Loader */
@@ -212,6 +216,7 @@ class Loader3DTiles {
     // transformations
     let threeMat = new Matrix4();
     const tileTrasnform = new Matrix4();
+    const rootCenter = new Vector3();
 
     if (tileset.root.boundingVolume) {
       if (tileset.root.header.boundingVolume.region) {
@@ -225,19 +230,33 @@ class Loader3DTiles {
           tileset.root.boundingVolume.center[2]
         )
       }
+      threeMat.copy(tileTrasnform).invert();
+    } 
+    if (!options.resetGeoTransform) {
+      const coords = UnitsUtils.datumsToSpherical(
+        tileset.cartographicCenter[1],
+        tileset.cartographicCenter[0]
+      )
+      rootCenter.set(
+       coords.x,
+       0,
+       -coords.y
+      );
+
+      root.position.copy(rootCenter);
+      root.rotation.set(-Math.PI / 2, 0, 0);
+
+      root.updateMatrixWorld(true);
+      tileBoxes.matrixWorld.copy(root.matrixWorld);
+      threeMat.premultiply(root.matrixWorld);
     }
 
-    // TODO: Originally the tileset is moved by loaders.gl to its WGS84 matching coordiate. In here, we negate that and bring it back to 0,0,0 with an optional initial transform. If we want to combine the tileset with other geographic layers we might need to go back to those original coordiates
-    threeMat.copy(tileTrasnform).invert();
-
     const resetTransform = threeMat.clone();
-
     let modelMatrix = new MathGLMatrix4(threeMat.toArray());
     tileset.modelMatrix = modelMatrix;
 
     let disposeFlag = false;
 
-    const rootCenter = new Vector3();
 
     pointcloudUniforms.rootCenter.value.copy(rootCenter);
     pointcloudUniforms.rootNormal.value.copy(new Vector3(0, 0, 1).normalize());
@@ -256,6 +275,7 @@ class Loader3DTiles {
     const lastCameraPosition = new Vector3(Infinity, Infinity, Infinity);
     let sseDenominator = null;
 
+    root.updateMatrixWorld(true);
     const lastRootTransform:Matrix4 = new Matrix4().copy(root.matrixWorld)
     const rootTransformInverse = new Matrix4().copy(lastRootTransform).invert();
 
@@ -425,7 +445,7 @@ class Loader3DTiles {
           timer += dt;
 
           if (tileset && timer >= UPDATE_INTERVAL) {
-            if (!lastRootTransform.equals(root.matrixWorld)) {
+            if (options.resetGeoTransform && !lastRootTransform.equals(root.matrixWorld)) {
               lastRootTransform.copy(root.matrixWorld);
               threeMat = resetTransform.clone();
               threeMat.premultiply(lastRootTransform);

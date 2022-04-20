@@ -17180,7 +17180,8 @@ const defaultOptions = {
     dracoDecoderPath: null,
     material: null,
     computeNormals: false,
-    shaderCallback: null
+    shaderCallback: null,
+    resetGeoTransform: true
 };
 /** 3D Tiles Loader */
 class Loader3DTiles {
@@ -17299,7 +17300,8 @@ class Loader3DTiles {
             // transformations
             let threeMat = new Matrix4$1();
             const tileTrasnform = new Matrix4$1();
-            if (tileset.root.boundingVolume) {
+            const rootCenter = new Vector3$1();
+            if (options.resetGeoTransform && tileset.root.boundingVolume) {
                 if (tileset.root.header.boundingVolume.region) {
                     // TODO: Handle region type bounding volumes
                     console.warn("Cannot apply a model matrix to bounding volumes of type region. Tileset stays in original geo-coordinates.");
@@ -17308,14 +17310,18 @@ class Loader3DTiles {
                     tileTrasnform.extractRotation(getMatrix4FromHalfAxes(tileset.root.boundingVolume.halfAxes));
                     tileTrasnform.setPosition(tileset.root.boundingVolume.center[0], tileset.root.boundingVolume.center[1], tileset.root.boundingVolume.center[2]);
                 }
+                threeMat.copy(tileTrasnform).invert();
             }
-            // TODO: Originally the tileset is moved by loaders.gl to its WGS84 matching coordiate. In here, we negate that and bring it back to 0,0,0 with an optional initial transform. If we want to combine the tileset with other geographic layers we might need to go back to those original coordiates
-            threeMat.copy(tileTrasnform).invert();
+            else {
+                if (tileset.root.boundingVolume) {
+                    rootCenter.set(tileset.root.boundingVolume.center[0], tileset.root.boundingVolume.center[1], tileset.root.boundingVolume.center[2]);
+                }
+            }
+            console.log("Root center", rootCenter);
             const resetTransform = threeMat.clone();
             let modelMatrix = new Matrix4(threeMat.toArray());
             tileset.modelMatrix = modelMatrix;
             let disposeFlag = false;
-            const rootCenter = new Vector3$1();
             pointcloudUniforms.rootCenter.value.copy(rootCenter);
             pointcloudUniforms.rootNormal.value.copy(new Vector3$1(0, 0, 1).normalize());
             // Extra stats
@@ -17477,7 +17483,7 @@ class Loader3DTiles {
                         rendererReference = renderer;
                         timer += dt;
                         if (tileset && timer >= UPDATE_INTERVAL) {
-                            if (!lastRootTransform.equals(root.matrixWorld)) {
+                            if (options.resetGeoTransform && !lastRootTransform.equals(root.matrixWorld)) {
                                 lastRootTransform.copy(root.matrixWorld);
                                 threeMat = resetTransform.clone();
                                 threeMat.premultiply(lastRootTransform);

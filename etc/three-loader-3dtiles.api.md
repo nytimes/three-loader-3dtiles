@@ -43,6 +43,7 @@ export interface LoaderOptions {
     maximumScreenSpaceError?: number;
     maxRequests?: number;
     pointCloudColoring?: PointCloudColoring;
+    resetGeoTransform?: boolean;
     shaderCallback?: (shader: Shader, renderer: WebGLRenderer) => void;
     shading?: Shading;
     skipLevelOfDetail?: boolean;

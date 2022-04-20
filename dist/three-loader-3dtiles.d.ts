@@ -71,6 +71,8 @@ export declare interface LoaderOptions {
     basisTranscoderPath?: string;
     /** A path to that contains the draco library. e.g: `https://unpkg.com/three@0.129.0/examples/js/libs/draco` - Default: `undefined` */
     dracoDecoderPath?: string;
+    /** Whether to reset any geo transformations and place the model at 0,0,0 - Default: `true` */
+    resetGeoTransform?: boolean;
 }
 
 /** Properties for loading a tileset */

@@ -70,6 +70,7 @@
     "eslint": "^7.27.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
+    "geo-three": "0.0.17",
     "http-server": "^0.12.3",
     "mocha": "^9.0.1",
     "ocular-dev-tools": "^1.0.0-alpha.6",

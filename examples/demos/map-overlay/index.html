@@ -68,7 +68,7 @@
   <div id="guide">
     <p>
     <span id="example-desc">
-      Map overlay provided by <b>Bing Maps</b> using the <b>geo-three</b> library.
+      Map overlay provided by <b>OpenStreetMap</b> using the <b>geo-three</b> library.
     </span>
     </p>
     <p>
@@ -116,7 +116,7 @@
     import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
     import { Loader3DTiles, PointCloudColoring, GeoTransform } from 'three-loader-3dtiles';
-    import { MapView, BingMapsProvider } from 'geo-three'
+    import { MapView, OpenStreetMapsProvider } from 'geo-three'
     import { TweenMax } from 'gsap'
 
     import Stats from 'three/examples/jsm/libs/stats.module.js';
@@ -162,7 +162,7 @@
     let tilesModel = undefined;
     let statsRuntime = undefined;
 
-    const provider = new BingMapsProvider();
+    const provider = new OpenStreetMapsProvider();
     const map = new MapView(MapView.PLANAR, provider);
 
     scene.add(map)
@@ -195,7 +195,7 @@
       statsParent.style.visibility = 'visible';
 
       if (!queryParams.get('tilesetUrl')) {
-        // Scaling the scan to align with Bing Maps, and bringing it up above the map
+        // Scaling the scan to align with Maps, and bringing it up above the map
         model.scale.set(1.27, 1.27, 1.27);
         model.translateZ(230);
       }

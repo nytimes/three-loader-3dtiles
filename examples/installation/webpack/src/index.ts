@@ -11,13 +11,14 @@ import {
   WebGLRenderer,
   Clock,
   sRGBEncoding,
-  GridHelper
+  GridHelper,
+  AmbientLight
 } from 'three'
 
 const scene = new Scene()
 
-const camera = new PerspectiveCamera()
-camera.position.set(0,0, 100);
+const camera = new PerspectiveCamera();
+camera.position.set(0,0,100);
 
 const renderer = new WebGLRenderer()
 renderer.outputEncoding = sRGBEncoding;
@@ -25,18 +26,14 @@ renderer.outputEncoding = sRGBEncoding;
 const clock = new Clock()
 const controls = new OrbitControls( camera, renderer.domElement);
 
-renderer.setSize(window.innerWidth, window.innerHeight)
-document.body.appendChild(renderer.domElement)
-
-
 const canvasParent = document.querySelector('#canvas-parent');
 const statsParent = document.querySelector('#stats-widget') as HTMLElement;
+
+canvasParent.appendChild(renderer.domElement);
 
 let tilesRuntime = undefined;
 let statsRuntime = undefined;
 
-const gridHelper = new GridHelper(100,5);
-scene.add( gridHelper );
 
 async function loadTileset() {
   const result = await Loader3DTiles.load( 
@@ -51,16 +48,16 @@ async function loadTileset() {
       }
   }
   )
-  const {model, runtime} = result
-  tilesRuntime = runtime
+  const {model, runtime} = result;
+  scene.add(model);
+  scene.add(runtime.getTileBoxes());
 
-  model.rotation.set(-Math.PI/2, 0, 0);
+  tilesRuntime = runtime
 
   statsRuntime = new StatsWidget(runtime.getStats(), {container: statsParent });
   statsParent.style.visibility = 'visible';
 
-  scene.add(runtime.getTileBoxes());
-  scene.add(model)
+  model.rotation.set(-Math.PI/2, 0, 0);
 }
 
 function render() {
@@ -76,5 +73,13 @@ function render() {
   window.requestAnimationFrame(render)
 }
 
+function onWindowResize() {
+  renderer.setSize(canvasParent.clientWidth, canvasParent.clientHeight);
+  camera.aspect = canvasParent.clientWidth / canvasParent.clientHeight;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', onWindowResize)
+
 loadTileset();
-render()
+onWindowResize();
+render();

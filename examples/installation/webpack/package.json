@@ -11,8 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@probe.gl/stats-widget": "^3.5.0",
     "three": "^0.137.0",
-    "three-loader-3dtiles": "^1.1.3"
+    "three-loader-3dtiles": "^1.1.5"
   },
   "devDependencies": {
     "ts-loader": "^9.2.3",

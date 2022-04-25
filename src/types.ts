@@ -24,6 +24,12 @@ enum Shading {
   ShadedNoTexture = 3,
 }
 
+enum GeoTransform {
+  Reset = 1,
+  Mercator = 2,
+  WGS84Cartesian = 3
+}
+
 /** Properties for loading a tileset */
 interface LoaderProps {
     /** The URL of the tileset. For example if using Cesium ION, 
@@ -79,6 +85,8 @@ interface LoaderOptions {
   basisTranscoderPath?: string;
   /** A path to that contains the draco library. e.g: `https://unpkg.com/three@0.129.0/examples/js/libs/draco` - Default: `undefined` */
   dracoDecoderPath?: string;
+  /** How to handle geo transformations: Reset any geo location and place the model at (0,0,0), Apply Mercator projection (for use with ccommon 2D mapping applications, or convert WGS84 long/lat to 3D cartesian coordinates)- Default: `Reset` */
+  geoTransform?: GeoTransform;
 }
 
 /** Container object for interfacing with lat/long/height coordinates */
@@ -135,4 +143,4 @@ interface Runtime {
   dispose(): void;
 }
 
-export { LoaderProps, LoaderOptions, PointCloudColoring, Runtime, GeoCoord, Shading };
+export { LoaderProps, LoaderOptions, PointCloudColoring, Runtime, GeoCoord, Shading, GeoTransform };

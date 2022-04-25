@@ -1,5 +1,8 @@
 ## v1.1
 
+### v1.1.6
+- Added a `GeoTransform` option, supporting Web Mercator. New demo with _OpenStreetMap_.
+
 ### v1.1.5
  - Fixed a bug where tileset geo-transformations were not correctly reset to 0.
  - Dispose KTX2 and DRACO loaders.

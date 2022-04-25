@@ -24,7 +24,8 @@ import {
   Camera,
   PerspectiveCamera,
   WebGLRenderer,
-  Texture
+  Texture,
+  Quaternion
 } from 'three';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -35,10 +36,7 @@ import { Gradients } from './gradients';
 
 import { PointCloudFS, PointCloudVS } from './shaders';
 
-import { LoaderProps, LoaderOptions, Runtime, PointCloudColoring, Shading, GeoCoord } from './types';
-
-//import { lngLatToWorld, getDistanceScales } from '@math.gl/web-mercator'
-import { UnitsUtils } from 'geo-three'
+import { LoaderProps, LoaderOptions, Runtime, PointCloudColoring, Shading, GeoCoord, GeoTransform } from './types';
 
 const gradient = Gradients.RAINBOW;
 const gradientTexture = typeof document != 'undefined' ? Util.generateGradientTexture(gradient) : null;
@@ -66,7 +64,7 @@ const defaultOptions: LoaderOptions = {
   material: null,
   computeNormals: false,
   shaderCallback: null,
-  resetGeoTransform: true
+  geoTransform: GeoTransform.Reset
 };
 
 /** 3D Tiles Loader */
@@ -163,7 +161,7 @@ class Loader3DTiles {
         let tileContent = null;
         switch (tile.type) {
           case TILE_TYPE.POINTCLOUD: {
-            tileContent = createPointNodes(tile, pointcloudUniforms, options);
+            tileContent = createPointNodes(tile, pointcloudUniforms, options, rootTransformInverse);
             break;
           }
           case TILE_TYPE.SCENEGRAPH:
@@ -216,42 +214,65 @@ class Loader3DTiles {
     // transformations
     let threeMat = new Matrix4();
     const tileTrasnform = new Matrix4();
+    const resetTransform = new Matrix4();
     const rootCenter = new Vector3();
 
     if (tileset.root.boundingVolume) {
       if (tileset.root.header.boundingVolume.region) {
         // TODO: Handle region type bounding volumes
         console.warn("Cannot apply a model matrix to bounding volumes of type region. Tileset stays in original geo-coordinates.")
-      } else {
+      }
+      else {
         tileTrasnform.extractRotation(Util.getMatrix4FromHalfAxes(tileset.root.boundingVolume.halfAxes));
         tileTrasnform.setPosition(
           tileset.root.boundingVolume.center[0],
           tileset.root.boundingVolume.center[1],
           tileset.root.boundingVolume.center[2]
         )
+        const pos = new Vector3();
+        const scale = new Vector3();
+        const quat = new Quaternion();
+        tileTrasnform.decompose(pos, quat, scale);
+
+        if (options.debug) {
+          const box = Util.loadersBoundingBoxToMesh(tileset.root);
+          tileBoxes.add(box);
+          boxMap[tileset.root.id] = box;
+        }
       }
-      threeMat.copy(tileTrasnform).invert();
-    } 
-    if (!options.resetGeoTransform) {
-      const coords = UnitsUtils.datumsToSpherical(
-        tileset.cartographicCenter[1],
-        tileset.cartographicCenter[0]
-      )
-      rootCenter.set(
-       coords.x,
-       0,
-       -coords.y
-      );
+      if (options.geoTransform == GeoTransform.Mercator) {
+        const coords = Util.datumsToSpherical(
+          tileset.cartographicCenter[1],
+          tileset.cartographicCenter[0]
+        )
+        rootCenter.set(
+         coords.x,
+         0,
+         -coords.y
+        );
 
-      root.position.copy(rootCenter);
-      root.rotation.set(-Math.PI / 2, 0, 0);
+        root.position.copy(rootCenter);
+        root.rotation.set(-Math.PI / 2, 0, 0);
 
-      root.updateMatrixWorld(true);
+        root.updateMatrixWorld(true);
+
+      } else if (options.geoTransform == GeoTransform.WGS84Cartesian) {
+        root.applyMatrix4(tileTrasnform);
+        root.updateMatrixWorld(true);
+        rootCenter.copy(root.position);
+      }
+      if (options.geoTransform != GeoTransform.WGS84Cartesian) {
+        // Reset the current model matrix and apply our own transformation
+        threeMat.copy(tileTrasnform).invert();
+        resetTransform.copy(threeMat);
+        threeMat.premultiply(root.matrixWorld);
+      }
+
       tileBoxes.matrixWorld.copy(root.matrixWorld);
-      threeMat.premultiply(root.matrixWorld);
+    } else {
+      console.warn("Bounding volume not found, no transformations applied")
     }
 
-    const resetTransform = threeMat.clone();
     let modelMatrix = new MathGLMatrix4(threeMat.toArray());
     tileset.modelMatrix = modelMatrix;
 
@@ -445,10 +466,14 @@ class Loader3DTiles {
           timer += dt;
 
           if (tileset && timer >= UPDATE_INTERVAL) {
-            if (options.resetGeoTransform && !lastRootTransform.equals(root.matrixWorld)) {
+            if (!lastRootTransform.equals(root.matrixWorld)) {
               lastRootTransform.copy(root.matrixWorld);
-              threeMat = resetTransform.clone();
-              threeMat.premultiply(lastRootTransform);
+              if (options.geoTransform != GeoTransform.WGS84Cartesian) {
+                threeMat = resetTransform.clone();
+                threeMat.premultiply(lastRootTransform);
+              } else {
+                threeMat.copy(lastRootTransform).multiply(new Matrix4().copy(tileTrasnform).invert());
+              }
               
               const rootCenter = new Vector3().setFromMatrixPosition(lastRootTransform);
               pointcloudUniforms.rootCenter.value.copy(rootCenter);
@@ -562,7 +587,7 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTra
     );
   });
 }
-function createPointNodes(tile, pointcloudUniforms, options) {
+function createPointNodes(tile, pointcloudUniforms, options, rootTransformInverse) {
   const d = {
     rtc_center: tile.content.rtcCenter, // eslint-disable-line camelcase
     points: tile.content.attributes.positions,
@@ -585,8 +610,10 @@ function createPointNodes(tile, pointcloudUniforms, options) {
     uniforms: pointcloudUniforms,
     vertexShader: PointCloudVS,
     fragmentShader: PointCloudFS,
-    transparent: true,
+    transparent: false
   });
+  const contentTransform = new Matrix4().fromArray(tile.computedTransform).premultiply(rootTransformInverse);
+
   if (d.rgba) {
     geometry.setAttribute('color', new Float32BufferAttribute(d.rgba, 4));
     pointcloudMaterial.vertexColors = true;
@@ -604,10 +631,9 @@ function createPointNodes(tile, pointcloudUniforms, options) {
   const tileContent = new Points(geometry, options.material || pointcloudMaterial);
   if (d.rtc_center) {
     const c = d.rtc_center;
-
-    // TODO: In the case of entwine/region bounding volume the modelMatrix also needs to be applied?
-    tileContent.applyMatrix4(new Matrix4().makeTranslation(c[0], c[1], c[2]));//.multiply(threeMat));
+    contentTransform.multiply(new Matrix4().makeTranslation(c[0], c[1], c[2]));
   }
+  tileContent.applyMatrix4(contentTransform);
   return tileContent;
 }
 
@@ -644,4 +670,4 @@ function disposeNode(node) {
   }
 }
 
-export { Loader3DTiles, PointCloudColoring, Shading, Runtime, GeoCoord, LoaderOptions, LoaderProps };
+export { Loader3DTiles, PointCloudColoring, Shading, Runtime, GeoCoord, GeoTransform, LoaderOptions, LoaderProps };

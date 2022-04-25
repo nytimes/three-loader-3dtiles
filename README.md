@@ -129,9 +129,6 @@ Refer to [examples/r3f](examples/r3f).
 ### Supporting 3D Tiles Next
 The [3D Tiles Next specification](https://cesium.com/blog/2021/11/10/introducing-3d-tiles-next/) is in the works, with some of the features already supported in loaders.gl. Supporting the new extensions opens up possibilities for new applications.
 
-### Geo-referencing and layering: WGS84.
-Currently the library does not use geo-referenced locations of tiled models, instead transforming them to Point `[0,0,0]`. We should support maintaining *WGS84* coordinates, so that models could be layered on top of maps and terrains.
-
 ### Skip-traversal
 Implementing the [Skip traversal mechanism](https://cesium.com/blog/2017/05/05/skipping-levels-of-detail/) could greatly improve performance of b3dm (mesh) tiles, but requires a shader/Stencil buffer-based implementation which manually manges Z-culling. This is a very wanted feature and contributions would be greatly appreciated.
 

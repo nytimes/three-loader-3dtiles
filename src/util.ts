@@ -1,4 +1,5 @@
 import {
+  Vector2,
   Vector3,
   Matrix4,
   Mesh,
@@ -16,7 +17,7 @@ import {
   RepeatWrapping,
   Group,
   ArrowHelper,
-  Color,
+  Color
 } from 'three';
 import { Tile3D } from '@loaders.gl/tiles';
 import { Plane as MathGLPlane } from '@math.gl/culling';
@@ -153,10 +154,26 @@ function getMatrix4FromHalfAxes(halfAxes: MathGLMatrix3): Matrix4 {
   return rotateMatrix;
 }
 
+/* 
+ * from https://github.com/tentone/geo-three
+ * Tree-shaking did not work, probably due to static class methods
+*/
+function datumsToSpherical(latitude:number, longitude:number): Vector2 {
+    const EARTH_RADIUS = 6378137;
+    const EARTH_PERIMETER = 2 * Math.PI * EARTH_RADIUS;
+    const EARTH_ORIGIN = EARTH_PERIMETER / 2.0;
+
+    const x = longitude * EARTH_ORIGIN / 180.0;
+    let y = Math.log(Math.tan((90 + latitude) * Math.PI / 360.0)) / (Math.PI / 180.0);
+    y = y * EARTH_ORIGIN / 180.0;
+    return new Vector2(x, y);
+}
+
 export {
   getCameraFrustum,
   loadersPlaneToMesh,
   loadersBoundingBoxToMesh,
   generateGradientTexture,
   getMatrix4FromHalfAxes,
+  datumsToSpherical
 };

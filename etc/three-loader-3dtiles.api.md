@@ -22,6 +22,16 @@ export interface GeoCoord {
     long: number;
 }
 
+// @public (undocumented)
+export enum GeoTransform {
+    // (undocumented)
+    Mercator = 2,
+    // (undocumented)
+    Reset = 1,
+    // (undocumented)
+    WGS84Cartesian = 3
+}
+
 // @public
 export class Loader3DTiles {
     static load(props: LoaderProps): Promise<{
@@ -37,13 +47,13 @@ export interface LoaderOptions {
     computeNormals?: boolean;
     debug?: boolean;
     dracoDecoderPath?: string;
+    geoTransform?: GeoTransform;
     material?: Material;
     maxConcurrency?: number;
     maximumMemoryUsage?: number;
     maximumScreenSpaceError?: number;
     maxRequests?: number;
     pointCloudColoring?: PointCloudColoring;
-    resetGeoTransform?: boolean;
     shaderCallback?: (shader: Shader, renderer: WebGLRenderer) => void;
     shading?: Shading;
     skipLevelOfDetail?: boolean;

@@ -13,6 +13,12 @@ export declare interface GeoCoord {
     height: number;
 }
 
+export declare enum GeoTransform {
+    Reset = 1,
+    Mercator = 2,
+    WGS84Cartesian = 3
+}
+
 /** 3D Tiles Loader */
 export declare class Loader3DTiles {
     /**
@@ -71,8 +77,8 @@ export declare interface LoaderOptions {
     basisTranscoderPath?: string;
     /** A path to that contains the draco library. e.g: `https://unpkg.com/three@0.129.0/examples/js/libs/draco` - Default: `undefined` */
     dracoDecoderPath?: string;
-    /** Whether to reset any geo transformations and place the model at 0,0,0 - Default: `true` */
-    resetGeoTransform?: boolean;
+    /** How to handle geo transformations: Reset any geo location and place the model at (0,0,0), Apply Mercator projection (for use with ccommon 2D mapping applications, or convert WGS84 long/lat to 3D cartesian coordinates)- Default: `Reset` */
+    geoTransform?: GeoTransform;
 }
 
 /** Properties for loading a tileset */

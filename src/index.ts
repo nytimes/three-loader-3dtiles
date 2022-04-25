@@ -229,10 +229,6 @@ class Loader3DTiles {
           tileset.root.boundingVolume.center[1],
           tileset.root.boundingVolume.center[2]
         )
-        const pos = new Vector3();
-        const scale = new Vector3();
-        const quat = new Quaternion();
-        tileTrasnform.decompose(pos, quat, scale);
 
         if (options.debug) {
           const box = Util.loadersBoundingBoxToMesh(tileset.root);

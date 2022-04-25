@@ -1,6 +1,6 @@
 ## v1.1
 
-### v1.1.7
+### v1.1.6
 - Added a `GeoTransform` option, supporting Web Mercator. New demo with _OpenStreetMap_.
 
 ### v1.1.5

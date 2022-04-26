@@ -1,4 +1,4 @@
-import { CanvasTexture, LinearFilter, RepeatWrapping, Vector2 as Vector2$1, Frustum, Matrix4 as Matrix4$1, Group, PlaneGeometry, Vector3 as Vector3$1, MeshBasicMaterial, DoubleSide, Mesh, ArrowHelper, Color, BoxGeometry, EdgesGeometry, LineSegments, LineBasicMaterial, Quaternion as Quaternion$1, BufferGeometry, Float32BufferAttribute, ShaderMaterial, Uint8BufferAttribute, Points } from 'three';
+import { CanvasTexture, LinearFilter, RepeatWrapping, Vector2 as Vector2$1, Frustum, Matrix4 as Matrix4$1, Group, PlaneGeometry, Vector3 as Vector3$1, MeshBasicMaterial, DoubleSide, Mesh, ArrowHelper, Color, BoxGeometry, EdgesGeometry, LineSegments, LineBasicMaterial, BufferGeometry, Float32BufferAttribute, ShaderMaterial, Uint8BufferAttribute, Points } from 'three';
 import { GLTFLoader as GLTFLoader$1 } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
@@ -17329,10 +17329,6 @@ class Loader3DTiles {
                 else {
                     tileTrasnform.extractRotation(getMatrix4FromHalfAxes(tileset.root.boundingVolume.halfAxes));
                     tileTrasnform.setPosition(tileset.root.boundingVolume.center[0], tileset.root.boundingVolume.center[1], tileset.root.boundingVolume.center[2]);
-                    const pos = new Vector3$1();
-                    const scale = new Vector3$1();
-                    const quat = new Quaternion$1();
-                    tileTrasnform.decompose(pos, quat, scale);
                     if (options.debug) {
                         const box = loadersBoundingBoxToMesh(tileset.root);
                         tileBoxes.add(box);

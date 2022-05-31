@@ -81,6 +81,7 @@ class Loader3DTiles {
     const { url } = props;
 
     const UPDATE_INTERVAL = options.updateInterval;
+    const MAX_DEPTH_FOR_ORIENTATION = 5;
 
     const loadersGLOptions: {[key: string]: unknown} = {};
 
@@ -182,8 +183,11 @@ class Loader3DTiles {
           }
         }
       },
-      onTileLoad: async () => {
+      onTileLoad: async (tile) => {
         if (tileset) {
+          if (!orientationDetected && tile?.depth <= MAX_DEPTH_FOR_ORIENTATION) {
+            detectOrientation(tile);
+          }
           tileset._frameNumber++;
           tilesetUpdate(tileset, renderMap, rendererReference, cameraReference);
         }
@@ -211,10 +215,10 @@ class Loader3DTiles {
     });
     //
     // transformations
-    let threeMat = new Matrix4();
+    const threeMat = new Matrix4();
     const tileTrasnform = new Matrix4();
-    const resetTransform = new Matrix4();
     const rootCenter = new Vector3();
+    let orientationDetected = false;
 
     if (tileset.root.boundingVolume) {
       if (tileset.root.header.boundingVolume.region) {
@@ -222,54 +226,20 @@ class Loader3DTiles {
         console.warn("Cannot apply a model matrix to bounding volumes of type region. Tileset stays in original geo-coordinates.")
       }
       else {
-        tileTrasnform.extractRotation(Util.getMatrix4FromHalfAxes(tileset.root.boundingVolume.halfAxes));
         tileTrasnform.setPosition(
           tileset.root.boundingVolume.center[0],
           tileset.root.boundingVolume.center[1],
           tileset.root.boundingVolume.center[2]
         )
-
         if (options.debug) {
           const box = Util.loadersBoundingBoxToMesh(tileset.root);
           tileBoxes.add(box);
           boxMap[tileset.root.id] = box;
         }
       }
-      if (options.geoTransform == GeoTransform.Mercator) {
-        const coords = Util.datumsToSpherical(
-          tileset.cartographicCenter[1],
-          tileset.cartographicCenter[0]
-        )
-        rootCenter.set(
-         coords.x,
-         0,
-         -coords.y
-        );
-
-        root.position.copy(rootCenter);
-        root.rotation.set(-Math.PI / 2, 0, 0);
-
-        root.updateMatrixWorld(true);
-
-      } else if (options.geoTransform == GeoTransform.WGS84Cartesian) {
-        root.applyMatrix4(tileTrasnform);
-        root.updateMatrixWorld(true);
-        rootCenter.copy(root.position);
-      }
-      if (options.geoTransform != GeoTransform.WGS84Cartesian) {
-        // Reset the current model matrix and apply our own transformation
-        threeMat.copy(tileTrasnform).invert();
-        resetTransform.copy(threeMat);
-        threeMat.premultiply(root.matrixWorld);
-      }
-
-      tileBoxes.matrixWorld.copy(root.matrixWorld);
     } else {
       console.warn("Bounding volume not found, no transformations applied")
     }
-
-    let modelMatrix = new MathGLMatrix4(threeMat.toArray());
-    tileset.modelMatrix = modelMatrix;
 
     let disposeFlag = false;
 
@@ -294,6 +264,66 @@ class Loader3DTiles {
     root.updateMatrixWorld(true);
     const lastRootTransform:Matrix4 = new Matrix4().copy(root.matrixWorld)
     const rootTransformInverse = new Matrix4().copy(lastRootTransform).invert();
+
+    detectOrientation(tileset.root);
+    updateResetTransform();
+
+    if (options.debug) {
+      boxMap[tileset.root.id].applyMatrix4(threeMat);
+      tileBoxes.matrixWorld.copy(root.matrixWorld);
+    }
+
+    if (options.geoTransform == GeoTransform.Mercator) {
+      const coords = Util.datumsToSpherical(
+        tileset.cartographicCenter[1],
+        tileset.cartographicCenter[0]
+      )
+      rootCenter.set(
+       coords.x,
+       0,
+       -coords.y
+      );
+
+      root.position.copy(rootCenter);
+      root.rotation.set(-Math.PI / 2, 0, 0);
+
+      root.updateMatrixWorld(true);
+
+    } else if (options.geoTransform == GeoTransform.WGS84Cartesian) {
+      root.applyMatrix4(tileTrasnform);
+      root.updateMatrixWorld(true);
+      rootCenter.copy(root.position);
+    }
+
+    function detectOrientation(tile) {
+      const halfAxes = tile.boundingVolume.halfAxes;
+      const orientationMatrix = new Matrix4()
+      .extractRotation(Util.getMatrix4FromHalfAxes(halfAxes))
+      .premultiply(new Matrix4().extractRotation(rootTransformInverse));
+
+      if (!orientationMatrix.equals(new Matrix4())) {
+        orientationDetected = true;
+        const pos = new Vector3(
+          tileTrasnform.elements[12], 
+          tileTrasnform.elements[13], 
+          tileTrasnform.elements[14])
+        ;
+        tileTrasnform.extractRotation(orientationMatrix);
+        tileTrasnform.setPosition(pos);
+        updateResetTransform();
+      } 
+    }
+
+    function updateResetTransform() {
+      if (options.geoTransform != GeoTransform.WGS84Cartesian) {
+        // Reset the current model matrix and apply our own transformation
+        threeMat.copy(tileTrasnform).invert();
+        threeMat.premultiply(lastRootTransform);
+      
+        threeMat.copy(lastRootTransform).multiply(new Matrix4().copy(tileTrasnform).invert());
+      }
+      tileset.modelMatrix = new MathGLMatrix4(threeMat.toArray());
+    }
 
     function tilesetUpdate(tileset, renderMap, renderer, camera) {
       if (disposeFlag) {
@@ -463,20 +493,17 @@ class Loader3DTiles {
           if (tileset && timer >= UPDATE_INTERVAL) {
             if (!lastRootTransform.equals(root.matrixWorld)) {
               lastRootTransform.copy(root.matrixWorld);
-              if (options.geoTransform != GeoTransform.WGS84Cartesian) {
-                threeMat = resetTransform.clone();
-                threeMat.premultiply(lastRootTransform);
-              } else {
-                threeMat.copy(lastRootTransform).multiply(new Matrix4().copy(tileTrasnform).invert());
-              }
-              
+              updateResetTransform();
+
               const rootCenter = new Vector3().setFromMatrixPosition(lastRootTransform);
               pointcloudUniforms.rootCenter.value.copy(rootCenter);
               pointcloudUniforms.rootNormal.value.copy(new Vector3(0, 0, 1).applyMatrix4(lastRootTransform).normalize());
-
               rootTransformInverse.copy(lastRootTransform).invert(); 
-              modelMatrix = new MathGLMatrix4(threeMat.toArray());
-              tileset.modelMatrix = modelMatrix;
+
+              if (options.debug) {
+                boxMap[tileset.root.id].matrixWorld.copy(threeMat);
+                boxMap[tileset.root.id].applyMatrix4(lastRootTransform);
+              }
             }
 
             const cameraChanged: boolean =

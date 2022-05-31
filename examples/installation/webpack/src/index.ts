@@ -17,6 +17,9 @@ import {
 
 const scene = new Scene()
 
+const gridHelper = new GridHelper( 1000, 10 );
+scene.add( gridHelper );
+
 const camera = new PerspectiveCamera();
 camera.position.set(0,0,100);
 

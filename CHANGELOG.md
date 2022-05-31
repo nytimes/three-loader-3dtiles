@@ -1,5 +1,8 @@
 ## v1.1
 
+### v1.1.9
+- Detect and reset the tileset orientation when it is deeper in the hierarchy (workaround for DJI Terra exports).
+
 ### v1.1.8
 - Added a `GeoTransform` option, supporting Web Mercator. New demo with _OpenStreetMap_.
 

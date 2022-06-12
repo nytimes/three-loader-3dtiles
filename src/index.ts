@@ -24,7 +24,8 @@ import {
   Camera,
   PerspectiveCamera,
   WebGLRenderer,
-  Texture
+  Texture,
+  Euler
 } from 'three';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -301,7 +302,9 @@ class Loader3DTiles {
       .extractRotation(Util.getMatrix4FromHalfAxes(halfAxes))
       .premultiply(new Matrix4().extractRotation(rootTransformInverse));
 
-      if (!orientationMatrix.equals(new Matrix4())) {
+      const rotation = new Euler().setFromRotationMatrix(orientationMatrix);
+
+      if (!rotation.equals(new Euler())) {
         orientationDetected = true;
         const pos = new Vector3(
           tileTrasnform.elements[12], 

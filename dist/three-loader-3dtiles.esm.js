@@ -1,4 +1,4 @@
-import { CanvasTexture, LinearFilter, RepeatWrapping, Vector2 as Vector2$1, Frustum, Matrix4 as Matrix4$1, Group, PlaneGeometry, Vector3 as Vector3$1, MeshBasicMaterial, DoubleSide, Mesh, ArrowHelper, Color, BoxGeometry, EdgesGeometry, LineSegments, LineBasicMaterial, BufferGeometry, Float32BufferAttribute, ShaderMaterial, Uint8BufferAttribute, Points } from 'three';
+import { CanvasTexture, LinearFilter, RepeatWrapping, Vector2 as Vector2$1, Frustum, Matrix4 as Matrix4$1, Group, PlaneGeometry, Vector3 as Vector3$1, MeshBasicMaterial, DoubleSide, Mesh, ArrowHelper, Color, BoxGeometry, EdgesGeometry, LineSegments, LineBasicMaterial, Euler, BufferGeometry, Float32BufferAttribute, ShaderMaterial, Uint8BufferAttribute, Points } from 'three';
 import { GLTFLoader as GLTFLoader$1 } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
@@ -12577,6 +12577,9 @@ async function parsePointCloud3DTile(tile, arrayBuffer, byteOffset, options, con
   parsePositions(tile, featureTable, options);
   parseColors(tile, featureTable, batchTable);
   parseNormals(tile, featureTable);
+
+  console.log("FEATURE TABLE", featureTable);
+  console.log("BATCH TABLE", batchTable);
   return byteOffset;
 }
 
@@ -12681,6 +12684,8 @@ function parseNormals(tile, featureTable) {
 
 function parseBatchIds(tile, featureTable) {
   let batchTable = null;
+
+  console.log("TILE", tile);
 
   if (!tile.batchIds && featureTable.hasProperty('BATCH_ID')) {
     tile.batchIds = featureTable.getPropertyArray('BATCH_ID', GL$1.UNSIGNED_SHORT, 1);
@@ -17380,7 +17385,8 @@ class Loader3DTiles {
                 const orientationMatrix = new Matrix4$1()
                     .extractRotation(getMatrix4FromHalfAxes(halfAxes))
                     .premultiply(new Matrix4$1().extractRotation(rootTransformInverse));
-                if (!orientationMatrix.equals(new Matrix4$1())) {
+                const rotation = new Euler().setFromRotationMatrix(orientationMatrix);
+                if (!rotation.equals(new Euler())) {
                     orientationDetected = true;
                     const pos = new Vector3$1(tileTrasnform.elements[12], tileTrasnform.elements[13], tileTrasnform.elements[14]);
                     tileTrasnform.extractRotation(orientationMatrix);

@@ -1,6 +1,6 @@
 ## v1.1
 
-### v1.1.9
+### v1.1.10
 - Detect and reset the tileset orientation when it is deeper in the hierarchy (workaround for DJI Terra exports).
 
 ### v1.1.8

@@ -224,22 +224,23 @@ class Loader3DTiles {
     if (tileset.root.boundingVolume) {
       if (tileset.root.header.boundingVolume.region) {
         // TODO: Handle region type bounding volumes
+        // https://github.com/visgl/loaders.gl/issues/1994
         console.warn("Cannot apply a model matrix to bounding volumes of type region. Tileset stays in original geo-coordinates.")
+        options.geoTransform = GeoTransform.WGS84Cartesian;
       }
-      else {
-        tileTrasnform.setPosition(
-          tileset.root.boundingVolume.center[0],
-          tileset.root.boundingVolume.center[1],
-          tileset.root.boundingVolume.center[2]
-        )
-        if (options.debug) {
-          const box = Util.loadersBoundingBoxToMesh(tileset.root);
-          tileBoxes.add(box);
-          boxMap[tileset.root.id] = box;
-        }
-      }
+      tileTrasnform.setPosition(
+        tileset.root.boundingVolume.center[0],
+        tileset.root.boundingVolume.center[1],
+        tileset.root.boundingVolume.center[2]
+      )
     } else {
       console.warn("Bounding volume not found, no transformations applied")
+    }
+
+    if (options.debug) {
+      const box = Util.loadersBoundingBoxToMesh(tileset.root);
+      tileBoxes.add(box);
+      boxMap[tileset.root.id] = box;
     }
 
     let disposeFlag = false;
@@ -297,6 +298,9 @@ class Loader3DTiles {
     }
 
     function detectOrientation(tile) {
+      if (!tile.boundingVolume.halfAxes) {
+        return;
+      }
       const halfAxes = tile.boundingVolume.halfAxes;
       const orientationMatrix = new Matrix4()
       .extractRotation(Util.getMatrix4FromHalfAxes(halfAxes))
@@ -324,8 +328,9 @@ class Loader3DTiles {
         threeMat.premultiply(lastRootTransform);
       
         threeMat.copy(lastRootTransform).multiply(new Matrix4().copy(tileTrasnform).invert());
+
+        tileset.modelMatrix = new MathGLMatrix4(threeMat.toArray());
       }
-      tileset.modelMatrix = new MathGLMatrix4(threeMat.toArray());
     }
 
     function tilesetUpdate(tileset, renderMap, renderer, camera) {

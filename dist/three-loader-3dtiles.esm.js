@@ -17334,18 +17334,17 @@ class Loader3DTiles {
                 if (tileset.root.header.boundingVolume.region) {
                     // TODO: Handle region type bounding volumes
                     console.warn("Cannot apply a model matrix to bounding volumes of type region. Tileset stays in original geo-coordinates.");
+                    options.geoTransform = GeoTransform.WGS84Cartesian;
                 }
-                else {
-                    tileTrasnform.setPosition(tileset.root.boundingVolume.center[0], tileset.root.boundingVolume.center[1], tileset.root.boundingVolume.center[2]);
-                    if (options.debug) {
-                        const box = loadersBoundingBoxToMesh(tileset.root);
-                        tileBoxes.add(box);
-                        boxMap[tileset.root.id] = box;
-                    }
-                }
+                tileTrasnform.setPosition(tileset.root.boundingVolume.center[0], tileset.root.boundingVolume.center[1], tileset.root.boundingVolume.center[2]);
             }
             else {
                 console.warn("Bounding volume not found, no transformations applied");
+            }
+            if (options.debug) {
+                const box = loadersBoundingBoxToMesh(tileset.root);
+                tileBoxes.add(box);
+                boxMap[tileset.root.id] = box;
             }
             let disposeFlag = false;
             pointcloudUniforms.rootCenter.value.copy(rootCenter);
@@ -17381,6 +17380,9 @@ class Loader3DTiles {
                 rootCenter.copy(root.position);
             }
             function detectOrientation(tile) {
+                if (!tile.boundingVolume.halfAxes) {
+                    return;
+                }
                 const halfAxes = tile.boundingVolume.halfAxes;
                 const orientationMatrix = new Matrix4$1()
                     .extractRotation(getMatrix4FromHalfAxes(halfAxes))
@@ -17400,8 +17402,8 @@ class Loader3DTiles {
                     threeMat.copy(tileTrasnform).invert();
                     threeMat.premultiply(lastRootTransform);
                     threeMat.copy(lastRootTransform).multiply(new Matrix4$1().copy(tileTrasnform).invert());
+                    tileset.modelMatrix = new Matrix4(threeMat.toArray());
                 }
-                tileset.modelMatrix = new Matrix4(threeMat.toArray());
             }
             function tilesetUpdate(tileset, renderMap, renderer, camera) {
                 if (disposeFlag) {

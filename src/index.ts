@@ -20,6 +20,7 @@ import {
   ShaderMaterial,
   MeshBasicMaterial,
   Uint8BufferAttribute,
+  BufferAttribute,
   Points,
   Camera,
   PerspectiveCamera,
@@ -56,6 +57,7 @@ const defaultOptions: LoaderOptions = {
   updateTransforms: true,
   shading: Shading.FlatTexture,
   pointCloudColoring: PointCloudColoring.White,
+  pointSize: 1.0,
   worker: true,
   wireframe: false,
   debug: false,
@@ -112,7 +114,7 @@ class Loader3DTiles {
     }
 
     const pointcloudUniforms = {
-      pointSize: { type: 'f', value: 1.0 },
+      pointSize: { type: 'f', value: options.pointSize },
       gradient: { type: 't', value: gradientTexture },
       grayscale: { type: 't', value: grayscaleTexture },
       rootCenter: { type: 'vec3', value: new Vector3() },
@@ -652,7 +654,11 @@ function createPointNodes(tile, pointcloudUniforms, options, rootTransformInvers
     pointcloudMaterial.vertexColors = true;
   }
   if (d.intensities) {
-    geometry.setAttribute('intensity', new Uint8BufferAttribute(d.intensities, 1, true));
+    geometry.setAttribute(
+      'intensity',
+      // Handles both 16bit or 8bit intensity values
+      new BufferAttribute(d.intensities, 1, true)
+    );
   }
   if (d.classifications) {
     geometry.setAttribute('classification', new Uint8BufferAttribute(d.classifications, 1, false));

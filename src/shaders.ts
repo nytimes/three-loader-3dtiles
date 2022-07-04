@@ -21,6 +21,7 @@ const PointCloudVS = `
   uniform bool hideGround;
   uniform float maxIntensity;
   uniform float intensityContrast;
+  uniform float pointSize;
 
   #ifdef USE_COLOR
   vec3 getRGB() {
@@ -79,7 +80,7 @@ const PointCloudVS = `
   void main() {
       vColor = getColor();
 
-      gl_PointSize = 1.0;
+      gl_PointSize = pointSize;
       gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
   }
 `;

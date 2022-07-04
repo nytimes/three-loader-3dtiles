@@ -1,5 +1,8 @@
 ## v1.1
 
+### v1.1.11
+ -  Point cloud shader fixes: support 16bit intensity values and a custom point size.
+
 ### v1.1.10
 - Detect and reset the tileset orientation when it is deeper in the hierarchy (workaround for DJI Terra exports).
 

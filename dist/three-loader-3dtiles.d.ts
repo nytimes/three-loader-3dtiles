@@ -71,6 +71,8 @@ export declare interface LoaderOptions {
     computeNormals?: boolean;
     /** When viewing Point Cloud tiles, how should the points be colored ({@link PointCloudColoring}) - Default: `PointCloudColoring.White` */
     pointCloudColoring?: PointCloudColoring;
+    /** Point size for Point Cloud tiles -  Default: `1.0` */
+    pointSize?: number;
     /** Debug mode: Show tile bounding boxes. Make sure to add the boxes to the scene from {@link Runtime.getTileBoxes} - Default: `false` */
     debug?: boolean;
     /** A path to that contains the basis universal library. e.g: `https://unpkg.com/three@0.129.0/examples/js/libs/basis` - Default: `undefined` */

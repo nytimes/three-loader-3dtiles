@@ -1,4 +1,4 @@
-import { CanvasTexture, LinearFilter, RepeatWrapping, Vector2 as Vector2$1, Frustum, Matrix4 as Matrix4$1, Group, PlaneGeometry, Vector3 as Vector3$1, MeshBasicMaterial, DoubleSide, Mesh, ArrowHelper, Color, BoxGeometry, EdgesGeometry, LineSegments, LineBasicMaterial, Euler, BufferGeometry, Float32BufferAttribute, ShaderMaterial, Uint8BufferAttribute, Points } from 'three';
+import { CanvasTexture, LinearFilter, RepeatWrapping, Vector2 as Vector2$1, Frustum, Matrix4 as Matrix4$1, Group, PlaneGeometry, Vector3 as Vector3$1, MeshBasicMaterial, DoubleSide, Mesh, ArrowHelper, Color, BoxGeometry, EdgesGeometry, LineSegments, LineBasicMaterial, Euler, BufferGeometry, Float32BufferAttribute, ShaderMaterial, Uint8BufferAttribute, BufferAttribute, Points } from 'three';
 import { GLTFLoader as GLTFLoader$1 } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
@@ -17095,6 +17095,7 @@ const PointCloudVS = `
   uniform bool hideGround;
   uniform float maxIntensity;
   uniform float intensityContrast;
+  uniform float pointSize;
 
   #ifdef USE_COLOR
   vec3 getRGB() {
@@ -17153,7 +17154,7 @@ const PointCloudVS = `
   void main() {
       vColor = getColor();
 
-      gl_PointSize = 1.0;
+      gl_PointSize = pointSize;
       gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
   }
 `;
@@ -17197,6 +17198,7 @@ const defaultOptions = {
     updateTransforms: true,
     shading: Shading.FlatTexture,
     pointCloudColoring: PointCloudColoring.White,
+    pointSize: 1.0,
     worker: true,
     wireframe: false,
     debug: false,
@@ -17241,7 +17243,7 @@ class Loader3DTiles {
                 tileBoxes.visible = false;
             }
             const pointcloudUniforms = {
-                pointSize: { type: 'f', value: 1.0 },
+                pointSize: { type: 'f', value: options.pointSize },
                 gradient: { type: 't', value: gradientTexture },
                 grayscale: { type: 't', value: grayscaleTexture },
                 rootCenter: { type: 'vec3', value: new Vector3$1() },
@@ -17333,6 +17335,7 @@ class Loader3DTiles {
             if (tileset.root.boundingVolume) {
                 if (tileset.root.header.boundingVolume.region) {
                     // TODO: Handle region type bounding volumes
+                    // https://github.com/visgl/loaders.gl/issues/1994
                     console.warn("Cannot apply a model matrix to bounding volumes of type region. Tileset stays in original geo-coordinates.");
                     options.geoTransform = GeoTransform.WGS84Cartesian;
                 }
@@ -17692,7 +17695,9 @@ function createPointNodes(tile, pointcloudUniforms, options, rootTransformInvers
         pointcloudMaterial.vertexColors = true;
     }
     if (d.intensities) {
-        geometry.setAttribute('intensity', new Uint8BufferAttribute(d.intensities, 1, true));
+        geometry.setAttribute('intensity', 
+        // Handles both 16bit or 8bit intensity values
+        new BufferAttribute(d.intensities, 1, true));
     }
     if (d.classifications) {
         geometry.setAttribute('classification', new Uint8BufferAttribute(d.classifications, 1, false));

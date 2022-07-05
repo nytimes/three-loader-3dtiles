@@ -13,7 +13,7 @@
   "dependencies": {
     "@probe.gl/stats-widget": "^3.5.0",
     "three": "^0.137.0",
-    "three-loader-3dtiles": "^1.1.11"
+    "three-loader-3dtiles": "^1.1.12"
   },
   "devDependencies": {
     "ts-loader": "^9.2.3",

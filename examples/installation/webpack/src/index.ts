@@ -41,16 +41,13 @@ let statsRuntime = undefined;
 async function loadTileset() {
   const result = await Loader3DTiles.load( 
   {
-      url: 'https://assets.cesium.com/1182497/tileset.json',
+      url: 'https://int.nyt.com/data/3dscenes/ONA360/TILESET/0731_FREEMAN_ALLEY_10M_A_36x8K__10K-PN_50P_DB/tileset_tileset.json',
       renderer: renderer,
       options: {
         dracoDecoderPath: 'https://unpkg.com/three@0.137.0/examples/js/libs/draco',
         basisTranscoderPath: 'https://unpkg.com/three@0.137.0/examples/js/libs/basis',
-        debug: false,
-        pointCloudColoring: PointCloudColoring.RGB,
-        cesiumIONToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxNGFlZTdjZi1lYmJiLTQ4YTMtODBhOS00OTEwZGFlZTE3YjUiLCJpZCI6Mjk0NDUsImlhdCI6MTY1NjM2Mzk5MH0.0vBVNZq3_NfesCswCBEoBAVvlQePbXJtQZ1LgEEy3DY",
-        pointSize: 3.0,
-        transparent: true
+        debug: true,
+        pointCloudColoring: PointCloudColoring.RGB
       }
   }
   )
@@ -59,10 +56,6 @@ async function loadTileset() {
   scene.add(runtime.getTileBoxes());
 
   tilesRuntime = runtime
-
-  setTimeout(() => {
-    runtime.setPointAlpha(0.1);
-  }, 3000)
 
   statsRuntime = new StatsWidget(runtime.getStats(), {container: statsParent });
   statsParent.style.visibility = 'visible';

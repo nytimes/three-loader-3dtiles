@@ -1,10 +1,12 @@
 const PointCloudFS = `
   varying vec3 vColor;
+  uniform float alpha;
+
   void main() {
     if (vColor == vec3(0.0, 0.0, 0.0)) {
       discard;
     } else {
-      gl_FragColor = vec4( vColor, 1.0 );
+      gl_FragColor = vec4( vColor, alpha);
     }
   }
 `;

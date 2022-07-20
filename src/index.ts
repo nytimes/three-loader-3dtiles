@@ -56,6 +56,7 @@ const defaultOptions: LoaderOptions = {
   skipLevelOfDetail: false,
   updateTransforms: true,
   shading: Shading.FlatTexture,
+  transparent: false,
   pointCloudColoring: PointCloudColoring.White,
   pointSize: 1.0,
   worker: true,
@@ -124,6 +125,7 @@ class Loader3DTiles {
       elevationRange: { type: 'vec2', value: new Vector2(0, 400) },
       maxIntensity: { type: 'f', value: 1.0 },
       intensityContrast: { type: 'f', value: 1.0 },
+      alpha: { type: 'f', value: 1.0 },
     };
 
     let cameraReference = null;
@@ -150,7 +152,7 @@ class Loader3DTiles {
       gltfLoader.setDRACOLoader(dracoLoader);
     }
 
-    const unlitMaterial = new MeshBasicMaterial();
+    const unlitMaterial = new MeshBasicMaterial({transparent: options.transparent});
 
     const tileOptions = {
       maximumMemoryUsage: options.maximumMemoryUsage,
@@ -469,6 +471,9 @@ class Loader3DTiles {
         setIntensityContrast: (contrast) => {
           pointcloudUniforms.intensityContrast.value = contrast;
         },
+        setPointAlpha: (alpha) => {
+          pointcloudUniforms.alpha.value = alpha;
+        },
         getLatLongHeightFromPosition: (position) => {
           const cartographicPosition = tileset.ellipsoid.cartesianToCartographic(
             new Vector3().copy(position).applyMatrix4(new Matrix4().copy(threeMat).invert()).toArray(),
@@ -642,7 +647,7 @@ function createPointNodes(tile, pointcloudUniforms, options, rootTransformInvers
     uniforms: pointcloudUniforms,
     vertexShader: PointCloudVS,
     fragmentShader: PointCloudFS,
-    transparent: false
+    transparent: options.transparent
   });
   const contentTransform = new Matrix4().fromArray(tile.computedTransform).premultiply(rootTransformInverse);
 

@@ -69,6 +69,8 @@ interface LoaderOptions {
   skipLevelOfDetail?: boolean;
   /** When viewing b3dm (mesh) tiles, which type of {@link Shading} is used - Default: `Shading.FlatTexture` */
   shading?: Shading;
+  /** Whether to set the material as transparent - Default: `false` */
+  transparent?: boolean;
   /** Apply a custom material, supports both b3dm (mesh) tiles and Point Cloud tiles - Default: `undefined` **/
   material?: Material;
   /** When viewing b3dm (mesh) tiles, a callback to update shader uniforms - Default: `undefined` */
@@ -133,6 +135,8 @@ interface Runtime {
   setMaxIntensity(number): void;
   /** In point clouds when coloring by `PointCloudColoring.Intensity`, set the contrast factor. Default: `1.0`. */
   setIntensityContrast(number): void;
+  /** In point clouds when, set the alpha value. Default: `1.0`. */
+  setPointAlpha(number): void;
   /** When viewing a Geo-located tileset, get the {@link GeoCoord} value from a world-space `Vector3`. */
   getLatLongHeightFromPosition(Vector3): GeoCoord;
   /** When viewing a Geo-located tileset, world-space `Vector3` from a {@link GeoCoord}. */

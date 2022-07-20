@@ -1,5 +1,8 @@
 ## v1.1
 
+### v1.1.13
+ -  Support setting point cloud opacity and material transparency.
+
 ### v1.1.12
  -  Point cloud shader fixes: support 16bit intensity values and a custom point size.
 

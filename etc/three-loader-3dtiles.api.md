@@ -59,6 +59,7 @@ export interface LoaderOptions {
     shading?: Shading;
     skipLevelOfDetail?: boolean;
     throttleRequests?: boolean;
+    transparent?: boolean;
     updateInterval?: number;
     updateTransforms?: boolean;
     viewDistanceScale?: number;
@@ -103,6 +104,7 @@ export interface Runtime {
     setHideGround(boolean: any): void;
     setIntensityContrast(number: any): void;
     setMaxIntensity(number: any): void;
+    setPointAlpha(number: any): void;
     setPointCloudColoring(PointCloudColoring: any): void;
     setShading(Shading: any): void;
     setViewDistanceScale(number: any): void;

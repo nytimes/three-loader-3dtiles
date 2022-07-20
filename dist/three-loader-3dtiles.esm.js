@@ -17074,11 +17074,13 @@ const Gradients = {
 
 const PointCloudFS = `
   varying vec3 vColor;
+  uniform float alpha;
+
   void main() {
     if (vColor == vec3(0.0, 0.0, 0.0)) {
       discard;
     } else {
-      gl_FragColor = vec4( vColor, 1.0 );
+      gl_FragColor = vec4( vColor, alpha);
     }
   }
 `;
@@ -17197,6 +17199,7 @@ const defaultOptions = {
     skipLevelOfDetail: false,
     updateTransforms: true,
     shading: Shading.FlatTexture,
+    transparent: false,
     pointCloudColoring: PointCloudColoring.White,
     pointSize: 1.0,
     worker: true,
@@ -17253,6 +17256,7 @@ class Loader3DTiles {
                 elevationRange: { type: 'vec2', value: new Vector2$1(0, 400) },
                 maxIntensity: { type: 'f', value: 1.0 },
                 intensityContrast: { type: 'f', value: 1.0 },
+                alpha: { type: 'f', value: 1.0 },
             };
             let cameraReference = null;
             let rendererReference = null;
@@ -17272,7 +17276,7 @@ class Loader3DTiles {
                 dracoLoader.setWorkerLimit(options.maxConcurrency);
                 gltfLoader.setDRACOLoader(dracoLoader);
             }
-            const unlitMaterial = new MeshBasicMaterial();
+            const unlitMaterial = new MeshBasicMaterial({ transparent: options.transparent });
             const tileOptions = {
                 maximumMemoryUsage: options.maximumMemoryUsage,
                 maximumScreenSpaceError: options.maximumScreenSpaceError,
@@ -17529,6 +17533,9 @@ class Loader3DTiles {
                     setIntensityContrast: (contrast) => {
                         pointcloudUniforms.intensityContrast.value = contrast;
                     },
+                    setPointAlpha: (alpha) => {
+                        pointcloudUniforms.alpha.value = alpha;
+                    },
                     getLatLongHeightFromPosition: (position) => {
                         const cartographicPosition = tileset.ellipsoid.cartesianToCartographic(new Vector3$1().copy(position).applyMatrix4(new Matrix4$1().copy(threeMat).invert()).toArray());
                         return {
@@ -17683,7 +17690,7 @@ function createPointNodes(tile, pointcloudUniforms, options, rootTransformInvers
         uniforms: pointcloudUniforms,
         vertexShader: PointCloudVS,
         fragmentShader: PointCloudFS,
-        transparent: false
+        transparent: options.transparent
     });
     const contentTransform = new Matrix4$1().fromArray(tile.computedTransform).premultiply(rootTransformInverse);
     if (d.rgba) {

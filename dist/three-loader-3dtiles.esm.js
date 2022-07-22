@@ -1,4 +1,4 @@
-import { CanvasTexture, LinearFilter, RepeatWrapping, Vector2 as Vector2$1, Frustum, Matrix4 as Matrix4$1, Group, PlaneGeometry, Vector3 as Vector3$1, MeshBasicMaterial, DoubleSide, Mesh, ArrowHelper, Color, BoxGeometry, EdgesGeometry, LineSegments, LineBasicMaterial, Euler, BufferGeometry, Float32BufferAttribute, ShaderMaterial, Uint8BufferAttribute, BufferAttribute, Points } from 'three';
+import { CanvasTexture, LinearFilter, RepeatWrapping, Vector2 as Vector2$1, Frustum, Matrix4 as Matrix4$1, Group, PlaneGeometry, Vector3 as Vector3$1, MeshBasicMaterial, DoubleSide, Mesh, ArrowHelper, Color, BoxGeometry, EdgesGeometry, LineSegments, LineBasicMaterial, ShaderMaterial, Euler, BufferGeometry, Float32BufferAttribute, Uint8BufferAttribute, BufferAttribute, Points } from 'three';
 import { GLTFLoader as GLTFLoader$1 } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
@@ -8826,7 +8826,7 @@ class TilesetTraverser {
         if (stoppedRefining) {
           this.selectTile(tile, frameState);
         }
-      } else if (tile.refine === TILE_REFINEMENT.ADD || tile.refine == 'Additive') {
+      } else if (tile.refine === TILE_REFINEMENT.ADD) {
         this.loadTile(tile, frameState);
         this.selectTile(tile, frameState);
       } else if (tile.refine === TILE_REFINEMENT.REPLACE) {
@@ -12577,9 +12577,6 @@ async function parsePointCloud3DTile(tile, arrayBuffer, byteOffset, options, con
   parsePositions(tile, featureTable, options);
   parseColors(tile, featureTable, batchTable);
   parseNormals(tile, featureTable);
-
-  console.log("FEATURE TABLE", featureTable);
-  console.log("BATCH TABLE", batchTable);
   return byteOffset;
 }
 
@@ -12684,8 +12681,6 @@ function parseNormals(tile, featureTable) {
 
 function parseBatchIds(tile, featureTable) {
   let batchTable = null;
-
-  console.log("TILE", tile);
 
   if (!tile.batchIds && featureTable.hasProperty('BATCH_ID')) {
     tile.batchIds = featureTable.getPropertyArray('BATCH_ID', GL$1.UNSIGNED_SHORT, 1);
@@ -17258,6 +17253,13 @@ class Loader3DTiles {
                 intensityContrast: { type: 'f', value: 1.0 },
                 alpha: { type: 'f', value: 1.0 },
             };
+            const pointcloudMaterial = new ShaderMaterial({
+                uniforms: pointcloudUniforms,
+                vertexShader: PointCloudVS,
+                fragmentShader: PointCloudFS,
+                transparent: options.transparent,
+                vertexColors: true
+            });
             let cameraReference = null;
             let rendererReference = null;
             const gltfLoader = new GLTFLoader$1();
@@ -17289,7 +17291,7 @@ class Loader3DTiles {
                     let tileContent = null;
                     switch (tile.type) {
                         case TILE_TYPE.POINTCLOUD: {
-                            tileContent = createPointNodes(tile, pointcloudUniforms, options, rootTransformInverse);
+                            tileContent = createPointNodes(tile, pointcloudMaterial, options, rootTransformInverse);
                             break;
                         }
                         case TILE_TYPE.SCENEGRAPH:
@@ -17627,37 +17629,38 @@ function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTransform
                 const tileContent = gltf.scenes[0];
                 tileContent.applyMatrix4(contentTransform);
                 tileContent.traverse((object) => {
-                    if (object instanceof Mesh) {
-                        const originalMaterial = object.material;
+                    if (object.type == "Mesh") {
+                        const mesh = object;
+                        const originalMaterial = mesh.material;
                         const originalMap = originalMaterial.map;
                         if (options.material) {
-                            object.material = options.material.clone();
+                            mesh.material = options.material.clone();
                             originalMaterial.dispose();
                         }
                         else if (options.shading == Shading.FlatTexture) {
-                            object.material = unlitMaterial.clone();
+                            mesh.material = unlitMaterial.clone();
                             originalMaterial.dispose();
                         }
                         if (options.shading != Shading.ShadedNoTexture) {
-                            if (object.material.uniforms) {
-                                object.material.uniforms.map = { value: originalMap };
+                            if (mesh.material.type == "ShaderMaterial") {
+                                mesh.material.uniforms.map = { value: originalMap };
                             }
                             else {
-                                object.material.map = originalMap;
+                                mesh.material.map = originalMap;
                             }
                         }
                         else {
                             if (originalMap) {
                                 originalMap.dispose();
                             }
-                            object.material.map = null;
+                            mesh.material.map = null;
                         }
                         if (options.shaderCallback) {
-                            object.onBeforeRender = options.shaderCallback;
+                            mesh.onBeforeRender = options.shaderCallback;
                         }
-                        object.material.wireframe = options.wireframe;
+                        mesh.material.wireframe = options.wireframe;
                         if (options.computeNormals) {
-                            object.geometry.computeVertexNormals();
+                            mesh.geometry.computeVertexNormals();
                         }
                     }
                 });
@@ -17668,7 +17671,7 @@ function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTransform
         });
     });
 }
-function createPointNodes(tile, pointcloudUniforms, options, rootTransformInverse) {
+function createPointNodes(tile, pointcloudMaterial, options, rootTransformInverse) {
     const d = {
         rtc_center: tile.content.rtcCenter,
         points: tile.content.attributes.positions,
@@ -17686,20 +17689,12 @@ function createPointNodes(tile, pointcloudUniforms, options, rootTransformInvers
     }
     const geometry = new BufferGeometry();
     geometry.setAttribute('position', new Float32BufferAttribute(d.points, 3));
-    const pointcloudMaterial = new ShaderMaterial({
-        uniforms: pointcloudUniforms,
-        vertexShader: PointCloudVS,
-        fragmentShader: PointCloudFS,
-        transparent: options.transparent
-    });
     const contentTransform = new Matrix4$1().fromArray(tile.computedTransform).premultiply(rootTransformInverse);
     if (d.rgba) {
         geometry.setAttribute('color', new Float32BufferAttribute(d.rgba, 4));
-        pointcloudMaterial.vertexColors = true;
     }
     else if (d.rgb) {
         geometry.setAttribute('color', new Uint8BufferAttribute(d.rgb, 3, true));
-        pointcloudMaterial.vertexColors = true;
     }
     if (d.intensities) {
         geometry.setAttribute('intensity', 

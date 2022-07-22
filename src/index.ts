@@ -128,6 +128,14 @@ class Loader3DTiles {
       alpha: { type: 'f', value: 1.0 },
     };
 
+    const pointcloudMaterial = new ShaderMaterial({
+      uniforms: pointcloudUniforms,
+      vertexShader: PointCloudVS,
+      fragmentShader: PointCloudFS,
+      transparent: options.transparent,
+      vertexColors: true
+    });
+    
     let cameraReference = null;
     let rendererReference = null;
 
@@ -166,7 +174,7 @@ class Loader3DTiles {
         let tileContent = null;
         switch (tile.type) {
           case TILE_TYPE.POINTCLOUD: {
-            tileContent = createPointNodes(tile, pointcloudUniforms, options, rootTransformInverse);
+            tileContent = createPointNodes(tile, pointcloudMaterial, options, rootTransformInverse);
             break;
           }
           case TILE_TYPE.SCENEGRAPH:
@@ -581,38 +589,39 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTra
         tileContent.applyMatrix4(contentTransform); 
 
         tileContent.traverse((object) => {
-          if (object instanceof Mesh) {
-            const originalMaterial = (object.material as MeshStandardMaterial);
+          if (object.type == "Mesh") {
+            const mesh = object as Mesh;
+            const originalMaterial = (mesh.material as MeshStandardMaterial);
             const originalMap = originalMaterial.map;
 
             if (options.material) {
-              object.material = options.material.clone();
+              mesh.material = options.material.clone();
               originalMaterial.dispose();
             } else if (options.shading == Shading.FlatTexture) {
-              object.material = unlitMaterial.clone();
+              mesh.material = unlitMaterial.clone();
               originalMaterial.dispose();
             }
 
             if (options.shading != Shading.ShadedNoTexture) {
-              if (object.material.uniforms) {
-                object.material.uniforms.map = { value: originalMap };
+              if ((mesh.material as Material).type == "ShaderMaterial") {
+                 (mesh.material as ShaderMaterial).uniforms.map = { value: originalMap };
               } else {
-                object.material.map = originalMap;
+                (mesh.material as MeshStandardMaterial).map = originalMap;
               }
             } else {
               if (originalMap) {
                 originalMap.dispose();
               }
-              object.material.map = null;
+              (mesh.material as MeshStandardMaterial).map = null;
             }
 
             if (options.shaderCallback) {
-              object.onBeforeRender = options.shaderCallback;
+              mesh.onBeforeRender = options.shaderCallback;
             }
-            object.material.wireframe = options.wireframe;
+            (mesh.material as MeshStandardMaterial | MeshBasicMaterial).wireframe = options.wireframe;
 
             if (options.computeNormals) {
-              object.geometry.computeVertexNormals();
+              mesh.geometry.computeVertexNormals();
             }
           }
         });
@@ -624,7 +633,7 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTra
     );
   });
 }
-function createPointNodes(tile, pointcloudUniforms, options, rootTransformInverse) {
+function createPointNodes(tile, pointcloudMaterial, options, rootTransformInverse) {
   const d = {
     rtc_center: tile.content.rtcCenter, // eslint-disable-line camelcase
     points: tile.content.attributes.positions,
@@ -643,20 +652,13 @@ function createPointNodes(tile, pointcloudUniforms, options, rootTransformInvers
 
   const geometry = new BufferGeometry();
   geometry.setAttribute('position', new Float32BufferAttribute(d.points, 3));
-  const pointcloudMaterial = new ShaderMaterial({
-    uniforms: pointcloudUniforms,
-    vertexShader: PointCloudVS,
-    fragmentShader: PointCloudFS,
-    transparent: options.transparent
-  });
+
   const contentTransform = new Matrix4().fromArray(tile.computedTransform).premultiply(rootTransformInverse);
 
   if (d.rgba) {
     geometry.setAttribute('color', new Float32BufferAttribute(d.rgba, 4));
-    pointcloudMaterial.vertexColors = true;
   } else if (d.rgb) {
     geometry.setAttribute('color', new Uint8BufferAttribute(d.rgb, 3, true));
-    pointcloudMaterial.vertexColors = true;
   }
   if (d.intensities) {
     geometry.setAttribute(
@@ -670,6 +672,7 @@ function createPointNodes(tile, pointcloudUniforms, options, rootTransformInvers
   }
 
   const tileContent = new Points(geometry, options.material || pointcloudMaterial);
+
   if (d.rtc_center) {
     const c = d.rtc_center;
     contentTransform.multiply(new Matrix4().makeTranslation(c[0], c[1], c[2]));

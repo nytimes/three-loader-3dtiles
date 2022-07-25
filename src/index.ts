@@ -441,7 +441,6 @@ class Loader3DTiles {
             options.preloadTilesCount == null ||
             tilesLoaded >= options.preloadTilesCount)
            ) {
-             console.log("Loading ended with preload count", options.preloadTilesCount)
              loadingEnded = true;
              props.loadingManager.itemEnd(props.url);
            }

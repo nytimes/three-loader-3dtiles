@@ -4,6 +4,7 @@
 
 ```ts
 
+import { LoadingManager } from 'three';
 import { Material } from 'three';
 import { Object3D } from 'three';
 import { Shader } from 'three';
@@ -55,6 +56,7 @@ export interface LoaderOptions {
     maxRequests?: number;
     pointCloudColoring?: PointCloudColoring;
     pointSize?: number;
+    preloadTilesCount?: number;
     shaderCallback?: (shader: Shader, renderer: WebGLRenderer) => void;
     shading?: Shading;
     skipLevelOfDetail?: boolean;
@@ -69,7 +71,7 @@ export interface LoaderOptions {
 
 // @public
 export interface LoaderProps {
-    // (undocumented)
+    loadingManager?: LoadingManager;
     onProgress?(progress: number | ProgressEvent<EventTarget>, total?: number): void;
     options?: LoaderOptions;
     renderer?: WebGLRenderer;

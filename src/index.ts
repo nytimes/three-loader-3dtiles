@@ -67,7 +67,8 @@ const defaultOptions: LoaderOptions = {
   material: null,
   computeNormals: false,
   shaderCallback: null,
-  geoTransform: GeoTransform.Reset
+  geoTransform: GeoTransform.Reset,
+  preloadTilesCount: null
 };
 
 /** 3D Tiles Loader */
@@ -95,6 +96,10 @@ class Loader3DTiles {
       };
       const metadata = await CesiumIonLoader.preload(url, loadersGLOptions);
       loadersGLOptions['fetch'] = { headers: metadata.headers };
+    }
+
+    if (props.loadingManager) {
+      props.loadingManager.itemStart(url);
     }
 
     const tilesetJson = await load(url, Tiles3DLoader, {
@@ -256,6 +261,7 @@ class Loader3DTiles {
     }
 
     let disposeFlag = false;
+    let loadingEnded = false;
 
 
     pointcloudUniforms.rootCenter.value.copy(rootCenter);
@@ -419,11 +425,25 @@ class Loader3DTiles {
         }
       }
 
+      const tilesLoaded = tileset.stats.get('Tiles Loaded').count;
+      const tilesLoading = tileset.stats.get('Tiles Loading').count;
+
       if (props.onProgress) {
         props.onProgress(
-          tileset.stats.get('Tiles Loaded').count,
-          tileset.stats.get('Tiles Loaded').count + tileset.stats.get('Tiles Loading').count,
+          tilesLoaded,
+          tilesLoaded + tilesLoading
         );
+      }
+
+      if (props.loadingManager && !loadingEnded) {
+        if (tilesLoading == 0 && 
+           (
+            options.preloadTilesCount == null ||
+            tilesLoaded >= options.preloadTilesCount)
+           ) {
+             loadingEnded = true;
+             props.loadingManager.itemEnd(props.url);
+           }
       }
 
       return frameState;

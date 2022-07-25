@@ -4,12 +4,12 @@ name: default
    
 steps:
   - name: install
-    image: node:12
+    image: node:14
     commands:
       - npm install
 
   - name: build
-    image: node:12
+    image: node:14
     commands:
       - npm run build:production
     when:
@@ -18,7 +18,7 @@ steps:
       - dev
 
   - name: build-npm
-    image: node:12
+    image: node:14
     commands:
       - npm run build:production
     when:
@@ -26,7 +26,7 @@ steps:
       - tag
 
   - name: test
-    image: node:12
+    image: node:14
     commands:
       - npm run test
     when:
@@ -35,7 +35,7 @@ steps:
       - dev
 
   - name: docs
-    image: node:12
+    image: node:14
     commands:
       - npm run docs:production
     when:

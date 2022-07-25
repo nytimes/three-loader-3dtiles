@@ -16,6 +16,7 @@ interface LoaderProps
 
 |  Property | Type | Description |
 |  --- | --- | --- |
+|  [loadingManager?](./three-loader-3dtiles.loaderprops.loadingmanager.md) | LoadingManager | <i>(Optional)</i> Use a Three JS loading manager |
 |  [options?](./three-loader-3dtiles.loaderprops.options.md) | LoaderOptions | <i>(Optional)</i> Advanced options for loading the tileset ([LoaderOptions](./three-loader-3dtiles.loaderoptions.md)<!-- -->) |
 |  [renderer?](./three-loader-3dtiles.loaderprops.renderer.md) | WebGLRenderer | <i>(Optional)</i> Required when using compressed textures (basis universal) for GPU feature detection. |
 |  [url](./three-loader-3dtiles.loaderprops.url.md) | string | The URL of the tileset. For example if using Cesium ION, it would have the form: <code>https://assets.cesium.com/[ASSET_ID]/tileset.json</code>. |
@@ -24,5 +25,5 @@ interface LoaderProps
 
 |  Method | Description |
 |  --- | --- |
-|  [onProgress(progress, total)?](./three-loader-3dtiles.loaderprops.onprogress.md) | <i>(Optional)</i> |
+|  [onProgress(progress, total)?](./three-loader-3dtiles.loaderprops.onprogress.md) | <i>(Optional)</i> a loading progress callback function |
 

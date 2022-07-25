@@ -4,6 +4,8 @@
 
 ## LoaderProps.onProgress() method
 
+a loading progress callback function
+
 <b>Signature:</b>
 
 ```typescript

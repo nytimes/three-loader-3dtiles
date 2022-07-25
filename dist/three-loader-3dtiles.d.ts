@@ -1,3 +1,4 @@
+import { LoadingManager } from 'three';
 import { Material } from 'three';
 import { Object3D } from 'three';
 import { Shader } from 'three';
@@ -83,6 +84,8 @@ export declare interface LoaderOptions {
     dracoDecoderPath?: string;
     /** How to handle geo transformations: Reset any geo location and place the model at (0,0,0), Apply Mercator projection (for use with ccommon 2D mapping applications, or convert WGS84 long/lat to 3D cartesian coordinates)- Default: `Reset` */
     geoTransform?: GeoTransform;
+    /** When using a three.js loading manager, do not call `onLoad` until this number of tiles were loaded - Default: `undefined` */
+    preloadTilesCount?: number;
 }
 
 /** Properties for loading a tileset */
@@ -95,7 +98,10 @@ export declare interface LoaderProps {
     renderer?: WebGLRenderer;
     /** Advanced options for loading the tileset ({@link LoaderOptions}) */
     options?: LoaderOptions;
+    /** a loading progress callback function */
     onProgress?(progress: number | ProgressEvent<EventTarget>, total?: number): void;
+    /** Use a Three JS loading manager */
+    loadingManager?: LoadingManager;
 }
 
 /** Types of coloring used when viewing point cloud tiles */

@@ -17205,7 +17205,8 @@ const defaultOptions = {
     material: null,
     computeNormals: false,
     shaderCallback: null,
-    geoTransform: GeoTransform.Reset
+    geoTransform: GeoTransform.Reset,
+    preloadTilesCount: null
 };
 /** 3D Tiles Loader */
 class Loader3DTiles {
@@ -17230,6 +17231,9 @@ class Loader3DTiles {
                 };
                 const metadata = yield CesiumIonLoader.preload(url, loadersGLOptions);
                 loadersGLOptions['fetch'] = { headers: metadata.headers };
+            }
+            if (props.loadingManager) {
+                props.loadingManager.itemStart(url);
             }
             const tilesetJson = yield load(url, Tiles3DLoader, Object.assign({}, loadersGLOptions));
             const renderMap = {};
@@ -17356,6 +17360,7 @@ class Loader3DTiles {
                 boxMap[tileset.root.id] = box;
             }
             let disposeFlag = false;
+            let loadingEnded = false;
             pointcloudUniforms.rootCenter.value.copy(rootCenter);
             pointcloudUniforms.rootNormal.value.copy(new Vector3$1(0, 0, 1).normalize());
             // Extra stats
@@ -17480,8 +17485,19 @@ class Loader3DTiles {
                         delete boxMap[tile.id];
                     }
                 }
+                const tilesLoaded = tileset.stats.get('Tiles Loaded').count;
+                const tilesLoading = tileset.stats.get('Tiles Loading').count;
                 if (props.onProgress) {
-                    props.onProgress(tileset.stats.get('Tiles Loaded').count, tileset.stats.get('Tiles Loaded').count + tileset.stats.get('Tiles Loading').count);
+                    props.onProgress(tilesLoaded, tilesLoaded + tilesLoading);
+                }
+                if (props.loadingManager && !loadingEnded) {
+                    if (tilesLoading == 0 &&
+                        (options.preloadTilesCount == null ||
+                            tilesLoaded >= options.preloadTilesCount)) {
+                        console.log("Loading ended with preload count", options.preloadTilesCount);
+                        loadingEnded = true;
+                        props.loadingManager.itemEnd(props.url);
+                    }
                 }
                 return frameState;
             }

@@ -87,7 +87,7 @@
         "three/examples/jsm/controls/OrbitControls": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/controls/OrbitControls",
         "three/examples/jsm/libs/stats.module.js": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/libs/stats.module",
         "@probe.gl/stats" : "https://cdn.skypack.dev/@probe.gl/stats@3.3.1",
-        "@probe.gl/stats-widget" : "https://unpkg.com/@probe.gl/stats-widget@3.3.1/dist/es6",
+        "@probe.gl/stats-widget" : "https://cdn.skypack.dev/@probe.gl/stats-widget@3.5.0",
         "three-loader-3dtiles" : "../../../dist/three-loader-3dtiles.esm.js"
       }
     }
@@ -152,7 +152,7 @@
           renderer: renderer,
           options: {
             cesiumIONToken: queryParams.get('ionToken') ?? ION_TOKEN, 
-            dracoDecoderPath: 'https://unpkg.com/three@0.137.0/examples/js/libs/draco',
+            dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.137.0/examples/js/libs/draco',
             pointCloudColoring: PointCloudColoring.RGB,
             maximumScreenSpaceError: 6
           }

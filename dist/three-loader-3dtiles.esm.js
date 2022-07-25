@@ -17494,7 +17494,6 @@ class Loader3DTiles {
                     if (tilesLoading == 0 &&
                         (options.preloadTilesCount == null ||
                             tilesLoaded >= options.preloadTilesCount)) {
-                        console.log("Loading ended with preload count", options.preloadTilesCount);
                         loadingEnded = true;
                         props.loadingManager.itemEnd(props.url);
                     }
@@ -17729,12 +17728,12 @@ function createPointNodes(tile, pointcloudMaterial, options, rootTransformInvers
     return tileContent;
 }
 function disposeMaterial(material) {
-    var _a, _b, _c, _d, _e, _f;
-    if ((_b = (_a = material) === null || _a === void 0 ? void 0 : _a.uniforms) === null || _b === void 0 ? void 0 : _b.map) {
-        (_e = (_d = (_c = material) === null || _c === void 0 ? void 0 : _c.uniforms) === null || _d === void 0 ? void 0 : _d.map.value) === null || _e === void 0 ? void 0 : _e.dispose();
+    var _a, _b, _c, _d;
+    if ((_a = material === null || material === void 0 ? void 0 : material.uniforms) === null || _a === void 0 ? void 0 : _a.map) {
+        (_c = (_b = material === null || material === void 0 ? void 0 : material.uniforms) === null || _b === void 0 ? void 0 : _b.map.value) === null || _c === void 0 ? void 0 : _c.dispose();
     }
     else if (material.map) {
-        (_f = material.map) === null || _f === void 0 ? void 0 : _f.dispose();
+        (_d = material.map) === null || _d === void 0 ? void 0 : _d.dispose();
     }
     material.dispose();
 }

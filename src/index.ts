@@ -276,7 +276,7 @@ class Loader3DTiles {
 
     let timer = 0;
 
-    const lastCameraTransform: Matrix4 = new Matrix4().makeTranslation(Infinity, Infinity, Infinity);
+    let lastCameraTransform: Matrix4 = null;
     let lastCameraAspect = null;
     const lastCameraPosition = new Vector3(Infinity, Infinity, Infinity);
     let sseDenominator = null;
@@ -535,6 +535,7 @@ class Loader3DTiles {
 
           if (tileset && timer >= UPDATE_INTERVAL) {
             if (!lastRootTransform.equals(root.matrixWorld)) {
+              timer = 0;
               lastRootTransform.copy(root.matrixWorld);
               updateResetTransform();
 
@@ -549,18 +550,21 @@ class Loader3DTiles {
               }
             }
 
-            const cameraChanged: boolean =
-              !camera.matrixWorld.equals(lastCameraTransform) ||
-              !((<PerspectiveCamera>camera).aspect == lastCameraAspect);
+            if (lastCameraTransform == null) {
+              lastCameraTransform = new Matrix4().copy(camera.matrixWorld);
+            } else {
+              const cameraChanged: boolean =
+                !camera.matrixWorld.equals(lastCameraTransform) ||
+                !((<PerspectiveCamera>camera).aspect == lastCameraAspect);
 
-            if (cameraChanged) {
-              timer = 0;
-              tileset._frameNumber++;
-              camera.getWorldPosition(lastCameraPosition);
-              lastCameraTransform.copy(camera.matrixWorld);
-              tilesetUpdate(tileset, renderMap, renderer, camera);
+              if (cameraChanged) {
+                timer = 0;
+                tileset._frameNumber++;
+                camera.getWorldPosition(lastCameraPosition);
+                lastCameraTransform.copy(camera.matrixWorld);
+                tilesetUpdate(tileset, renderMap, renderer, camera);
+              }
             }
-
           }
         },
         dispose: function () {

@@ -17368,7 +17368,7 @@ class Loader3DTiles {
             tileset.stats.get('Maximum SSE').count = options.maximumScreenSpaceError;
             tileset.stats.get('Maximum mem usage').count = options.maximumMemoryUsage;
             let timer = 0;
-            const lastCameraTransform = new Matrix4$1().makeTranslation(Infinity, Infinity, Infinity);
+            let lastCameraTransform = null;
             let lastCameraAspect = null;
             const lastCameraPosition = new Vector3$1(Infinity, Infinity, Infinity);
             let sseDenominator = null;
@@ -17581,6 +17581,7 @@ class Loader3DTiles {
                         timer += dt;
                         if (tileset && timer >= UPDATE_INTERVAL) {
                             if (!lastRootTransform.equals(root.matrixWorld)) {
+                                timer = 0;
                                 lastRootTransform.copy(root.matrixWorld);
                                 updateResetTransform();
                                 const rootCenter = new Vector3$1().setFromMatrixPosition(lastRootTransform);
@@ -17592,14 +17593,19 @@ class Loader3DTiles {
                                     boxMap[tileset.root.id].applyMatrix4(lastRootTransform);
                                 }
                             }
-                            const cameraChanged = !camera.matrixWorld.equals(lastCameraTransform) ||
-                                !(camera.aspect == lastCameraAspect);
-                            if (cameraChanged) {
-                                timer = 0;
-                                tileset._frameNumber++;
-                                camera.getWorldPosition(lastCameraPosition);
-                                lastCameraTransform.copy(camera.matrixWorld);
-                                tilesetUpdate(tileset, renderMap, renderer, camera);
+                            if (lastCameraTransform == null) {
+                                lastCameraTransform = new Matrix4$1().copy(camera.matrixWorld);
+                            }
+                            else {
+                                const cameraChanged = !camera.matrixWorld.equals(lastCameraTransform) ||
+                                    !(camera.aspect == lastCameraAspect);
+                                if (cameraChanged) {
+                                    timer = 0;
+                                    tileset._frameNumber++;
+                                    camera.getWorldPosition(lastCameraPosition);
+                                    lastCameraTransform.copy(camera.matrixWorld);
+                                    tilesetUpdate(tileset, renderMap, renderer, camera);
+                                }
                             }
                         }
                     },

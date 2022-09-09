@@ -1,9 +1,9 @@
 ## v1.1
 
-### v1.1.6
+### v1.1.17
  -  Support a three.js loading manager with a specified preloading tiles count. 
  
-### v1.1.4
+### v1.1.14
  -  Support setting point cloud opacity and material transparency.
 
 ### v1.1.12

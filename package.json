@@ -71,7 +71,7 @@
     "eslint-plugin-prettier": "^3.4.0",
     "http-server": "^0.12.3",
     "mocha": "^9.0.1",
-    "ocular-dev-tools": "^1.0.0-alpha.6",
+    "ocular-dev-tools": "^2.0.0-alpha.7",
     "prettier": "2.3.0",
     "rollup": "^2.50.5",
     "rollup-plugin-node-externals": "^2.2.0",

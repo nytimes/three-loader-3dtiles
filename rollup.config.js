@@ -2,8 +2,8 @@ import typescript from 'rollup-plugin-typescript2';
 import externals from 'rollup-plugin-node-externals';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import alias from '@rollup/plugin-alias';
-import eslint from '@rbnlffl/rollup-plugin-eslint';
-import { terser } from 'rollup-plugin-terser';
+import eslint from '@rollup/plugin-eslint';
+import terser from '@rollup/plugin-terser';
 import { getOcularConfig } from 'ocular-dev-tools';
 
 const { NODE_ENV } = process.env;
@@ -34,7 +34,7 @@ const commonPlugins = (env) => {
       extensions: ['.js', '.ts'],
       browser: true
     }),
-    eslint({filterExclude: ['node_modules/**']}),
+    eslint({exclude: ['node_modules/**']}),
     typescript({
       tsconfigDefaults: {
         compilerOptions: {

@@ -51,6 +51,8 @@ interface LoaderProps {
 interface LoaderOptions {
   /** A Cesium ION access token when loading tilesets from Cesium ION. */
   cesiumIONToken?: string;
+  /** Google API Key for loading Google Maps 3D Tiles*/
+  googleApiKey?: string;
   /** Whether to check if the tileset was transformed, set to `true` if the model is changes position in runtime. Default: `true` */
   updateTransforms?: boolean;
   /** Interval in seconds for the traverser to check in an update is needed - Default: `0.1`. */

@@ -99,6 +99,11 @@ class Loader3DTiles {
       loadersGLOptions['fetch'] = { headers: metadata.headers };
     }
 
+    if (options.googleApiKey) {
+      loadersGLOptions['fetch'] = { headers: { 'X-GOOG-API-KEY': options.googleApiKey} };
+    }
+
+
     if (props.loadingManager) {
       props.loadingManager.itemStart(url);
     }

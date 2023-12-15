@@ -1,0 +1,232 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Tiles Loader: Google Maps 3D Tiles</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #canvas-parent {
+      width: 100vw;
+      height: 100vh;
+      touch-action: none;
+    }
+    #guide {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 300px;
+      padding: 1rem 2rem;
+      font-family:'Courier New', Courier, monospace;
+      line-height: 1.2;
+      background-color: white;
+      color: black;
+    }
+
+    #guide p {
+      margin-top: 10px;
+    }
+    #stats-widget  {
+      position: fixed;
+      top: 70px;
+      padding: 10px;
+    }
+    #stats-widget div {
+      width: 300px;
+      word-break: break-all;
+    }
+    #button {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      padding: 12px;
+      border-radius: 50%;
+      margin-bottom: 0px;
+      background-color: #FFF;
+      opacity: .9;
+      z-index: 999;
+      box-shadow: 0 0 4px rgb(0 0 0 / 15%);
+    }
+    @media (max-width:480px) {
+      #guide, #stats-widget { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas-parent"></div>
+  <div id="stats-widget"></div>
+
+  <div id="guide">
+    <p>
+    <span id="example-desc">
+      Map overlay provided by <b>OpenStreetMap</b> using the <b>geo-three</b> library.
+    </span>
+    </p>
+    <p>
+    Use arrow keys, mouse wheel/trackpad, or right click to move around, and left click and drag to turn/rotate the camera.
+    </p>
+    <p>
+      <u>Available URL parameters:</u>
+      <ul>
+        <li><b>tilesetUrl</b>: Load another tileset json.</li>
+      </ul>
+    </p>
+  </div>
+
+  <script type='module'>
+    import { 
+      Scene, 
+      PerspectiveCamera, 
+      WebGLRenderer, 
+      GridHelper, 
+      Clock,
+      Matrix4,
+      Euler,
+      sRGBEncoding
+    } from 'three';
+
+    import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+
+    import { Loader3DTiles, PointCloudColoring, GeoTransform } from '../../../src/index';
+    import { MapView, OpenStreetMapsProvider } from 'geo-three'
+    import { TweenMax } from 'gsap'
+
+    import Stats from 'three/examples/jsm/libs/stats.module.js';
+    import StatsWidget from '@probe.gl/stats-widget';
+
+    const canvasParent = document.querySelector('#canvas-parent');
+    const statsParent = document.querySelector('#stats-widget')
+
+    const scene = new Scene();
+    const camera = new PerspectiveCamera(
+      45,
+      1,
+      100,
+      1000000,
+    );
+
+    const renderer = new WebGLRenderer();
+    renderer.preserveDrawingBuffer  = true;
+
+    const clock = new Clock()
+    const controls = new OrbitControls( camera, canvasParent);
+    controls.listenToKeyEvents( window );
+
+    canvasParent.appendChild(renderer.domElement);
+
+    const threeJsStats = new Stats();
+    threeJsStats.domElement.style.position = 'absolute';
+    threeJsStats.domElement.style.top = '10px';
+    threeJsStats.domElement.style.left = '10px';
+
+    canvasParent.appendChild( threeJsStats.domElement );
+
+    const queryParams = new URLSearchParams(document.location.search);
+    if (queryParams.get('tilesetUrl')) {
+      renderer.outputEncoding = sRGBEncoding;
+    }
+
+    loadTileset();
+
+    let tilesRuntime = undefined;
+    let tilesModel = undefined;
+    let statsRuntime = undefined;
+
+    const provider = new OpenStreetMapsProvider();
+    const map = new MapView(MapView.PLANAR, provider);
+
+    scene.add(map)
+
+    async function loadTileset() {
+      const result = await Loader3DTiles.load(
+        {
+          url:
+            "https://tile.googleapis.com/v1/3dtiles/root.json",
+          renderer: renderer,
+          options: {
+            googleApiKey: queryParams.get('googleApiKey') ?? '',
+            dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.137.0/examples/js/libs/draco',
+            basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.137.0/examples/js/libs/basis',
+            pointCloudColoring: PointCloudColoring.RGB,
+            maximumScreenSpaceError: queryParams.get('sse') ?? 6,
+            geoTransform: GeoTransform.Mercator
+          }
+        }
+      );
+
+      const {model, runtime} = result;
+
+      tilesRuntime = runtime;
+      tilesModel = model;
+      scene.add(model);
+
+      statsRuntime = new StatsWidget(runtime.getStats(), {container: statsParent });
+      statsParent.style.visibility = 'visible';
+
+      if (!queryParams.get('tilesetUrl')) {
+        // Scaling the scan to align with Maps, and bringing it up above the map
+        model.scale.set(1.27, 1.27, 1.27);
+        model.translateZ(230);
+      }
+      camera.position.copy(model.position);
+      camera.position.set(30000, 10000, 10000);
+
+      controls.target.copy(model.position);
+      controls.update();
+
+      //zoomIn();
+    }
+
+    function zoomIn() {
+      controls.enabled = false
+      TweenMax.to( camera.position, {
+        duration: 5,
+        y: queryParams.get('tilesetUrl') ? 100 : 3000,
+        onUpdate: function() {
+          controls.update();
+        },
+        onComplete: function() {
+          controls.enabled = true;
+          camera.near = 1;
+          camera.updateProjectionMatrix();
+        }
+      } );
+    }
+
+
+    function render(t) {
+      const dt = clock.getDelta()
+      controls.update();
+      if (tilesRuntime) {
+        tilesRuntime.update(dt, renderer, camera);
+      }
+      if (statsRuntime) {
+        statsRuntime.update();
+      }
+      renderer.render(scene, camera);
+      threeJsStats.update();
+      window.requestAnimationFrame(render);
+
+    }
+
+    onWindowResize();
+
+    function onWindowResize() {
+      renderer.setSize(canvasParent.clientWidth, canvasParent.clientHeight);
+      camera.aspect = canvasParent.clientWidth / canvasParent.clientHeight;
+      camera.updateProjectionMatrix();
+    }
+    window.addEventListener('resize', onWindowResize)
+
+    render();
+  </script>
+  <a id="button" target="_blank" href="https://github.com/nytimes/three-loader-3dtiles/blob/master/examples/demos/map-overlay/index.html" title="View source code for demo" style=""><img src="../ic_code_black_24dp.svg"></a>
+</body>
+</html>

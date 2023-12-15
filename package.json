@@ -22,7 +22,7 @@
   "scripts": {
     "build": "rollup -c",
     "watch": "rollup -w -c",
-    "dev": "concurrently \"npm run watch\"  \"http-server -c-1 -p 8000\"",
+    "dev": "vite",
     "build:types": "tsc --declaration --emitDeclarationOnly --declarationMap --declarationDir lib/",
     "api:extract": "api-extractor run --local --verbose",
     "api:extract:production": "api-extractor run",
@@ -43,7 +43,10 @@
     "@loaders.gl/polyfills": "^4.0.4",
     "@math.gl/core": "^4.0.0",
     "@math.gl/culling": "^4.0.0",
-    "jpeg-js": ">=0.4.0"
+    "@probe.gl/stats-widget": "^4.0.4",
+    "geo-three": "^0.1.14",
+    "jpeg-js": ">=0.4.0",
+    "three-story-controls": "^1.0.6"
   },
   "peerDependencies": {
     "three": "^0.137.0"
@@ -59,7 +62,7 @@
     "@types/chai": "^4.2.19",
     "@types/chai-as-promised": "^7.1.4",
     "@types/mocha": "^8.2.2",
-    "@types/node": "^15.12.5",
+    "@types/node": "^18.0.0",
     "@types/offscreencanvas": "^2019.6.4",
     "@types/three": "^0.137.0",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
@@ -82,6 +85,7 @@
     "three": "^0.137.0",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.2",
+    "vite": "^5.0.9",
     "xmldom": "github:xmldom/xmldom#0.7.0"
   }
 }

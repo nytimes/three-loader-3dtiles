@@ -37,7 +37,8 @@ import { Gradients } from './gradients';
 
 import { PointCloudFS, PointCloudVS } from './shaders';
 
-import { LoaderProps, LoaderOptions, Runtime, PointCloudColoring, Shading, GeoCoord, GeoTransform } from './types';
+import type { LoaderProps, LoaderOptions, Runtime, GeoCoord} from './types';
+import { PointCloudColoring, Shading, GeoTransform } from './types';
 
 const gradient = Gradients.RAINBOW;
 const gradientTexture = typeof document != 'undefined' ? Util.generateGradientTexture(gradient) : null;

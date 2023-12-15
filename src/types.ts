@@ -155,4 +155,5 @@ interface Runtime {
   dispose(): void;
 }
 
-export { LoaderProps, LoaderOptions, PointCloudColoring, Runtime, GeoCoord, Shading, GeoTransform };
+export type { LoaderProps, LoaderOptions, Runtime, GeoCoord };
+export { PointCloudColoring, Shading, GeoTransform}

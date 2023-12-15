@@ -34,15 +34,14 @@
       margin-top: 10px;
     }
 
-    #stats-widget {
-      position: absolute;
+    #stats-widget  {
+      position: fixed;
       top: 70px;
-      left: 10px;
-      background-color: rgb(255 255 255 / 83%);
       padding: 10px;
+    }
+    #stats-widget div {
       width: 300px;
       word-break: break-all;
-      visibility: hidden;
     }
     #button {
       position: fixed;
@@ -79,24 +78,6 @@
     </p>
   </div>
 
-  <script async src="https://ga.jspm.io/npm:es-module-shims@1.4.4/dist/es-module-shims.js"></script>
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.skypack.dev/three@0.137.0",
-        "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/loaders/GLTFLoader",
-        "three/examples/jsm/loaders/DRACOLoader.js": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/loaders/DRACOLoader",
-        "three/examples/jsm/loaders/KTX2Loader.js": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/loaders/KTX2Loader",
-        "three/examples/jsm/libs/stats.module.js": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/libs/stats.module",
-        "three/examples/jsm/controls/OrbitControls": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/controls/OrbitControls",
-        "@probe.gl/stats" : "https://cdn.skypack.dev/@probe.gl/stats@3.3.1",
-        "@probe.gl/stats-widget" : "https://cdn.skypack.dev/@probe.gl/stats-widget@3.5.0",
-        "three-loader-3dtiles" : "../../../dist/three-loader-3dtiles.esm.js",
-        "gsap": "https://cdn.skypack.dev/gsap@3.6.1",
-        "three-story-controls" : "https://cdn.skypack.dev/three-story-controls@1.0.0"
-      }
-    }
-  </script>
   <script type='module'>
     import { 
       Scene, 
@@ -111,7 +92,8 @@
 
     import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-    import { Loader3DTiles } from 'three-loader-3dtiles';
+    import { Loader3DTiles } from '../../../src/index.ts';
+
     import { CameraRig, FreeMovementControls } from 'three-story-controls'
 
     import Stats from 'three/examples/jsm/libs/stats.module.js';

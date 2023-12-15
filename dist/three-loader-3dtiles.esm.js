@@ -1,9 +1,24 @@
-import { CanvasTexture, LinearFilter, RepeatWrapping, Frustum, Matrix4 as Matrix4$2, Group, PlaneGeometry, Vector3 as Vector3$2, MeshBasicMaterial, DoubleSide, Mesh, ArrowHelper, Color, BoxGeometry, EdgesGeometry, LineSegments, LineBasicMaterial, Vector2 as Vector2$1, ShaderMaterial, Euler, BufferGeometry, Float32BufferAttribute, Uint8BufferAttribute, BufferAttribute, Points } from 'three';
+import { CanvasTexture, LinearFilter, RepeatWrapping, Frustum, Matrix4 as Matrix4$1, Group, PlaneGeometry, Vector3 as Vector3$1, MeshBasicMaterial, DoubleSide, Mesh, ArrowHelper, Color, BoxGeometry, EdgesGeometry, LineSegments, LineBasicMaterial, Vector2 as Vector2$1, ShaderMaterial, Euler, BufferGeometry, Float32BufferAttribute, Uint8BufferAttribute, BufferAttribute, Points } from 'three';
 import { GLTFLoader as GLTFLoader$1 } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
 
-/*! *****************************************************************************
+function _mergeNamespaces(n, m) {
+    m.forEach(function (e) {
+        e && typeof e !== 'string' && !Array.isArray(e) && Object.keys(e).forEach(function (k) {
+            if (k !== 'default' && !(k in n)) {
+                var d = Object.getOwnPropertyDescriptor(e, k);
+                Object.defineProperty(n, k, d.get ? d : {
+                    enumerable: true,
+                    get: function () { return e[k]; }
+                });
+            }
+        });
+    });
+    return Object.freeze(n);
+}
+
+/******************************************************************************
 Copyright (c) Microsoft Corporation.
 
 Permission to use, copy, modify, and/or distribute this software for any
@@ -17,7 +32,7 @@ LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
-/* global Reflect, Promise */
+/* global Reflect, Promise, SuppressedError, Symbol */
 
 
 function __awaiter(thisArg, _arguments, P, generator) {
@@ -30,7 +45,16 @@ function __awaiter(thisArg, _arguments, P, generator) {
     });
 }
 
-function assert$8(condition, message) {
+typeof SuppressedError === "function" ? SuppressedError : function (error, suppressed, message) {
+    var e = new Error(message);
+    return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
+};
+
+async function parseFromContext(data, loaders, options, context) {
+  return context._parse(data, loaders, options, context);
+}
+
+function assert$6(condition, message) {
   if (!condition) {
     throw new Error(message || 'loader assertion failed.');
   }
@@ -40,76 +64,59 @@ const isBrowser$2 = Boolean(typeof process !== 'object' || String(process) !== '
 const matches$1 = typeof process !== 'undefined' && process.version && /v([0-9]*)/.exec(process.version);
 matches$1 && parseFloat(matches$1[1]) || 0;
 
-const VERSION$8 = "3.4.14" ;
+function mergeLoaderOptions(baseOptions, newOptions) {
+  return mergeOptionsRecursively(baseOptions || {}, newOptions);
+}
+function mergeOptionsRecursively(baseOptions, newOptions) {
+  const options = {
+    ...baseOptions
+  };
+  for (const [key, newValue] of Object.entries(newOptions)) {
+    if (newValue && typeof newValue === 'object' && !Array.isArray(newValue)) {
+      options[key] = mergeOptionsRecursively(options[key] || {}, newOptions[key]);
+    } else {
+      options[key] = newOptions[key];
+    }
+  }
+  return options;
+}
 
-function assert$7(condition, message) {
+const NPM_TAG = 'latest';
+function getVersion() {
+  var _globalThis$_loadersg;
+  if (!((_globalThis$_loadersg = globalThis._loadersgl_) !== null && _globalThis$_loadersg !== void 0 && _globalThis$_loadersg.version)) {
+    globalThis._loadersgl_ = globalThis._loadersgl_ || {};
+    if (typeof __VERSION__ === 'undefined') {
+      console.warn('loaders.gl: The __VERSION__ variable is not injected using babel plugin. Latest unstable workers would be fetched from the CDN.');
+      globalThis._loadersgl_.version = NPM_TAG;
+    } else {
+      globalThis._loadersgl_.version = __VERSION__;
+    }
+  }
+  return globalThis._loadersgl_.version;
+}
+const VERSION$6 = getVersion();
+
+function assert$5(condition, message) {
   if (!condition) {
     throw new Error(message || 'loaders.gl assertion failed.');
   }
 }
 
-const globals = {
-  self: typeof self !== 'undefined' && self,
-  window: typeof window !== 'undefined' && window,
-  global: typeof global !== 'undefined' && global,
-  document: typeof document !== 'undefined' && document
-};
-const global_ = globals.global || globals.self || globals.window || {};
 const isBrowser$1 = typeof process !== 'object' || String(process) !== '[object process]' || process.browser;
 const isWorker = typeof importScripts === 'function';
 const isMobile = typeof window !== 'undefined' && typeof window.orientation !== 'undefined';
 const matches = typeof process !== 'undefined' && process.version && /v([0-9]*)/.exec(process.version);
 matches && parseFloat(matches[1]) || 0;
 
-function _typeof(o) {
-  "@babel/helpers - typeof";
-
-  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
-    return typeof o;
-  } : function (o) {
-    return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-  }, _typeof(o);
-}
-
-function toPrimitive(t, r) {
-  if ("object" != _typeof(t) || !t) return t;
-  var e = t[Symbol.toPrimitive];
-  if (void 0 !== e) {
-    var i = e.call(t, r || "default");
-    if ("object" != _typeof(i)) return i;
-    throw new TypeError("@@toPrimitive must return a primitive value.");
-  }
-  return ("string" === r ? String : Number)(t);
-}
-
-function toPropertyKey(t) {
-  var i = toPrimitive(t, "string");
-  return "symbol" == _typeof(i) ? i : String(i);
-}
-
-function _defineProperty(obj, key, value) {
-  key = toPropertyKey(key);
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-  return obj;
-}
-
 class WorkerJob {
   constructor(jobName, workerThread) {
-    _defineProperty(this, "name", void 0);
-    _defineProperty(this, "workerThread", void 0);
-    _defineProperty(this, "isRunning", true);
-    _defineProperty(this, "result", void 0);
-    _defineProperty(this, "_resolve", () => {});
-    _defineProperty(this, "_reject", () => {});
+    this.name = void 0;
+    this.workerThread = void 0;
+    this.isRunning = true;
+    this.result = void 0;
+    this._resolve = () => {};
+    this._reject = () => {};
     this.name = jobName;
     this.workerThread = workerThread;
     this.result = new Promise((resolve, reject) => {
@@ -125,24 +132,24 @@ class WorkerJob {
     });
   }
   done(value) {
-    assert$7(this.isRunning);
+    assert$5(this.isRunning);
     this.isRunning = false;
     this._resolve(value);
   }
   error(error) {
-    assert$7(this.isRunning);
+    assert$5(this.isRunning);
     this.isRunning = false;
     this._reject(error);
   }
 }
 
-let Worker$1 = class Worker {
+class NodeWorker {
   terminate() {}
-};
+}
 
 const workerURLCache = new Map();
 function getLoadableWorkerURL(props) {
-  assert$7(props.source && !props.url || !props.source && props.url);
+  assert$5(props.source && !props.url || !props.source && props.url);
   let workerURL = workerURLCache.get(props.source || props.url);
   if (!workerURL) {
     if (props.url) {
@@ -154,7 +161,7 @@ function getLoadableWorkerURL(props) {
       workerURLCache.set(props.source, workerURL);
     }
   }
-  assert$7(workerURL);
+  assert$5(workerURL);
   return workerURL;
 }
 function getLoadableWorkerURLFromURL(url) {
@@ -171,7 +178,13 @@ function getLoadableWorkerURLFromSource(workerSource) {
   return URL.createObjectURL(blob);
 }
 function buildScriptSource(workerUrl) {
-  return "try {\n  importScripts('".concat(workerUrl, "');\n} catch (error) {\n  console.error(error);\n  throw error;\n}");
+  return `\
+try {
+  importScripts('${workerUrl}');
+} catch (error) {
+  console.error(error);
+  throw error;
+}`;
 }
 
 function getTransferList(object) {
@@ -211,23 +224,23 @@ function isTransferable(object) {
 const NOOP = () => {};
 class WorkerThread {
   static isSupported() {
-    return typeof Worker !== 'undefined' && isBrowser$1 || typeof Worker$1 !== 'undefined' && !isBrowser$1;
+    return typeof Worker !== 'undefined' && isBrowser$1 || typeof NodeWorker !== 'undefined' && !isBrowser$1;
   }
   constructor(props) {
-    _defineProperty(this, "name", void 0);
-    _defineProperty(this, "source", void 0);
-    _defineProperty(this, "url", void 0);
-    _defineProperty(this, "terminated", false);
-    _defineProperty(this, "worker", void 0);
-    _defineProperty(this, "onMessage", void 0);
-    _defineProperty(this, "onError", void 0);
-    _defineProperty(this, "_loadableURL", '');
+    this.name = void 0;
+    this.source = void 0;
+    this.url = void 0;
+    this.terminated = false;
+    this.worker = void 0;
+    this.onMessage = void 0;
+    this.onError = void 0;
+    this._loadableURL = '';
     const {
       name,
       source,
       url
     } = props;
-    assert$7(source || url);
+    assert$5(source || url);
     this.name = name;
     this.source = source;
     this.url = url;
@@ -250,12 +263,12 @@ class WorkerThread {
   }
   _getErrorFromErrorEvent(event) {
     let message = 'Failed to load ';
-    message += "worker ".concat(this.name, " from ").concat(this.url, ". ");
+    message += `worker ${this.name} from ${this.url}. `;
     if (event.message) {
-      message += "".concat(event.message, " in ");
+      message += `${event.message} in `;
     }
     if (event.lineno) {
-      message += ":".concat(event.lineno, ":").concat(event.colno);
+      message += `:${event.lineno}:${event.colno}`;
     }
     return new Error(message);
   }
@@ -285,12 +298,12 @@ class WorkerThread {
     let worker;
     if (this.url) {
       const absolute = this.url.includes(':/') || this.url.startsWith('/');
-      const url = absolute ? this.url : "./".concat(this.url);
-      worker = new Worker$1(url, {
+      const url = absolute ? this.url : `./${this.url}`;
+      worker = new NodeWorker(url, {
         eval: false
       });
     } else if (this.source) {
-      worker = new Worker$1(this.source, {
+      worker = new NodeWorker(this.source, {
         eval: true
       });
     } else {
@@ -312,18 +325,18 @@ class WorkerPool {
     return WorkerThread.isSupported();
   }
   constructor(props) {
-    _defineProperty(this, "name", 'unnamed');
-    _defineProperty(this, "source", void 0);
-    _defineProperty(this, "url", void 0);
-    _defineProperty(this, "maxConcurrency", 1);
-    _defineProperty(this, "maxMobileConcurrency", 1);
-    _defineProperty(this, "onDebug", () => {});
-    _defineProperty(this, "reuseWorkers", true);
-    _defineProperty(this, "props", {});
-    _defineProperty(this, "jobQueue", []);
-    _defineProperty(this, "idleQueue", []);
-    _defineProperty(this, "count", 0);
-    _defineProperty(this, "isDestroyed", false);
+    this.name = 'unnamed';
+    this.source = void 0;
+    this.url = void 0;
+    this.maxConcurrency = 1;
+    this.maxMobileConcurrency = 1;
+    this.onDebug = () => {};
+    this.reuseWorkers = true;
+    this.props = {};
+    this.jobQueue = [];
+    this.idleQueue = [];
+    this.count = 0;
+    this.isDestroyed = false;
     this.source = props.source;
     this.url = props.url;
     this.setProps(props);
@@ -390,13 +403,15 @@ class WorkerPool {
       queuedJob.onStart(job);
       try {
         await job.result;
+      } catch (error) {
+        console.error(`Worker exception: ${error}`);
       } finally {
         this.returnWorkerToQueue(workerThread);
       }
     }
   }
   returnWorkerToQueue(worker) {
-    const shouldDestroyWorker = this.isDestroyed || !this.reuseWorkers || this.count > this._getMaxConcurrency();
+    const shouldDestroyWorker = !isBrowser$1 || this.isDestroyed || !this.reuseWorkers || this.count > this._getMaxConcurrency();
     if (shouldDestroyWorker) {
       worker.destroy();
       this.count--;
@@ -413,7 +428,7 @@ class WorkerPool {
     }
     if (this.count < this._getMaxConcurrency()) {
       this.count++;
-      const name = "".concat(this.name.toLowerCase(), " (#").concat(this.count, " of ").concat(this.maxConcurrency, ")");
+      const name = `${this.name.toLowerCase()} (#${this.count} of ${this.maxConcurrency})`;
       return new WorkerThread({
         name,
         source: this.source,
@@ -444,8 +459,8 @@ class WorkerFarm {
     return WorkerFarm._workerFarm;
   }
   constructor(props) {
-    _defineProperty(this, "props", void 0);
-    _defineProperty(this, "workerPools", new Map());
+    this.props = void 0;
+    this.workerPools = new Map();
     this.props = {
       ...DEFAULT_PROPS$3
     };
@@ -494,35 +509,38 @@ class WorkerFarm {
     };
   }
 }
-_defineProperty(WorkerFarm, "_workerFarm", void 0);
+WorkerFarm._workerFarm = void 0;
 
-const NPM_TAG = 'latest';
 function getWorkerURL(worker) {
   let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   const workerOptions = options[worker.id] || {};
-  const workerFile = "".concat(worker.id, "-worker.js");
+  const workerFile = isBrowser$1 ? `${worker.id}-worker.js` : `${worker.id}-worker-node.js`;
   let url = workerOptions.workerUrl;
   if (!url && worker.id === 'compression') {
     url = options.workerUrl;
   }
   if (options._workerType === 'test') {
-    url = "modules/".concat(worker.module, "/dist/").concat(workerFile);
+    if (isBrowser$1) {
+      url = `modules/${worker.module}/dist/${workerFile}`;
+    } else {
+      url = `modules/${worker.module}/src/workers/${worker.id}-worker-node.ts`;
+    }
   }
   if (!url) {
     let version = worker.version;
     if (version === 'latest') {
       version = NPM_TAG;
     }
-    const versionTag = version ? "@".concat(version) : '';
-    url = "https://unpkg.com/@loaders.gl/".concat(worker.module).concat(versionTag, "/dist/").concat(workerFile);
+    const versionTag = version ? `@${version}` : '';
+    url = `https://unpkg.com/@loaders.gl/${worker.module}${versionTag}/dist/${workerFile}`;
   }
-  assert$7(url);
+  assert$5(url);
   return url;
 }
 
 function validateWorkerVersion(worker) {
-  let coreVersion = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : VERSION$8;
-  assert$7(worker, 'no worker provided');
+  let coreVersion = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : VERSION$6;
+  assert$5(worker, 'no worker provided');
   const workerVersion = worker.version;
   if (!coreVersion || !workerVersion) {
     return false;
@@ -530,75 +548,71 @@ function validateWorkerVersion(worker) {
   return true;
 }
 
-const readFileAsArrayBuffer = null;
-const readFileAsText = null;
-const requireFromFile = null;
-const requireFromString = null;
+var _nodeResolve_empty = {};
 
-var node = /*#__PURE__*/Object.freeze({
+var node = /*#__PURE__*/_mergeNamespaces({
     __proto__: null,
-    readFileAsArrayBuffer: readFileAsArrayBuffer,
-    readFileAsText: readFileAsText,
-    requireFromFile: requireFromFile,
-    requireFromString: requireFromString
-});
+    default: _nodeResolve_empty
+}, [_nodeResolve_empty]);
 
-const VERSION$7 = "3.4.14" ;
 const loadLibraryPromises = {};
 async function loadLibrary(libraryUrl) {
   let moduleName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
   let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  let libraryName = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
   if (moduleName) {
-    libraryUrl = getLibraryUrl(libraryUrl, moduleName, options);
+    libraryUrl = getLibraryUrl(libraryUrl, moduleName, options, libraryName);
   }
   loadLibraryPromises[libraryUrl] = loadLibraryPromises[libraryUrl] || loadLibraryFromFile(libraryUrl);
   return await loadLibraryPromises[libraryUrl];
 }
-function getLibraryUrl(library, moduleName, options) {
-  if (library.startsWith('http')) {
+function getLibraryUrl(library, moduleName) {
+  let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  let libraryName = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+  if (!options.useLocalLibraries && library.startsWith('http')) {
     return library;
   }
+  libraryName = libraryName || library;
   const modules = options.modules || {};
-  if (modules[library]) {
-    return modules[library];
+  if (modules[libraryName]) {
+    return modules[libraryName];
   }
   if (!isBrowser$1) {
-    return "modules/".concat(moduleName, "/dist/libs/").concat(library);
+    return `modules/${moduleName}/dist/libs/${libraryName}`;
   }
   if (options.CDN) {
-    assert$7(options.CDN.startsWith('http'));
-    return "".concat(options.CDN, "/").concat(moduleName, "@").concat(VERSION$7, "/dist/libs/").concat(library);
+    assert$5(options.CDN.startsWith('http'));
+    return `${options.CDN}/${moduleName}@${VERSION$6}/dist/libs/${libraryName}`;
   }
   if (isWorker) {
-    return "../src/libs/".concat(library);
+    return `../src/libs/${libraryName}`;
   }
-  return "modules/".concat(moduleName, "/src/libs/").concat(library);
+  return `modules/${moduleName}/src/libs/${libraryName}`;
 }
 async function loadLibraryFromFile(libraryUrl) {
   if (libraryUrl.endsWith('wasm')) {
-    const response = await fetch(libraryUrl);
-    return await response.arrayBuffer();
+    return await loadAsArrayBuffer(libraryUrl);
   }
   if (!isBrowser$1) {
     try {
-      return node && requireFromFile && (await requireFromFile(libraryUrl));
-    } catch {
+      return node && _nodeResolve_empty.requireFromFile && (await _nodeResolve_empty.requireFromFile(libraryUrl));
+    } catch (error) {
+      console.error(error);
       return null;
     }
   }
   if (isWorker) {
     return importScripts(libraryUrl);
   }
-  const response = await fetch(libraryUrl);
-  const scriptSource = await response.text();
+  const scriptSource = await loadAsText(libraryUrl);
   return loadLibraryFromString(scriptSource, libraryUrl);
 }
 function loadLibraryFromString(scriptSource, id) {
   if (!isBrowser$1) {
-    return requireFromString ;
+    return _nodeResolve_empty.requireFromString && _nodeResolve_empty.requireFromString(scriptSource, id);
   }
   if (isWorker) {
-    eval.call(global_, scriptSource);
+    eval.call(globalThis, scriptSource);
     return null;
   }
   const script = document.createElement('script');
@@ -610,6 +624,20 @@ function loadLibraryFromString(scriptSource, id) {
   }
   document.body.appendChild(script);
   return null;
+}
+async function loadAsArrayBuffer(url) {
+  if (isBrowser$1 || !_nodeResolve_empty.readFileAsArrayBuffer || url.startsWith('http')) {
+    const response = await fetch(url);
+    return await response.arrayBuffer();
+  }
+  return await _nodeResolve_empty.readFileAsArrayBuffer(url);
+}
+async function loadAsText(url) {
+  if (isBrowser$1 || !_nodeResolve_empty.readFileAsText || url.startsWith('http')) {
+    const response = await fetch(url);
+    return await response.text();
+  }
+  return await _nodeResolve_empty.readFileAsText(url);
 }
 
 function canParseWithWorker(loader, options) {
@@ -669,7 +697,7 @@ async function onMessage(parseOnMainThread, job, type, payload) {
       }
       break;
     default:
-      console.warn("parse-with-worker unknown message ".concat(type));
+      console.warn(`parse-with-worker unknown message ${type}`);
   }
 }
 
@@ -701,7 +729,7 @@ function parseJSON(string) {
   try {
     return JSON.parse(string);
   } catch (_) {
-    throw new Error("Failed to parse JSON from data starting with \"".concat(getFirstCharacters$1(string), "\""));
+    throw new Error(`Failed to parse JSON from data starting with "${getFirstCharacters$1(string)}"`);
   }
 }
 
@@ -740,8 +768,8 @@ function sliceArrayBuffer(arrayBuffer, byteOffset, byteLength) {
 }
 
 function padToNBytes(byteLength, padding) {
-  assert$8(byteLength >= 0);
-  assert$8(padding > 0);
+  assert$6(byteLength >= 0);
+  assert$6(padding > 0);
   return byteLength + (padding - 1) & ~(padding - 1);
 }
 function copyToArray(source, target, targetOffset) {
@@ -1008,12 +1036,12 @@ const DEFAULT_PROPS$2 = {
 class RequestScheduler {
   constructor() {
     let props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    _defineProperty(this, "props", void 0);
-    _defineProperty(this, "stats", void 0);
-    _defineProperty(this, "activeRequestCount", 0);
-    _defineProperty(this, "requestQueue", []);
-    _defineProperty(this, "requestMap", new Map());
-    _defineProperty(this, "deferredUpdate", null);
+    this.props = void 0;
+    this.stats = void 0;
+    this.activeRequestCount = 0;
+    this.requestQueue = [];
+    this.requestMap = new Map();
+    this.deferredUpdate = null;
     this.props = {
       ...DEFAULT_PROPS$2,
       ...props
@@ -1123,7 +1151,7 @@ function resolvePath(filename) {
     }
   }
   if (!filename.startsWith('http://') && !filename.startsWith('https://')) {
-    filename = "".concat(pathPrefix).concat(filename);
+    filename = `${pathPrefix}${filename}`;
   }
   return filename;
 }
@@ -1159,6 +1187,15 @@ function toArrayBuffer(data) {
   throw new Error('toArrayBuffer');
 }
 
+function getCWD() {
+  var _window$location;
+  if (typeof process !== 'undefined' && typeof process.cwd !== 'undefined') {
+    return process.cwd();
+  }
+  const pathname = (_window$location = window.location) === null || _window$location === void 0 ? void 0 : _window$location.pathname;
+  return (pathname === null || pathname === void 0 ? void 0 : pathname.slice(0, pathname.lastIndexOf('/') + 1)) || '';
+}
+
 function filename(url) {
   const slashIndex = url ? url.lastIndexOf('/') : -1;
   return slashIndex >= 0 ? url.substr(slashIndex + 1) : '';
@@ -1167,12 +1204,113 @@ function dirname(url) {
   const slashIndex = url ? url.lastIndexOf('/') : -1;
   return slashIndex >= 0 ? url.substr(0, slashIndex) : '';
 }
+function resolve() {
+  const paths = [];
+  for (let _i = 0; _i < arguments.length; _i++) {
+    paths[_i] = _i < 0 || arguments.length <= _i ? undefined : arguments[_i];
+  }
+  let resolvedPath = '';
+  let resolvedAbsolute = false;
+  let cwd;
+  for (let i = paths.length - 1; i >= -1 && !resolvedAbsolute; i--) {
+    let path;
+    if (i >= 0) {
+      path = paths[i];
+    } else {
+      if (cwd === undefined) {
+        cwd = getCWD();
+      }
+      path = cwd;
+    }
+    if (path.length === 0) {
+      continue;
+    }
+    resolvedPath = `${path}/${resolvedPath}`;
+    resolvedAbsolute = path.charCodeAt(0) === SLASH;
+  }
+  resolvedPath = normalizeStringPosix(resolvedPath, !resolvedAbsolute);
+  if (resolvedAbsolute) {
+    return `/${resolvedPath}`;
+  } else if (resolvedPath.length > 0) {
+    return resolvedPath;
+  }
+  return '.';
+}
+const SLASH = 47;
+const DOT = 46;
+function normalizeStringPosix(path, allowAboveRoot) {
+  let res = '';
+  let lastSlash = -1;
+  let dots = 0;
+  let code;
+  let isAboveRoot = false;
+  for (let i = 0; i <= path.length; ++i) {
+    if (i < path.length) {
+      code = path.charCodeAt(i);
+    } else if (code === SLASH) {
+      break;
+    } else {
+      code = SLASH;
+    }
+    if (code === SLASH) {
+      if (lastSlash === i - 1 || dots === 1) ; else if (lastSlash !== i - 1 && dots === 2) {
+        if (res.length < 2 || !isAboveRoot || res.charCodeAt(res.length - 1) !== DOT || res.charCodeAt(res.length - 2) !== DOT) {
+          if (res.length > 2) {
+            const start = res.length - 1;
+            let j = start;
+            for (; j >= 0; --j) {
+              if (res.charCodeAt(j) === SLASH) {
+                break;
+              }
+            }
+            if (j !== start) {
+              res = j === -1 ? '' : res.slice(0, j);
+              lastSlash = i;
+              dots = 0;
+              isAboveRoot = false;
+              continue;
+            }
+          } else if (res.length === 2 || res.length === 1) {
+            res = '';
+            lastSlash = i;
+            dots = 0;
+            isAboveRoot = false;
+            continue;
+          }
+        }
+        if (allowAboveRoot) {
+          if (res.length > 0) {
+            res += '/..';
+          } else {
+            res = '..';
+          }
+          isAboveRoot = true;
+        }
+      } else {
+        const slice = path.slice(lastSlash + 1, i);
+        if (res.length > 0) {
+          res += `/${slice}`;
+        } else {
+          res = slice;
+        }
+        isAboveRoot = false;
+      }
+      lastSlash = i;
+      dots = 0;
+    } else if (code === DOT && dots !== -1) {
+      ++dots;
+    } else {
+      dots = -1;
+    }
+  }
+  return res;
+}
 
 const isBoolean = x => typeof x === 'boolean';
 const isFunction = x => typeof x === 'function';
 const isObject = x => x !== null && typeof x === 'object';
 const isPureObject = x => isObject(x) && x.constructor === {}.constructor;
-const isIterable = x => x && typeof x[Symbol.iterator] === 'function';
+const isIterable = x => Boolean(x) && typeof x[Symbol.iterator] === 'function';
 const isAsyncIterable = x => x && typeof x[Symbol.asyncIterator] === 'function';
 const isResponse = x => typeof Response !== 'undefined' && x instanceof Response || x && x.arrayBuffer && x.text && x.json;
 const isBlob = x => typeof Blob !== 'undefined' && x instanceof Blob;
@@ -1294,22 +1432,22 @@ async function checkResponse(response) {
   }
 }
 async function getResponseError(response) {
-  let message = "Failed to fetch resource ".concat(response.url, " (").concat(response.status, "): ");
+  let message = `Failed to fetch resource ${response.url} (${response.status}): `;
   try {
     const contentType = response.headers.get('Content-Type');
     let text = response.statusText;
-    if (contentType.includes('application/json')) {
-      text += " ".concat(await response.text());
+    if (contentType !== null && contentType !== void 0 && contentType.includes('application/json')) {
+      text += ` ${await response.text()}`;
     }
     message += text;
-    message = message.length > 60 ? "".concat(message.slice(0, 60), "...") : message;
+    message = message.length > 60 ? `${message.slice(0, 60)}...` : message;
   } catch (error) {}
   return message;
 }
 async function getInitialDataUrl(resource) {
   const INITIAL_DATA_LENGTH = 5;
   if (typeof resource === 'string') {
-    return "data:,".concat(resource.slice(0, INITIAL_DATA_LENGTH));
+    return `data:,${resource.slice(0, INITIAL_DATA_LENGTH)}`;
   }
   if (resource instanceof Blob) {
     const blobSlice = resource.slice(0, 5);
@@ -1325,7 +1463,7 @@ async function getInitialDataUrl(resource) {
   if (resource instanceof ArrayBuffer) {
     const slice = resource.slice(0, INITIAL_DATA_LENGTH);
     const base64 = arrayBufferToBase64(slice);
-    return "data:base64,".concat(base64);
+    return `data:base64,${base64}`;
   }
   return null;
 }
@@ -1338,16 +1476,28 @@ function arrayBufferToBase64(buffer) {
   return btoa(binary);
 }
 
-async function fetchFile(url, options) {
-  if (typeof url === 'string') {
-    url = resolvePath(url);
-    let fetchOptions = options;
-    if (options !== null && options !== void 0 && options.fetch && typeof (options === null || options === void 0 ? void 0 : options.fetch) !== 'function') {
-      fetchOptions = options.fetch;
+function isNodePath(url) {
+  return !isRequestURL(url) && !isDataURL(url);
+}
+function isRequestURL(url) {
+  return url.startsWith('http:') || url.startsWith('https:');
+}
+function isDataURL(url) {
+  return url.startsWith('data:');
+}
+async function fetchFile(urlOrData, fetchOptions) {
+  if (typeof urlOrData === 'string') {
+    const url = resolvePath(urlOrData);
+    if (isNodePath(url)) {
+      var _globalThis$loaders;
+      if ((_globalThis$loaders = globalThis.loaders) !== null && _globalThis$loaders !== void 0 && _globalThis$loaders.fetchNode) {
+        var _globalThis$loaders2;
+        return (_globalThis$loaders2 = globalThis.loaders) === null || _globalThis$loaders2 === void 0 ? void 0 : _globalThis$loaders2.fetchNode(url, fetchOptions);
+      }
     }
     return await fetch(url, fetchOptions);
   }
-  return await makeResponse(url);
+  return await makeResponse(urlOrData);
 }
 
 function isElectron(mockUserAgent) {
@@ -1377,7 +1527,7 @@ function isBrowser() {
 const window_ = globalThis.window || globalThis.self || globalThis.global;
 const process_ = globalThis.process || {};
 
-const VERSION$6 = typeof __VERSION__ !== 'undefined' ? __VERSION__ : 'untranspiled source';
+const VERSION$5 = typeof __VERSION__ !== 'undefined' ? __VERSION__ : 'untranspiled source';
 isBrowser();
 
 function getStorage(type) {
@@ -1532,7 +1682,7 @@ function autobind(obj) {
   }
 }
 
-function assert$6(condition, message) {
+function assert$4(condition, message) {
   if (!condition) {
     throw new Error(message || 'Assertion failed');
   }
@@ -1583,7 +1733,7 @@ class Log {
       id: ''
     };
     this.id = void 0;
-    this.VERSION = VERSION$6;
+    this.VERSION = VERSION$5;
     this._startTs = getHiResTimestamp();
     this._deltaTs = getHiResTimestamp();
     this._storage = void 0;
@@ -1670,7 +1820,7 @@ class Log {
   }
 
   assert(condition, message) {
-    assert$6(condition, message);
+    assert$4(condition, message);
   }
 
   warn(message) {
@@ -1806,7 +1956,7 @@ class Log {
         opts
       });
       method = method || opts.method;
-      assert$6(method);
+      assert$4(method);
       opts.total = this.getTotal();
       opts.delta = this.getDelta();
       this._deltaTs = getHiResTimestamp();
@@ -1828,7 +1978,7 @@ class Log {
   }
 
 }
-Log.VERSION = VERSION$6;
+Log.VERSION = VERSION$5;
 
 function normalizeLogLevel(logLevel) {
   if (!logLevel) {
@@ -1850,7 +2000,7 @@ function normalizeLogLevel(logLevel) {
       return 0;
   }
 
-  assert$6(Number.isFinite(resolvedLevel) && resolvedLevel >= 0);
+  assert$4(Number.isFinite(resolvedLevel) && resolvedLevel >= 0);
   return resolvedLevel;
 }
 
@@ -1884,7 +2034,7 @@ function normalizeArguments(opts) {
   }
 
   const messageType = typeof opts.message;
-  assert$6(messageType === 'string' || messageType === 'object');
+  assert$4(messageType === 'string' || messageType === 'object');
   return Object.assign(opts, {
     args
   }, opts.opts);
@@ -1953,6 +2103,10 @@ function getTableHeader(table) {
   return 'empty';
 }
 
+var log$1 = new Log({
+  id: '@probe.gl/log'
+});
+
 const probeLog = new Log({
   id: 'loaders.gl'
 });
@@ -1972,7 +2126,7 @@ class NullLog {
 }
 class ConsoleLog {
   constructor() {
-    _defineProperty(this, "console", void 0);
+    this.console = void 0;
     this.console = console;
   }
   log() {
@@ -2006,6 +2160,7 @@ const DEFAULT_LOADER_OPTIONS = {
   mimeType: undefined,
   nothrow: false,
   log: new ConsoleLog(),
+  useLocalLibraries: false,
   CDN: 'https://unpkg.com/@loaders.gl',
   worker: true,
   maxConcurrency: 3,
@@ -2046,13 +2201,13 @@ function getGlobalLoaderState() {
   loaders._state = loaders._state || {};
   return loaders._state;
 }
-const getGlobalLoaderOptions = () => {
+function getGlobalLoaderOptions() {
   const state = getGlobalLoaderState();
   state.globalOptions = state.globalOptions || {
     ...DEFAULT_LOADER_OPTIONS
   };
   return state.globalOptions;
-};
+}
 function normalizeOptions(options, loader, loaders, url) {
   loaders = loaders || [];
   loaders = Array.isArray(loaders) ? loaders : [loaders];
@@ -2070,17 +2225,17 @@ function validateOptions(options, loaders) {
 }
 function validateOptionsObject(options, id, defaultOptions, deprecatedOptions, loaders) {
   const loaderName = id || 'Top level';
-  const prefix = id ? "".concat(id, ".") : '';
+  const prefix = id ? `${id}.` : '';
   for (const key in options) {
     const isSubOptions = !id && isObject(options[key]);
     const isBaseUriOption = key === 'baseUri' && !id;
     const isWorkerUrlOption = key === 'workerUrl' && id;
     if (!(key in defaultOptions) && !isBaseUriOption && !isWorkerUrlOption) {
       if (key in deprecatedOptions) {
-        probeLog.warn("".concat(loaderName, " loader option '").concat(prefix).concat(key, "' no longer supported, use '").concat(deprecatedOptions[key], "'"))();
+        probeLog.warn(`${loaderName} loader option \'${prefix}${key}\' no longer supported, use \'${deprecatedOptions[key]}\'`)();
       } else if (!isSubOptions) {
         const suggestion = findSimilarOption(key, loaders);
-        probeLog.warn("".concat(loaderName, " loader option '").concat(prefix).concat(key, "' not recognized. ").concat(suggestion))();
+        probeLog.warn(`${loaderName} loader option \'${prefix}${key}\' not recognized. ${suggestion}`)();
       }
     }
   }
@@ -2091,12 +2246,12 @@ function findSimilarOption(optionKey, loaders) {
   for (const loader of loaders) {
     for (const key in loader.options) {
       if (optionKey === key) {
-        return "Did you mean '".concat(loader.id, ".").concat(key, "'?");
+        return `Did you mean \'${loader.id}.${key}\'?`;
       }
       const lowerCaseKey = key.toLowerCase();
       const isPartialMatch = lowerCaseOptionKey.startsWith(lowerCaseKey) || lowerCaseKey.startsWith(lowerCaseOptionKey);
       if (isPartialMatch) {
-        bestSuggestion = bestSuggestion || "Did you mean '".concat(loader.id, ".").concat(key, "'?");
+        bestSuggestion = bestSuggestion || `Did you mean \'${loader.id}.${key}\'?`;
       }
     }
   }
@@ -2149,8 +2304,8 @@ function isLoaderObject(loader) {
 }
 function normalizeLoader(loader) {
   var _loader2, _loader3;
-  assert$8(loader, 'null loader');
-  assert$8(isLoaderObject(loader), 'invalid loader');
+  assert$6(loader, 'null loader');
+  assert$6(isLoaderObject(loader), 'invalid loader');
   let options;
   if (Array.isArray(loader)) {
     options = loader[1];
@@ -2241,19 +2396,21 @@ function selectLoaderInternal(data, loaders, options, context) {
   let reason = '';
   if (options !== null && options !== void 0 && options.mimeType) {
     loader = findLoaderByMIMEType(loaders, options === null || options === void 0 ? void 0 : options.mimeType);
-    reason = "match forced by supplied MIME type ".concat(options === null || options === void 0 ? void 0 : options.mimeType);
+    reason = `match forced by supplied MIME type ${options === null || options === void 0 ? void 0 : options.mimeType}`;
   }
   loader = loader || findLoaderByUrl(loaders, testUrl);
-  reason = reason || (loader ? "matched url ".concat(testUrl) : '');
+  reason = reason || (loader ? `matched url ${testUrl}` : '');
   loader = loader || findLoaderByMIMEType(loaders, type);
-  reason = reason || (loader ? "matched MIME type ".concat(type) : '');
+  reason = reason || (loader ? `matched MIME type ${type}` : '');
   loader = loader || findLoaderByInitialBytes(loaders, data);
-  reason = reason || (loader ? "matched initial data ".concat(getFirstCharacters(data)) : '');
-  loader = loader || findLoaderByMIMEType(loaders, options === null || options === void 0 ? void 0 : options.fallbackMimeType);
-  reason = reason || (loader ? "matched fallback MIME type ".concat(type) : '');
+  reason = reason || (loader ? `matched initial data ${getFirstCharacters(data)}` : '');
+  if (options !== null && options !== void 0 && options.fallbackMimeType) {
+    loader = loader || findLoaderByMIMEType(loaders, options === null || options === void 0 ? void 0 : options.fallbackMimeType);
+    reason = reason || (loader ? `matched fallback MIME type ${type}` : '');
+  }
   if (reason) {
     var _loader;
-    log.log(1, "selectLoader selected ".concat((_loader = loader) === null || _loader === void 0 ? void 0 : _loader.name, ": ").concat(reason, "."));
+    log.log(1, `selectLoader selected ${(_loader = loader) === null || _loader === void 0 ? void 0 : _loader.name}: ${reason}.`);
   }
   return loader;
 }
@@ -2269,10 +2426,10 @@ function getNoValidLoaderMessage(data) {
   const url = getResourceUrl(data);
   const type = getResourceMIMEType(data);
   let message = 'No valid loader found (';
-  message += url ? "".concat(filename(url), ", ") : 'no url provided, ';
-  message += "MIME type: ".concat(type ? "\"".concat(type, "\"") : 'not provided', ", ");
+  message += url ? `${filename(url)}, ` : 'no url provided, ';
+  message += `MIME type: ${type ? `"${type}"` : 'not provided'}, `;
   const firstCharacters = data ? getFirstCharacters(data) : '';
-  message += firstCharacters ? " first bytes: \"".concat(firstCharacters, "\"") : 'first bytes: not available';
+  message += firstCharacters ? ` first bytes: "${firstCharacters}"` : 'first bytes: not available';
   message += ')';
   return message;
 }
@@ -2302,7 +2459,7 @@ function findLoaderByMIMEType(loaders, mimeType) {
     if (loader.mimeTypes && loader.mimeTypes.includes(mimeType)) {
       return loader;
     }
-    if (mimeType === "application/x.".concat(loader.id)) {
+    if (mimeType === `application/x.${loader.id}`) {
       return loader;
     }
   }
@@ -2347,7 +2504,7 @@ function testBinary(data, byteOffset, loader, test) {
   }
   switch (typeof test) {
     case 'function':
-      return test(data, loader);
+      return test(data);
     case 'string':
       const magic = getMagicString$2(data, byteOffset, test.length);
       return test === magic;
@@ -2529,12 +2686,12 @@ async function getArrayBufferOrStringFromData(data, loader, options) {
 
 function getFetchFunction(options, context) {
   const globalOptions = getGlobalLoaderOptions();
-  const fetchOptions = options || globalOptions;
-  if (typeof fetchOptions.fetch === 'function') {
-    return fetchOptions.fetch;
+  const loaderOptions = options || globalOptions;
+  if (typeof loaderOptions.fetch === 'function') {
+    return loaderOptions.fetch;
   }
-  if (isObject(fetchOptions.fetch)) {
-    return url => fetchFile(url, fetchOptions);
+  if (isObject(loaderOptions.fetch)) {
+    return url => fetchFile(url, loaderOptions.fetch);
   }
   if (context !== null && context !== void 0 && context.fetch) {
     return context === null || context === void 0 ? void 0 : context.fetch;
@@ -2563,7 +2720,7 @@ function getLoaderContext(context, options, parentContext) {
   return newContext;
 }
 function getLoadersFromContext(loaders, context) {
-  if (!context && loaders && !Array.isArray(loaders)) {
+  if (loaders && !Array.isArray(loaders)) {
     return loaders;
   }
   let candidateLoaders;
@@ -2574,11 +2731,10 @@ function getLoadersFromContext(loaders, context) {
     const contextLoaders = Array.isArray(context.loaders) ? context.loaders : [context.loaders];
     candidateLoaders = candidateLoaders ? [...candidateLoaders, ...contextLoaders] : contextLoaders;
   }
-  return candidateLoaders && candidateLoaders.length ? candidateLoaders : null;
+  return candidateLoaders && candidateLoaders.length ? candidateLoaders : undefined;
 }
 
 async function parse$3(data, loaders, options, context) {
-  assert$7(!context || typeof context === 'object');
   if (loaders && !Array.isArray(loaders) && !isLoaderObject(loaders)) {
     context = undefined;
     options = loaders;
@@ -2596,13 +2752,14 @@ async function parse$3(data, loaders, options, context) {
   options = normalizeOptions(options, loader, candidateLoaders, url);
   context = getLoaderContext({
     url,
-    parse: parse$3,
+    _parse: parse$3,
     loaders: candidateLoaders
   }, options, context || null);
   return await parseWithLoader(loader, data, options, context);
 }
 async function parseWithLoader(loader, data, options, context) {
   validateWorkerVersion(loader);
+  options = mergeLoaderOptions(loader.options, options);
   if (isResponse(data)) {
     const response = data;
     const {
@@ -2625,29 +2782,112 @@ async function parseWithLoader(loader, data, options, context) {
     };
   }
   data = await getArrayBufferOrStringFromData(data, loader, options);
-  if (loader.parseTextSync && typeof data === 'string') {
-    options.dataType = 'text';
-    return loader.parseTextSync(data, options, context, loader);
+  const loaderWithParser = loader;
+  if (loaderWithParser.parseTextSync && typeof data === 'string') {
+    return loaderWithParser.parseTextSync(data, options, context);
   }
   if (canParseWithWorker(loader, options)) {
     return await parseWithWorker(loader, data, options, context, parse$3);
   }
-  if (loader.parseText && typeof data === 'string') {
-    return await loader.parseText(data, options, context, loader);
+  if (loaderWithParser.parseText && typeof data === 'string') {
+    return await loaderWithParser.parseText(data, options, context);
   }
-  if (loader.parse) {
-    return await loader.parse(data, options, context, loader);
+  if (loaderWithParser.parse) {
+    return await loaderWithParser.parse(data, options, context);
   }
-  assert$7(!loader.parseSync);
-  throw new Error("".concat(loader.id, " loader - no parser found and worker is disabled"));
+  assert$5(!loaderWithParser.parseSync);
+  throw new Error(`${loader.id} loader - no parser found and worker is disabled`);
+}
+
+function getDataTypeFromTypedArray(array) {
+  switch (array.constructor) {
+    case Int8Array:
+      return 'int8';
+    case Uint8Array:
+    case Uint8ClampedArray:
+      return 'uint8';
+    case Int16Array:
+      return 'int16';
+    case Uint16Array:
+      return 'uint16';
+    case Int32Array:
+      return 'int32';
+    case Uint32Array:
+      return 'uint32';
+    case Float32Array:
+      return 'float32';
+    case Float64Array:
+      return 'float64';
+    default:
+      return 'null';
+  }
+}
+
+function getMeshBoundingBox(attributes) {
+  let minX = Infinity;
+  let minY = Infinity;
+  let minZ = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  let maxZ = -Infinity;
+  const positions = attributes.POSITION ? attributes.POSITION.value : [];
+  const len = positions && positions.length;
+  for (let i = 0; i < len; i += 3) {
+    const x = positions[i];
+    const y = positions[i + 1];
+    const z = positions[i + 2];
+    minX = x < minX ? x : minX;
+    minY = y < minY ? y : minY;
+    minZ = z < minZ ? z : minZ;
+    maxX = x > maxX ? x : maxX;
+    maxY = y > maxY ? y : maxY;
+    maxZ = z > maxZ ? z : maxZ;
+  }
+  return [[minX, minY, minZ], [maxX, maxY, maxZ]];
+}
+
+function deduceMeshField(name, attribute, optionalMetadata) {
+  const type = getDataTypeFromTypedArray(attribute.value);
+  const metadata = optionalMetadata ? optionalMetadata : makeMeshAttributeMetadata(attribute);
+  return {
+    name,
+    type: {
+      type: 'fixed-size-list',
+      listSize: attribute.size,
+      children: [{
+        name: 'value',
+        type
+      }]
+    },
+    nullable: false,
+    metadata
+  };
+}
+function makeMeshAttributeMetadata(attribute) {
+  const result = {};
+  if ('byteOffset' in attribute) {
+    result.byteOffset = attribute.byteOffset.toString(10);
+  }
+  if ('byteStride' in attribute) {
+    result.byteStride = attribute.byteStride.toString(10);
+  }
+  if ('normalized' in attribute) {
+    result.normalized = attribute.normalized.toString();
+  }
+  return result;
 }
 
 async function load(url, loaders, options, context) {
+  let resolvedLoaders;
+  let resolvedOptions;
   if (!Array.isArray(loaders) && !isLoaderObject(loaders)) {
-    options = loaders;
-    loaders = undefined;
+    resolvedLoaders = [];
+    resolvedOptions = loaders;
+  } else {
+    resolvedLoaders = loaders;
+    resolvedOptions = options;
   }
-  const fetch = getFetchFunction(options);
+  const fetch = getFetchFunction(resolvedOptions);
   let data = url;
   if (typeof url === 'string') {
     data = await fetch(url);
@@ -2655,4053 +2895,25 @@ async function load(url, loaders, options, context) {
   if (isBlob(url)) {
     data = await fetch(url);
   }
-  return await parse$3(data, loaders, options);
-}
-
-function assert$5(condition, message) {
-  if (!condition) {
-    throw new Error("math.gl assertion ".concat(message));
-  }
-}
-
-const RADIANS_TO_DEGREES$1 = 1 / Math.PI * 180;
-const config$1 = {};
-config$1.EPSILON = 1e-12;
-config$1.debug = false;
-config$1.precision = 4;
-config$1.printTypes = false;
-config$1.printDegrees = false;
-config$1.printRowMajor = true;
-
-function round$1(value) {
-  return Math.round(value / config$1.EPSILON) * config$1.EPSILON;
-}
-
-function formatValue$1(value, {
-  precision = config$1.precision || 4
-} = {}) {
-  value = round$1(value);
-  return "".concat(parseFloat(value.toPrecision(precision)));
-}
-function isArray$1(value) {
-  return Array.isArray(value) || ArrayBuffer.isView(value) && !(value instanceof DataView);
-}
-
-function duplicateArray$1(array) {
-  return array.clone ? array.clone() : new Array(array.length);
-}
-
-function map$2(value, func, result) {
-  if (isArray$1(value)) {
-    result = result || duplicateArray$1(value);
-
-    for (let i = 0; i < result.length && i < value.length; ++i) {
-      result[i] = func(value[i], i, result);
-    }
-
-    return result;
-  }
-
-  return func(value);
-}
-function degrees$1(radians, result) {
-  return map$2(radians, radians => radians * RADIANS_TO_DEGREES$1, result);
-}
-function clamp(value, min, max) {
-  return map$2(value, value => Math.max(min, Math.min(max, value)));
-}
-function equals$1(a, b, epsilon) {
-  const oldEpsilon = config$1.EPSILON;
-
-  if (epsilon) {
-    config$1.EPSILON = epsilon;
-  }
-
-  try {
-    if (a === b) {
-      return true;
-    }
-
-    if (isArray$1(a) && isArray$1(b)) {
-      if (a.length !== b.length) {
-        return false;
-      }
-
-      for (let i = 0; i < a.length; ++i) {
-        if (!equals$1(a[i], b[i])) {
-          return false;
-        }
-      }
-
-      return true;
-    }
-
-    if (a && a.equals) {
-      return a.equals(b);
-    }
-
-    if (b && b.equals) {
-      return b.equals(a);
-    }
-
-    if (Number.isFinite(a) && Number.isFinite(b)) {
-      return Math.abs(a - b) <= config$1.EPSILON * Math.max(1.0, Math.abs(a), Math.abs(b));
-    }
-
-    return false;
-  } finally {
-    config$1.EPSILON = oldEpsilon;
-  }
-}
-
-function _extendableBuiltin$1(cls) {
-  function ExtendableBuiltin() {
-    var instance = Reflect.construct(cls, Array.from(arguments));
-    Object.setPrototypeOf(instance, Object.getPrototypeOf(this));
-    return instance;
-  }
-
-  ExtendableBuiltin.prototype = Object.create(cls.prototype, {
-    constructor: {
-      value: cls,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    }
-  });
-
-  if (Object.setPrototypeOf) {
-    Object.setPrototypeOf(ExtendableBuiltin, cls);
-  } else {
-    ExtendableBuiltin.__proto__ = cls;
-  }
-
-  return ExtendableBuiltin;
-}
-let MathArray$1 = class MathArray extends _extendableBuiltin$1(Array) {
-  get ELEMENTS() {
-    assert$5(false);
-    return 0;
-  }
-
-  clone() {
-    return new this.constructor().copy(this);
-  }
-
-  from(arrayOrObject) {
-    return Array.isArray(arrayOrObject) ? this.copy(arrayOrObject) : this.fromObject(arrayOrObject);
-  }
-
-  fromArray(array, offset = 0) {
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      this[i] = array[i + offset];
-    }
-
-    return this.check();
-  }
-
-  to(arrayOrObject) {
-    if (arrayOrObject === this) {
-      return this;
-    }
-
-    return isArray$1(arrayOrObject) ? this.toArray(arrayOrObject) : this.toObject(arrayOrObject);
-  }
-
-  toTarget(target) {
-    return target ? this.to(target) : this;
-  }
-
-  toArray(array = [], offset = 0) {
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      array[offset + i] = this[i];
-    }
-
-    return array;
-  }
-
-  toFloat32Array() {
-    return new Float32Array(this);
-  }
-
-  toString() {
-    return this.formatString(config$1);
-  }
-
-  formatString(opts) {
-    let string = '';
-
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      string += (i > 0 ? ', ' : '') + formatValue$1(this[i], opts);
-    }
-
-    return "".concat(opts.printTypes ? this.constructor.name : '', "[").concat(string, "]");
-  }
-
-  equals(array) {
-    if (!array || this.length !== array.length) {
-      return false;
-    }
-
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      if (!equals$1(this[i], array[i])) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  exactEquals(array) {
-    if (!array || this.length !== array.length) {
-      return false;
-    }
-
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      if (this[i] !== array[i]) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  negate() {
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      this[i] = -this[i];
-    }
-
-    return this.check();
-  }
-
-  lerp(a, b, t) {
-    if (t === undefined) {
-      t = b;
-      b = a;
-      a = this;
-    }
-
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      const ai = a[i];
-      this[i] = ai + t * (b[i] - ai);
-    }
-
-    return this.check();
-  }
-
-  min(vector) {
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      this[i] = Math.min(vector[i], this[i]);
-    }
-
-    return this.check();
-  }
-
-  max(vector) {
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      this[i] = Math.max(vector[i], this[i]);
-    }
-
-    return this.check();
-  }
-
-  clamp(minVector, maxVector) {
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      this[i] = Math.min(Math.max(this[i], minVector[i]), maxVector[i]);
-    }
-
-    return this.check();
-  }
-
-  add(...vectors) {
-    for (const vector of vectors) {
-      for (let i = 0; i < this.ELEMENTS; ++i) {
-        this[i] += vector[i];
-      }
-    }
-
-    return this.check();
-  }
-
-  subtract(...vectors) {
-    for (const vector of vectors) {
-      for (let i = 0; i < this.ELEMENTS; ++i) {
-        this[i] -= vector[i];
-      }
-    }
-
-    return this.check();
-  }
-
-  scale(scale) {
-    if (Array.isArray(scale)) {
-      return this.multiply(scale);
-    }
-
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      this[i] *= scale;
-    }
-
-    return this.check();
-  }
-
-  sub(a) {
-    return this.subtract(a);
-  }
-
-  setScalar(a) {
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      this[i] = a;
-    }
-
-    return this.check();
-  }
-
-  addScalar(a) {
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      this[i] += a;
-    }
-
-    return this.check();
-  }
-
-  subScalar(a) {
-    return this.addScalar(-a);
-  }
-
-  multiplyScalar(scalar) {
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      this[i] *= scalar;
-    }
-
-    return this.check();
-  }
-
-  divideScalar(a) {
-    return this.scale(1 / a);
-  }
-
-  clampScalar(min, max) {
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      this[i] = Math.min(Math.max(this[i], min), max);
-    }
-
-    return this.check();
-  }
-
-  multiplyByScalar(scalar) {
-    return this.scale(scalar);
-  }
-
-  get elements() {
-    return this;
-  }
-
-  check() {
-    if (config$1.debug && !this.validate()) {
-      throw new Error("math.gl: ".concat(this.constructor.name, " some fields set to invalid numbers'"));
-    }
-
-    return this;
-  }
-
-  validate() {
-    let valid = this.length === this.ELEMENTS;
-
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      valid = valid && Number.isFinite(this[i]);
-    }
-
-    return valid;
-  }
-
-};
-
-function validateVector$1(v, length) {
-  if (v.length !== length) {
-    return false;
-  }
-
-  for (let i = 0; i < v.length; ++i) {
-    if (!Number.isFinite(v[i])) {
-      return false;
-    }
-  }
-
-  return true;
-}
-function checkNumber$1(value) {
-  if (!Number.isFinite(value)) {
-    throw new Error("Invalid number ".concat(value));
-  }
-
-  return value;
-}
-function checkVector$1(v, length, callerName = '') {
-  if (config$1.debug && !validateVector$1(v, length)) {
-    throw new Error("math.gl: ".concat(callerName, " some fields set to invalid numbers'"));
-  }
-
-  return v;
-}
-const map$1 = {};
-function deprecated(method, version) {
-  if (!map$1[method]) {
-    map$1[method] = true;
-    console.warn("".concat(method, " has been removed in version ").concat(version, ", see upgrade guide for more information"));
-  }
-}
-
-let Vector$1 = class Vector extends MathArray$1 {
-  get ELEMENTS() {
-    assert$5(false);
-    return 0;
-  }
-
-  copy(vector) {
-    assert$5(false);
-    return this;
-  }
-
-  get x() {
-    return this[0];
-  }
-
-  set x(value) {
-    this[0] = checkNumber$1(value);
-  }
-
-  get y() {
-    return this[1];
-  }
-
-  set y(value) {
-    this[1] = checkNumber$1(value);
-  }
-
-  len() {
-    return Math.sqrt(this.lengthSquared());
-  }
-
-  magnitude() {
-    return this.len();
-  }
-
-  lengthSquared() {
-    let length = 0;
-
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      length += this[i] * this[i];
-    }
-
-    return length;
-  }
-
-  magnitudeSquared() {
-    return this.lengthSquared();
-  }
-
-  distance(mathArray) {
-    return Math.sqrt(this.distanceSquared(mathArray));
-  }
-
-  distanceSquared(mathArray) {
-    let length = 0;
-
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      const dist = this[i] - mathArray[i];
-      length += dist * dist;
-    }
-
-    return checkNumber$1(length);
-  }
-
-  dot(mathArray) {
-    let product = 0;
-
-    for (let i = 0; i < this.ELEMENTS; ++i) {
-      product += this[i] * mathArray[i];
-    }
-
-    return checkNumber$1(product);
-  }
-
-  normalize() {
-    const length = this.magnitude();
-
-    if (length !== 0) {
-      for (let i = 0; i < this.ELEMENTS; ++i) {
-        this[i] /= length;
-      }
-    }
-
-    return this.check();
-  }
-
-  multiply(...vectors) {
-    for (const vector of vectors) {
-      for (let i = 0; i < this.ELEMENTS; ++i) {
-        this[i] *= vector[i];
-      }
-    }
-
-    return this.check();
-  }
-
-  divide(...vectors) {
-    for (const vector of vectors) {
-      for (let i = 0; i < this.ELEMENTS; ++i) {
-        this[i] /= vector[i];
-      }
-    }
-
-    return this.check();
-  }
-
-  lengthSq() {
-    return this.lengthSquared();
-  }
-
-  distanceTo(vector) {
-    return this.distance(vector);
-  }
-
-  distanceToSquared(vector) {
-    return this.distanceSquared(vector);
-  }
-
-  getComponent(i) {
-    assert$5(i >= 0 && i < this.ELEMENTS, 'index is out of range');
-    return checkNumber$1(this[i]);
-  }
-
-  setComponent(i, value) {
-    assert$5(i >= 0 && i < this.ELEMENTS, 'index is out of range');
-    this[i] = value;
-    return this.check();
-  }
-
-  addVectors(a, b) {
-    return this.copy(a).add(b);
-  }
-
-  subVectors(a, b) {
-    return this.copy(a).subtract(b);
-  }
-
-  multiplyVectors(a, b) {
-    return this.copy(a).multiply(b);
-  }
-
-  addScaledVector(a, b) {
-    return this.add(new this.constructor(a).multiplyScalar(b));
-  }
-
-};
-
-/**
- * Common utilities
- * @module glMatrix
- */
-// Configuration Constants
-var EPSILON$1 = 0.000001;
-var ARRAY_TYPE$1 = typeof Float32Array !== 'undefined' ? Float32Array : Array;
-if (!Math.hypot) Math.hypot = function () {
-  var y = 0,
-      i = arguments.length;
-
-  while (i--) {
-    y += arguments[i] * arguments[i];
-  }
-
-  return Math.sqrt(y);
-};
-
-/**
- * 2 Dimensional Vector
- * @module vec2
- */
-
-/**
- * Creates a new, empty vec2
- *
- * @returns {vec2} a new 2D vector
- */
-
-function create$7() {
-  var out = new ARRAY_TYPE$1(2);
-
-  if (ARRAY_TYPE$1 != Float32Array) {
-    out[0] = 0;
-    out[1] = 0;
-  }
-
-  return out;
-}
-/**
- * Transforms the vec2 with a mat2
- *
- * @param {vec2} out the receiving vector
- * @param {ReadonlyVec2} a the vector to transform
- * @param {ReadonlyMat2} m matrix to transform with
- * @returns {vec2} out
- */
-
-function transformMat2(out, a, m) {
-  var x = a[0],
-      y = a[1];
-  out[0] = m[0] * x + m[2] * y;
-  out[1] = m[1] * x + m[3] * y;
-  return out;
-}
-/**
- * Transforms the vec2 with a mat2d
- *
- * @param {vec2} out the receiving vector
- * @param {ReadonlyVec2} a the vector to transform
- * @param {ReadonlyMat2d} m matrix to transform with
- * @returns {vec2} out
- */
-
-function transformMat2d(out, a, m) {
-  var x = a[0],
-      y = a[1];
-  out[0] = m[0] * x + m[2] * y + m[4];
-  out[1] = m[1] * x + m[3] * y + m[5];
-  return out;
-}
-/**
- * Transforms the vec2 with a mat3
- * 3rd vector component is implicitly '1'
- *
- * @param {vec2} out the receiving vector
- * @param {ReadonlyVec2} a the vector to transform
- * @param {ReadonlyMat3} m matrix to transform with
- * @returns {vec2} out
- */
-
-function transformMat3$2(out, a, m) {
-  var x = a[0],
-      y = a[1];
-  out[0] = m[0] * x + m[3] * y + m[6];
-  out[1] = m[1] * x + m[4] * y + m[7];
-  return out;
-}
-/**
- * Transforms the vec2 with a mat4
- * 3rd vector component is implicitly '0'
- * 4th vector component is implicitly '1'
- *
- * @param {vec2} out the receiving vector
- * @param {ReadonlyVec2} a the vector to transform
- * @param {ReadonlyMat4} m matrix to transform with
- * @returns {vec2} out
- */
-
-function transformMat4$5(out, a, m) {
-  var x = a[0];
-  var y = a[1];
-  out[0] = m[0] * x + m[4] * y + m[12];
-  out[1] = m[1] * x + m[5] * y + m[13];
-  return out;
-}
-/**
- * Perform some operation over an array of vec2s.
- *
- * @param {Array} a the array of vectors to iterate over
- * @param {Number} stride Number of elements between the start of each vec2. If 0 assumes tightly packed
- * @param {Number} offset Number of elements to skip at the beginning of the array
- * @param {Number} count Number of vec2s to iterate over. If 0 iterates over entire array
- * @param {Function} fn Function to call for each vector in the array
- * @param {Object} [arg] additional argument to pass to fn
- * @returns {Array} a
- * @function
- */
-
-(function () {
-  var vec = create$7();
-  return function (a, stride, offset, count, fn, arg) {
-    var i, l;
-
-    if (!stride) {
-      stride = 2;
-    }
-
-    if (!offset) {
-      offset = 0;
-    }
-
-    if (count) {
-      l = Math.min(count * stride + offset, a.length);
-    } else {
-      l = a.length;
-    }
-
-    for (i = offset; i < l; i += stride) {
-      vec[0] = a[i];
-      vec[1] = a[i + 1];
-      fn(vec, vec, arg);
-      a[i] = vec[0];
-      a[i + 1] = vec[1];
-    }
-
-    return a;
-  };
-})();
-
-function vec2_transformMat4AsVector$1(out, a, m) {
-  const x = a[0];
-  const y = a[1];
-  const w = m[3] * x + m[7] * y || 1.0;
-  out[0] = (m[0] * x + m[4] * y) / w;
-  out[1] = (m[1] * x + m[5] * y) / w;
-  return out;
-}
-function vec3_transformMat4AsVector$1(out, a, m) {
-  const x = a[0];
-  const y = a[1];
-  const z = a[2];
-  const w = m[3] * x + m[7] * y + m[11] * z || 1.0;
-  out[0] = (m[0] * x + m[4] * y + m[8] * z) / w;
-  out[1] = (m[1] * x + m[5] * y + m[9] * z) / w;
-  out[2] = (m[2] * x + m[6] * y + m[10] * z) / w;
-  return out;
-}
-function vec3_transformMat2$1(out, a, m) {
-  const x = a[0];
-  const y = a[1];
-  out[0] = m[0] * x + m[2] * y;
-  out[1] = m[1] * x + m[3] * y;
-  out[2] = a[2];
-  return out;
-}
-function vec4_transformMat3(out, a, m) {
-  const x = a[0];
-  const y = a[1];
-  const z = a[2];
-  out[0] = m[0] * x + m[3] * y + m[6] * z;
-  out[1] = m[1] * x + m[4] * y + m[7] * z;
-  out[2] = m[2] * x + m[5] * y + m[8] * z;
-  out[3] = a[3];
-  return out;
-}
-
-class Vector2 extends Vector$1 {
-  constructor(x = 0, y = 0) {
-    super(2);
-
-    if (isArray$1(x) && arguments.length === 1) {
-      this.copy(x);
-    } else {
-      if (config$1.debug) {
-        checkNumber$1(x);
-        checkNumber$1(y);
-      }
-
-      this[0] = x;
-      this[1] = y;
-    }
-  }
-
-  set(x, y) {
-    this[0] = x;
-    this[1] = y;
-    return this.check();
-  }
-
-  copy(array) {
-    this[0] = array[0];
-    this[1] = array[1];
-    return this.check();
-  }
-
-  fromObject(object) {
-    if (config$1.debug) {
-      checkNumber$1(object.x);
-      checkNumber$1(object.y);
-    }
-
-    this[0] = object.x;
-    this[1] = object.y;
-    return this.check();
-  }
-
-  toObject(object) {
-    object.x = this[0];
-    object.y = this[1];
-    return object;
-  }
-
-  get ELEMENTS() {
-    return 2;
-  }
-
-  horizontalAngle() {
-    return Math.atan2(this.y, this.x);
-  }
-
-  verticalAngle() {
-    return Math.atan2(this.x, this.y);
-  }
-
-  transform(matrix4) {
-    return this.transformAsPoint(matrix4);
-  }
-
-  transformAsPoint(matrix4) {
-    transformMat4$5(this, this, matrix4);
-    return this.check();
-  }
-
-  transformAsVector(matrix4) {
-    vec2_transformMat4AsVector$1(this, this, matrix4);
-    return this.check();
-  }
-
-  transformByMatrix3(matrix3) {
-    transformMat3$2(this, this, matrix3);
-    return this.check();
-  }
-
-  transformByMatrix2x3(matrix2x3) {
-    transformMat2d(this, this, matrix2x3);
-    return this.check();
-  }
-
-  transformByMatrix2(matrix2) {
-    transformMat2(this, this, matrix2);
-    return this.check();
-  }
-
-}
-
-/**
- * 3 Dimensional Vector
- * @module vec3
- */
-
-/**
- * Creates a new, empty vec3
- *
- * @returns {vec3} a new 3D vector
- */
-
-function create$6() {
-  var out = new ARRAY_TYPE$1(3);
-
-  if (ARRAY_TYPE$1 != Float32Array) {
-    out[0] = 0;
-    out[1] = 0;
-    out[2] = 0;
-  }
-
-  return out;
-}
-/**
- * Calculates the length of a vec3
- *
- * @param {ReadonlyVec3} a vector to calculate length of
- * @returns {Number} length of a
- */
-
-function length$3(a) {
-  var x = a[0];
-  var y = a[1];
-  var z = a[2];
-  return Math.hypot(x, y, z);
-}
-/**
- * Creates a new vec3 initialized with the given values
- *
- * @param {Number} x X component
- * @param {Number} y Y component
- * @param {Number} z Z component
- * @returns {vec3} a new 3D vector
- */
-
-function fromValues(x, y, z) {
-  var out = new ARRAY_TYPE$1(3);
-  out[0] = x;
-  out[1] = y;
-  out[2] = z;
-  return out;
-}
-/**
- * Normalize a vec3
- *
- * @param {vec3} out the receiving vector
- * @param {ReadonlyVec3} a vector to normalize
- * @returns {vec3} out
- */
-
-function normalize$2(out, a) {
-  var x = a[0];
-  var y = a[1];
-  var z = a[2];
-  var len = x * x + y * y + z * z;
-
-  if (len > 0) {
-    //TODO: evaluate use of glm_invsqrt here?
-    len = 1 / Math.sqrt(len);
-  }
-
-  out[0] = a[0] * len;
-  out[1] = a[1] * len;
-  out[2] = a[2] * len;
-  return out;
-}
-/**
- * Calculates the dot product of two vec3's
- *
- * @param {ReadonlyVec3} a the first operand
- * @param {ReadonlyVec3} b the second operand
- * @returns {Number} dot product of a and b
- */
-
-function dot$3(a, b) {
-  return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-}
-/**
- * Computes the cross product of two vec3's
- *
- * @param {vec3} out the receiving vector
- * @param {ReadonlyVec3} a the first operand
- * @param {ReadonlyVec3} b the second operand
- * @returns {vec3} out
- */
-
-function cross$1(out, a, b) {
-  var ax = a[0],
-      ay = a[1],
-      az = a[2];
-  var bx = b[0],
-      by = b[1],
-      bz = b[2];
-  out[0] = ay * bz - az * by;
-  out[1] = az * bx - ax * bz;
-  out[2] = ax * by - ay * bx;
-  return out;
-}
-/**
- * Transforms the vec3 with a mat4.
- * 4th vector component is implicitly '1'
- *
- * @param {vec3} out the receiving vector
- * @param {ReadonlyVec3} a the vector to transform
- * @param {ReadonlyMat4} m matrix to transform with
- * @returns {vec3} out
- */
-
-function transformMat4$4(out, a, m) {
-  var x = a[0],
-      y = a[1],
-      z = a[2];
-  var w = m[3] * x + m[7] * y + m[11] * z + m[15];
-  w = w || 1.0;
-  out[0] = (m[0] * x + m[4] * y + m[8] * z + m[12]) / w;
-  out[1] = (m[1] * x + m[5] * y + m[9] * z + m[13]) / w;
-  out[2] = (m[2] * x + m[6] * y + m[10] * z + m[14]) / w;
-  return out;
-}
-/**
- * Transforms the vec3 with a mat3.
- *
- * @param {vec3} out the receiving vector
- * @param {ReadonlyVec3} a the vector to transform
- * @param {ReadonlyMat3} m the 3x3 matrix to transform with
- * @returns {vec3} out
- */
-
-function transformMat3$1(out, a, m) {
-  var x = a[0],
-      y = a[1],
-      z = a[2];
-  out[0] = x * m[0] + y * m[3] + z * m[6];
-  out[1] = x * m[1] + y * m[4] + z * m[7];
-  out[2] = x * m[2] + y * m[5] + z * m[8];
-  return out;
-}
-/**
- * Transforms the vec3 with a quat
- * Can also be used for dual quaternions. (Multiply it with the real part)
- *
- * @param {vec3} out the receiving vector
- * @param {ReadonlyVec3} a the vector to transform
- * @param {ReadonlyQuat} q quaternion to transform with
- * @returns {vec3} out
- */
-
-function transformQuat$2(out, a, q) {
-  // benchmarks: https://jsperf.com/quaternion-transform-vec3-implementations-fixed
-  var qx = q[0],
-      qy = q[1],
-      qz = q[2],
-      qw = q[3];
-  var x = a[0],
-      y = a[1],
-      z = a[2]; // var qvec = [qx, qy, qz];
-  // var uv = vec3.cross([], qvec, a);
-
-  var uvx = qy * z - qz * y,
-      uvy = qz * x - qx * z,
-      uvz = qx * y - qy * x; // var uuv = vec3.cross([], qvec, uv);
-
-  var uuvx = qy * uvz - qz * uvy,
-      uuvy = qz * uvx - qx * uvz,
-      uuvz = qx * uvy - qy * uvx; // vec3.scale(uv, uv, 2 * w);
-
-  var w2 = qw * 2;
-  uvx *= w2;
-  uvy *= w2;
-  uvz *= w2; // vec3.scale(uuv, uuv, 2);
-
-  uuvx *= 2;
-  uuvy *= 2;
-  uuvz *= 2; // return vec3.add(out, a, vec3.add(out, uv, uuv));
-
-  out[0] = x + uvx + uuvx;
-  out[1] = y + uvy + uuvy;
-  out[2] = z + uvz + uuvz;
-  return out;
-}
-/**
- * Rotate a 3D vector around the x-axis
- * @param {vec3} out The receiving vec3
- * @param {ReadonlyVec3} a The vec3 point to rotate
- * @param {ReadonlyVec3} b The origin of the rotation
- * @param {Number} rad The angle of rotation in radians
- * @returns {vec3} out
- */
-
-function rotateX$4(out, a, b, rad) {
-  var p = [],
-      r = []; //Translate point to the origin
-
-  p[0] = a[0] - b[0];
-  p[1] = a[1] - b[1];
-  p[2] = a[2] - b[2]; //perform rotation
-
-  r[0] = p[0];
-  r[1] = p[1] * Math.cos(rad) - p[2] * Math.sin(rad);
-  r[2] = p[1] * Math.sin(rad) + p[2] * Math.cos(rad); //translate to correct position
-
-  out[0] = r[0] + b[0];
-  out[1] = r[1] + b[1];
-  out[2] = r[2] + b[2];
-  return out;
-}
-/**
- * Rotate a 3D vector around the y-axis
- * @param {vec3} out The receiving vec3
- * @param {ReadonlyVec3} a The vec3 point to rotate
- * @param {ReadonlyVec3} b The origin of the rotation
- * @param {Number} rad The angle of rotation in radians
- * @returns {vec3} out
- */
-
-function rotateY$4(out, a, b, rad) {
-  var p = [],
-      r = []; //Translate point to the origin
-
-  p[0] = a[0] - b[0];
-  p[1] = a[1] - b[1];
-  p[2] = a[2] - b[2]; //perform rotation
-
-  r[0] = p[2] * Math.sin(rad) + p[0] * Math.cos(rad);
-  r[1] = p[1];
-  r[2] = p[2] * Math.cos(rad) - p[0] * Math.sin(rad); //translate to correct position
-
-  out[0] = r[0] + b[0];
-  out[1] = r[1] + b[1];
-  out[2] = r[2] + b[2];
-  return out;
-}
-/**
- * Rotate a 3D vector around the z-axis
- * @param {vec3} out The receiving vec3
- * @param {ReadonlyVec3} a The vec3 point to rotate
- * @param {ReadonlyVec3} b The origin of the rotation
- * @param {Number} rad The angle of rotation in radians
- * @returns {vec3} out
- */
-
-function rotateZ$4(out, a, b, rad) {
-  var p = [],
-      r = []; //Translate point to the origin
-
-  p[0] = a[0] - b[0];
-  p[1] = a[1] - b[1];
-  p[2] = a[2] - b[2]; //perform rotation
-
-  r[0] = p[0] * Math.cos(rad) - p[1] * Math.sin(rad);
-  r[1] = p[0] * Math.sin(rad) + p[1] * Math.cos(rad);
-  r[2] = p[2]; //translate to correct position
-
-  out[0] = r[0] + b[0];
-  out[1] = r[1] + b[1];
-  out[2] = r[2] + b[2];
-  return out;
-}
-/**
- * Get the angle between two 3D vectors
- * @param {ReadonlyVec3} a The first operand
- * @param {ReadonlyVec3} b The second operand
- * @returns {Number} The angle in radians
- */
-
-function angle$1(a, b) {
-  var ax = a[0],
-      ay = a[1],
-      az = a[2],
-      bx = b[0],
-      by = b[1],
-      bz = b[2],
-      mag1 = Math.sqrt(ax * ax + ay * ay + az * az),
-      mag2 = Math.sqrt(bx * bx + by * by + bz * bz),
-      mag = mag1 * mag2,
-      cosine = mag && dot$3(a, b) / mag;
-  return Math.acos(Math.min(Math.max(cosine, -1), 1));
-}
-/**
- * Alias for {@link vec3.length}
- * @function
- */
-
-var len = length$3;
-/**
- * Perform some operation over an array of vec3s.
- *
- * @param {Array} a the array of vectors to iterate over
- * @param {Number} stride Number of elements between the start of each vec3. If 0 assumes tightly packed
- * @param {Number} offset Number of elements to skip at the beginning of the array
- * @param {Number} count Number of vec3s to iterate over. If 0 iterates over entire array
- * @param {Function} fn Function to call for each vector in the array
- * @param {Object} [arg] additional argument to pass to fn
- * @returns {Array} a
- * @function
- */
-
-(function () {
-  var vec = create$6();
-  return function (a, stride, offset, count, fn, arg) {
-    var i, l;
-
-    if (!stride) {
-      stride = 3;
-    }
-
-    if (!offset) {
-      offset = 0;
-    }
-
-    if (count) {
-      l = Math.min(count * stride + offset, a.length);
-    } else {
-      l = a.length;
-    }
-
-    for (i = offset; i < l; i += stride) {
-      vec[0] = a[i];
-      vec[1] = a[i + 1];
-      vec[2] = a[i + 2];
-      fn(vec, vec, arg);
-      a[i] = vec[0];
-      a[i + 1] = vec[1];
-      a[i + 2] = vec[2];
-    }
-
-    return a;
-  };
-})();
-
-const ORIGIN$1 = [0, 0, 0];
-const constants$2 = {};
-let Vector3$1 = class Vector3 extends Vector$1 {
-  static get ZERO() {
-    return constants$2.ZERO = constants$2.ZERO || Object.freeze(new Vector3(0, 0, 0, 0));
-  }
-
-  constructor(x = 0, y = 0, z = 0) {
-    super(-0, -0, -0);
-
-    if (arguments.length === 1 && isArray$1(x)) {
-      this.copy(x);
-    } else {
-      if (config$1.debug) {
-        checkNumber$1(x);
-        checkNumber$1(y);
-        checkNumber$1(z);
-      }
-
-      this[0] = x;
-      this[1] = y;
-      this[2] = z;
-    }
-  }
-
-  set(x, y, z) {
-    this[0] = x;
-    this[1] = y;
-    this[2] = z;
-    return this.check();
-  }
-
-  copy(array) {
-    this[0] = array[0];
-    this[1] = array[1];
-    this[2] = array[2];
-    return this.check();
-  }
-
-  fromObject(object) {
-    if (config$1.debug) {
-      checkNumber$1(object.x);
-      checkNumber$1(object.y);
-      checkNumber$1(object.z);
-    }
-
-    this[0] = object.x;
-    this[1] = object.y;
-    this[2] = object.z;
-    return this.check();
-  }
-
-  toObject(object) {
-    object.x = this[0];
-    object.y = this[1];
-    object.z = this[2];
-    return object;
-  }
-
-  get ELEMENTS() {
-    return 3;
-  }
-
-  get z() {
-    return this[2];
-  }
-
-  set z(value) {
-    this[2] = checkNumber$1(value);
-  }
-
-  angle(vector) {
-    return angle$1(this, vector);
-  }
-
-  cross(vector) {
-    cross$1(this, this, vector);
-    return this.check();
-  }
-
-  rotateX({
-    radians,
-    origin = ORIGIN$1
-  }) {
-    rotateX$4(this, this, origin, radians);
-    return this.check();
-  }
-
-  rotateY({
-    radians,
-    origin = ORIGIN$1
-  }) {
-    rotateY$4(this, this, origin, radians);
-    return this.check();
-  }
-
-  rotateZ({
-    radians,
-    origin = ORIGIN$1
-  }) {
-    rotateZ$4(this, this, origin, radians);
-    return this.check();
-  }
-
-  transform(matrix4) {
-    return this.transformAsPoint(matrix4);
-  }
-
-  transformAsPoint(matrix4) {
-    transformMat4$4(this, this, matrix4);
-    return this.check();
-  }
-
-  transformAsVector(matrix4) {
-    vec3_transformMat4AsVector$1(this, this, matrix4);
-    return this.check();
-  }
-
-  transformByMatrix3(matrix3) {
-    transformMat3$1(this, this, matrix3);
-    return this.check();
-  }
-
-  transformByMatrix2(matrix2) {
-    vec3_transformMat2$1(this, this, matrix2);
-    return this.check();
-  }
-
-  transformByQuaternion(quaternion) {
-    transformQuat$2(this, this, quaternion);
-    return this.check();
-  }
-
-};
-
-let Matrix$1 = class Matrix extends MathArray$1 {
-  get ELEMENTS() {
-    assert$5(false);
-    return 0;
-  }
-
-  get RANK() {
-    assert$5(false);
-    return 0;
-  }
-
-  toString() {
-    let string = '[';
-
-    if (config$1.printRowMajor) {
-      string += 'row-major:';
-
-      for (let row = 0; row < this.RANK; ++row) {
-        for (let col = 0; col < this.RANK; ++col) {
-          string += " ".concat(this[col * this.RANK + row]);
-        }
-      }
-    } else {
-      string += 'column-major:';
-
-      for (let i = 0; i < this.ELEMENTS; ++i) {
-        string += " ".concat(this[i]);
-      }
-    }
-
-    string += ']';
-    return string;
-  }
-
-  getElementIndex(row, col) {
-    return col * this.RANK + row;
-  }
-
-  getElement(row, col) {
-    return this[col * this.RANK + row];
-  }
-
-  setElement(row, col, value) {
-    this[col * this.RANK + row] = checkNumber$1(value);
-    return this;
-  }
-
-  getColumn(columnIndex, result = new Array(this.RANK).fill(-0)) {
-    const firstIndex = columnIndex * this.RANK;
-
-    for (let i = 0; i < this.RANK; ++i) {
-      result[i] = this[firstIndex + i];
-    }
-
-    return result;
-  }
-
-  setColumn(columnIndex, columnVector) {
-    const firstIndex = columnIndex * this.RANK;
-
-    for (let i = 0; i < this.RANK; ++i) {
-      this[firstIndex + i] = columnVector[i];
-    }
-
-    return this;
-  }
-
-};
-
-/**
- * 3x3 Matrix
- * @module mat3
- */
-
-/**
- * Creates a new identity mat3
- *
- * @returns {mat3} a new 3x3 matrix
- */
-
-function create$5() {
-  var out = new ARRAY_TYPE$1(9);
-
-  if (ARRAY_TYPE$1 != Float32Array) {
-    out[1] = 0;
-    out[2] = 0;
-    out[3] = 0;
-    out[5] = 0;
-    out[6] = 0;
-    out[7] = 0;
-  }
-
-  out[0] = 1;
-  out[4] = 1;
-  out[8] = 1;
-  return out;
-}
-/**
- * Transpose the values of a mat3
- *
- * @param {mat3} out the receiving matrix
- * @param {ReadonlyMat3} a the source matrix
- * @returns {mat3} out
- */
-
-function transpose$2(out, a) {
-  // If we are transposing ourselves we can skip a few steps but have to cache some values
-  if (out === a) {
-    var a01 = a[1],
-        a02 = a[2],
-        a12 = a[5];
-    out[1] = a[3];
-    out[2] = a[6];
-    out[3] = a01;
-    out[5] = a[7];
-    out[6] = a02;
-    out[7] = a12;
-  } else {
-    out[0] = a[0];
-    out[1] = a[3];
-    out[2] = a[6];
-    out[3] = a[1];
-    out[4] = a[4];
-    out[5] = a[7];
-    out[6] = a[2];
-    out[7] = a[5];
-    out[8] = a[8];
-  }
-
-  return out;
-}
-/**
- * Inverts a mat3
- *
- * @param {mat3} out the receiving matrix
- * @param {ReadonlyMat3} a the source matrix
- * @returns {mat3} out
- */
-
-function invert$3(out, a) {
-  var a00 = a[0],
-      a01 = a[1],
-      a02 = a[2];
-  var a10 = a[3],
-      a11 = a[4],
-      a12 = a[5];
-  var a20 = a[6],
-      a21 = a[7],
-      a22 = a[8];
-  var b01 = a22 * a11 - a12 * a21;
-  var b11 = -a22 * a10 + a12 * a20;
-  var b21 = a21 * a10 - a11 * a20; // Calculate the determinant
-
-  var det = a00 * b01 + a01 * b11 + a02 * b21;
-
-  if (!det) {
-    return null;
-  }
-
-  det = 1.0 / det;
-  out[0] = b01 * det;
-  out[1] = (-a22 * a01 + a02 * a21) * det;
-  out[2] = (a12 * a01 - a02 * a11) * det;
-  out[3] = b11 * det;
-  out[4] = (a22 * a00 - a02 * a20) * det;
-  out[5] = (-a12 * a00 + a02 * a10) * det;
-  out[6] = b21 * det;
-  out[7] = (-a21 * a00 + a01 * a20) * det;
-  out[8] = (a11 * a00 - a01 * a10) * det;
-  return out;
-}
-/**
- * Calculates the determinant of a mat3
- *
- * @param {ReadonlyMat3} a the source matrix
- * @returns {Number} determinant of a
- */
-
-function determinant$2(a) {
-  var a00 = a[0],
-      a01 = a[1],
-      a02 = a[2];
-  var a10 = a[3],
-      a11 = a[4],
-      a12 = a[5];
-  var a20 = a[6],
-      a21 = a[7],
-      a22 = a[8];
-  return a00 * (a22 * a11 - a12 * a21) + a01 * (-a22 * a10 + a12 * a20) + a02 * (a21 * a10 - a11 * a20);
-}
-/**
- * Multiplies two mat3's
- *
- * @param {mat3} out the receiving matrix
- * @param {ReadonlyMat3} a the first operand
- * @param {ReadonlyMat3} b the second operand
- * @returns {mat3} out
- */
-
-function multiply$3(out, a, b) {
-  var a00 = a[0],
-      a01 = a[1],
-      a02 = a[2];
-  var a10 = a[3],
-      a11 = a[4],
-      a12 = a[5];
-  var a20 = a[6],
-      a21 = a[7],
-      a22 = a[8];
-  var b00 = b[0],
-      b01 = b[1],
-      b02 = b[2];
-  var b10 = b[3],
-      b11 = b[4],
-      b12 = b[5];
-  var b20 = b[6],
-      b21 = b[7],
-      b22 = b[8];
-  out[0] = b00 * a00 + b01 * a10 + b02 * a20;
-  out[1] = b00 * a01 + b01 * a11 + b02 * a21;
-  out[2] = b00 * a02 + b01 * a12 + b02 * a22;
-  out[3] = b10 * a00 + b11 * a10 + b12 * a20;
-  out[4] = b10 * a01 + b11 * a11 + b12 * a21;
-  out[5] = b10 * a02 + b11 * a12 + b12 * a22;
-  out[6] = b20 * a00 + b21 * a10 + b22 * a20;
-  out[7] = b20 * a01 + b21 * a11 + b22 * a21;
-  out[8] = b20 * a02 + b21 * a12 + b22 * a22;
-  return out;
-}
-/**
- * Translate a mat3 by the given vector
- *
- * @param {mat3} out the receiving matrix
- * @param {ReadonlyMat3} a the matrix to translate
- * @param {ReadonlyVec2} v vector to translate by
- * @returns {mat3} out
- */
-
-function translate$2(out, a, v) {
-  var a00 = a[0],
-      a01 = a[1],
-      a02 = a[2],
-      a10 = a[3],
-      a11 = a[4],
-      a12 = a[5],
-      a20 = a[6],
-      a21 = a[7],
-      a22 = a[8],
-      x = v[0],
-      y = v[1];
-  out[0] = a00;
-  out[1] = a01;
-  out[2] = a02;
-  out[3] = a10;
-  out[4] = a11;
-  out[5] = a12;
-  out[6] = x * a00 + y * a10 + a20;
-  out[7] = x * a01 + y * a11 + a21;
-  out[8] = x * a02 + y * a12 + a22;
-  return out;
-}
-/**
- * Rotates a mat3 by the given angle
- *
- * @param {mat3} out the receiving matrix
- * @param {ReadonlyMat3} a the matrix to rotate
- * @param {Number} rad the angle to rotate the matrix by
- * @returns {mat3} out
- */
-
-function rotate$2(out, a, rad) {
-  var a00 = a[0],
-      a01 = a[1],
-      a02 = a[2],
-      a10 = a[3],
-      a11 = a[4],
-      a12 = a[5],
-      a20 = a[6],
-      a21 = a[7],
-      a22 = a[8],
-      s = Math.sin(rad),
-      c = Math.cos(rad);
-  out[0] = c * a00 + s * a10;
-  out[1] = c * a01 + s * a11;
-  out[2] = c * a02 + s * a12;
-  out[3] = c * a10 - s * a00;
-  out[4] = c * a11 - s * a01;
-  out[5] = c * a12 - s * a02;
-  out[6] = a20;
-  out[7] = a21;
-  out[8] = a22;
-  return out;
-}
-/**
- * Scales the mat3 by the dimensions in the given vec2
- *
- * @param {mat3} out the receiving matrix
- * @param {ReadonlyMat3} a the matrix to rotate
- * @param {ReadonlyVec2} v the vec2 to scale the matrix by
- * @returns {mat3} out
- **/
-
-function scale$4(out, a, v) {
-  var x = v[0],
-      y = v[1];
-  out[0] = x * a[0];
-  out[1] = x * a[1];
-  out[2] = x * a[2];
-  out[3] = y * a[3];
-  out[4] = y * a[4];
-  out[5] = y * a[5];
-  out[6] = a[6];
-  out[7] = a[7];
-  out[8] = a[8];
-  return out;
-}
-/**
- * Calculates a 3x3 matrix from the given quaternion
- *
- * @param {mat3} out mat3 receiving operation result
- * @param {ReadonlyQuat} q Quaternion to create matrix from
- *
- * @returns {mat3} out
- */
-
-function fromQuat$2(out, q) {
-  var x = q[0],
-      y = q[1],
-      z = q[2],
-      w = q[3];
-  var x2 = x + x;
-  var y2 = y + y;
-  var z2 = z + z;
-  var xx = x * x2;
-  var yx = y * x2;
-  var yy = y * y2;
-  var zx = z * x2;
-  var zy = z * y2;
-  var zz = z * z2;
-  var wx = w * x2;
-  var wy = w * y2;
-  var wz = w * z2;
-  out[0] = 1 - yy - zz;
-  out[3] = yx - wz;
-  out[6] = zx + wy;
-  out[1] = yx + wz;
-  out[4] = 1 - xx - zz;
-  out[7] = zy - wx;
-  out[2] = zx - wy;
-  out[5] = zy + wx;
-  out[8] = 1 - xx - yy;
-  return out;
-}
-
-const IDENTITY$2 = Object.freeze([1, 0, 0, 0, 1, 0, 0, 0, 1]);
-const ZERO$4 = Object.freeze([0, 0, 0, 0, 0, 0, 0, 0, 0]);
-const INDICES$2 = Object.freeze({
-  COL0ROW0: 0,
-  COL0ROW1: 1,
-  COL0ROW2: 2,
-  COL1ROW0: 3,
-  COL1ROW1: 4,
-  COL1ROW2: 5,
-  COL2ROW0: 6,
-  COL2ROW1: 7,
-  COL2ROW2: 8
-});
-const constants$1 = {};
-class Matrix3 extends Matrix$1 {
-  static get IDENTITY() {
-    constants$1.IDENTITY = constants$1.IDENTITY || Object.freeze(new Matrix3(IDENTITY$2));
-    return constants$1.IDENTITY;
-  }
-
-  static get ZERO() {
-    constants$1.ZERO = constants$1.ZERO || Object.freeze(new Matrix3(ZERO$4));
-    return constants$1.ZERO;
-  }
-
-  get ELEMENTS() {
-    return 9;
-  }
-
-  get RANK() {
-    return 3;
-  }
-
-  get INDICES() {
-    return INDICES$2;
-  }
-
-  constructor(array) {
-    super(-0, -0, -0, -0, -0, -0, -0, -0, -0);
-
-    if (arguments.length === 1 && Array.isArray(array)) {
-      this.copy(array);
-    } else {
-      this.identity();
-    }
-  }
-
-  copy(array) {
-    this[0] = array[0];
-    this[1] = array[1];
-    this[2] = array[2];
-    this[3] = array[3];
-    this[4] = array[4];
-    this[5] = array[5];
-    this[6] = array[6];
-    this[7] = array[7];
-    this[8] = array[8];
-    return this.check();
-  }
-
-  set(m00, m10, m20, m01, m11, m21, m02, m12, m22) {
-    this[0] = m00;
-    this[1] = m10;
-    this[2] = m20;
-    this[3] = m01;
-    this[4] = m11;
-    this[5] = m21;
-    this[6] = m02;
-    this[7] = m12;
-    this[8] = m22;
-    return this.check();
-  }
-
-  setRowMajor(m00, m01, m02, m10, m11, m12, m20, m21, m22) {
-    this[0] = m00;
-    this[1] = m10;
-    this[2] = m20;
-    this[3] = m01;
-    this[4] = m11;
-    this[5] = m21;
-    this[6] = m02;
-    this[7] = m12;
-    this[8] = m22;
-    return this.check();
-  }
-
-  determinant() {
-    return determinant$2(this);
-  }
-
-  identity() {
-    return this.copy(IDENTITY$2);
-  }
-
-  fromQuaternion(q) {
-    fromQuat$2(this, q);
-    return this.check();
-  }
-
-  transpose() {
-    transpose$2(this, this);
-    return this.check();
-  }
-
-  invert() {
-    invert$3(this, this);
-    return this.check();
-  }
-
-  multiplyLeft(a) {
-    multiply$3(this, a, this);
-    return this.check();
-  }
-
-  multiplyRight(a) {
-    multiply$3(this, this, a);
-    return this.check();
-  }
-
-  rotate(radians) {
-    rotate$2(this, this, radians);
-    return this.check();
-  }
-
-  scale(factor) {
-    if (Array.isArray(factor)) {
-      scale$4(this, this, factor);
-    } else {
-      scale$4(this, this, [factor, factor, factor]);
-    }
-
-    return this.check();
-  }
-
-  translate(vec) {
-    translate$2(this, this, vec);
-    return this.check();
-  }
-
-  transform(vector, result) {
-    switch (vector.length) {
-      case 2:
-        result = transformMat3$2(result || [-0, -0], vector, this);
-        break;
-
-      case 3:
-        result = transformMat3$1(result || [-0, -0, -0], vector, this);
-        break;
-
-      case 4:
-        result = vec4_transformMat3(result || [-0, -0, -0, -0], vector, this);
-        break;
-
-      default:
-        throw new Error('Illegal vector');
-    }
-
-    checkVector$1(result, vector.length);
-    return result;
-  }
-
-  transformVector(vector, result) {
-    deprecated('Matrix3.transformVector');
-    return this.transform(vector, result);
-  }
-
-  transformVector2(vector, result) {
-    deprecated('Matrix3.transformVector');
-    return this.transform(vector, result);
-  }
-
-  transformVector3(vector, result) {
-    deprecated('Matrix3.transformVector');
-    return this.transform(vector, result);
-  }
-
-}
-
-/**
- * Set a mat4 to the identity matrix
- *
- * @param {mat4} out the receiving matrix
- * @returns {mat4} out
- */
-
-function identity$3(out) {
-  out[0] = 1;
-  out[1] = 0;
-  out[2] = 0;
-  out[3] = 0;
-  out[4] = 0;
-  out[5] = 1;
-  out[6] = 0;
-  out[7] = 0;
-  out[8] = 0;
-  out[9] = 0;
-  out[10] = 1;
-  out[11] = 0;
-  out[12] = 0;
-  out[13] = 0;
-  out[14] = 0;
-  out[15] = 1;
-  return out;
-}
-/**
- * Transpose the values of a mat4
- *
- * @param {mat4} out the receiving matrix
- * @param {ReadonlyMat4} a the source matrix
- * @returns {mat4} out
- */
-
-function transpose$1(out, a) {
-  // If we are transposing ourselves we can skip a few steps but have to cache some values
-  if (out === a) {
-    var a01 = a[1],
-        a02 = a[2],
-        a03 = a[3];
-    var a12 = a[6],
-        a13 = a[7];
-    var a23 = a[11];
-    out[1] = a[4];
-    out[2] = a[8];
-    out[3] = a[12];
-    out[4] = a01;
-    out[6] = a[9];
-    out[7] = a[13];
-    out[8] = a02;
-    out[9] = a12;
-    out[11] = a[14];
-    out[12] = a03;
-    out[13] = a13;
-    out[14] = a23;
-  } else {
-    out[0] = a[0];
-    out[1] = a[4];
-    out[2] = a[8];
-    out[3] = a[12];
-    out[4] = a[1];
-    out[5] = a[5];
-    out[6] = a[9];
-    out[7] = a[13];
-    out[8] = a[2];
-    out[9] = a[6];
-    out[10] = a[10];
-    out[11] = a[14];
-    out[12] = a[3];
-    out[13] = a[7];
-    out[14] = a[11];
-    out[15] = a[15];
-  }
-
-  return out;
-}
-/**
- * Inverts a mat4
- *
- * @param {mat4} out the receiving matrix
- * @param {ReadonlyMat4} a the source matrix
- * @returns {mat4} out
- */
-
-function invert$2(out, a) {
-  var a00 = a[0],
-      a01 = a[1],
-      a02 = a[2],
-      a03 = a[3];
-  var a10 = a[4],
-      a11 = a[5],
-      a12 = a[6],
-      a13 = a[7];
-  var a20 = a[8],
-      a21 = a[9],
-      a22 = a[10],
-      a23 = a[11];
-  var a30 = a[12],
-      a31 = a[13],
-      a32 = a[14],
-      a33 = a[15];
-  var b00 = a00 * a11 - a01 * a10;
-  var b01 = a00 * a12 - a02 * a10;
-  var b02 = a00 * a13 - a03 * a10;
-  var b03 = a01 * a12 - a02 * a11;
-  var b04 = a01 * a13 - a03 * a11;
-  var b05 = a02 * a13 - a03 * a12;
-  var b06 = a20 * a31 - a21 * a30;
-  var b07 = a20 * a32 - a22 * a30;
-  var b08 = a20 * a33 - a23 * a30;
-  var b09 = a21 * a32 - a22 * a31;
-  var b10 = a21 * a33 - a23 * a31;
-  var b11 = a22 * a33 - a23 * a32; // Calculate the determinant
-
-  var det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
-
-  if (!det) {
-    return null;
-  }
-
-  det = 1.0 / det;
-  out[0] = (a11 * b11 - a12 * b10 + a13 * b09) * det;
-  out[1] = (a02 * b10 - a01 * b11 - a03 * b09) * det;
-  out[2] = (a31 * b05 - a32 * b04 + a33 * b03) * det;
-  out[3] = (a22 * b04 - a21 * b05 - a23 * b03) * det;
-  out[4] = (a12 * b08 - a10 * b11 - a13 * b07) * det;
-  out[5] = (a00 * b11 - a02 * b08 + a03 * b07) * det;
-  out[6] = (a32 * b02 - a30 * b05 - a33 * b01) * det;
-  out[7] = (a20 * b05 - a22 * b02 + a23 * b01) * det;
-  out[8] = (a10 * b10 - a11 * b08 + a13 * b06) * det;
-  out[9] = (a01 * b08 - a00 * b10 - a03 * b06) * det;
-  out[10] = (a30 * b04 - a31 * b02 + a33 * b00) * det;
-  out[11] = (a21 * b02 - a20 * b04 - a23 * b00) * det;
-  out[12] = (a11 * b07 - a10 * b09 - a12 * b06) * det;
-  out[13] = (a00 * b09 - a01 * b07 + a02 * b06) * det;
-  out[14] = (a31 * b01 - a30 * b03 - a32 * b00) * det;
-  out[15] = (a20 * b03 - a21 * b01 + a22 * b00) * det;
-  return out;
-}
-/**
- * Calculates the determinant of a mat4
- *
- * @param {ReadonlyMat4} a the source matrix
- * @returns {Number} determinant of a
- */
-
-function determinant$1(a) {
-  var a00 = a[0],
-      a01 = a[1],
-      a02 = a[2],
-      a03 = a[3];
-  var a10 = a[4],
-      a11 = a[5],
-      a12 = a[6],
-      a13 = a[7];
-  var a20 = a[8],
-      a21 = a[9],
-      a22 = a[10],
-      a23 = a[11];
-  var a30 = a[12],
-      a31 = a[13],
-      a32 = a[14],
-      a33 = a[15];
-  var b00 = a00 * a11 - a01 * a10;
-  var b01 = a00 * a12 - a02 * a10;
-  var b02 = a00 * a13 - a03 * a10;
-  var b03 = a01 * a12 - a02 * a11;
-  var b04 = a01 * a13 - a03 * a11;
-  var b05 = a02 * a13 - a03 * a12;
-  var b06 = a20 * a31 - a21 * a30;
-  var b07 = a20 * a32 - a22 * a30;
-  var b08 = a20 * a33 - a23 * a30;
-  var b09 = a21 * a32 - a22 * a31;
-  var b10 = a21 * a33 - a23 * a31;
-  var b11 = a22 * a33 - a23 * a32; // Calculate the determinant
-
-  return b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
-}
-/**
- * Multiplies two mat4s
- *
- * @param {mat4} out the receiving matrix
- * @param {ReadonlyMat4} a the first operand
- * @param {ReadonlyMat4} b the second operand
- * @returns {mat4} out
- */
-
-function multiply$2(out, a, b) {
-  var a00 = a[0],
-      a01 = a[1],
-      a02 = a[2],
-      a03 = a[3];
-  var a10 = a[4],
-      a11 = a[5],
-      a12 = a[6],
-      a13 = a[7];
-  var a20 = a[8],
-      a21 = a[9],
-      a22 = a[10],
-      a23 = a[11];
-  var a30 = a[12],
-      a31 = a[13],
-      a32 = a[14],
-      a33 = a[15]; // Cache only the current line of the second matrix
-
-  var b0 = b[0],
-      b1 = b[1],
-      b2 = b[2],
-      b3 = b[3];
-  out[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
-  out[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
-  out[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
-  out[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
-  b0 = b[4];
-  b1 = b[5];
-  b2 = b[6];
-  b3 = b[7];
-  out[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
-  out[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
-  out[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
-  out[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
-  b0 = b[8];
-  b1 = b[9];
-  b2 = b[10];
-  b3 = b[11];
-  out[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
-  out[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
-  out[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
-  out[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
-  b0 = b[12];
-  b1 = b[13];
-  b2 = b[14];
-  b3 = b[15];
-  out[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
-  out[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
-  out[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
-  out[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
-  return out;
-}
-/**
- * Translate a mat4 by the given vector
- *
- * @param {mat4} out the receiving matrix
- * @param {ReadonlyMat4} a the matrix to translate
- * @param {ReadonlyVec3} v vector to translate by
- * @returns {mat4} out
- */
-
-function translate$1(out, a, v) {
-  var x = v[0],
-      y = v[1],
-      z = v[2];
-  var a00, a01, a02, a03;
-  var a10, a11, a12, a13;
-  var a20, a21, a22, a23;
-
-  if (a === out) {
-    out[12] = a[0] * x + a[4] * y + a[8] * z + a[12];
-    out[13] = a[1] * x + a[5] * y + a[9] * z + a[13];
-    out[14] = a[2] * x + a[6] * y + a[10] * z + a[14];
-    out[15] = a[3] * x + a[7] * y + a[11] * z + a[15];
-  } else {
-    a00 = a[0];
-    a01 = a[1];
-    a02 = a[2];
-    a03 = a[3];
-    a10 = a[4];
-    a11 = a[5];
-    a12 = a[6];
-    a13 = a[7];
-    a20 = a[8];
-    a21 = a[9];
-    a22 = a[10];
-    a23 = a[11];
-    out[0] = a00;
-    out[1] = a01;
-    out[2] = a02;
-    out[3] = a03;
-    out[4] = a10;
-    out[5] = a11;
-    out[6] = a12;
-    out[7] = a13;
-    out[8] = a20;
-    out[9] = a21;
-    out[10] = a22;
-    out[11] = a23;
-    out[12] = a00 * x + a10 * y + a20 * z + a[12];
-    out[13] = a01 * x + a11 * y + a21 * z + a[13];
-    out[14] = a02 * x + a12 * y + a22 * z + a[14];
-    out[15] = a03 * x + a13 * y + a23 * z + a[15];
-  }
-
-  return out;
-}
-/**
- * Scales the mat4 by the dimensions in the given vec3 not using vectorization
- *
- * @param {mat4} out the receiving matrix
- * @param {ReadonlyMat4} a the matrix to scale
- * @param {ReadonlyVec3} v the vec3 to scale the matrix by
- * @returns {mat4} out
- **/
-
-function scale$3(out, a, v) {
-  var x = v[0],
-      y = v[1],
-      z = v[2];
-  out[0] = a[0] * x;
-  out[1] = a[1] * x;
-  out[2] = a[2] * x;
-  out[3] = a[3] * x;
-  out[4] = a[4] * y;
-  out[5] = a[5] * y;
-  out[6] = a[6] * y;
-  out[7] = a[7] * y;
-  out[8] = a[8] * z;
-  out[9] = a[9] * z;
-  out[10] = a[10] * z;
-  out[11] = a[11] * z;
-  out[12] = a[12];
-  out[13] = a[13];
-  out[14] = a[14];
-  out[15] = a[15];
-  return out;
-}
-/**
- * Rotates a mat4 by the given angle around the given axis
- *
- * @param {mat4} out the receiving matrix
- * @param {ReadonlyMat4} a the matrix to rotate
- * @param {Number} rad the angle to rotate the matrix by
- * @param {ReadonlyVec3} axis the axis to rotate around
- * @returns {mat4} out
- */
-
-function rotate$1(out, a, rad, axis) {
-  var x = axis[0],
-      y = axis[1],
-      z = axis[2];
-  var len = Math.hypot(x, y, z);
-  var s, c, t;
-  var a00, a01, a02, a03;
-  var a10, a11, a12, a13;
-  var a20, a21, a22, a23;
-  var b00, b01, b02;
-  var b10, b11, b12;
-  var b20, b21, b22;
-
-  if (len < EPSILON$1) {
-    return null;
-  }
-
-  len = 1 / len;
-  x *= len;
-  y *= len;
-  z *= len;
-  s = Math.sin(rad);
-  c = Math.cos(rad);
-  t = 1 - c;
-  a00 = a[0];
-  a01 = a[1];
-  a02 = a[2];
-  a03 = a[3];
-  a10 = a[4];
-  a11 = a[5];
-  a12 = a[6];
-  a13 = a[7];
-  a20 = a[8];
-  a21 = a[9];
-  a22 = a[10];
-  a23 = a[11]; // Construct the elements of the rotation matrix
-
-  b00 = x * x * t + c;
-  b01 = y * x * t + z * s;
-  b02 = z * x * t - y * s;
-  b10 = x * y * t - z * s;
-  b11 = y * y * t + c;
-  b12 = z * y * t + x * s;
-  b20 = x * z * t + y * s;
-  b21 = y * z * t - x * s;
-  b22 = z * z * t + c; // Perform rotation-specific matrix multiplication
-
-  out[0] = a00 * b00 + a10 * b01 + a20 * b02;
-  out[1] = a01 * b00 + a11 * b01 + a21 * b02;
-  out[2] = a02 * b00 + a12 * b01 + a22 * b02;
-  out[3] = a03 * b00 + a13 * b01 + a23 * b02;
-  out[4] = a00 * b10 + a10 * b11 + a20 * b12;
-  out[5] = a01 * b10 + a11 * b11 + a21 * b12;
-  out[6] = a02 * b10 + a12 * b11 + a22 * b12;
-  out[7] = a03 * b10 + a13 * b11 + a23 * b12;
-  out[8] = a00 * b20 + a10 * b21 + a20 * b22;
-  out[9] = a01 * b20 + a11 * b21 + a21 * b22;
-  out[10] = a02 * b20 + a12 * b21 + a22 * b22;
-  out[11] = a03 * b20 + a13 * b21 + a23 * b22;
-
-  if (a !== out) {
-    // If the source and destination differ, copy the unchanged last row
-    out[12] = a[12];
-    out[13] = a[13];
-    out[14] = a[14];
-    out[15] = a[15];
-  }
-
-  return out;
-}
-/**
- * Rotates a matrix by the given angle around the X axis
- *
- * @param {mat4} out the receiving matrix
- * @param {ReadonlyMat4} a the matrix to rotate
- * @param {Number} rad the angle to rotate the matrix by
- * @returns {mat4} out
- */
-
-function rotateX$3(out, a, rad) {
-  var s = Math.sin(rad);
-  var c = Math.cos(rad);
-  var a10 = a[4];
-  var a11 = a[5];
-  var a12 = a[6];
-  var a13 = a[7];
-  var a20 = a[8];
-  var a21 = a[9];
-  var a22 = a[10];
-  var a23 = a[11];
-
-  if (a !== out) {
-    // If the source and destination differ, copy the unchanged rows
-    out[0] = a[0];
-    out[1] = a[1];
-    out[2] = a[2];
-    out[3] = a[3];
-    out[12] = a[12];
-    out[13] = a[13];
-    out[14] = a[14];
-    out[15] = a[15];
-  } // Perform axis-specific matrix multiplication
-
-
-  out[4] = a10 * c + a20 * s;
-  out[5] = a11 * c + a21 * s;
-  out[6] = a12 * c + a22 * s;
-  out[7] = a13 * c + a23 * s;
-  out[8] = a20 * c - a10 * s;
-  out[9] = a21 * c - a11 * s;
-  out[10] = a22 * c - a12 * s;
-  out[11] = a23 * c - a13 * s;
-  return out;
-}
-/**
- * Rotates a matrix by the given angle around the Y axis
- *
- * @param {mat4} out the receiving matrix
- * @param {ReadonlyMat4} a the matrix to rotate
- * @param {Number} rad the angle to rotate the matrix by
- * @returns {mat4} out
- */
-
-function rotateY$3(out, a, rad) {
-  var s = Math.sin(rad);
-  var c = Math.cos(rad);
-  var a00 = a[0];
-  var a01 = a[1];
-  var a02 = a[2];
-  var a03 = a[3];
-  var a20 = a[8];
-  var a21 = a[9];
-  var a22 = a[10];
-  var a23 = a[11];
-
-  if (a !== out) {
-    // If the source and destination differ, copy the unchanged rows
-    out[4] = a[4];
-    out[5] = a[5];
-    out[6] = a[6];
-    out[7] = a[7];
-    out[12] = a[12];
-    out[13] = a[13];
-    out[14] = a[14];
-    out[15] = a[15];
-  } // Perform axis-specific matrix multiplication
-
-
-  out[0] = a00 * c - a20 * s;
-  out[1] = a01 * c - a21 * s;
-  out[2] = a02 * c - a22 * s;
-  out[3] = a03 * c - a23 * s;
-  out[8] = a00 * s + a20 * c;
-  out[9] = a01 * s + a21 * c;
-  out[10] = a02 * s + a22 * c;
-  out[11] = a03 * s + a23 * c;
-  return out;
-}
-/**
- * Rotates a matrix by the given angle around the Z axis
- *
- * @param {mat4} out the receiving matrix
- * @param {ReadonlyMat4} a the matrix to rotate
- * @param {Number} rad the angle to rotate the matrix by
- * @returns {mat4} out
- */
-
-function rotateZ$3(out, a, rad) {
-  var s = Math.sin(rad);
-  var c = Math.cos(rad);
-  var a00 = a[0];
-  var a01 = a[1];
-  var a02 = a[2];
-  var a03 = a[3];
-  var a10 = a[4];
-  var a11 = a[5];
-  var a12 = a[6];
-  var a13 = a[7];
-
-  if (a !== out) {
-    // If the source and destination differ, copy the unchanged last row
-    out[8] = a[8];
-    out[9] = a[9];
-    out[10] = a[10];
-    out[11] = a[11];
-    out[12] = a[12];
-    out[13] = a[13];
-    out[14] = a[14];
-    out[15] = a[15];
-  } // Perform axis-specific matrix multiplication
-
-
-  out[0] = a00 * c + a10 * s;
-  out[1] = a01 * c + a11 * s;
-  out[2] = a02 * c + a12 * s;
-  out[3] = a03 * c + a13 * s;
-  out[4] = a10 * c - a00 * s;
-  out[5] = a11 * c - a01 * s;
-  out[6] = a12 * c - a02 * s;
-  out[7] = a13 * c - a03 * s;
-  return out;
-}
-/**
- * Returns the scaling factor component of a transformation
- *  matrix. If a matrix is built with fromRotationTranslationScale
- *  with a normalized Quaternion paramter, the returned vector will be
- *  the same as the scaling vector
- *  originally supplied.
- * @param  {vec3} out Vector to receive scaling factor component
- * @param  {ReadonlyMat4} mat Matrix to be decomposed (input)
- * @return {vec3} out
- */
-
-function getScaling(out, mat) {
-  var m11 = mat[0];
-  var m12 = mat[1];
-  var m13 = mat[2];
-  var m21 = mat[4];
-  var m22 = mat[5];
-  var m23 = mat[6];
-  var m31 = mat[8];
-  var m32 = mat[9];
-  var m33 = mat[10];
-  out[0] = Math.hypot(m11, m12, m13);
-  out[1] = Math.hypot(m21, m22, m23);
-  out[2] = Math.hypot(m31, m32, m33);
-  return out;
-}
-/**
- * Calculates a 4x4 matrix from the given quaternion
- *
- * @param {mat4} out mat4 receiving operation result
- * @param {ReadonlyQuat} q Quaternion to create matrix from
- *
- * @returns {mat4} out
- */
-
-function fromQuat$1(out, q) {
-  var x = q[0],
-      y = q[1],
-      z = q[2],
-      w = q[3];
-  var x2 = x + x;
-  var y2 = y + y;
-  var z2 = z + z;
-  var xx = x * x2;
-  var yx = y * x2;
-  var yy = y * y2;
-  var zx = z * x2;
-  var zy = z * y2;
-  var zz = z * z2;
-  var wx = w * x2;
-  var wy = w * y2;
-  var wz = w * z2;
-  out[0] = 1 - yy - zz;
-  out[1] = yx + wz;
-  out[2] = zx - wy;
-  out[3] = 0;
-  out[4] = yx - wz;
-  out[5] = 1 - xx - zz;
-  out[6] = zy + wx;
-  out[7] = 0;
-  out[8] = zx + wy;
-  out[9] = zy - wx;
-  out[10] = 1 - xx - yy;
-  out[11] = 0;
-  out[12] = 0;
-  out[13] = 0;
-  out[14] = 0;
-  out[15] = 1;
-  return out;
-}
-/**
- * Generates a frustum matrix with the given bounds
- *
- * @param {mat4} out mat4 frustum matrix will be written into
- * @param {Number} left Left bound of the frustum
- * @param {Number} right Right bound of the frustum
- * @param {Number} bottom Bottom bound of the frustum
- * @param {Number} top Top bound of the frustum
- * @param {Number} near Near bound of the frustum
- * @param {Number} far Far bound of the frustum
- * @returns {mat4} out
- */
-
-function frustum$1(out, left, right, bottom, top, near, far) {
-  var rl = 1 / (right - left);
-  var tb = 1 / (top - bottom);
-  var nf = 1 / (near - far);
-  out[0] = near * 2 * rl;
-  out[1] = 0;
-  out[2] = 0;
-  out[3] = 0;
-  out[4] = 0;
-  out[5] = near * 2 * tb;
-  out[6] = 0;
-  out[7] = 0;
-  out[8] = (right + left) * rl;
-  out[9] = (top + bottom) * tb;
-  out[10] = (far + near) * nf;
-  out[11] = -1;
-  out[12] = 0;
-  out[13] = 0;
-  out[14] = far * near * 2 * nf;
-  out[15] = 0;
-  return out;
-}
-/**
- * Generates a perspective projection matrix with the given bounds.
- * Passing null/undefined/no value for far will generate infinite projection matrix.
- *
- * @param {mat4} out mat4 frustum matrix will be written into
- * @param {number} fovy Vertical field of view in radians
- * @param {number} aspect Aspect ratio. typically viewport width/height
- * @param {number} near Near bound of the frustum
- * @param {number} far Far bound of the frustum, can be null or Infinity
- * @returns {mat4} out
- */
-
-function perspective$1(out, fovy, aspect, near, far) {
-  var f = 1.0 / Math.tan(fovy / 2),
-      nf;
-  out[0] = f / aspect;
-  out[1] = 0;
-  out[2] = 0;
-  out[3] = 0;
-  out[4] = 0;
-  out[5] = f;
-  out[6] = 0;
-  out[7] = 0;
-  out[8] = 0;
-  out[9] = 0;
-  out[11] = -1;
-  out[12] = 0;
-  out[13] = 0;
-  out[15] = 0;
-
-  if (far != null && far !== Infinity) {
-    nf = 1 / (near - far);
-    out[10] = (far + near) * nf;
-    out[14] = 2 * far * near * nf;
-  } else {
-    out[10] = -1;
-    out[14] = -2 * near;
-  }
-
-  return out;
-}
-/**
- * Generates a orthogonal projection matrix with the given bounds
- *
- * @param {mat4} out mat4 frustum matrix will be written into
- * @param {number} left Left bound of the frustum
- * @param {number} right Right bound of the frustum
- * @param {number} bottom Bottom bound of the frustum
- * @param {number} top Top bound of the frustum
- * @param {number} near Near bound of the frustum
- * @param {number} far Far bound of the frustum
- * @returns {mat4} out
- */
-
-function ortho$1(out, left, right, bottom, top, near, far) {
-  var lr = 1 / (left - right);
-  var bt = 1 / (bottom - top);
-  var nf = 1 / (near - far);
-  out[0] = -2 * lr;
-  out[1] = 0;
-  out[2] = 0;
-  out[3] = 0;
-  out[4] = 0;
-  out[5] = -2 * bt;
-  out[6] = 0;
-  out[7] = 0;
-  out[8] = 0;
-  out[9] = 0;
-  out[10] = 2 * nf;
-  out[11] = 0;
-  out[12] = (left + right) * lr;
-  out[13] = (top + bottom) * bt;
-  out[14] = (far + near) * nf;
-  out[15] = 1;
-  return out;
-}
-/**
- * Generates a look-at matrix with the given eye position, focal point, and up axis.
- * If you want a matrix that actually makes an object look at another object, you should use targetTo instead.
- *
- * @param {mat4} out mat4 frustum matrix will be written into
- * @param {ReadonlyVec3} eye Position of the viewer
- * @param {ReadonlyVec3} center Point the viewer is looking at
- * @param {ReadonlyVec3} up vec3 pointing up
- * @returns {mat4} out
- */
-
-function lookAt$1(out, eye, center, up) {
-  var x0, x1, x2, y0, y1, y2, z0, z1, z2, len;
-  var eyex = eye[0];
-  var eyey = eye[1];
-  var eyez = eye[2];
-  var upx = up[0];
-  var upy = up[1];
-  var upz = up[2];
-  var centerx = center[0];
-  var centery = center[1];
-  var centerz = center[2];
-
-  if (Math.abs(eyex - centerx) < EPSILON$1 && Math.abs(eyey - centery) < EPSILON$1 && Math.abs(eyez - centerz) < EPSILON$1) {
-    return identity$3(out);
-  }
-
-  z0 = eyex - centerx;
-  z1 = eyey - centery;
-  z2 = eyez - centerz;
-  len = 1 / Math.hypot(z0, z1, z2);
-  z0 *= len;
-  z1 *= len;
-  z2 *= len;
-  x0 = upy * z2 - upz * z1;
-  x1 = upz * z0 - upx * z2;
-  x2 = upx * z1 - upy * z0;
-  len = Math.hypot(x0, x1, x2);
-
-  if (!len) {
-    x0 = 0;
-    x1 = 0;
-    x2 = 0;
-  } else {
-    len = 1 / len;
-    x0 *= len;
-    x1 *= len;
-    x2 *= len;
-  }
-
-  y0 = z1 * x2 - z2 * x1;
-  y1 = z2 * x0 - z0 * x2;
-  y2 = z0 * x1 - z1 * x0;
-  len = Math.hypot(y0, y1, y2);
-
-  if (!len) {
-    y0 = 0;
-    y1 = 0;
-    y2 = 0;
-  } else {
-    len = 1 / len;
-    y0 *= len;
-    y1 *= len;
-    y2 *= len;
-  }
-
-  out[0] = x0;
-  out[1] = y0;
-  out[2] = z0;
-  out[3] = 0;
-  out[4] = x1;
-  out[5] = y1;
-  out[6] = z1;
-  out[7] = 0;
-  out[8] = x2;
-  out[9] = y2;
-  out[10] = z2;
-  out[11] = 0;
-  out[12] = -(x0 * eyex + x1 * eyey + x2 * eyez);
-  out[13] = -(y0 * eyex + y1 * eyey + y2 * eyez);
-  out[14] = -(z0 * eyex + z1 * eyey + z2 * eyez);
-  out[15] = 1;
-  return out;
-}
-
-/**
- * 4 Dimensional Vector
- * @module vec4
- */
-
-/**
- * Creates a new, empty vec4
- *
- * @returns {vec4} a new 4D vector
- */
-
-function create$4() {
-  var out = new ARRAY_TYPE$1(4);
-
-  if (ARRAY_TYPE$1 != Float32Array) {
-    out[0] = 0;
-    out[1] = 0;
-    out[2] = 0;
-    out[3] = 0;
-  }
-
-  return out;
-}
-/**
- * Adds two vec4's
- *
- * @param {vec4} out the receiving vector
- * @param {ReadonlyVec4} a the first operand
- * @param {ReadonlyVec4} b the second operand
- * @returns {vec4} out
- */
-
-function add$1(out, a, b) {
-  out[0] = a[0] + b[0];
-  out[1] = a[1] + b[1];
-  out[2] = a[2] + b[2];
-  out[3] = a[3] + b[3];
-  return out;
-}
-/**
- * Scales a vec4 by a scalar number
- *
- * @param {vec4} out the receiving vector
- * @param {ReadonlyVec4} a the vector to scale
- * @param {Number} b amount to scale the vector by
- * @returns {vec4} out
- */
-
-function scale$2(out, a, b) {
-  out[0] = a[0] * b;
-  out[1] = a[1] * b;
-  out[2] = a[2] * b;
-  out[3] = a[3] * b;
-  return out;
-}
-/**
- * Calculates the length of a vec4
- *
- * @param {ReadonlyVec4} a vector to calculate length of
- * @returns {Number} length of a
- */
-
-function length$2(a) {
-  var x = a[0];
-  var y = a[1];
-  var z = a[2];
-  var w = a[3];
-  return Math.hypot(x, y, z, w);
-}
-/**
- * Calculates the squared length of a vec4
- *
- * @param {ReadonlyVec4} a vector to calculate squared length of
- * @returns {Number} squared length of a
- */
-
-function squaredLength$1(a) {
-  var x = a[0];
-  var y = a[1];
-  var z = a[2];
-  var w = a[3];
-  return x * x + y * y + z * z + w * w;
-}
-/**
- * Normalize a vec4
- *
- * @param {vec4} out the receiving vector
- * @param {ReadonlyVec4} a vector to normalize
- * @returns {vec4} out
- */
-
-function normalize$1(out, a) {
-  var x = a[0];
-  var y = a[1];
-  var z = a[2];
-  var w = a[3];
-  var len = x * x + y * y + z * z + w * w;
-
-  if (len > 0) {
-    len = 1 / Math.sqrt(len);
-  }
-
-  out[0] = x * len;
-  out[1] = y * len;
-  out[2] = z * len;
-  out[3] = w * len;
-  return out;
-}
-/**
- * Calculates the dot product of two vec4's
- *
- * @param {ReadonlyVec4} a the first operand
- * @param {ReadonlyVec4} b the second operand
- * @returns {Number} dot product of a and b
- */
-
-function dot$2(a, b) {
-  return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
-}
-/**
- * Performs a linear interpolation between two vec4's
- *
- * @param {vec4} out the receiving vector
- * @param {ReadonlyVec4} a the first operand
- * @param {ReadonlyVec4} b the second operand
- * @param {Number} t interpolation amount, in the range [0-1], between the two inputs
- * @returns {vec4} out
- */
-
-function lerp$1(out, a, b, t) {
-  var ax = a[0];
-  var ay = a[1];
-  var az = a[2];
-  var aw = a[3];
-  out[0] = ax + t * (b[0] - ax);
-  out[1] = ay + t * (b[1] - ay);
-  out[2] = az + t * (b[2] - az);
-  out[3] = aw + t * (b[3] - aw);
-  return out;
-}
-/**
- * Transforms the vec4 with a mat4.
- *
- * @param {vec4} out the receiving vector
- * @param {ReadonlyVec4} a the vector to transform
- * @param {ReadonlyMat4} m matrix to transform with
- * @returns {vec4} out
- */
-
-function transformMat4$3(out, a, m) {
-  var x = a[0],
-      y = a[1],
-      z = a[2],
-      w = a[3];
-  out[0] = m[0] * x + m[4] * y + m[8] * z + m[12] * w;
-  out[1] = m[1] * x + m[5] * y + m[9] * z + m[13] * w;
-  out[2] = m[2] * x + m[6] * y + m[10] * z + m[14] * w;
-  out[3] = m[3] * x + m[7] * y + m[11] * z + m[15] * w;
-  return out;
-}
-/**
- * Transforms the vec4 with a quat
- *
- * @param {vec4} out the receiving vector
- * @param {ReadonlyVec4} a the vector to transform
- * @param {ReadonlyQuat} q quaternion to transform with
- * @returns {vec4} out
- */
-
-function transformQuat$1(out, a, q) {
-  var x = a[0],
-      y = a[1],
-      z = a[2];
-  var qx = q[0],
-      qy = q[1],
-      qz = q[2],
-      qw = q[3]; // calculate quat * vec
-
-  var ix = qw * x + qy * z - qz * y;
-  var iy = qw * y + qz * x - qx * z;
-  var iz = qw * z + qx * y - qy * x;
-  var iw = -qx * x - qy * y - qz * z; // calculate result * inverse quat
-
-  out[0] = ix * qw + iw * -qx + iy * -qz - iz * -qy;
-  out[1] = iy * qw + iw * -qy + iz * -qx - ix * -qz;
-  out[2] = iz * qw + iw * -qz + ix * -qy - iy * -qx;
-  out[3] = a[3];
-  return out;
-}
-/**
- * Perform some operation over an array of vec4s.
- *
- * @param {Array} a the array of vectors to iterate over
- * @param {Number} stride Number of elements between the start of each vec4. If 0 assumes tightly packed
- * @param {Number} offset Number of elements to skip at the beginning of the array
- * @param {Number} count Number of vec4s to iterate over. If 0 iterates over entire array
- * @param {Function} fn Function to call for each vector in the array
- * @param {Object} [arg] additional argument to pass to fn
- * @returns {Array} a
- * @function
- */
-
-(function () {
-  var vec = create$4();
-  return function (a, stride, offset, count, fn, arg) {
-    var i, l;
-
-    if (!stride) {
-      stride = 4;
-    }
-
-    if (!offset) {
-      offset = 0;
-    }
-
-    if (count) {
-      l = Math.min(count * stride + offset, a.length);
-    } else {
-      l = a.length;
-    }
-
-    for (i = offset; i < l; i += stride) {
-      vec[0] = a[i];
-      vec[1] = a[i + 1];
-      vec[2] = a[i + 2];
-      vec[3] = a[i + 3];
-      fn(vec, vec, arg);
-      a[i] = vec[0];
-      a[i + 1] = vec[1];
-      a[i + 2] = vec[2];
-      a[i + 3] = vec[3];
-    }
-
-    return a;
-  };
-})();
-
-const IDENTITY$1 = Object.freeze([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
-const ZERO$3 = Object.freeze([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-const INDICES$1 = Object.freeze({
-  COL0ROW0: 0,
-  COL0ROW1: 1,
-  COL0ROW2: 2,
-  COL0ROW3: 3,
-  COL1ROW0: 4,
-  COL1ROW1: 5,
-  COL1ROW2: 6,
-  COL1ROW3: 7,
-  COL2ROW0: 8,
-  COL2ROW1: 9,
-  COL2ROW2: 10,
-  COL2ROW3: 11,
-  COL3ROW0: 12,
-  COL3ROW1: 13,
-  COL3ROW2: 14,
-  COL3ROW3: 15
-});
-const constants = {};
-let Matrix4$1 = class Matrix4 extends Matrix$1 {
-  static get IDENTITY() {
-    constants.IDENTITY = constants.IDENTITY || Object.freeze(new Matrix4(IDENTITY$1));
-    return constants.IDENTITY;
-  }
-
-  static get ZERO() {
-    constants.ZERO = constants.ZERO || Object.freeze(new Matrix4(ZERO$3));
-    return constants.ZERO;
-  }
-
-  get INDICES() {
-    return INDICES$1;
-  }
-
-  get ELEMENTS() {
-    return 16;
-  }
-
-  get RANK() {
-    return 4;
-  }
-
-  constructor(array) {
-    super(-0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0);
-
-    if (arguments.length === 1 && Array.isArray(array)) {
-      this.copy(array);
-    } else {
-      this.identity();
-    }
-  }
-
-  copy(array) {
-    this[0] = array[0];
-    this[1] = array[1];
-    this[2] = array[2];
-    this[3] = array[3];
-    this[4] = array[4];
-    this[5] = array[5];
-    this[6] = array[6];
-    this[7] = array[7];
-    this[8] = array[8];
-    this[9] = array[9];
-    this[10] = array[10];
-    this[11] = array[11];
-    this[12] = array[12];
-    this[13] = array[13];
-    this[14] = array[14];
-    this[15] = array[15];
-    return this.check();
-  }
-
-  set(m00, m10, m20, m30, m01, m11, m21, m31, m02, m12, m22, m32, m03, m13, m23, m33) {
-    this[0] = m00;
-    this[1] = m10;
-    this[2] = m20;
-    this[3] = m30;
-    this[4] = m01;
-    this[5] = m11;
-    this[6] = m21;
-    this[7] = m31;
-    this[8] = m02;
-    this[9] = m12;
-    this[10] = m22;
-    this[11] = m32;
-    this[12] = m03;
-    this[13] = m13;
-    this[14] = m23;
-    this[15] = m33;
-    return this.check();
-  }
-
-  setRowMajor(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {
-    this[0] = m00;
-    this[1] = m10;
-    this[2] = m20;
-    this[3] = m30;
-    this[4] = m01;
-    this[5] = m11;
-    this[6] = m21;
-    this[7] = m31;
-    this[8] = m02;
-    this[9] = m12;
-    this[10] = m22;
-    this[11] = m32;
-    this[12] = m03;
-    this[13] = m13;
-    this[14] = m23;
-    this[15] = m33;
-    return this.check();
-  }
-
-  toRowMajor(result) {
-    result[0] = this[0];
-    result[1] = this[4];
-    result[2] = this[8];
-    result[3] = this[12];
-    result[4] = this[1];
-    result[5] = this[5];
-    result[6] = this[9];
-    result[7] = this[13];
-    result[8] = this[2];
-    result[9] = this[6];
-    result[10] = this[10];
-    result[11] = this[14];
-    result[12] = this[3];
-    result[13] = this[7];
-    result[14] = this[11];
-    result[15] = this[15];
-    return result;
-  }
-
-  identity() {
-    return this.copy(IDENTITY$1);
-  }
-
-  fromQuaternion(q) {
-    fromQuat$1(this, q);
-    return this.check();
-  }
-
-  frustum({
-    left,
-    right,
-    bottom,
-    top,
-    near,
-    far
-  }) {
-    if (far === Infinity) {
-      Matrix4._computeInfinitePerspectiveOffCenter(this, left, right, bottom, top, near);
-    } else {
-      frustum$1(this, left, right, bottom, top, near, far);
-    }
-
-    return this.check();
-  }
-
-  static _computeInfinitePerspectiveOffCenter(result, left, right, bottom, top, near) {
-    const column0Row0 = 2.0 * near / (right - left);
-    const column1Row1 = 2.0 * near / (top - bottom);
-    const column2Row0 = (right + left) / (right - left);
-    const column2Row1 = (top + bottom) / (top - bottom);
-    const column2Row2 = -1.0;
-    const column2Row3 = -1.0;
-    const column3Row2 = -2.0 * near;
-    result[0] = column0Row0;
-    result[1] = 0.0;
-    result[2] = 0.0;
-    result[3] = 0.0;
-    result[4] = 0.0;
-    result[5] = column1Row1;
-    result[6] = 0.0;
-    result[7] = 0.0;
-    result[8] = column2Row0;
-    result[9] = column2Row1;
-    result[10] = column2Row2;
-    result[11] = column2Row3;
-    result[12] = 0.0;
-    result[13] = 0.0;
-    result[14] = column3Row2;
-    result[15] = 0.0;
-    return result;
-  }
-
-  lookAt(eye, center, up) {
-    if (arguments.length === 1) {
-      ({
-        eye,
-        center,
-        up
-      } = eye);
-    }
-
-    center = center || [0, 0, 0];
-    up = up || [0, 1, 0];
-    lookAt$1(this, eye, center, up);
-    return this.check();
-  }
-
-  ortho({
-    left,
-    right,
-    bottom,
-    top,
-    near = 0.1,
-    far = 500
-  }) {
-    ortho$1(this, left, right, bottom, top, near, far);
-    return this.check();
-  }
-
-  orthographic({
-    fovy = 45 * Math.PI / 180,
-    aspect = 1,
-    focalDistance = 1,
-    near = 0.1,
-    far = 500
-  }) {
-    if (fovy > Math.PI * 2) {
-      throw Error('radians');
-    }
-
-    const halfY = fovy / 2;
-    const top = focalDistance * Math.tan(halfY);
-    const right = top * aspect;
-    return new Matrix4().ortho({
-      left: -right,
-      right,
-      bottom: -top,
-      top,
-      near,
-      far
-    });
-  }
-
-  perspective({
-    fovy = undefined,
-    fov = 45 * Math.PI / 180,
-    aspect = 1,
-    near = 0.1,
-    far = 500
-  } = {}) {
-    fovy = fovy || fov;
-
-    if (fovy > Math.PI * 2) {
-      throw Error('radians');
-    }
-
-    perspective$1(this, fovy, aspect, near, far);
-    return this.check();
-  }
-
-  determinant() {
-    return determinant$1(this);
-  }
-
-  getScale(result = [-0, -0, -0]) {
-    result[0] = Math.sqrt(this[0] * this[0] + this[1] * this[1] + this[2] * this[2]);
-    result[1] = Math.sqrt(this[4] * this[4] + this[5] * this[5] + this[6] * this[6]);
-    result[2] = Math.sqrt(this[8] * this[8] + this[9] * this[9] + this[10] * this[10]);
-    return result;
-  }
-
-  getTranslation(result = [-0, -0, -0]) {
-    result[0] = this[12];
-    result[1] = this[13];
-    result[2] = this[14];
-    return result;
-  }
-
-  getRotation(result = [-0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0], scaleResult = null) {
-    const scale = this.getScale(scaleResult || [-0, -0, -0]);
-    const inverseScale0 = 1 / scale[0];
-    const inverseScale1 = 1 / scale[1];
-    const inverseScale2 = 1 / scale[2];
-    result[0] = this[0] * inverseScale0;
-    result[1] = this[1] * inverseScale1;
-    result[2] = this[2] * inverseScale2;
-    result[3] = 0;
-    result[4] = this[4] * inverseScale0;
-    result[5] = this[5] * inverseScale1;
-    result[6] = this[6] * inverseScale2;
-    result[7] = 0;
-    result[8] = this[8] * inverseScale0;
-    result[9] = this[9] * inverseScale1;
-    result[10] = this[10] * inverseScale2;
-    result[11] = 0;
-    result[12] = 0;
-    result[13] = 0;
-    result[14] = 0;
-    result[15] = 1;
-    return result;
-  }
-
-  getRotationMatrix3(result = [-0, -0, -0, -0, -0, -0, -0, -0, -0], scaleResult = null) {
-    const scale = this.getScale(scaleResult || [-0, -0, -0]);
-    const inverseScale0 = 1 / scale[0];
-    const inverseScale1 = 1 / scale[1];
-    const inverseScale2 = 1 / scale[2];
-    result[0] = this[0] * inverseScale0;
-    result[1] = this[1] * inverseScale1;
-    result[2] = this[2] * inverseScale2;
-    result[3] = this[4] * inverseScale0;
-    result[4] = this[5] * inverseScale1;
-    result[5] = this[6] * inverseScale2;
-    result[6] = this[8] * inverseScale0;
-    result[7] = this[9] * inverseScale1;
-    result[8] = this[10] * inverseScale2;
-    return result;
-  }
-
-  transpose() {
-    transpose$1(this, this);
-    return this.check();
-  }
-
-  invert() {
-    invert$2(this, this);
-    return this.check();
-  }
-
-  multiplyLeft(a) {
-    multiply$2(this, a, this);
-    return this.check();
-  }
-
-  multiplyRight(a) {
-    multiply$2(this, this, a);
-    return this.check();
-  }
-
-  rotateX(radians) {
-    rotateX$3(this, this, radians);
-    return this.check();
-  }
-
-  rotateY(radians) {
-    rotateY$3(this, this, radians);
-    return this.check();
-  }
-
-  rotateZ(radians) {
-    rotateZ$3(this, this, radians);
-    return this.check();
-  }
-
-  rotateXYZ([rx, ry, rz]) {
-    return this.rotateX(rx).rotateY(ry).rotateZ(rz);
-  }
-
-  rotateAxis(radians, axis) {
-    rotate$1(this, this, radians, axis);
-    return this.check();
-  }
-
-  scale(factor) {
-    if (Array.isArray(factor)) {
-      scale$3(this, this, factor);
-    } else {
-      scale$3(this, this, [factor, factor, factor]);
-    }
-
-    return this.check();
-  }
-
-  translate(vec) {
-    translate$1(this, this, vec);
-    return this.check();
-  }
-
-  transform(vector, result) {
-    if (vector.length === 4) {
-      result = transformMat4$3(result || [-0, -0, -0, -0], vector, this);
-      checkVector$1(result, 4);
-      return result;
-    }
-
-    return this.transformAsPoint(vector, result);
-  }
-
-  transformAsPoint(vector, result) {
-    const {
-      length
-    } = vector;
-
-    switch (length) {
-      case 2:
-        result = transformMat4$5(result || [-0, -0], vector, this);
-        break;
-
-      case 3:
-        result = transformMat4$4(result || [-0, -0, -0], vector, this);
-        break;
-
-      default:
-        throw new Error('Illegal vector');
-    }
-
-    checkVector$1(result, vector.length);
-    return result;
-  }
-
-  transformAsVector(vector, result) {
-    switch (vector.length) {
-      case 2:
-        result = vec2_transformMat4AsVector$1(result || [-0, -0], vector, this);
-        break;
-
-      case 3:
-        result = vec3_transformMat4AsVector$1(result || [-0, -0, -0], vector, this);
-        break;
-
-      default:
-        throw new Error('Illegal vector');
-    }
-
-    checkVector$1(result, vector.length);
-    return result;
-  }
-
-  makeRotationX(radians) {
-    return this.identity().rotateX(radians);
-  }
-
-  makeTranslation(x, y, z) {
-    return this.identity().translate([x, y, z]);
-  }
-
-  transformPoint(vector, result) {
-    deprecated('Matrix4.transformPoint', '3.0');
-    return this.transformAsPoint(vector, result);
-  }
-
-  transformVector(vector, result) {
-    deprecated('Matrix4.transformVector', '3.0');
-    return this.transformAsPoint(vector, result);
-  }
-
-  transformDirection(vector, result) {
-    deprecated('Matrix4.transformDirection', '3.0');
-    return this.transformAsVector(vector, result);
-  }
-
-};
-
-/**
- * Quaternion
- * @module quat
- */
-
-/**
- * Creates a new identity quat
- *
- * @returns {quat} a new quaternion
- */
-
-function create$3() {
-  var out = new ARRAY_TYPE$1(4);
-
-  if (ARRAY_TYPE$1 != Float32Array) {
-    out[0] = 0;
-    out[1] = 0;
-    out[2] = 0;
-  }
-
-  out[3] = 1;
-  return out;
-}
-/**
- * Set a quat to the identity quaternion
- *
- * @param {quat} out the receiving quaternion
- * @returns {quat} out
- */
-
-function identity$2(out) {
-  out[0] = 0;
-  out[1] = 0;
-  out[2] = 0;
-  out[3] = 1;
-  return out;
-}
-/**
- * Sets a quat from the given angle and rotation axis,
- * then returns it.
- *
- * @param {quat} out the receiving quaternion
- * @param {ReadonlyVec3} axis the axis around which to rotate
- * @param {Number} rad the angle in radians
- * @returns {quat} out
- **/
-
-function setAxisAngle(out, axis, rad) {
-  rad = rad * 0.5;
-  var s = Math.sin(rad);
-  out[0] = s * axis[0];
-  out[1] = s * axis[1];
-  out[2] = s * axis[2];
-  out[3] = Math.cos(rad);
-  return out;
-}
-/**
- * Multiplies two quat's
- *
- * @param {quat} out the receiving quaternion
- * @param {ReadonlyQuat} a the first operand
- * @param {ReadonlyQuat} b the second operand
- * @returns {quat} out
- */
-
-function multiply$1(out, a, b) {
-  var ax = a[0],
-      ay = a[1],
-      az = a[2],
-      aw = a[3];
-  var bx = b[0],
-      by = b[1],
-      bz = b[2],
-      bw = b[3];
-  out[0] = ax * bw + aw * bx + ay * bz - az * by;
-  out[1] = ay * bw + aw * by + az * bx - ax * bz;
-  out[2] = az * bw + aw * bz + ax * by - ay * bx;
-  out[3] = aw * bw - ax * bx - ay * by - az * bz;
-  return out;
-}
-/**
- * Rotates a quaternion by the given angle about the X axis
- *
- * @param {quat} out quat receiving operation result
- * @param {ReadonlyQuat} a quat to rotate
- * @param {number} rad angle (in radians) to rotate
- * @returns {quat} out
- */
-
-function rotateX$2(out, a, rad) {
-  rad *= 0.5;
-  var ax = a[0],
-      ay = a[1],
-      az = a[2],
-      aw = a[3];
-  var bx = Math.sin(rad),
-      bw = Math.cos(rad);
-  out[0] = ax * bw + aw * bx;
-  out[1] = ay * bw + az * bx;
-  out[2] = az * bw - ay * bx;
-  out[3] = aw * bw - ax * bx;
-  return out;
-}
-/**
- * Rotates a quaternion by the given angle about the Y axis
- *
- * @param {quat} out quat receiving operation result
- * @param {ReadonlyQuat} a quat to rotate
- * @param {number} rad angle (in radians) to rotate
- * @returns {quat} out
- */
-
-function rotateY$2(out, a, rad) {
-  rad *= 0.5;
-  var ax = a[0],
-      ay = a[1],
-      az = a[2],
-      aw = a[3];
-  var by = Math.sin(rad),
-      bw = Math.cos(rad);
-  out[0] = ax * bw - az * by;
-  out[1] = ay * bw + aw * by;
-  out[2] = az * bw + ax * by;
-  out[3] = aw * bw - ay * by;
-  return out;
-}
-/**
- * Rotates a quaternion by the given angle about the Z axis
- *
- * @param {quat} out quat receiving operation result
- * @param {ReadonlyQuat} a quat to rotate
- * @param {number} rad angle (in radians) to rotate
- * @returns {quat} out
- */
-
-function rotateZ$2(out, a, rad) {
-  rad *= 0.5;
-  var ax = a[0],
-      ay = a[1],
-      az = a[2],
-      aw = a[3];
-  var bz = Math.sin(rad),
-      bw = Math.cos(rad);
-  out[0] = ax * bw + ay * bz;
-  out[1] = ay * bw - ax * bz;
-  out[2] = az * bw + aw * bz;
-  out[3] = aw * bw - az * bz;
-  return out;
-}
-/**
- * Calculates the W component of a quat from the X, Y, and Z components.
- * Assumes that quaternion is 1 unit in length.
- * Any existing W component will be ignored.
- *
- * @param {quat} out the receiving quaternion
- * @param {ReadonlyQuat} a quat to calculate W component of
- * @returns {quat} out
- */
-
-function calculateW(out, a) {
-  var x = a[0],
-      y = a[1],
-      z = a[2];
-  out[0] = x;
-  out[1] = y;
-  out[2] = z;
-  out[3] = Math.sqrt(Math.abs(1.0 - x * x - y * y - z * z));
-  return out;
-}
-/**
- * Performs a spherical linear interpolation between two quat
- *
- * @param {quat} out the receiving quaternion
- * @param {ReadonlyQuat} a the first operand
- * @param {ReadonlyQuat} b the second operand
- * @param {Number} t interpolation amount, in the range [0-1], between the two inputs
- * @returns {quat} out
- */
-
-function slerp(out, a, b, t) {
-  // benchmarks:
-  //    http://jsperf.com/quaternion-slerp-implementations
-  var ax = a[0],
-      ay = a[1],
-      az = a[2],
-      aw = a[3];
-  var bx = b[0],
-      by = b[1],
-      bz = b[2],
-      bw = b[3];
-  var omega, cosom, sinom, scale0, scale1; // calc cosine
-
-  cosom = ax * bx + ay * by + az * bz + aw * bw; // adjust signs (if necessary)
-
-  if (cosom < 0.0) {
-    cosom = -cosom;
-    bx = -bx;
-    by = -by;
-    bz = -bz;
-    bw = -bw;
-  } // calculate coefficients
-
-
-  if (1.0 - cosom > EPSILON$1) {
-    // standard case (slerp)
-    omega = Math.acos(cosom);
-    sinom = Math.sin(omega);
-    scale0 = Math.sin((1.0 - t) * omega) / sinom;
-    scale1 = Math.sin(t * omega) / sinom;
-  } else {
-    // "from" and "to" quaternions are very close
-    //  ... so we can do a linear interpolation
-    scale0 = 1.0 - t;
-    scale1 = t;
-  } // calculate final values
-
-
-  out[0] = scale0 * ax + scale1 * bx;
-  out[1] = scale0 * ay + scale1 * by;
-  out[2] = scale0 * az + scale1 * bz;
-  out[3] = scale0 * aw + scale1 * bw;
-  return out;
-}
-/**
- * Calculates the inverse of a quat
- *
- * @param {quat} out the receiving quaternion
- * @param {ReadonlyQuat} a quat to calculate inverse of
- * @returns {quat} out
- */
-
-function invert$1(out, a) {
-  var a0 = a[0],
-      a1 = a[1],
-      a2 = a[2],
-      a3 = a[3];
-  var dot = a0 * a0 + a1 * a1 + a2 * a2 + a3 * a3;
-  var invDot = dot ? 1.0 / dot : 0; // TODO: Would be faster to return [0,0,0,0] immediately if dot == 0
-
-  out[0] = -a0 * invDot;
-  out[1] = -a1 * invDot;
-  out[2] = -a2 * invDot;
-  out[3] = a3 * invDot;
-  return out;
-}
-/**
- * Calculates the conjugate of a quat
- * If the quaternion is normalized, this function is faster than quat.inverse and produces the same result.
- *
- * @param {quat} out the receiving quaternion
- * @param {ReadonlyQuat} a quat to calculate conjugate of
- * @returns {quat} out
- */
-
-function conjugate(out, a) {
-  out[0] = -a[0];
-  out[1] = -a[1];
-  out[2] = -a[2];
-  out[3] = a[3];
-  return out;
-}
-/**
- * Creates a quaternion from the given 3x3 rotation matrix.
- *
- * NOTE: The resultant quaternion is not normalized, so you should be sure
- * to renormalize the quaternion yourself where necessary.
- *
- * @param {quat} out the receiving quaternion
- * @param {ReadonlyMat3} m rotation matrix
- * @returns {quat} out
- * @function
- */
-
-function fromMat3(out, m) {
-  // Algorithm in Ken Shoemake's article in 1987 SIGGRAPH course notes
-  // article "Quaternion Calculus and Fast Animation".
-  var fTrace = m[0] + m[4] + m[8];
-  var fRoot;
-
-  if (fTrace > 0.0) {
-    // |w| > 1/2, may as well choose w > 1/2
-    fRoot = Math.sqrt(fTrace + 1.0); // 2w
-
-    out[3] = 0.5 * fRoot;
-    fRoot = 0.5 / fRoot; // 1/(4w)
-
-    out[0] = (m[5] - m[7]) * fRoot;
-    out[1] = (m[6] - m[2]) * fRoot;
-    out[2] = (m[1] - m[3]) * fRoot;
-  } else {
-    // |w| <= 1/2
-    var i = 0;
-    if (m[4] > m[0]) i = 1;
-    if (m[8] > m[i * 3 + i]) i = 2;
-    var j = (i + 1) % 3;
-    var k = (i + 2) % 3;
-    fRoot = Math.sqrt(m[i * 3 + i] - m[j * 3 + j] - m[k * 3 + k] + 1.0);
-    out[i] = 0.5 * fRoot;
-    fRoot = 0.5 / fRoot;
-    out[3] = (m[j * 3 + k] - m[k * 3 + j]) * fRoot;
-    out[j] = (m[j * 3 + i] + m[i * 3 + j]) * fRoot;
-    out[k] = (m[k * 3 + i] + m[i * 3 + k]) * fRoot;
-  }
-
-  return out;
-}
-/**
- * Adds two quat's
- *
- * @param {quat} out the receiving quaternion
- * @param {ReadonlyQuat} a the first operand
- * @param {ReadonlyQuat} b the second operand
- * @returns {quat} out
- * @function
- */
-
-var add = add$1;
-/**
- * Scales a quat by a scalar number
- *
- * @param {quat} out the receiving vector
- * @param {ReadonlyQuat} a the vector to scale
- * @param {Number} b amount to scale the vector by
- * @returns {quat} out
- * @function
- */
-
-var scale$1 = scale$2;
-/**
- * Calculates the dot product of two quat's
- *
- * @param {ReadonlyQuat} a the first operand
- * @param {ReadonlyQuat} b the second operand
- * @returns {Number} dot product of a and b
- * @function
- */
-
-var dot$1 = dot$2;
-/**
- * Performs a linear interpolation between two quat's
- *
- * @param {quat} out the receiving quaternion
- * @param {ReadonlyQuat} a the first operand
- * @param {ReadonlyQuat} b the second operand
- * @param {Number} t interpolation amount, in the range [0-1], between the two inputs
- * @returns {quat} out
- * @function
- */
-
-var lerp = lerp$1;
-/**
- * Calculates the length of a quat
- *
- * @param {ReadonlyQuat} a vector to calculate length of
- * @returns {Number} length of a
- */
-
-var length$1 = length$2;
-/**
- * Calculates the squared length of a quat
- *
- * @param {ReadonlyQuat} a vector to calculate squared length of
- * @returns {Number} squared length of a
- * @function
- */
-
-var squaredLength = squaredLength$1;
-/**
- * Normalize a quat
- *
- * @param {quat} out the receiving quaternion
- * @param {ReadonlyQuat} a quaternion to normalize
- * @returns {quat} out
- * @function
- */
-
-var normalize = normalize$1;
-/**
- * Sets a quaternion to represent the shortest rotation from one
- * vector to another.
- *
- * Both vectors are assumed to be unit length.
- *
- * @param {quat} out the receiving quaternion.
- * @param {ReadonlyVec3} a the initial vector
- * @param {ReadonlyVec3} b the destination vector
- * @returns {quat} out
- */
-
-var rotationTo = function () {
-  var tmpvec3 = create$6();
-  var xUnitVec3 = fromValues(1, 0, 0);
-  var yUnitVec3 = fromValues(0, 1, 0);
-  return function (out, a, b) {
-    var dot = dot$3(a, b);
-
-    if (dot < -0.999999) {
-      cross$1(tmpvec3, xUnitVec3, a);
-      if (len(tmpvec3) < 0.000001) cross$1(tmpvec3, yUnitVec3, a);
-      normalize$2(tmpvec3, tmpvec3);
-      setAxisAngle(out, tmpvec3, Math.PI);
-      return out;
-    } else if (dot > 0.999999) {
-      out[0] = 0;
-      out[1] = 0;
-      out[2] = 0;
-      out[3] = 1;
-      return out;
-    } else {
-      cross$1(tmpvec3, a, b);
-      out[0] = tmpvec3[0];
-      out[1] = tmpvec3[1];
-      out[2] = tmpvec3[2];
-      out[3] = 1 + dot;
-      return normalize(out, out);
-    }
-  };
-}();
-/**
- * Performs a spherical linear interpolation with two control points
- *
- * @param {quat} out the receiving quaternion
- * @param {ReadonlyQuat} a the first operand
- * @param {ReadonlyQuat} b the second operand
- * @param {ReadonlyQuat} c the third operand
- * @param {ReadonlyQuat} d the fourth operand
- * @param {Number} t interpolation amount, in the range [0-1], between the two inputs
- * @returns {quat} out
- */
-
-(function () {
-  var temp1 = create$3();
-  var temp2 = create$3();
-  return function (out, a, b, c, d, t) {
-    slerp(temp1, a, d, t);
-    slerp(temp2, b, c, t);
-    slerp(out, temp1, temp2, 2 * t * (1 - t));
-    return out;
-  };
-})();
-/**
- * Sets the specified quaternion with values corresponding to the given
- * axes. Each axis is a vec3 and is expected to be unit length and
- * perpendicular to all other specified axes.
- *
- * @param {ReadonlyVec3} view  the vector representing the viewing direction
- * @param {ReadonlyVec3} right the vector representing the local "right" direction
- * @param {ReadonlyVec3} up    the vector representing the local "up" direction
- * @returns {quat} out
- */
-
-(function () {
-  var matr = create$5();
-  return function (out, view, right, up) {
-    matr[0] = right[0];
-    matr[3] = right[1];
-    matr[6] = right[2];
-    matr[1] = up[0];
-    matr[4] = up[1];
-    matr[7] = up[2];
-    matr[2] = -view[0];
-    matr[5] = -view[1];
-    matr[8] = -view[2];
-    return normalize(out, fromMat3(out, matr));
-  };
-})();
-
-const IDENTITY_QUATERNION = [0, 0, 0, 1];
-class Quaternion extends MathArray$1 {
-  constructor(x = 0, y = 0, z = 0, w = 1) {
-    super(-0, -0, -0, -0);
-
-    if (Array.isArray(x) && arguments.length === 1) {
-      this.copy(x);
-    } else {
-      this.set(x, y, z, w);
-    }
-  }
-
-  copy(array) {
-    this[0] = array[0];
-    this[1] = array[1];
-    this[2] = array[2];
-    this[3] = array[3];
-    return this.check();
-  }
-
-  set(x, y, z, w) {
-    this[0] = x;
-    this[1] = y;
-    this[2] = z;
-    this[3] = w;
-    return this.check();
-  }
-
-  fromMatrix3(m) {
-    fromMat3(this, m);
-    return this.check();
-  }
-
-  identity() {
-    identity$2(this);
-    return this.check();
-  }
-
-  fromAxisRotation(axis, rad) {
-    setAxisAngle(this, axis, rad);
-    return this.check();
-  }
-
-  setAxisAngle(axis, rad) {
-    return this.fromAxisRotation(axis, rad);
-  }
-
-  get ELEMENTS() {
-    return 4;
-  }
-
-  get x() {
-    return this[0];
-  }
-
-  set x(value) {
-    this[0] = checkNumber$1(value);
-  }
-
-  get y() {
-    return this[1];
-  }
-
-  set y(value) {
-    this[1] = checkNumber$1(value);
-  }
-
-  get z() {
-    return this[2];
-  }
-
-  set z(value) {
-    this[2] = checkNumber$1(value);
-  }
-
-  get w() {
-    return this[3];
-  }
-
-  set w(value) {
-    this[3] = checkNumber$1(value);
-  }
-
-  len() {
-    return length$1(this);
-  }
-
-  lengthSquared() {
-    return squaredLength(this);
-  }
-
-  dot(a, b) {
-    if (b !== undefined) {
-      throw new Error('Quaternion.dot only takes one argument');
-    }
-
-    return dot$1(this, a);
-  }
-
-  rotationTo(vectorA, vectorB) {
-    rotationTo(this, vectorA, vectorB);
-    return this.check();
-  }
-
-  add(a, b) {
-    if (b !== undefined) {
-      throw new Error('Quaternion.add only takes one argument');
-    }
-
-    add(this, this, a);
-    return this.check();
-  }
-
-  calculateW() {
-    calculateW(this, this);
-    return this.check();
-  }
-
-  conjugate() {
-    conjugate(this, this);
-    return this.check();
-  }
-
-  invert() {
-    invert$1(this, this);
-    return this.check();
-  }
-
-  lerp(a, b, t) {
-    lerp(this, a, b, t);
-    return this.check();
-  }
-
-  multiplyRight(a, b) {
-    assert$5(!b);
-    multiply$1(this, this, a);
-    return this.check();
-  }
-
-  multiplyLeft(a, b) {
-    assert$5(!b);
-    multiply$1(this, a, this);
-    return this.check();
-  }
-
-  normalize() {
-    const length = this.len();
-    const l = length > 0 ? 1 / length : 0;
-    this[0] = this[0] * l;
-    this[1] = this[1] * l;
-    this[2] = this[2] * l;
-    this[3] = this[3] * l;
-
-    if (length === 0) {
-      this[3] = 1;
-    }
-
-    return this.check();
-  }
-
-  rotateX(rad) {
-    rotateX$2(this, this, rad);
-    return this.check();
-  }
-
-  rotateY(rad) {
-    rotateY$2(this, this, rad);
-    return this.check();
-  }
-
-  rotateZ(rad) {
-    rotateZ$2(this, this, rad);
-    return this.check();
-  }
-
-  scale(b) {
-    scale$1(this, this, b);
-    return this.check();
-  }
-
-  slerp(start, target, ratio) {
-    switch (arguments.length) {
-      case 1:
-        ({
-          start = IDENTITY_QUATERNION,
-          target,
-          ratio
-        } = arguments[0]);
-        break;
-
-      case 2:
-        [target, ratio] = arguments;
-        start = this;
-        break;
-    }
-
-    slerp(this, start, target, ratio);
-    return this.check();
-  }
-
-  transformVector4(vector, result = vector) {
-    transformQuat$1(result, vector, this);
-    return checkVector$1(result, 4);
-  }
-
-  lengthSq() {
-    return this.lengthSquared();
-  }
-
-  setFromAxisAngle(axis, rad) {
-    return this.setAxisAngle(axis, rad);
-  }
-
-  premultiply(a, b) {
-    return this.multiplyLeft(a, b);
-  }
-
-  multiply(a, b) {
-    return this.multiplyRight(a, b);
-  }
-
-}
-
-var _MathUtils$1 = {
-  EPSILON1: 1e-1,
-  EPSILON2: 1e-2,
-  EPSILON3: 1e-3,
-  EPSILON4: 1e-4,
-  EPSILON5: 1e-5,
-  EPSILON6: 1e-6,
-  EPSILON7: 1e-7,
-  EPSILON8: 1e-8,
-  EPSILON9: 1e-9,
-  EPSILON10: 1e-10,
-  EPSILON11: 1e-11,
-  EPSILON12: 1e-12,
-  EPSILON13: 1e-13,
-  EPSILON14: 1e-14,
-  EPSILON15: 1e-15,
-  EPSILON16: 1e-16,
-  EPSILON17: 1e-17,
-  EPSILON18: 1e-18,
-  EPSILON19: 1e-19,
-  EPSILON20: 1e-20,
-  PI_OVER_TWO: Math.PI / 2,
-  PI_OVER_FOUR: Math.PI / 4,
-  PI_OVER_SIX: Math.PI / 6,
-  TWO_PI: Math.PI * 2
-};
-
-function assert$4(condition, message) {
-  if (!condition) {
-    throw new Error("math.gl assertion ".concat(message));
-  }
+  return Array.isArray(resolvedLoaders) ? await parse$3(data, resolvedLoaders, resolvedOptions) : await parse$3(data, resolvedLoaders, resolvedOptions);
 }
 
 const RADIANS_TO_DEGREES = 1 / Math.PI * 180;
 const DEGREES_TO_RADIANS = 1 / 180 * Math.PI;
-const config = {
+const DEFAULT_CONFIG = {
   EPSILON: 1e-12,
   debug: false,
   precision: 4,
   printTypes: false,
   printDegrees: false,
-  printRowMajor: true
+  printRowMajor: true,
+  _cartographicRadians: false
 };
+globalThis.mathgl = globalThis.mathgl || {
+  config: { ...DEFAULT_CONFIG
+  }
+};
+const config = globalThis.mathgl.config;
 function formatValue(value, {
   precision = config.precision
 } = {}) {
@@ -6722,6 +2934,9 @@ function radians(degrees, result) {
 }
 function degrees(radians, result) {
   return map(radians, radians => radians * RADIANS_TO_DEGREES, result);
+}
+function clamp(value, min, max) {
+  return map(value, value => Math.max(min, Math.min(max, value)));
 }
 function equals(a, b, epsilon) {
   const oldEpsilon = config.EPSILON;
@@ -6781,7 +2996,8 @@ function map(value, func, result) {
     result = result || duplicateArray(array);
 
     for (let i = 0; i < result.length && i < array.length; ++i) {
-      result[i] = func(value[i], i, result);
+      const val = typeof value === 'number' ? value : value[i];
+      result[i] = func(val, i, result);
     }
 
     return result;
@@ -6833,6 +3049,10 @@ class MathArray extends _extendableBuiltin(Array) {
     }
 
     return targetArray;
+  }
+
+  toObject(targetObject) {
+    return targetObject;
   }
 
   from(arrayOrObject) {
@@ -6912,7 +3132,8 @@ class MathArray extends _extendableBuiltin(Array) {
 
     for (let i = 0; i < this.ELEMENTS; ++i) {
       const ai = a[i];
-      this[i] = ai + t * (b[i] - ai);
+      const endValue = typeof b === 'number' ? b : b[i];
+      this[i] = ai + t * (endValue - ai);
     }
 
     return this.check();
@@ -7067,7 +3288,7 @@ function validateVector(v, length) {
 }
 function checkNumber(value) {
   if (!Number.isFinite(value)) {
-    throw new Error("Invalid number ".concat(value));
+    throw new Error("Invalid number ".concat(JSON.stringify(value)));
   }
 
   return value;
@@ -7078,6 +3299,12 @@ function checkVector(v, length, callerName = '') {
   }
 
   return v;
+}
+
+function assert$3(condition, message) {
+  if (!condition) {
+    throw new Error("math.gl assertion ".concat(message));
+  }
 }
 
 class Vector extends MathArray {
@@ -7189,12 +3416,12 @@ class Vector extends MathArray {
   }
 
   getComponent(i) {
-    assert$4(i >= 0 && i < this.ELEMENTS, 'index is out of range');
+    assert$3(i >= 0 && i < this.ELEMENTS, 'index is out of range');
     return checkNumber(this[i]);
   }
 
   setComponent(i, value) {
-    assert$4(i >= 0 && i < this.ELEMENTS, 'index is out of range');
+    assert$3(i >= 0 && i < this.ELEMENTS, 'index is out of range');
     this[i] = value;
     return this.check();
   }
@@ -7217,37 +3444,11 @@ class Vector extends MathArray {
 
 }
 
-/**
- * Common utilities
- * @module glMatrix
- */
-// Configuration Constants
-var EPSILON = 0.000001;
-var ARRAY_TYPE = typeof Float32Array !== 'undefined' ? Float32Array : Array;
-if (!Math.hypot) Math.hypot = function () {
-  var y = 0,
-      i = arguments.length;
+const EPSILON = 0.000001;
+let ARRAY_TYPE = typeof Float32Array !== 'undefined' ? Float32Array : Array;
 
-  while (i--) {
-    y += arguments[i] * arguments[i];
-  }
-
-  return Math.sqrt(y);
-};
-
-/**
- * 2 Dimensional Vector
- * @module vec2
- */
-
-/**
- * Creates a new, empty vec2
- *
- * @returns {vec2} a new 2D vector
- */
-
-function create$2() {
-  var out = new ARRAY_TYPE(2);
+function create$4() {
+  const out = new ARRAY_TYPE(2);
 
   if (ARRAY_TYPE != Float32Array) {
     out[0] = 0;
@@ -7256,41 +3457,39 @@ function create$2() {
 
   return out;
 }
-/**
- * Transforms the vec2 with a mat4
- * 3rd vector component is implicitly '0'
- * 4th vector component is implicitly '1'
- *
- * @param {vec2} out the receiving vector
- * @param {ReadonlyVec2} a the vector to transform
- * @param {ReadonlyMat4} m matrix to transform with
- * @returns {vec2} out
- */
-
+function transformMat2(out, a, m) {
+  const x = a[0];
+  const y = a[1];
+  out[0] = m[0] * x + m[2] * y;
+  out[1] = m[1] * x + m[3] * y;
+  return out;
+}
+function transformMat2d(out, a, m) {
+  const x = a[0];
+  const y = a[1];
+  out[0] = m[0] * x + m[2] * y + m[4];
+  out[1] = m[1] * x + m[3] * y + m[5];
+  return out;
+}
+function transformMat3$1(out, a, m) {
+  const x = a[0];
+  const y = a[1];
+  out[0] = m[0] * x + m[3] * y + m[6];
+  out[1] = m[1] * x + m[4] * y + m[7];
+  return out;
+}
 function transformMat4$2(out, a, m) {
-  var x = a[0];
-  var y = a[1];
+  const x = a[0];
+  const y = a[1];
   out[0] = m[0] * x + m[4] * y + m[12];
   out[1] = m[1] * x + m[5] * y + m[13];
   return out;
 }
-/**
- * Perform some operation over an array of vec2s.
- *
- * @param {Array} a the array of vectors to iterate over
- * @param {Number} stride Number of elements between the start of each vec2. If 0 assumes tightly packed
- * @param {Number} offset Number of elements to skip at the beginning of the array
- * @param {Number} count Number of vec2s to iterate over. If 0 iterates over entire array
- * @param {Function} fn Function to call for each vector in the array
- * @param {Object} [arg] additional argument to pass to fn
- * @returns {Array} a
- * @function
- */
-
 (function () {
-  var vec = create$2();
+  const vec = create$4();
   return function (a, stride, offset, count, fn, arg) {
-    var i, l;
+    let i;
+    let l;
 
     if (!stride) {
       stride = 2;
@@ -7344,20 +3543,117 @@ function vec3_transformMat2(out, a, m) {
   out[2] = a[2];
   return out;
 }
+function vec4_transformMat2(out, a, m) {
+  const x = a[0];
+  const y = a[1];
+  out[0] = m[0] * x + m[2] * y;
+  out[1] = m[1] * x + m[3] * y;
+  out[2] = a[2];
+  out[3] = a[3];
+  return out;
+}
+function vec4_transformMat3(out, a, m) {
+  const x = a[0];
+  const y = a[1];
+  const z = a[2];
+  out[0] = m[0] * x + m[3] * y + m[6] * z;
+  out[1] = m[1] * x + m[4] * y + m[7] * z;
+  out[2] = m[2] * x + m[5] * y + m[8] * z;
+  out[3] = a[3];
+  return out;
+}
 
-/**
- * 3 Dimensional Vector
- * @module vec3
- */
+class Vector2 extends Vector {
+  constructor(x = 0, y = 0) {
+    super(2);
 
-/**
- * Creates a new, empty vec3
- *
- * @returns {vec3} a new 3D vector
- */
+    if (isArray(x) && arguments.length === 1) {
+      this.copy(x);
+    } else {
+      if (config.debug) {
+        checkNumber(x);
+        checkNumber(y);
+      }
 
-function create$1() {
-  var out = new ARRAY_TYPE(3);
+      this[0] = x;
+      this[1] = y;
+    }
+  }
+
+  set(x, y) {
+    this[0] = x;
+    this[1] = y;
+    return this.check();
+  }
+
+  copy(array) {
+    this[0] = array[0];
+    this[1] = array[1];
+    return this.check();
+  }
+
+  fromObject(object) {
+    if (config.debug) {
+      checkNumber(object.x);
+      checkNumber(object.y);
+    }
+
+    this[0] = object.x;
+    this[1] = object.y;
+    return this.check();
+  }
+
+  toObject(object) {
+    object.x = this[0];
+    object.y = this[1];
+    return object;
+  }
+
+  get ELEMENTS() {
+    return 2;
+  }
+
+  horizontalAngle() {
+    return Math.atan2(this.y, this.x);
+  }
+
+  verticalAngle() {
+    return Math.atan2(this.x, this.y);
+  }
+
+  transform(matrix4) {
+    return this.transformAsPoint(matrix4);
+  }
+
+  transformAsPoint(matrix4) {
+    transformMat4$2(this, this, matrix4);
+    return this.check();
+  }
+
+  transformAsVector(matrix4) {
+    vec2_transformMat4AsVector(this, this, matrix4);
+    return this.check();
+  }
+
+  transformByMatrix3(matrix3) {
+    transformMat3$1(this, this, matrix3);
+    return this.check();
+  }
+
+  transformByMatrix2x3(matrix2x3) {
+    transformMat2d(this, this, matrix2x3);
+    return this.check();
+  }
+
+  transformByMatrix2(matrix2) {
+    transformMat2(this, this, matrix2);
+    return this.check();
+  }
+
+}
+
+function create$3() {
+  const out = new ARRAY_TYPE(3);
 
   if (ARRAY_TYPE != Float32Array) {
     out[0] = 0;
@@ -7367,248 +3663,154 @@ function create$1() {
 
   return out;
 }
-/**
- * Calculates the length of a vec3
- *
- * @param {ReadonlyVec3} a vector to calculate length of
- * @returns {Number} length of a
- */
-
-function length(a) {
-  var x = a[0];
-  var y = a[1];
-  var z = a[2];
-  return Math.hypot(x, y, z);
+function length$2(a) {
+  const x = a[0];
+  const y = a[1];
+  const z = a[2];
+  return Math.sqrt(x * x + y * y + z * z);
 }
-/**
- * Calculates the dot product of two vec3's
- *
- * @param {ReadonlyVec3} a the first operand
- * @param {ReadonlyVec3} b the second operand
- * @returns {Number} dot product of a and b
- */
+function fromValues(x, y, z) {
+  const out = new ARRAY_TYPE(3);
+  out[0] = x;
+  out[1] = y;
+  out[2] = z;
+  return out;
+}
+function normalize$2(out, a) {
+  const x = a[0];
+  const y = a[1];
+  const z = a[2];
+  let len = x * x + y * y + z * z;
 
-function dot(a, b) {
+  if (len > 0) {
+    len = 1 / Math.sqrt(len);
+  }
+
+  out[0] = a[0] * len;
+  out[1] = a[1] * len;
+  out[2] = a[2] * len;
+  return out;
+}
+function dot$2(a, b) {
   return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
-/**
- * Computes the cross product of two vec3's
- *
- * @param {vec3} out the receiving vector
- * @param {ReadonlyVec3} a the first operand
- * @param {ReadonlyVec3} b the second operand
- * @returns {vec3} out
- */
-
 function cross(out, a, b) {
-  var ax = a[0],
-      ay = a[1],
-      az = a[2];
-  var bx = b[0],
-      by = b[1],
-      bz = b[2];
+  const ax = a[0];
+  const ay = a[1];
+  const az = a[2];
+  const bx = b[0];
+  const by = b[1];
+  const bz = b[2];
   out[0] = ay * bz - az * by;
   out[1] = az * bx - ax * bz;
   out[2] = ax * by - ay * bx;
   return out;
 }
-/**
- * Transforms the vec3 with a mat4.
- * 4th vector component is implicitly '1'
- *
- * @param {vec3} out the receiving vector
- * @param {ReadonlyVec3} a the vector to transform
- * @param {ReadonlyMat4} m matrix to transform with
- * @returns {vec3} out
- */
-
 function transformMat4$1(out, a, m) {
-  var x = a[0],
-      y = a[1],
-      z = a[2];
-  var w = m[3] * x + m[7] * y + m[11] * z + m[15];
+  const x = a[0];
+  const y = a[1];
+  const z = a[2];
+  let w = m[3] * x + m[7] * y + m[11] * z + m[15];
   w = w || 1.0;
   out[0] = (m[0] * x + m[4] * y + m[8] * z + m[12]) / w;
   out[1] = (m[1] * x + m[5] * y + m[9] * z + m[13]) / w;
   out[2] = (m[2] * x + m[6] * y + m[10] * z + m[14]) / w;
   return out;
 }
-/**
- * Transforms the vec3 with a mat3.
- *
- * @param {vec3} out the receiving vector
- * @param {ReadonlyVec3} a the vector to transform
- * @param {ReadonlyMat3} m the 3x3 matrix to transform with
- * @returns {vec3} out
- */
-
 function transformMat3(out, a, m) {
-  var x = a[0],
-      y = a[1],
-      z = a[2];
+  const x = a[0];
+  const y = a[1];
+  const z = a[2];
   out[0] = x * m[0] + y * m[3] + z * m[6];
   out[1] = x * m[1] + y * m[4] + z * m[7];
   out[2] = x * m[2] + y * m[5] + z * m[8];
   return out;
 }
-/**
- * Transforms the vec3 with a quat
- * Can also be used for dual quaternions. (Multiply it with the real part)
- *
- * @param {vec3} out the receiving vector
- * @param {ReadonlyVec3} a the vector to transform
- * @param {ReadonlyQuat} q quaternion to transform with
- * @returns {vec3} out
- */
-
-function transformQuat(out, a, q) {
-  // benchmarks: https://jsperf.com/quaternion-transform-vec3-implementations-fixed
-  var qx = q[0],
-      qy = q[1],
-      qz = q[2],
-      qw = q[3];
-  var x = a[0],
-      y = a[1],
-      z = a[2]; // var qvec = [qx, qy, qz];
-  // var uv = vec3.cross([], qvec, a);
-
-  var uvx = qy * z - qz * y,
-      uvy = qz * x - qx * z,
-      uvz = qx * y - qy * x; // var uuv = vec3.cross([], qvec, uv);
-
-  var uuvx = qy * uvz - qz * uvy,
-      uuvy = qz * uvx - qx * uvz,
-      uuvz = qx * uvy - qy * uvx; // vec3.scale(uv, uv, 2 * w);
-
-  var w2 = qw * 2;
+function transformQuat$1(out, a, q) {
+  const qx = q[0];
+  const qy = q[1];
+  const qz = q[2];
+  const qw = q[3];
+  const x = a[0];
+  const y = a[1];
+  const z = a[2];
+  let uvx = qy * z - qz * y;
+  let uvy = qz * x - qx * z;
+  let uvz = qx * y - qy * x;
+  let uuvx = qy * uvz - qz * uvy;
+  let uuvy = qz * uvx - qx * uvz;
+  let uuvz = qx * uvy - qy * uvx;
+  const w2 = qw * 2;
   uvx *= w2;
   uvy *= w2;
-  uvz *= w2; // vec3.scale(uuv, uuv, 2);
-
+  uvz *= w2;
   uuvx *= 2;
   uuvy *= 2;
-  uuvz *= 2; // return vec3.add(out, a, vec3.add(out, uv, uuv));
-
+  uuvz *= 2;
   out[0] = x + uvx + uuvx;
   out[1] = y + uvy + uuvy;
   out[2] = z + uvz + uuvz;
   return out;
 }
-/**
- * Rotate a 3D vector around the x-axis
- * @param {vec3} out The receiving vec3
- * @param {ReadonlyVec3} a The vec3 point to rotate
- * @param {ReadonlyVec3} b The origin of the rotation
- * @param {Number} rad The angle of rotation in radians
- * @returns {vec3} out
- */
-
-function rotateX$1(out, a, b, rad) {
-  var p = [],
-      r = []; //Translate point to the origin
-
+function rotateX$2(out, a, b, rad) {
+  const p = [];
+  const r = [];
   p[0] = a[0] - b[0];
   p[1] = a[1] - b[1];
-  p[2] = a[2] - b[2]; //perform rotation
-
+  p[2] = a[2] - b[2];
   r[0] = p[0];
   r[1] = p[1] * Math.cos(rad) - p[2] * Math.sin(rad);
-  r[2] = p[1] * Math.sin(rad) + p[2] * Math.cos(rad); //translate to correct position
-
+  r[2] = p[1] * Math.sin(rad) + p[2] * Math.cos(rad);
   out[0] = r[0] + b[0];
   out[1] = r[1] + b[1];
   out[2] = r[2] + b[2];
   return out;
 }
-/**
- * Rotate a 3D vector around the y-axis
- * @param {vec3} out The receiving vec3
- * @param {ReadonlyVec3} a The vec3 point to rotate
- * @param {ReadonlyVec3} b The origin of the rotation
- * @param {Number} rad The angle of rotation in radians
- * @returns {vec3} out
- */
-
-function rotateY$1(out, a, b, rad) {
-  var p = [],
-      r = []; //Translate point to the origin
-
+function rotateY$2(out, a, b, rad) {
+  const p = [];
+  const r = [];
   p[0] = a[0] - b[0];
   p[1] = a[1] - b[1];
-  p[2] = a[2] - b[2]; //perform rotation
-
+  p[2] = a[2] - b[2];
   r[0] = p[2] * Math.sin(rad) + p[0] * Math.cos(rad);
   r[1] = p[1];
-  r[2] = p[2] * Math.cos(rad) - p[0] * Math.sin(rad); //translate to correct position
-
+  r[2] = p[2] * Math.cos(rad) - p[0] * Math.sin(rad);
   out[0] = r[0] + b[0];
   out[1] = r[1] + b[1];
   out[2] = r[2] + b[2];
   return out;
 }
-/**
- * Rotate a 3D vector around the z-axis
- * @param {vec3} out The receiving vec3
- * @param {ReadonlyVec3} a The vec3 point to rotate
- * @param {ReadonlyVec3} b The origin of the rotation
- * @param {Number} rad The angle of rotation in radians
- * @returns {vec3} out
- */
-
-function rotateZ$1(out, a, b, rad) {
-  var p = [],
-      r = []; //Translate point to the origin
-
+function rotateZ$2(out, a, b, rad) {
+  const p = [];
+  const r = [];
   p[0] = a[0] - b[0];
   p[1] = a[1] - b[1];
-  p[2] = a[2] - b[2]; //perform rotation
-
+  p[2] = a[2] - b[2];
   r[0] = p[0] * Math.cos(rad) - p[1] * Math.sin(rad);
   r[1] = p[0] * Math.sin(rad) + p[1] * Math.cos(rad);
-  r[2] = p[2]; //translate to correct position
-
+  r[2] = p[2];
   out[0] = r[0] + b[0];
   out[1] = r[1] + b[1];
   out[2] = r[2] + b[2];
   return out;
 }
-/**
- * Get the angle between two 3D vectors
- * @param {ReadonlyVec3} a The first operand
- * @param {ReadonlyVec3} b The second operand
- * @returns {Number} The angle in radians
- */
-
 function angle(a, b) {
-  var ax = a[0],
-      ay = a[1],
-      az = a[2],
-      bx = b[0],
-      by = b[1],
-      bz = b[2],
-      mag1 = Math.sqrt(ax * ax + ay * ay + az * az),
-      mag2 = Math.sqrt(bx * bx + by * by + bz * bz),
-      mag = mag1 * mag2,
-      cosine = mag && dot(a, b) / mag;
+  const ax = a[0];
+  const ay = a[1];
+  const az = a[2];
+  const bx = b[0];
+  const by = b[1];
+  const bz = b[2];
+  const mag = Math.sqrt((ax * ax + ay * ay + az * az) * (bx * bx + by * by + bz * bz));
+  const cosine = mag && dot$2(a, b) / mag;
   return Math.acos(Math.min(Math.max(cosine, -1), 1));
 }
-/**
- * Perform some operation over an array of vec3s.
- *
- * @param {Array} a the array of vectors to iterate over
- * @param {Number} stride Number of elements between the start of each vec3. If 0 assumes tightly packed
- * @param {Number} offset Number of elements to skip at the beginning of the array
- * @param {Number} count Number of vec3s to iterate over. If 0 iterates over entire array
- * @param {Function} fn Function to call for each vector in the array
- * @param {Object} [arg] additional argument to pass to fn
- * @returns {Array} a
- * @function
- */
-
+const len = length$2;
 (function () {
-  var vec = create$1();
+  const vec = create$3();
   return function (a, stride, offset, count, fn, arg) {
-    var i, l;
+    let i;
+    let l;
 
     if (!stride) {
       stride = 3;
@@ -7639,15 +3841,15 @@ function angle(a, b) {
 })();
 
 const ORIGIN = [0, 0, 0];
-let ZERO$2;
+let ZERO$3;
 class Vector3 extends Vector {
   static get ZERO() {
-    if (!ZERO$2) {
-      ZERO$2 = new Vector3(0, 0, 0);
-      Object.freeze(ZERO$2);
+    if (!ZERO$3) {
+      ZERO$3 = new Vector3(0, 0, 0);
+      Object.freeze(ZERO$3);
     }
 
-    return ZERO$2;
+    return ZERO$3;
   }
 
   constructor(x = 0, y = 0, z = 0) {
@@ -7727,7 +3929,7 @@ class Vector3 extends Vector {
     radians,
     origin = ORIGIN
   }) {
-    rotateX$1(this, this, origin, radians);
+    rotateX$2(this, this, origin, radians);
     return this.check();
   }
 
@@ -7735,7 +3937,7 @@ class Vector3 extends Vector {
     radians,
     origin = ORIGIN
   }) {
-    rotateY$1(this, this, origin, radians);
+    rotateY$2(this, this, origin, radians);
     return this.check();
   }
 
@@ -7743,7 +3945,7 @@ class Vector3 extends Vector {
     radians,
     origin = ORIGIN
   }) {
-    rotateZ$1(this, this, origin, radians);
+    rotateZ$2(this, this, origin, radians);
     return this.check();
   }
 
@@ -7772,8 +3974,125 @@ class Vector3 extends Vector {
   }
 
   transformByQuaternion(quaternion) {
-    transformQuat(this, this, quaternion);
+    transformQuat$1(this, this, quaternion);
     return this.check();
+  }
+
+}
+
+let ZERO$2;
+class Vector4 extends Vector {
+  static get ZERO() {
+    if (!ZERO$2) {
+      ZERO$2 = new Vector4(0, 0, 0, 0);
+      Object.freeze(ZERO$2);
+    }
+
+    return ZERO$2;
+  }
+
+  constructor(x = 0, y = 0, z = 0, w = 0) {
+    super(-0, -0, -0, -0);
+
+    if (isArray(x) && arguments.length === 1) {
+      this.copy(x);
+    } else {
+      if (config.debug) {
+        checkNumber(x);
+        checkNumber(y);
+        checkNumber(z);
+        checkNumber(w);
+      }
+
+      this[0] = x;
+      this[1] = y;
+      this[2] = z;
+      this[3] = w;
+    }
+  }
+
+  set(x, y, z, w) {
+    this[0] = x;
+    this[1] = y;
+    this[2] = z;
+    this[3] = w;
+    return this.check();
+  }
+
+  copy(array) {
+    this[0] = array[0];
+    this[1] = array[1];
+    this[2] = array[2];
+    this[3] = array[3];
+    return this.check();
+  }
+
+  fromObject(object) {
+    if (config.debug) {
+      checkNumber(object.x);
+      checkNumber(object.y);
+      checkNumber(object.z);
+      checkNumber(object.w);
+    }
+
+    this[0] = object.x;
+    this[1] = object.y;
+    this[2] = object.z;
+    this[3] = object.w;
+    return this;
+  }
+
+  toObject(object) {
+    object.x = this[0];
+    object.y = this[1];
+    object.z = this[2];
+    object.w = this[3];
+    return object;
+  }
+
+  get ELEMENTS() {
+    return 4;
+  }
+
+  get z() {
+    return this[2];
+  }
+
+  set z(value) {
+    this[2] = checkNumber(value);
+  }
+
+  get w() {
+    return this[3];
+  }
+
+  set w(value) {
+    this[3] = checkNumber(value);
+  }
+
+  transform(matrix4) {
+    transformMat4$1(this, this, matrix4);
+    return this.check();
+  }
+
+  transformByMatrix3(matrix3) {
+    vec4_transformMat3(this, this, matrix3);
+    return this.check();
+  }
+
+  transformByMatrix2(matrix2) {
+    vec4_transformMat2(this, this, matrix2);
+    return this.check();
+  }
+
+  transformByQuaternion(quaternion) {
+    transformQuat$1(this, this, quaternion);
+    return this.check();
+  }
+
+  applyMatrix4(m) {
+    m.transform(this, this);
+    return this;
   }
 
 }
@@ -7837,14 +4156,413 @@ class Matrix extends MathArray {
 
 }
 
-/**
- * Set a mat4 to the identity matrix
- *
- * @param {mat4} out the receiving matrix
- * @returns {mat4} out
- */
+function create$2() {
+  const out = new ARRAY_TYPE(9);
 
-function identity$1(out) {
+  if (ARRAY_TYPE != Float32Array) {
+    out[1] = 0;
+    out[2] = 0;
+    out[3] = 0;
+    out[5] = 0;
+    out[6] = 0;
+    out[7] = 0;
+  }
+
+  out[0] = 1;
+  out[4] = 1;
+  out[8] = 1;
+  return out;
+}
+function transpose$1(out, a) {
+  if (out === a) {
+    const a01 = a[1];
+    const a02 = a[2];
+    const a12 = a[5];
+    out[1] = a[3];
+    out[2] = a[6];
+    out[3] = a01;
+    out[5] = a[7];
+    out[6] = a02;
+    out[7] = a12;
+  } else {
+    out[0] = a[0];
+    out[1] = a[3];
+    out[2] = a[6];
+    out[3] = a[1];
+    out[4] = a[4];
+    out[5] = a[7];
+    out[6] = a[2];
+    out[7] = a[5];
+    out[8] = a[8];
+  }
+
+  return out;
+}
+function invert$2(out, a) {
+  const a00 = a[0];
+  const a01 = a[1];
+  const a02 = a[2];
+  const a10 = a[3];
+  const a11 = a[4];
+  const a12 = a[5];
+  const a20 = a[6];
+  const a21 = a[7];
+  const a22 = a[8];
+  const b01 = a22 * a11 - a12 * a21;
+  const b11 = -a22 * a10 + a12 * a20;
+  const b21 = a21 * a10 - a11 * a20;
+  let det = a00 * b01 + a01 * b11 + a02 * b21;
+
+  if (!det) {
+    return null;
+  }
+
+  det = 1.0 / det;
+  out[0] = b01 * det;
+  out[1] = (-a22 * a01 + a02 * a21) * det;
+  out[2] = (a12 * a01 - a02 * a11) * det;
+  out[3] = b11 * det;
+  out[4] = (a22 * a00 - a02 * a20) * det;
+  out[5] = (-a12 * a00 + a02 * a10) * det;
+  out[6] = b21 * det;
+  out[7] = (-a21 * a00 + a01 * a20) * det;
+  out[8] = (a11 * a00 - a01 * a10) * det;
+  return out;
+}
+function determinant$1(a) {
+  const a00 = a[0];
+  const a01 = a[1];
+  const a02 = a[2];
+  const a10 = a[3];
+  const a11 = a[4];
+  const a12 = a[5];
+  const a20 = a[6];
+  const a21 = a[7];
+  const a22 = a[8];
+  return a00 * (a22 * a11 - a12 * a21) + a01 * (-a22 * a10 + a12 * a20) + a02 * (a21 * a10 - a11 * a20);
+}
+function multiply$2(out, a, b) {
+  const a00 = a[0];
+  const a01 = a[1];
+  const a02 = a[2];
+  const a10 = a[3];
+  const a11 = a[4];
+  const a12 = a[5];
+  const a20 = a[6];
+  const a21 = a[7];
+  const a22 = a[8];
+  const b00 = b[0];
+  const b01 = b[1];
+  const b02 = b[2];
+  const b10 = b[3];
+  const b11 = b[4];
+  const b12 = b[5];
+  const b20 = b[6];
+  const b21 = b[7];
+  const b22 = b[8];
+  out[0] = b00 * a00 + b01 * a10 + b02 * a20;
+  out[1] = b00 * a01 + b01 * a11 + b02 * a21;
+  out[2] = b00 * a02 + b01 * a12 + b02 * a22;
+  out[3] = b10 * a00 + b11 * a10 + b12 * a20;
+  out[4] = b10 * a01 + b11 * a11 + b12 * a21;
+  out[5] = b10 * a02 + b11 * a12 + b12 * a22;
+  out[6] = b20 * a00 + b21 * a10 + b22 * a20;
+  out[7] = b20 * a01 + b21 * a11 + b22 * a21;
+  out[8] = b20 * a02 + b21 * a12 + b22 * a22;
+  return out;
+}
+function translate$1(out, a, v) {
+  const a00 = a[0];
+  const a01 = a[1];
+  const a02 = a[2];
+  const a10 = a[3];
+  const a11 = a[4];
+  const a12 = a[5];
+  const a20 = a[6];
+  const a21 = a[7];
+  const a22 = a[8];
+  const x = v[0];
+  const y = v[1];
+  out[0] = a00;
+  out[1] = a01;
+  out[2] = a02;
+  out[3] = a10;
+  out[4] = a11;
+  out[5] = a12;
+  out[6] = x * a00 + y * a10 + a20;
+  out[7] = x * a01 + y * a11 + a21;
+  out[8] = x * a02 + y * a12 + a22;
+  return out;
+}
+function rotate$1(out, a, rad) {
+  const a00 = a[0];
+  const a01 = a[1];
+  const a02 = a[2];
+  const a10 = a[3];
+  const a11 = a[4];
+  const a12 = a[5];
+  const a20 = a[6];
+  const a21 = a[7];
+  const a22 = a[8];
+  const s = Math.sin(rad);
+  const c = Math.cos(rad);
+  out[0] = c * a00 + s * a10;
+  out[1] = c * a01 + s * a11;
+  out[2] = c * a02 + s * a12;
+  out[3] = c * a10 - s * a00;
+  out[4] = c * a11 - s * a01;
+  out[5] = c * a12 - s * a02;
+  out[6] = a20;
+  out[7] = a21;
+  out[8] = a22;
+  return out;
+}
+function scale$3(out, a, v) {
+  const x = v[0];
+  const y = v[1];
+  out[0] = x * a[0];
+  out[1] = x * a[1];
+  out[2] = x * a[2];
+  out[3] = y * a[3];
+  out[4] = y * a[4];
+  out[5] = y * a[5];
+  out[6] = a[6];
+  out[7] = a[7];
+  out[8] = a[8];
+  return out;
+}
+function fromQuat$1(out, q) {
+  const x = q[0];
+  const y = q[1];
+  const z = q[2];
+  const w = q[3];
+  const x2 = x + x;
+  const y2 = y + y;
+  const z2 = z + z;
+  const xx = x * x2;
+  const yx = y * x2;
+  const yy = y * y2;
+  const zx = z * x2;
+  const zy = z * y2;
+  const zz = z * z2;
+  const wx = w * x2;
+  const wy = w * y2;
+  const wz = w * z2;
+  out[0] = 1 - yy - zz;
+  out[3] = yx - wz;
+  out[6] = zx + wy;
+  out[1] = yx + wz;
+  out[4] = 1 - xx - zz;
+  out[7] = zy - wx;
+  out[2] = zx - wy;
+  out[5] = zy + wx;
+  out[8] = 1 - xx - yy;
+  return out;
+}
+
+var INDICES$1;
+
+(function (INDICES) {
+  INDICES[INDICES["COL0ROW0"] = 0] = "COL0ROW0";
+  INDICES[INDICES["COL0ROW1"] = 1] = "COL0ROW1";
+  INDICES[INDICES["COL0ROW2"] = 2] = "COL0ROW2";
+  INDICES[INDICES["COL1ROW0"] = 3] = "COL1ROW0";
+  INDICES[INDICES["COL1ROW1"] = 4] = "COL1ROW1";
+  INDICES[INDICES["COL1ROW2"] = 5] = "COL1ROW2";
+  INDICES[INDICES["COL2ROW0"] = 6] = "COL2ROW0";
+  INDICES[INDICES["COL2ROW1"] = 7] = "COL2ROW1";
+  INDICES[INDICES["COL2ROW2"] = 8] = "COL2ROW2";
+})(INDICES$1 || (INDICES$1 = {}));
+
+const IDENTITY_MATRIX$1 = Object.freeze([1, 0, 0, 0, 1, 0, 0, 0, 1]);
+class Matrix3 extends Matrix {
+  static get IDENTITY() {
+    return getIdentityMatrix$1();
+  }
+
+  static get ZERO() {
+    return getZeroMatrix$1();
+  }
+
+  get ELEMENTS() {
+    return 9;
+  }
+
+  get RANK() {
+    return 3;
+  }
+
+  get INDICES() {
+    return INDICES$1;
+  }
+
+  constructor(array, ...args) {
+    super(-0, -0, -0, -0, -0, -0, -0, -0, -0);
+
+    if (arguments.length === 1 && Array.isArray(array)) {
+      this.copy(array);
+    } else if (args.length > 0) {
+      this.copy([array, ...args]);
+    } else {
+      this.identity();
+    }
+  }
+
+  copy(array) {
+    this[0] = array[0];
+    this[1] = array[1];
+    this[2] = array[2];
+    this[3] = array[3];
+    this[4] = array[4];
+    this[5] = array[5];
+    this[6] = array[6];
+    this[7] = array[7];
+    this[8] = array[8];
+    return this.check();
+  }
+
+  identity() {
+    return this.copy(IDENTITY_MATRIX$1);
+  }
+
+  fromObject(object) {
+    return this.check();
+  }
+
+  fromQuaternion(q) {
+    fromQuat$1(this, q);
+    return this.check();
+  }
+
+  set(m00, m10, m20, m01, m11, m21, m02, m12, m22) {
+    this[0] = m00;
+    this[1] = m10;
+    this[2] = m20;
+    this[3] = m01;
+    this[4] = m11;
+    this[5] = m21;
+    this[6] = m02;
+    this[7] = m12;
+    this[8] = m22;
+    return this.check();
+  }
+
+  setRowMajor(m00, m01, m02, m10, m11, m12, m20, m21, m22) {
+    this[0] = m00;
+    this[1] = m10;
+    this[2] = m20;
+    this[3] = m01;
+    this[4] = m11;
+    this[5] = m21;
+    this[6] = m02;
+    this[7] = m12;
+    this[8] = m22;
+    return this.check();
+  }
+
+  determinant() {
+    return determinant$1(this);
+  }
+
+  transpose() {
+    transpose$1(this, this);
+    return this.check();
+  }
+
+  invert() {
+    invert$2(this, this);
+    return this.check();
+  }
+
+  multiplyLeft(a) {
+    multiply$2(this, a, this);
+    return this.check();
+  }
+
+  multiplyRight(a) {
+    multiply$2(this, this, a);
+    return this.check();
+  }
+
+  rotate(radians) {
+    rotate$1(this, this, radians);
+    return this.check();
+  }
+
+  scale(factor) {
+    if (Array.isArray(factor)) {
+      scale$3(this, this, factor);
+    } else {
+      scale$3(this, this, [factor, factor]);
+    }
+
+    return this.check();
+  }
+
+  translate(vec) {
+    translate$1(this, this, vec);
+    return this.check();
+  }
+
+  transform(vector, result) {
+    let out;
+
+    switch (vector.length) {
+      case 2:
+        out = transformMat3$1(result || [-0, -0], vector, this);
+        break;
+
+      case 3:
+        out = transformMat3(result || [-0, -0, -0], vector, this);
+        break;
+
+      case 4:
+        out = vec4_transformMat3(result || [-0, -0, -0, -0], vector, this);
+        break;
+
+      default:
+        throw new Error('Illegal vector');
+    }
+
+    checkVector(out, vector.length);
+    return out;
+  }
+
+  transformVector(vector, result) {
+    return this.transform(vector, result);
+  }
+
+  transformVector2(vector, result) {
+    return this.transform(vector, result);
+  }
+
+  transformVector3(vector, result) {
+    return this.transform(vector, result);
+  }
+
+}
+let ZERO_MATRIX3;
+let IDENTITY_MATRIX3 = null;
+
+function getZeroMatrix$1() {
+  if (!ZERO_MATRIX3) {
+    ZERO_MATRIX3 = new Matrix3([0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    Object.freeze(ZERO_MATRIX3);
+  }
+
+  return ZERO_MATRIX3;
+}
+
+function getIdentityMatrix$1() {
+  if (!IDENTITY_MATRIX3) {
+    IDENTITY_MATRIX3 = new Matrix3();
+    Object.freeze(IDENTITY_MATRIX3);
+  }
+
+  return IDENTITY_MATRIX3;
+}
+
+function identity$2(out) {
   out[0] = 1;
   out[1] = 0;
   out[2] = 0;
@@ -7863,23 +4581,14 @@ function identity$1(out) {
   out[15] = 1;
   return out;
 }
-/**
- * Transpose the values of a mat4
- *
- * @param {mat4} out the receiving matrix
- * @param {ReadonlyMat4} a the source matrix
- * @returns {mat4} out
- */
-
 function transpose(out, a) {
-  // If we are transposing ourselves we can skip a few steps but have to cache some values
   if (out === a) {
-    var a01 = a[1],
-        a02 = a[2],
-        a03 = a[3];
-    var a12 = a[6],
-        a13 = a[7];
-    var a23 = a[11];
+    const a01 = a[1];
+    const a02 = a[2];
+    const a03 = a[3];
+    const a12 = a[6];
+    const a13 = a[7];
+    const a23 = a[11];
     out[1] = a[4];
     out[2] = a[8];
     out[3] = a[12];
@@ -7913,45 +4622,36 @@ function transpose(out, a) {
 
   return out;
 }
-/**
- * Inverts a mat4
- *
- * @param {mat4} out the receiving matrix
- * @param {ReadonlyMat4} a the source matrix
- * @returns {mat4} out
- */
-
-function invert(out, a) {
-  var a00 = a[0],
-      a01 = a[1],
-      a02 = a[2],
-      a03 = a[3];
-  var a10 = a[4],
-      a11 = a[5],
-      a12 = a[6],
-      a13 = a[7];
-  var a20 = a[8],
-      a21 = a[9],
-      a22 = a[10],
-      a23 = a[11];
-  var a30 = a[12],
-      a31 = a[13],
-      a32 = a[14],
-      a33 = a[15];
-  var b00 = a00 * a11 - a01 * a10;
-  var b01 = a00 * a12 - a02 * a10;
-  var b02 = a00 * a13 - a03 * a10;
-  var b03 = a01 * a12 - a02 * a11;
-  var b04 = a01 * a13 - a03 * a11;
-  var b05 = a02 * a13 - a03 * a12;
-  var b06 = a20 * a31 - a21 * a30;
-  var b07 = a20 * a32 - a22 * a30;
-  var b08 = a20 * a33 - a23 * a30;
-  var b09 = a21 * a32 - a22 * a31;
-  var b10 = a21 * a33 - a23 * a31;
-  var b11 = a22 * a33 - a23 * a32; // Calculate the determinant
-
-  var det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+function invert$1(out, a) {
+  const a00 = a[0];
+  const a01 = a[1];
+  const a02 = a[2];
+  const a03 = a[3];
+  const a10 = a[4];
+  const a11 = a[5];
+  const a12 = a[6];
+  const a13 = a[7];
+  const a20 = a[8];
+  const a21 = a[9];
+  const a22 = a[10];
+  const a23 = a[11];
+  const a30 = a[12];
+  const a31 = a[13];
+  const a32 = a[14];
+  const a33 = a[15];
+  const b00 = a00 * a11 - a01 * a10;
+  const b01 = a00 * a12 - a02 * a10;
+  const b02 = a00 * a13 - a03 * a10;
+  const b03 = a01 * a12 - a02 * a11;
+  const b04 = a01 * a13 - a03 * a11;
+  const b05 = a02 * a13 - a03 * a12;
+  const b06 = a20 * a31 - a21 * a30;
+  const b07 = a20 * a32 - a22 * a30;
+  const b08 = a20 * a33 - a23 * a30;
+  const b09 = a21 * a32 - a22 * a31;
+  const b10 = a21 * a33 - a23 * a31;
+  const b11 = a22 * a33 - a23 * a32;
+  let det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
 
   if (!det) {
     return null;
@@ -7976,76 +4676,56 @@ function invert(out, a) {
   out[15] = (a20 * b03 - a21 * b01 + a22 * b00) * det;
   return out;
 }
-/**
- * Calculates the determinant of a mat4
- *
- * @param {ReadonlyMat4} a the source matrix
- * @returns {Number} determinant of a
- */
-
 function determinant(a) {
-  var a00 = a[0],
-      a01 = a[1],
-      a02 = a[2],
-      a03 = a[3];
-  var a10 = a[4],
-      a11 = a[5],
-      a12 = a[6],
-      a13 = a[7];
-  var a20 = a[8],
-      a21 = a[9],
-      a22 = a[10],
-      a23 = a[11];
-  var a30 = a[12],
-      a31 = a[13],
-      a32 = a[14],
-      a33 = a[15];
-  var b00 = a00 * a11 - a01 * a10;
-  var b01 = a00 * a12 - a02 * a10;
-  var b02 = a00 * a13 - a03 * a10;
-  var b03 = a01 * a12 - a02 * a11;
-  var b04 = a01 * a13 - a03 * a11;
-  var b05 = a02 * a13 - a03 * a12;
-  var b06 = a20 * a31 - a21 * a30;
-  var b07 = a20 * a32 - a22 * a30;
-  var b08 = a20 * a33 - a23 * a30;
-  var b09 = a21 * a32 - a22 * a31;
-  var b10 = a21 * a33 - a23 * a31;
-  var b11 = a22 * a33 - a23 * a32; // Calculate the determinant
-
-  return b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+  const a00 = a[0];
+  const a01 = a[1];
+  const a02 = a[2];
+  const a03 = a[3];
+  const a10 = a[4];
+  const a11 = a[5];
+  const a12 = a[6];
+  const a13 = a[7];
+  const a20 = a[8];
+  const a21 = a[9];
+  const a22 = a[10];
+  const a23 = a[11];
+  const a30 = a[12];
+  const a31 = a[13];
+  const a32 = a[14];
+  const a33 = a[15];
+  const b0 = a00 * a11 - a01 * a10;
+  const b1 = a00 * a12 - a02 * a10;
+  const b2 = a01 * a12 - a02 * a11;
+  const b3 = a20 * a31 - a21 * a30;
+  const b4 = a20 * a32 - a22 * a30;
+  const b5 = a21 * a32 - a22 * a31;
+  const b6 = a00 * b5 - a01 * b4 + a02 * b3;
+  const b7 = a10 * b5 - a11 * b4 + a12 * b3;
+  const b8 = a20 * b2 - a21 * b1 + a22 * b0;
+  const b9 = a30 * b2 - a31 * b1 + a32 * b0;
+  return a13 * b6 - a03 * b7 + a33 * b8 - a23 * b9;
 }
-/**
- * Multiplies two mat4s
- *
- * @param {mat4} out the receiving matrix
- * @param {ReadonlyMat4} a the first operand
- * @param {ReadonlyMat4} b the second operand
- * @returns {mat4} out
- */
-
-function multiply(out, a, b) {
-  var a00 = a[0],
-      a01 = a[1],
-      a02 = a[2],
-      a03 = a[3];
-  var a10 = a[4],
-      a11 = a[5],
-      a12 = a[6],
-      a13 = a[7];
-  var a20 = a[8],
-      a21 = a[9],
-      a22 = a[10],
-      a23 = a[11];
-  var a30 = a[12],
-      a31 = a[13],
-      a32 = a[14],
-      a33 = a[15]; // Cache only the current line of the second matrix
-
-  var b0 = b[0],
-      b1 = b[1],
-      b2 = b[2],
-      b3 = b[3];
+function multiply$1(out, a, b) {
+  const a00 = a[0];
+  const a01 = a[1];
+  const a02 = a[2];
+  const a03 = a[3];
+  const a10 = a[4];
+  const a11 = a[5];
+  const a12 = a[6];
+  const a13 = a[7];
+  const a20 = a[8];
+  const a21 = a[9];
+  const a22 = a[10];
+  const a23 = a[11];
+  const a30 = a[12];
+  const a31 = a[13];
+  const a32 = a[14];
+  const a33 = a[15];
+  let b0 = b[0];
+  let b1 = b[1];
+  let b2 = b[2];
+  let b3 = b[3];
   out[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
   out[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
   out[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
@@ -8076,22 +4756,22 @@ function multiply(out, a, b) {
   out[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
   return out;
 }
-/**
- * Translate a mat4 by the given vector
- *
- * @param {mat4} out the receiving matrix
- * @param {ReadonlyMat4} a the matrix to translate
- * @param {ReadonlyVec3} v vector to translate by
- * @returns {mat4} out
- */
-
 function translate(out, a, v) {
-  var x = v[0],
-      y = v[1],
-      z = v[2];
-  var a00, a01, a02, a03;
-  var a10, a11, a12, a13;
-  var a20, a21, a22, a23;
+  const x = v[0];
+  const y = v[1];
+  const z = v[2];
+  let a00;
+  let a01;
+  let a02;
+  let a03;
+  let a10;
+  let a11;
+  let a12;
+  let a13;
+  let a20;
+  let a21;
+  let a22;
+  let a23;
 
   if (a === out) {
     out[12] = a[0] * x + a[4] * y + a[8] * z + a[12];
@@ -8131,19 +4811,10 @@ function translate(out, a, v) {
 
   return out;
 }
-/**
- * Scales the mat4 by the dimensions in the given vec3 not using vectorization
- *
- * @param {mat4} out the receiving matrix
- * @param {ReadonlyMat4} a the matrix to scale
- * @param {ReadonlyVec3} v the vec3 to scale the matrix by
- * @returns {mat4} out
- **/
-
-function scale(out, a, v) {
-  var x = v[0],
-      y = v[1],
-      z = v[2];
+function scale$2(out, a, v) {
+  const x = v[0];
+  const y = v[1];
+  const z = v[2];
   out[0] = a[0] * x;
   out[1] = a[1] * x;
   out[2] = a[2] * x;
@@ -8162,28 +4833,35 @@ function scale(out, a, v) {
   out[15] = a[15];
   return out;
 }
-/**
- * Rotates a mat4 by the given angle around the given axis
- *
- * @param {mat4} out the receiving matrix
- * @param {ReadonlyMat4} a the matrix to rotate
- * @param {Number} rad the angle to rotate the matrix by
- * @param {ReadonlyVec3} axis the axis to rotate around
- * @returns {mat4} out
- */
-
 function rotate(out, a, rad, axis) {
-  var x = axis[0],
-      y = axis[1],
-      z = axis[2];
-  var len = Math.hypot(x, y, z);
-  var s, c, t;
-  var a00, a01, a02, a03;
-  var a10, a11, a12, a13;
-  var a20, a21, a22, a23;
-  var b00, b01, b02;
-  var b10, b11, b12;
-  var b20, b21, b22;
+  let x = axis[0];
+  let y = axis[1];
+  let z = axis[2];
+  let len = Math.sqrt(x * x + y * y + z * z);
+  let c;
+  let s;
+  let t;
+  let a00;
+  let a01;
+  let a02;
+  let a03;
+  let a10;
+  let a11;
+  let a12;
+  let a13;
+  let a20;
+  let a21;
+  let a22;
+  let a23;
+  let b00;
+  let b01;
+  let b02;
+  let b10;
+  let b11;
+  let b12;
+  let b20;
+  let b21;
+  let b22;
 
   if (len < EPSILON) {
     return null;
@@ -8207,8 +4885,7 @@ function rotate(out, a, rad, axis) {
   a20 = a[8];
   a21 = a[9];
   a22 = a[10];
-  a23 = a[11]; // Construct the elements of the rotation matrix
-
+  a23 = a[11];
   b00 = x * x * t + c;
   b01 = y * x * t + z * s;
   b02 = z * x * t - y * s;
@@ -8217,8 +4894,7 @@ function rotate(out, a, rad, axis) {
   b12 = z * y * t + x * s;
   b20 = x * z * t + y * s;
   b21 = y * z * t - x * s;
-  b22 = z * z * t + c; // Perform rotation-specific matrix multiplication
-
+  b22 = z * z * t + c;
   out[0] = a00 * b00 + a10 * b01 + a20 * b02;
   out[1] = a01 * b00 + a11 * b01 + a21 * b02;
   out[2] = a02 * b00 + a12 * b01 + a22 * b02;
@@ -8233,7 +4909,6 @@ function rotate(out, a, rad, axis) {
   out[11] = a03 * b20 + a13 * b21 + a23 * b22;
 
   if (a !== out) {
-    // If the source and destination differ, copy the unchanged last row
     out[12] = a[12];
     out[13] = a[13];
     out[14] = a[14];
@@ -8242,29 +4917,19 @@ function rotate(out, a, rad, axis) {
 
   return out;
 }
-/**
- * Rotates a matrix by the given angle around the X axis
- *
- * @param {mat4} out the receiving matrix
- * @param {ReadonlyMat4} a the matrix to rotate
- * @param {Number} rad the angle to rotate the matrix by
- * @returns {mat4} out
- */
-
-function rotateX(out, a, rad) {
-  var s = Math.sin(rad);
-  var c = Math.cos(rad);
-  var a10 = a[4];
-  var a11 = a[5];
-  var a12 = a[6];
-  var a13 = a[7];
-  var a20 = a[8];
-  var a21 = a[9];
-  var a22 = a[10];
-  var a23 = a[11];
+function rotateX$1(out, a, rad) {
+  const s = Math.sin(rad);
+  const c = Math.cos(rad);
+  const a10 = a[4];
+  const a11 = a[5];
+  const a12 = a[6];
+  const a13 = a[7];
+  const a20 = a[8];
+  const a21 = a[9];
+  const a22 = a[10];
+  const a23 = a[11];
 
   if (a !== out) {
-    // If the source and destination differ, copy the unchanged rows
     out[0] = a[0];
     out[1] = a[1];
     out[2] = a[2];
@@ -8273,8 +4938,7 @@ function rotateX(out, a, rad) {
     out[13] = a[13];
     out[14] = a[14];
     out[15] = a[15];
-  } // Perform axis-specific matrix multiplication
-
+  }
 
   out[4] = a10 * c + a20 * s;
   out[5] = a11 * c + a21 * s;
@@ -8286,29 +4950,19 @@ function rotateX(out, a, rad) {
   out[11] = a23 * c - a13 * s;
   return out;
 }
-/**
- * Rotates a matrix by the given angle around the Y axis
- *
- * @param {mat4} out the receiving matrix
- * @param {ReadonlyMat4} a the matrix to rotate
- * @param {Number} rad the angle to rotate the matrix by
- * @returns {mat4} out
- */
-
-function rotateY(out, a, rad) {
-  var s = Math.sin(rad);
-  var c = Math.cos(rad);
-  var a00 = a[0];
-  var a01 = a[1];
-  var a02 = a[2];
-  var a03 = a[3];
-  var a20 = a[8];
-  var a21 = a[9];
-  var a22 = a[10];
-  var a23 = a[11];
+function rotateY$1(out, a, rad) {
+  const s = Math.sin(rad);
+  const c = Math.cos(rad);
+  const a00 = a[0];
+  const a01 = a[1];
+  const a02 = a[2];
+  const a03 = a[3];
+  const a20 = a[8];
+  const a21 = a[9];
+  const a22 = a[10];
+  const a23 = a[11];
 
   if (a !== out) {
-    // If the source and destination differ, copy the unchanged rows
     out[4] = a[4];
     out[5] = a[5];
     out[6] = a[6];
@@ -8317,8 +4971,7 @@ function rotateY(out, a, rad) {
     out[13] = a[13];
     out[14] = a[14];
     out[15] = a[15];
-  } // Perform axis-specific matrix multiplication
-
+  }
 
   out[0] = a00 * c - a20 * s;
   out[1] = a01 * c - a21 * s;
@@ -8330,29 +4983,19 @@ function rotateY(out, a, rad) {
   out[11] = a03 * s + a23 * c;
   return out;
 }
-/**
- * Rotates a matrix by the given angle around the Z axis
- *
- * @param {mat4} out the receiving matrix
- * @param {ReadonlyMat4} a the matrix to rotate
- * @param {Number} rad the angle to rotate the matrix by
- * @returns {mat4} out
- */
-
-function rotateZ(out, a, rad) {
-  var s = Math.sin(rad);
-  var c = Math.cos(rad);
-  var a00 = a[0];
-  var a01 = a[1];
-  var a02 = a[2];
-  var a03 = a[3];
-  var a10 = a[4];
-  var a11 = a[5];
-  var a12 = a[6];
-  var a13 = a[7];
+function rotateZ$1(out, a, rad) {
+  const s = Math.sin(rad);
+  const c = Math.cos(rad);
+  const a00 = a[0];
+  const a01 = a[1];
+  const a02 = a[2];
+  const a03 = a[3];
+  const a10 = a[4];
+  const a11 = a[5];
+  const a12 = a[6];
+  const a13 = a[7];
 
   if (a !== out) {
-    // If the source and destination differ, copy the unchanged last row
     out[8] = a[8];
     out[9] = a[9];
     out[10] = a[10];
@@ -8361,8 +5004,7 @@ function rotateZ(out, a, rad) {
     out[13] = a[13];
     out[14] = a[14];
     out[15] = a[15];
-  } // Perform axis-specific matrix multiplication
-
+  }
 
   out[0] = a00 * c + a10 * s;
   out[1] = a01 * c + a11 * s;
@@ -8374,32 +5016,38 @@ function rotateZ(out, a, rad) {
   out[7] = a13 * c - a03 * s;
   return out;
 }
-/**
- * Calculates a 4x4 matrix from the given quaternion
- *
- * @param {mat4} out mat4 receiving operation result
- * @param {ReadonlyQuat} q Quaternion to create matrix from
- *
- * @returns {mat4} out
- */
-
+function getScaling(out, mat) {
+  const m11 = mat[0];
+  const m12 = mat[1];
+  const m13 = mat[2];
+  const m21 = mat[4];
+  const m22 = mat[5];
+  const m23 = mat[6];
+  const m31 = mat[8];
+  const m32 = mat[9];
+  const m33 = mat[10];
+  out[0] = Math.sqrt(m11 * m11 + m12 * m12 + m13 * m13);
+  out[1] = Math.sqrt(m21 * m21 + m22 * m22 + m23 * m23);
+  out[2] = Math.sqrt(m31 * m31 + m32 * m32 + m33 * m33);
+  return out;
+}
 function fromQuat(out, q) {
-  var x = q[0],
-      y = q[1],
-      z = q[2],
-      w = q[3];
-  var x2 = x + x;
-  var y2 = y + y;
-  var z2 = z + z;
-  var xx = x * x2;
-  var yx = y * x2;
-  var yy = y * y2;
-  var zx = z * x2;
-  var zy = z * y2;
-  var zz = z * z2;
-  var wx = w * x2;
-  var wy = w * y2;
-  var wz = w * z2;
+  const x = q[0];
+  const y = q[1];
+  const z = q[2];
+  const w = q[3];
+  const x2 = x + x;
+  const y2 = y + y;
+  const z2 = z + z;
+  const xx = x * x2;
+  const yx = y * x2;
+  const yy = y * y2;
+  const zx = z * x2;
+  const zy = z * y2;
+  const zz = z * z2;
+  const wx = w * x2;
+  const wy = w * y2;
+  const wz = w * z2;
   out[0] = 1 - yy - zz;
   out[1] = yx + wz;
   out[2] = zx - wy;
@@ -8418,23 +5066,10 @@ function fromQuat(out, q) {
   out[15] = 1;
   return out;
 }
-/**
- * Generates a frustum matrix with the given bounds
- *
- * @param {mat4} out mat4 frustum matrix will be written into
- * @param {Number} left Left bound of the frustum
- * @param {Number} right Right bound of the frustum
- * @param {Number} bottom Bottom bound of the frustum
- * @param {Number} top Top bound of the frustum
- * @param {Number} near Near bound of the frustum
- * @param {Number} far Far bound of the frustum
- * @returns {mat4} out
- */
-
 function frustum(out, left, right, bottom, top, near, far) {
-  var rl = 1 / (right - left);
-  var tb = 1 / (top - bottom);
-  var nf = 1 / (near - far);
+  const rl = 1 / (right - left);
+  const tb = 1 / (top - bottom);
+  const nf = 1 / (near - far);
   out[0] = near * 2 * rl;
   out[1] = 0;
   out[2] = 0;
@@ -8453,23 +5088,8 @@ function frustum(out, left, right, bottom, top, near, far) {
   out[15] = 0;
   return out;
 }
-/**
- * Generates a perspective projection matrix with the given bounds.
- * The near/far clip planes correspond to a normalized device coordinate Z range of [-1, 1],
- * which matches WebGL/OpenGL's clip volume.
- * Passing null/undefined/no value for far will generate infinite projection matrix.
- *
- * @param {mat4} out mat4 frustum matrix will be written into
- * @param {number} fovy Vertical field of view in radians
- * @param {number} aspect Aspect ratio. typically viewport width/height
- * @param {number} near Near bound of the frustum
- * @param {number} far Far bound of the frustum, can be null or Infinity
- * @returns {mat4} out
- */
-
 function perspectiveNO(out, fovy, aspect, near, far) {
-  var f = 1.0 / Math.tan(fovy / 2),
-      nf;
+  const f = 1.0 / Math.tan(fovy / 2);
   out[0] = f / aspect;
   out[1] = 0;
   out[2] = 0;
@@ -8486,7 +5106,7 @@ function perspectiveNO(out, fovy, aspect, near, far) {
   out[15] = 0;
 
   if (far != null && far !== Infinity) {
-    nf = 1 / (near - far);
+    const nf = 1 / (near - far);
     out[10] = (far + near) * nf;
     out[14] = 2 * far * near * nf;
   } else {
@@ -8496,31 +5116,11 @@ function perspectiveNO(out, fovy, aspect, near, far) {
 
   return out;
 }
-/**
- * Alias for {@link mat4.perspectiveNO}
- * @function
- */
-
-var perspective = perspectiveNO;
-/**
- * Generates a orthogonal projection matrix with the given bounds.
- * The near/far clip planes correspond to a normalized device coordinate Z range of [-1, 1],
- * which matches WebGL/OpenGL's clip volume.
- *
- * @param {mat4} out mat4 frustum matrix will be written into
- * @param {number} left Left bound of the frustum
- * @param {number} right Right bound of the frustum
- * @param {number} bottom Bottom bound of the frustum
- * @param {number} top Top bound of the frustum
- * @param {number} near Near bound of the frustum
- * @param {number} far Far bound of the frustum
- * @returns {mat4} out
- */
-
+const perspective = perspectiveNO;
 function orthoNO(out, left, right, bottom, top, near, far) {
-  var lr = 1 / (left - right);
-  var bt = 1 / (bottom - top);
-  var nf = 1 / (near - far);
+  const lr = 1 / (left - right);
+  const bt = 1 / (bottom - top);
+  const nf = 1 / (near - far);
   out[0] = -2 * lr;
   out[1] = 0;
   out[2] = 0;
@@ -8539,50 +5139,43 @@ function orthoNO(out, left, right, bottom, top, near, far) {
   out[15] = 1;
   return out;
 }
-/**
- * Alias for {@link mat4.orthoNO}
- * @function
- */
-
-var ortho = orthoNO;
-/**
- * Generates a look-at matrix with the given eye position, focal point, and up axis.
- * If you want a matrix that actually makes an object look at another object, you should use targetTo instead.
- *
- * @param {mat4} out mat4 frustum matrix will be written into
- * @param {ReadonlyVec3} eye Position of the viewer
- * @param {ReadonlyVec3} center Point the viewer is looking at
- * @param {ReadonlyVec3} up vec3 pointing up
- * @returns {mat4} out
- */
-
+const ortho = orthoNO;
 function lookAt(out, eye, center, up) {
-  var x0, x1, x2, y0, y1, y2, z0, z1, z2, len;
-  var eyex = eye[0];
-  var eyey = eye[1];
-  var eyez = eye[2];
-  var upx = up[0];
-  var upy = up[1];
-  var upz = up[2];
-  var centerx = center[0];
-  var centery = center[1];
-  var centerz = center[2];
+  let len;
+  let x0;
+  let x1;
+  let x2;
+  let y0;
+  let y1;
+  let y2;
+  let z0;
+  let z1;
+  let z2;
+  const eyex = eye[0];
+  const eyey = eye[1];
+  const eyez = eye[2];
+  const upx = up[0];
+  const upy = up[1];
+  const upz = up[2];
+  const centerx = center[0];
+  const centery = center[1];
+  const centerz = center[2];
 
   if (Math.abs(eyex - centerx) < EPSILON && Math.abs(eyey - centery) < EPSILON && Math.abs(eyez - centerz) < EPSILON) {
-    return identity$1(out);
+    return identity$2(out);
   }
 
   z0 = eyex - centerx;
   z1 = eyey - centery;
   z2 = eyez - centerz;
-  len = 1 / Math.hypot(z0, z1, z2);
+  len = 1 / Math.sqrt(z0 * z0 + z1 * z1 + z2 * z2);
   z0 *= len;
   z1 *= len;
   z2 *= len;
   x0 = upy * z2 - upz * z1;
   x1 = upz * z0 - upx * z2;
   x2 = upx * z1 - upy * z0;
-  len = Math.hypot(x0, x1, x2);
+  len = Math.sqrt(x0 * x0 + x1 * x1 + x2 * x2);
 
   if (!len) {
     x0 = 0;
@@ -8598,7 +5191,7 @@ function lookAt(out, eye, center, up) {
   y0 = z1 * x2 - z2 * x1;
   y1 = z2 * x0 - z0 * x2;
   y2 = z0 * x1 - z1 * x0;
-  len = Math.hypot(y0, y1, y2);
+  len = Math.sqrt(y0 * y0 + y1 * y1 + y2 * y2);
 
   if (!len) {
     y0 = 0;
@@ -8630,19 +5223,8 @@ function lookAt(out, eye, center, up) {
   return out;
 }
 
-/**
- * 4 Dimensional Vector
- * @module vec4
- */
-
-/**
- * Creates a new, empty vec4
- *
- * @returns {vec4} a new 4D vector
- */
-
-function create() {
-  var out = new ARRAY_TYPE(4);
+function create$1() {
+  const out = new ARRAY_TYPE(4);
 
   if (ARRAY_TYPE != Float32Array) {
     out[0] = 0;
@@ -8653,43 +5235,99 @@ function create() {
 
   return out;
 }
-/**
- * Transforms the vec4 with a mat4.
- *
- * @param {vec4} out the receiving vector
- * @param {ReadonlyVec4} a the vector to transform
- * @param {ReadonlyMat4} m matrix to transform with
- * @returns {vec4} out
- */
+function add$1(out, a, b) {
+  out[0] = a[0] + b[0];
+  out[1] = a[1] + b[1];
+  out[2] = a[2] + b[2];
+  out[3] = a[3] + b[3];
+  return out;
+}
+function scale$1(out, a, b) {
+  out[0] = a[0] * b;
+  out[1] = a[1] * b;
+  out[2] = a[2] * b;
+  out[3] = a[3] * b;
+  return out;
+}
+function length$1(a) {
+  const x = a[0];
+  const y = a[1];
+  const z = a[2];
+  const w = a[3];
+  return Math.sqrt(x * x + y * y + z * z + w * w);
+}
+function squaredLength$1(a) {
+  const x = a[0];
+  const y = a[1];
+  const z = a[2];
+  const w = a[3];
+  return x * x + y * y + z * z + w * w;
+}
+function normalize$1(out, a) {
+  const x = a[0];
+  const y = a[1];
+  const z = a[2];
+  const w = a[3];
+  let len = x * x + y * y + z * z + w * w;
 
+  if (len > 0) {
+    len = 1 / Math.sqrt(len);
+  }
+
+  out[0] = x * len;
+  out[1] = y * len;
+  out[2] = z * len;
+  out[3] = w * len;
+  return out;
+}
+function dot$1(a, b) {
+  return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
+}
+function lerp$1(out, a, b, t) {
+  const ax = a[0];
+  const ay = a[1];
+  const az = a[2];
+  const aw = a[3];
+  out[0] = ax + t * (b[0] - ax);
+  out[1] = ay + t * (b[1] - ay);
+  out[2] = az + t * (b[2] - az);
+  out[3] = aw + t * (b[3] - aw);
+  return out;
+}
 function transformMat4(out, a, m) {
-  var x = a[0],
-      y = a[1],
-      z = a[2],
-      w = a[3];
+  const x = a[0];
+  const y = a[1];
+  const z = a[2];
+  const w = a[3];
   out[0] = m[0] * x + m[4] * y + m[8] * z + m[12] * w;
   out[1] = m[1] * x + m[5] * y + m[9] * z + m[13] * w;
   out[2] = m[2] * x + m[6] * y + m[10] * z + m[14] * w;
   out[3] = m[3] * x + m[7] * y + m[11] * z + m[15] * w;
   return out;
 }
-/**
- * Perform some operation over an array of vec4s.
- *
- * @param {Array} a the array of vectors to iterate over
- * @param {Number} stride Number of elements between the start of each vec4. If 0 assumes tightly packed
- * @param {Number} offset Number of elements to skip at the beginning of the array
- * @param {Number} count Number of vec4s to iterate over. If 0 iterates over entire array
- * @param {Function} fn Function to call for each vector in the array
- * @param {Object} [arg] additional argument to pass to fn
- * @returns {Array} a
- * @function
- */
-
+function transformQuat(out, a, q) {
+  const x = a[0];
+  const y = a[1];
+  const z = a[2];
+  const qx = q[0];
+  const qy = q[1];
+  const qz = q[2];
+  const qw = q[3];
+  const ix = qw * x + qy * z - qz * y;
+  const iy = qw * y + qz * x - qx * z;
+  const iz = qw * z + qx * y - qy * x;
+  const iw = -qx * x - qy * y - qz * z;
+  out[0] = ix * qw + iw * -qx + iy * -qz - iz * -qy;
+  out[1] = iy * qw + iw * -qy + iz * -qx - ix * -qz;
+  out[2] = iz * qw + iw * -qz + ix * -qy - iy * -qx;
+  out[3] = a[3];
+  return out;
+}
 (function () {
-  var vec = create();
+  const vec = create$1();
   return function (a, stride, offset, count, fn, arg) {
-    var i, l;
+    let i;
+    let l;
 
     if (!stride) {
       stride = 4;
@@ -9016,32 +5654,32 @@ class Matrix4 extends Matrix {
   }
 
   invert() {
-    invert(this, this);
+    invert$1(this, this);
     return this.check();
   }
 
   multiplyLeft(a) {
-    multiply(this, a, this);
+    multiply$1(this, a, this);
     return this.check();
   }
 
   multiplyRight(a) {
-    multiply(this, this, a);
+    multiply$1(this, this, a);
     return this.check();
   }
 
   rotateX(radians) {
-    rotateX(this, this, radians);
+    rotateX$1(this, this, radians);
     return this.check();
   }
 
   rotateY(radians) {
-    rotateY(this, this, radians);
+    rotateY$1(this, this, radians);
     return this.check();
   }
 
   rotateZ(radians) {
-    rotateZ(this, this, radians);
+    rotateZ$1(this, this, radians);
     return this.check();
   }
 
@@ -9055,7 +5693,7 @@ class Matrix4 extends Matrix {
   }
 
   scale(factor) {
-    scale(this, this, Array.isArray(factor) ? factor : [factor, factor, factor]);
+    scale$2(this, this, Array.isArray(factor) ? factor : [factor, factor, factor]);
     return this.check();
   }
 
@@ -9192,32 +5830,530 @@ function computeInfinitePerspectiveOffCenter(result, left, right, bottom, top, n
   return result;
 }
 
-var _MathUtils = {
-  EPSILON1: 1e-1,
-  EPSILON2: 1e-2,
-  EPSILON3: 1e-3,
-  EPSILON4: 1e-4,
-  EPSILON5: 1e-5,
-  EPSILON6: 1e-6,
-  EPSILON7: 1e-7,
-  EPSILON8: 1e-8,
-  EPSILON9: 1e-9,
-  EPSILON10: 1e-10,
-  EPSILON11: 1e-11,
-  EPSILON12: 1e-12,
-  EPSILON13: 1e-13,
-  EPSILON14: 1e-14,
-  EPSILON15: 1e-15,
-  EPSILON16: 1e-16,
-  EPSILON17: 1e-17,
-  EPSILON18: 1e-18,
-  EPSILON19: 1e-19,
-  EPSILON20: 1e-20,
-  PI_OVER_TWO: Math.PI / 2,
-  PI_OVER_FOUR: Math.PI / 4,
-  PI_OVER_SIX: Math.PI / 6,
-  TWO_PI: Math.PI * 2
-};
+function create() {
+  const out = new ARRAY_TYPE(4);
+
+  if (ARRAY_TYPE != Float32Array) {
+    out[0] = 0;
+    out[1] = 0;
+    out[2] = 0;
+  }
+
+  out[3] = 1;
+  return out;
+}
+function identity$1(out) {
+  out[0] = 0;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 1;
+  return out;
+}
+function setAxisAngle(out, axis, rad) {
+  rad = rad * 0.5;
+  const s = Math.sin(rad);
+  out[0] = s * axis[0];
+  out[1] = s * axis[1];
+  out[2] = s * axis[2];
+  out[3] = Math.cos(rad);
+  return out;
+}
+function multiply(out, a, b) {
+  const ax = a[0];
+  const ay = a[1];
+  const az = a[2];
+  const aw = a[3];
+  const bx = b[0];
+  const by = b[1];
+  const bz = b[2];
+  const bw = b[3];
+  out[0] = ax * bw + aw * bx + ay * bz - az * by;
+  out[1] = ay * bw + aw * by + az * bx - ax * bz;
+  out[2] = az * bw + aw * bz + ax * by - ay * bx;
+  out[3] = aw * bw - ax * bx - ay * by - az * bz;
+  return out;
+}
+function rotateX(out, a, rad) {
+  rad *= 0.5;
+  const ax = a[0];
+  const ay = a[1];
+  const az = a[2];
+  const aw = a[3];
+  const bx = Math.sin(rad);
+  const bw = Math.cos(rad);
+  out[0] = ax * bw + aw * bx;
+  out[1] = ay * bw + az * bx;
+  out[2] = az * bw - ay * bx;
+  out[3] = aw * bw - ax * bx;
+  return out;
+}
+function rotateY(out, a, rad) {
+  rad *= 0.5;
+  const ax = a[0];
+  const ay = a[1];
+  const az = a[2];
+  const aw = a[3];
+  const by = Math.sin(rad);
+  const bw = Math.cos(rad);
+  out[0] = ax * bw - az * by;
+  out[1] = ay * bw + aw * by;
+  out[2] = az * bw + ax * by;
+  out[3] = aw * bw - ay * by;
+  return out;
+}
+function rotateZ(out, a, rad) {
+  rad *= 0.5;
+  const ax = a[0];
+  const ay = a[1];
+  const az = a[2];
+  const aw = a[3];
+  const bz = Math.sin(rad);
+  const bw = Math.cos(rad);
+  out[0] = ax * bw + ay * bz;
+  out[1] = ay * bw - ax * bz;
+  out[2] = az * bw + aw * bz;
+  out[3] = aw * bw - az * bz;
+  return out;
+}
+function calculateW(out, a) {
+  const x = a[0];
+  const y = a[1];
+  const z = a[2];
+  out[0] = x;
+  out[1] = y;
+  out[2] = z;
+  out[3] = Math.sqrt(Math.abs(1.0 - x * x - y * y - z * z));
+  return out;
+}
+function slerp(out, a, b, t) {
+  const ax = a[0];
+  const ay = a[1];
+  const az = a[2];
+  const aw = a[3];
+  let bx = b[0];
+  let by = b[1];
+  let bz = b[2];
+  let bw = b[3];
+  let cosom;
+  let omega;
+  let scale0;
+  let scale1;
+  let sinom;
+  cosom = ax * bx + ay * by + az * bz + aw * bw;
+
+  if (cosom < 0.0) {
+    cosom = -cosom;
+    bx = -bx;
+    by = -by;
+    bz = -bz;
+    bw = -bw;
+  }
+
+  if (1.0 - cosom > EPSILON) {
+    omega = Math.acos(cosom);
+    sinom = Math.sin(omega);
+    scale0 = Math.sin((1.0 - t) * omega) / sinom;
+    scale1 = Math.sin(t * omega) / sinom;
+  } else {
+    scale0 = 1.0 - t;
+    scale1 = t;
+  }
+
+  out[0] = scale0 * ax + scale1 * bx;
+  out[1] = scale0 * ay + scale1 * by;
+  out[2] = scale0 * az + scale1 * bz;
+  out[3] = scale0 * aw + scale1 * bw;
+  return out;
+}
+function invert(out, a) {
+  const a0 = a[0];
+  const a1 = a[1];
+  const a2 = a[2];
+  const a3 = a[3];
+  const dot = a0 * a0 + a1 * a1 + a2 * a2 + a3 * a3;
+  const invDot = dot ? 1.0 / dot : 0;
+  out[0] = -a0 * invDot;
+  out[1] = -a1 * invDot;
+  out[2] = -a2 * invDot;
+  out[3] = a3 * invDot;
+  return out;
+}
+function conjugate(out, a) {
+  out[0] = -a[0];
+  out[1] = -a[1];
+  out[2] = -a[2];
+  out[3] = a[3];
+  return out;
+}
+function fromMat3(out, m) {
+  const fTrace = m[0] + m[4] + m[8];
+  let fRoot;
+
+  if (fTrace > 0.0) {
+    fRoot = Math.sqrt(fTrace + 1.0);
+    out[3] = 0.5 * fRoot;
+    fRoot = 0.5 / fRoot;
+    out[0] = (m[5] - m[7]) * fRoot;
+    out[1] = (m[6] - m[2]) * fRoot;
+    out[2] = (m[1] - m[3]) * fRoot;
+  } else {
+    let i = 0;
+    if (m[4] > m[0]) i = 1;
+    if (m[8] > m[i * 3 + i]) i = 2;
+    const j = (i + 1) % 3;
+    const k = (i + 2) % 3;
+    fRoot = Math.sqrt(m[i * 3 + i] - m[j * 3 + j] - m[k * 3 + k] + 1.0);
+    out[i] = 0.5 * fRoot;
+    fRoot = 0.5 / fRoot;
+    out[3] = (m[j * 3 + k] - m[k * 3 + j]) * fRoot;
+    out[j] = (m[j * 3 + i] + m[i * 3 + j]) * fRoot;
+    out[k] = (m[k * 3 + i] + m[i * 3 + k]) * fRoot;
+  }
+
+  return out;
+}
+const add = add$1;
+const scale = scale$1;
+const dot = dot$1;
+const lerp = lerp$1;
+const length = length$1;
+const squaredLength = squaredLength$1;
+const normalize = normalize$1;
+const rotationTo = function () {
+  const tmpvec3 = create$3();
+  const xUnitVec3 = fromValues(1, 0, 0);
+  const yUnitVec3 = fromValues(0, 1, 0);
+  return function (out, a, b) {
+    const dot = dot$2(a, b);
+
+    if (dot < -0.999999) {
+      cross(tmpvec3, xUnitVec3, a);
+      if (len(tmpvec3) < 0.000001) cross(tmpvec3, yUnitVec3, a);
+      normalize$2(tmpvec3, tmpvec3);
+      setAxisAngle(out, tmpvec3, Math.PI);
+      return out;
+    } else if (dot > 0.999999) {
+      out[0] = 0;
+      out[1] = 0;
+      out[2] = 0;
+      out[3] = 1;
+      return out;
+    }
+
+    cross(tmpvec3, a, b);
+    out[0] = tmpvec3[0];
+    out[1] = tmpvec3[1];
+    out[2] = tmpvec3[2];
+    out[3] = 1 + dot;
+    return normalize(out, out);
+  };
+}();
+(function () {
+  const temp1 = create();
+  const temp2 = create();
+  return function (out, a, b, c, d, t) {
+    slerp(temp1, a, d, t);
+    slerp(temp2, b, c, t);
+    slerp(out, temp1, temp2, 2 * t * (1 - t));
+    return out;
+  };
+})();
+(function () {
+  const matr = create$2();
+  return function (out, view, right, up) {
+    matr[0] = right[0];
+    matr[3] = right[1];
+    matr[6] = right[2];
+    matr[1] = up[0];
+    matr[4] = up[1];
+    matr[7] = up[2];
+    matr[2] = -view[0];
+    matr[5] = -view[1];
+    matr[8] = -view[2];
+    return normalize(out, fromMat3(out, matr));
+  };
+})();
+
+const IDENTITY_QUATERNION = [0, 0, 0, 1];
+class Quaternion extends MathArray {
+  constructor(x = 0, y = 0, z = 0, w = 1) {
+    super(-0, -0, -0, -0);
+
+    if (Array.isArray(x) && arguments.length === 1) {
+      this.copy(x);
+    } else {
+      this.set(x, y, z, w);
+    }
+  }
+
+  copy(array) {
+    this[0] = array[0];
+    this[1] = array[1];
+    this[2] = array[2];
+    this[3] = array[3];
+    return this.check();
+  }
+
+  set(x, y, z, w) {
+    this[0] = x;
+    this[1] = y;
+    this[2] = z;
+    this[3] = w;
+    return this.check();
+  }
+
+  fromObject(object) {
+    this[0] = object.x;
+    this[1] = object.y;
+    this[2] = object.z;
+    this[3] = object.w;
+    return this.check();
+  }
+
+  fromMatrix3(m) {
+    fromMat3(this, m);
+    return this.check();
+  }
+
+  fromAxisRotation(axis, rad) {
+    setAxisAngle(this, axis, rad);
+    return this.check();
+  }
+
+  identity() {
+    identity$1(this);
+    return this.check();
+  }
+
+  setAxisAngle(axis, rad) {
+    return this.fromAxisRotation(axis, rad);
+  }
+
+  get ELEMENTS() {
+    return 4;
+  }
+
+  get x() {
+    return this[0];
+  }
+
+  set x(value) {
+    this[0] = checkNumber(value);
+  }
+
+  get y() {
+    return this[1];
+  }
+
+  set y(value) {
+    this[1] = checkNumber(value);
+  }
+
+  get z() {
+    return this[2];
+  }
+
+  set z(value) {
+    this[2] = checkNumber(value);
+  }
+
+  get w() {
+    return this[3];
+  }
+
+  set w(value) {
+    this[3] = checkNumber(value);
+  }
+
+  len() {
+    return length(this);
+  }
+
+  lengthSquared() {
+    return squaredLength(this);
+  }
+
+  dot(a) {
+    return dot(this, a);
+  }
+
+  rotationTo(vectorA, vectorB) {
+    rotationTo(this, vectorA, vectorB);
+    return this.check();
+  }
+
+  add(a) {
+    add(this, this, a);
+    return this.check();
+  }
+
+  calculateW() {
+    calculateW(this, this);
+    return this.check();
+  }
+
+  conjugate() {
+    conjugate(this, this);
+    return this.check();
+  }
+
+  invert() {
+    invert(this, this);
+    return this.check();
+  }
+
+  lerp(a, b, t) {
+    if (t === undefined) {
+      return this.lerp(this, a, b);
+    }
+
+    lerp(this, a, b, t);
+    return this.check();
+  }
+
+  multiplyRight(a) {
+    multiply(this, this, a);
+    return this.check();
+  }
+
+  multiplyLeft(a) {
+    multiply(this, a, this);
+    return this.check();
+  }
+
+  normalize() {
+    const length = this.len();
+    const l = length > 0 ? 1 / length : 0;
+    this[0] = this[0] * l;
+    this[1] = this[1] * l;
+    this[2] = this[2] * l;
+    this[3] = this[3] * l;
+
+    if (length === 0) {
+      this[3] = 1;
+    }
+
+    return this.check();
+  }
+
+  rotateX(rad) {
+    rotateX(this, this, rad);
+    return this.check();
+  }
+
+  rotateY(rad) {
+    rotateY(this, this, rad);
+    return this.check();
+  }
+
+  rotateZ(rad) {
+    rotateZ(this, this, rad);
+    return this.check();
+  }
+
+  scale(b) {
+    scale(this, this, b);
+    return this.check();
+  }
+
+  slerp(arg0, arg1, arg2) {
+    let start;
+    let target;
+    let ratio;
+
+    switch (arguments.length) {
+      case 1:
+        ({
+          start = IDENTITY_QUATERNION,
+          target,
+          ratio
+        } = arg0);
+        break;
+
+      case 2:
+        start = this;
+        target = arg0;
+        ratio = arg1;
+        break;
+
+      default:
+        start = arg0;
+        target = arg1;
+        ratio = arg2;
+    }
+
+    slerp(this, start, target, ratio);
+    return this.check();
+  }
+
+  transformVector4(vector, result = new Vector4()) {
+    transformQuat(result, vector, this);
+    return checkVector(result, 4);
+  }
+
+  lengthSq() {
+    return this.lengthSquared();
+  }
+
+  setFromAxisAngle(axis, rad) {
+    return this.setAxisAngle(axis, rad);
+  }
+
+  premultiply(a) {
+    return this.multiplyLeft(a);
+  }
+
+  multiply(a) {
+    return this.multiplyRight(a);
+  }
+
+}
+
+function _typeof(o) {
+  "@babel/helpers - typeof";
+
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
+    return typeof o;
+  } : function (o) {
+    return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
+  }, _typeof(o);
+}
+
+function toPrimitive(t, r) {
+  if ("object" != _typeof(t) || !t) return t;
+  var e = t[Symbol.toPrimitive];
+  if (void 0 !== e) {
+    var i = e.call(t, r || "default");
+    if ("object" != _typeof(i)) return i;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return ("string" === r ? String : Number)(t);
+}
+
+function toPropertyKey(t) {
+  var i = toPrimitive(t, "string");
+  return "symbol" == _typeof(i) ? i : String(i);
+}
+
+function _defineProperty(obj, key, value) {
+  key = toPropertyKey(key);
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+  return obj;
+}
+
+const EPSILON1 = 1e-1;
+const EPSILON12 = 1e-12;
+const EPSILON15 = 1e-15;
+const EPSILON20 = 1e-20;
 
 const WGS84_RADIUS_X$1 = 6378137.0;
 const WGS84_RADIUS_Y$1 = 6378137.0;
@@ -9267,71 +6403,6 @@ function toCartographic(vector, cartographic, map = identity) {
 }
 function toCartographicFromRadians(vector, cartographic) {
   return toCartographic(vector, cartographic, config._cartographicRadians ? identity : toDegrees);
-}
-
-const scratchVector$6 = new Vector3();
-const scaleToGeodeticSurfaceIntersection = new Vector3();
-const scaleToGeodeticSurfaceGradient = new Vector3();
-function scaleToGeodeticSurface(cartesian, ellipsoid, result = []) {
-  const {
-    oneOverRadii,
-    oneOverRadiiSquared,
-    centerToleranceSquared
-  } = ellipsoid;
-  scratchVector$6.from(cartesian);
-  const positionX = scratchVector$6.x;
-  const positionY = scratchVector$6.y;
-  const positionZ = scratchVector$6.z;
-  const oneOverRadiiX = oneOverRadii.x;
-  const oneOverRadiiY = oneOverRadii.y;
-  const oneOverRadiiZ = oneOverRadii.z;
-  const x2 = positionX * positionX * oneOverRadiiX * oneOverRadiiX;
-  const y2 = positionY * positionY * oneOverRadiiY * oneOverRadiiY;
-  const z2 = positionZ * positionZ * oneOverRadiiZ * oneOverRadiiZ;
-  const squaredNorm = x2 + y2 + z2;
-  const ratio = Math.sqrt(1.0 / squaredNorm);
-
-  if (!Number.isFinite(ratio)) {
-    return undefined;
-  }
-
-  const intersection = scaleToGeodeticSurfaceIntersection;
-  intersection.copy(cartesian).scale(ratio);
-
-  if (squaredNorm < centerToleranceSquared) {
-    return intersection.to(result);
-  }
-
-  const oneOverRadiiSquaredX = oneOverRadiiSquared.x;
-  const oneOverRadiiSquaredY = oneOverRadiiSquared.y;
-  const oneOverRadiiSquaredZ = oneOverRadiiSquared.z;
-  const gradient = scaleToGeodeticSurfaceGradient;
-  gradient.set(intersection.x * oneOverRadiiSquaredX * 2.0, intersection.y * oneOverRadiiSquaredY * 2.0, intersection.z * oneOverRadiiSquaredZ * 2.0);
-  let lambda = (1.0 - ratio) * scratchVector$6.len() / (0.5 * gradient.len());
-  let correction = 0.0;
-  let xMultiplier;
-  let yMultiplier;
-  let zMultiplier;
-  let func;
-
-  do {
-    lambda -= correction;
-    xMultiplier = 1.0 / (1.0 + lambda * oneOverRadiiSquaredX);
-    yMultiplier = 1.0 / (1.0 + lambda * oneOverRadiiSquaredY);
-    zMultiplier = 1.0 / (1.0 + lambda * oneOverRadiiSquaredZ);
-    const xMultiplier2 = xMultiplier * xMultiplier;
-    const yMultiplier2 = yMultiplier * yMultiplier;
-    const zMultiplier2 = zMultiplier * zMultiplier;
-    const xMultiplier3 = xMultiplier2 * xMultiplier;
-    const yMultiplier3 = yMultiplier2 * yMultiplier;
-    const zMultiplier3 = zMultiplier2 * zMultiplier;
-    func = x2 * xMultiplier2 + y2 * yMultiplier2 + z2 * zMultiplier2 - 1.0;
-    const denominator = x2 * xMultiplier3 * oneOverRadiiSquaredX + y2 * yMultiplier3 * oneOverRadiiSquaredY + z2 * zMultiplier3 * oneOverRadiiSquaredZ;
-    const derivative = -2.0 * denominator;
-    correction = func / derivative;
-  } while (Math.abs(func) > _MathUtils.EPSILON12);
-
-  return scratchVector$6.scale([xMultiplier, yMultiplier, zMultiplier]).to(result);
 }
 
 const EPSILON14 = 1e-14;
@@ -9395,7 +6466,7 @@ const scratchVector2$2 = new Vector3();
 const scratchVector3$2 = new Vector3();
 function localFrameToFixedFrame(ellipsoid, firstAxis, secondAxis, thirdAxis, cartesianOrigin, result) {
   const thirdAxisInferred = VECTOR_PRODUCT_LOCAL_FRAME[firstAxis] && VECTOR_PRODUCT_LOCAL_FRAME[firstAxis][secondAxis];
-  assert$4(thirdAxisInferred && (!thirdAxis || thirdAxis === thirdAxisInferred));
+  assert$3(thirdAxisInferred && (!thirdAxis || thirdAxis === thirdAxisInferred));
   let firstAxisVector;
   let secondAxisVector;
   let thirdAxisVector;
@@ -9462,6 +6533,71 @@ function localFrameToFixedFrame(ellipsoid, firstAxis, secondAxis, thirdAxis, car
   return result;
 }
 
+const scratchVector$6 = new Vector3();
+const scaleToGeodeticSurfaceIntersection = new Vector3();
+const scaleToGeodeticSurfaceGradient = new Vector3();
+function scaleToGeodeticSurface(cartesian, ellipsoid, result = []) {
+  const {
+    oneOverRadii,
+    oneOverRadiiSquared,
+    centerToleranceSquared
+  } = ellipsoid;
+  scratchVector$6.from(cartesian);
+  const positionX = scratchVector$6.x;
+  const positionY = scratchVector$6.y;
+  const positionZ = scratchVector$6.z;
+  const oneOverRadiiX = oneOverRadii.x;
+  const oneOverRadiiY = oneOverRadii.y;
+  const oneOverRadiiZ = oneOverRadii.z;
+  const x2 = positionX * positionX * oneOverRadiiX * oneOverRadiiX;
+  const y2 = positionY * positionY * oneOverRadiiY * oneOverRadiiY;
+  const z2 = positionZ * positionZ * oneOverRadiiZ * oneOverRadiiZ;
+  const squaredNorm = x2 + y2 + z2;
+  const ratio = Math.sqrt(1.0 / squaredNorm);
+
+  if (!Number.isFinite(ratio)) {
+    return undefined;
+  }
+
+  const intersection = scaleToGeodeticSurfaceIntersection;
+  intersection.copy(cartesian).scale(ratio);
+
+  if (squaredNorm < centerToleranceSquared) {
+    return intersection.to(result);
+  }
+
+  const oneOverRadiiSquaredX = oneOverRadiiSquared.x;
+  const oneOverRadiiSquaredY = oneOverRadiiSquared.y;
+  const oneOverRadiiSquaredZ = oneOverRadiiSquared.z;
+  const gradient = scaleToGeodeticSurfaceGradient;
+  gradient.set(intersection.x * oneOverRadiiSquaredX * 2.0, intersection.y * oneOverRadiiSquaredY * 2.0, intersection.z * oneOverRadiiSquaredZ * 2.0);
+  let lambda = (1.0 - ratio) * scratchVector$6.len() / (0.5 * gradient.len());
+  let correction = 0.0;
+  let xMultiplier;
+  let yMultiplier;
+  let zMultiplier;
+  let func;
+
+  do {
+    lambda -= correction;
+    xMultiplier = 1.0 / (1.0 + lambda * oneOverRadiiSquaredX);
+    yMultiplier = 1.0 / (1.0 + lambda * oneOverRadiiSquaredY);
+    zMultiplier = 1.0 / (1.0 + lambda * oneOverRadiiSquaredZ);
+    const xMultiplier2 = xMultiplier * xMultiplier;
+    const yMultiplier2 = yMultiplier * yMultiplier;
+    const zMultiplier2 = zMultiplier * zMultiplier;
+    const xMultiplier3 = xMultiplier2 * xMultiplier;
+    const yMultiplier3 = yMultiplier2 * yMultiplier;
+    const zMultiplier3 = zMultiplier2 * zMultiplier;
+    func = x2 * xMultiplier2 + y2 * yMultiplier2 + z2 * zMultiplier2 - 1.0;
+    const denominator = x2 * xMultiplier3 * oneOverRadiiSquaredX + y2 * yMultiplier3 * oneOverRadiiSquaredY + z2 * zMultiplier3 * oneOverRadiiSquaredZ;
+    const derivative = -2.0 * denominator;
+    correction = func / derivative;
+  } while (Math.abs(func) > EPSILON12);
+
+  return scratchVector$6.scale([xMultiplier, yMultiplier, zMultiplier]).to(result);
+}
+
 const scratchVector$5 = new Vector3();
 const scratchNormal$2 = new Vector3();
 const scratchK = new Vector3();
@@ -9484,13 +6620,13 @@ class Ellipsoid {
 
     _defineProperty(this, "maximumRadius", void 0);
 
-    _defineProperty(this, "centerToleranceSquared", _MathUtils.EPSILON1);
+    _defineProperty(this, "centerToleranceSquared", EPSILON1);
 
     _defineProperty(this, "squaredXOverSquaredZ", void 0);
 
-    assert$4(x >= 0.0);
-    assert$4(y >= 0.0);
-    assert$4(z >= 0.0);
+    assert$3(x >= 0.0);
+    assert$3(y >= 0.0);
+    assert$3(z >= 0.0);
     this.radii = new Vector3(x, y, z);
     this.radiiSquared = new Vector3(x * x, y * y, z * z);
     this.radiiToTheFourth = new Vector3(x * x * x * x, y * y * y * y, z * z * z * z);
@@ -9540,7 +6676,7 @@ class Ellipsoid {
     h.copy(scratchCartesian).subtract(point);
     const longitude = Math.atan2(normal.y, normal.x);
     const latitude = Math.asin(normal.z);
-    const height = Math.sign(dot(h, scratchCartesian)) * length(h);
+    const height = Math.sign(dot$2(h, scratchCartesian)) * length$2(h);
     return toCartographicFromRadians([longitude, latitude, height], result);
   }
 
@@ -9592,8 +6728,8 @@ class Ellipsoid {
   }
 
   getSurfaceNormalIntersectionWithZAxis(position, buffer = 0, result = [0, 0, 0]) {
-    assert$4(equals(this.radii.x, this.radii.y, _MathUtils.EPSILON15));
-    assert$4(this.radii.z > 0);
+    assert$3(equals(this.radii.x, this.radii.y, EPSILON15));
+    assert$3(this.radii.z > 0);
     scratchPosition$2.from(position);
     const z = scratchPosition$2.z * (1 - this.squaredXOverSquaredZ);
 
@@ -9610,9 +6746,9 @@ _defineProperty(Ellipsoid, "WGS84", new Ellipsoid(WGS84_RADIUS_X$1, WGS84_RADIUS
 
 class DoublyLinkedListNode {
   constructor(item, previous, next) {
-    _defineProperty(this, "item", void 0);
-    _defineProperty(this, "previous", void 0);
-    _defineProperty(this, "next", void 0);
+    this.item = void 0;
+    this.previous = void 0;
+    this.next = void 0;
     this.item = item;
     this.previous = previous;
     this.next = next;
@@ -9621,9 +6757,9 @@ class DoublyLinkedListNode {
 
 class DoublyLinkedList {
   constructor() {
-    _defineProperty(this, "head", null);
-    _defineProperty(this, "tail", null);
-    _defineProperty(this, "_length", 0);
+    this.head = null;
+    this.tail = null;
+    this._length = 0;
   }
   get length() {
     return this._length;
@@ -9684,9 +6820,9 @@ class DoublyLinkedList {
 
 class TilesetCache {
   constructor() {
-    _defineProperty(this, "_list", void 0);
-    _defineProperty(this, "_sentinel", void 0);
-    _defineProperty(this, "_trimTiles", void 0);
+    this._list = void 0;
+    this._sentinel = void 0;
+    this._trimTiles = void 0;
     this._list = new DoublyLinkedList();
     this._sentinel = this._list.add('sentinel');
     this._trimTiles = false;
@@ -9738,8 +6874,8 @@ class TilesetCache {
 }
 
 function calculateTransformProps(tileHeader, tile) {
-  assert$8(tileHeader);
-  assert$8(tile);
+  assert$6(tileHeader);
+  assert$6(tile);
   const {
     rtcCenter,
     gltfUpAxis
@@ -9750,7 +6886,7 @@ function calculateTransformProps(tileHeader, tile) {
       center
     }
   } = tileHeader;
-  let modelMatrix = new Matrix4$1(computedTransform);
+  let modelMatrix = new Matrix4(computedTransform);
   if (rtcCenter) {
     modelMatrix.translate(rtcCenter);
   }
@@ -9758,21 +6894,21 @@ function calculateTransformProps(tileHeader, tile) {
     case 'Z':
       break;
     case 'Y':
-      const rotationY = new Matrix4$1().rotateX(Math.PI / 2);
+      const rotationY = new Matrix4().rotateX(Math.PI / 2);
       modelMatrix = modelMatrix.multiplyRight(rotationY);
       break;
     case 'X':
-      const rotationX = new Matrix4$1().rotateY(-Math.PI / 2);
+      const rotationX = new Matrix4().rotateY(-Math.PI / 2);
       modelMatrix = modelMatrix.multiplyRight(rotationX);
       break;
   }
   if (tile.isQuantized) {
     modelMatrix.translate(tile.quantizedVolumeOffset).scale(tile.quantizedVolumeScale);
   }
-  const cartesianOrigin = new Vector3$1(center);
+  const cartesianOrigin = new Vector3(center);
   tile.cartesianModelMatrix = modelMatrix;
   tile.cartesianOrigin = cartesianOrigin;
-  const cartographicOrigin = Ellipsoid.WGS84.cartesianToCartographic(cartesianOrigin, new Vector3$1());
+  const cartographicOrigin = Ellipsoid.WGS84.cartesianToCartographic(cartesianOrigin, new Vector3());
   const fromFixedFrameMatrix = Ellipsoid.WGS84.eastNorthUpToFixedFrame(cartesianOrigin);
   const toFixedFrameMatrix = fromFixedFrameMatrix.invert();
   tile.cartographicModelMatrix = toFixedFrameMatrix.multiplyRight(modelMatrix);
@@ -9782,940 +6918,1267 @@ function calculateTransformProps(tileHeader, tile) {
   }
 }
 
-const INTERSECTION = Object.freeze({
-  OUTSIDE: -1,
-  INTERSECTING: 0,
-  INSIDE: 1
-});
-
-new Vector3$1();
-new Vector3$1();
-
-const scratchVector$4 = new Vector3$1();
-const scratchVector2$1 = new Vector3$1();
-class BoundingSphere {
-  constructor(center = [0, 0, 0], radius = 0.0) {
-    this.radius = -0;
-    this.center = new Vector3$1();
-    this.fromCenterRadius(center, radius);
-  }
-
-  fromCenterRadius(center, radius) {
-    this.center.from(center);
-    this.radius = radius;
-    return this;
-  }
-
-  fromCornerPoints(corner, oppositeCorner) {
-    oppositeCorner = scratchVector$4.from(oppositeCorner);
-    this.center = new Vector3$1().from(corner).add(oppositeCorner).scale(0.5);
-    this.radius = this.center.distance(oppositeCorner);
-    return this;
-  }
-
-  equals(right) {
-    return this === right || Boolean(right) && this.center.equals(right.center) && this.radius === right.radius;
-  }
-
-  clone() {
-    return new BoundingSphere(this.center, this.radius);
-  }
-
-  union(boundingSphere) {
-    const leftCenter = this.center;
-    const leftRadius = this.radius;
-    const rightCenter = boundingSphere.center;
-    const rightRadius = boundingSphere.radius;
-    const toRightCenter = scratchVector$4.copy(rightCenter).subtract(leftCenter);
-    const centerSeparation = toRightCenter.magnitude();
-
-    if (leftRadius >= centerSeparation + rightRadius) {
-      return this.clone();
-    }
-
-    if (rightRadius >= centerSeparation + leftRadius) {
-      return boundingSphere.clone();
-    }
-
-    const halfDistanceBetweenTangentPoints = (leftRadius + centerSeparation + rightRadius) * 0.5;
-    scratchVector2$1.copy(toRightCenter).scale((-leftRadius + halfDistanceBetweenTangentPoints) / centerSeparation).add(leftCenter);
-    this.center.copy(scratchVector2$1);
-    this.radius = halfDistanceBetweenTangentPoints;
-    return this;
-  }
-
-  expand(point) {
-    point = scratchVector$4.from(point);
-    const radius = point.subtract(this.center).magnitude();
-
-    if (radius > this.radius) {
-      this.radius = radius;
-    }
-
-    return this;
-  }
-
-  transform(transform) {
-    this.center.transform(transform);
-    const scale = getScaling(scratchVector$4, transform);
-    this.radius = Math.max(scale[0], Math.max(scale[1], scale[2])) * this.radius;
-    return this;
-  }
-
-  distanceSquaredTo(point) {
-    const d = this.distanceTo(point);
-    return d * d;
-  }
-
-  distanceTo(point) {
-    point = scratchVector$4.from(point);
-    const delta = point.subtract(this.center);
-    return Math.max(0, delta.len() - this.radius);
-  }
-
-  intersectPlane(plane) {
-    const center = this.center;
-    const radius = this.radius;
-    const normal = plane.normal;
-    const distanceToPlane = normal.dot(center) + plane.distance;
-
-    if (distanceToPlane < -radius) {
-      return INTERSECTION.OUTSIDE;
-    }
-
-    if (distanceToPlane < radius) {
-      return INTERSECTION.INTERSECTING;
-    }
-
-    return INTERSECTION.INSIDE;
-  }
-
-}
-
-const scratchVector3$1 = new Vector3$1();
-const scratchOffset = new Vector3$1();
-const scratchVectorU = new Vector3$1();
-const scratchVectorV = new Vector3$1();
-const scratchVectorW = new Vector3$1();
-const scratchCorner = new Vector3$1();
-const scratchToCenter = new Vector3$1();
-const MATRIX3 = {
-  COLUMN0ROW0: 0,
-  COLUMN0ROW1: 1,
-  COLUMN0ROW2: 2,
-  COLUMN1ROW0: 3,
-  COLUMN1ROW1: 4,
-  COLUMN1ROW2: 5,
-  COLUMN2ROW0: 6,
-  COLUMN2ROW1: 7,
-  COLUMN2ROW2: 8
+// This file is derived from the Cesium math library under Apache 2 license
+// See LICENSE.md and https://github.com/AnalyticalGraphicsInc/cesium/blob/master/LICENSE.md
+const INTERSECTION = {
+    OUTSIDE: -1,
+    INTERSECTING: 0,
+    INSIDE: 1 // Represents that an object is fully within the frustum.
 };
+
+new Vector3();
+new Vector3();
+
+// This file is derived from the Cesium math library under Apache 2 license
+// See LICENSE.md and https://github.com/AnalyticalGraphicsInc/cesium/blob/master/LICENSE.md
+const scratchVector$4 = new Vector3();
+const scratchVector2$1 = new Vector3();
+/** A BoundingSphere */
+class BoundingSphere {
+    /** Creates a bounding sphere */
+    constructor(center = [0, 0, 0], radius = 0.0) {
+        this.radius = -0;
+        this.center = new Vector3();
+        this.fromCenterRadius(center, radius);
+    }
+    /** Sets the bounding sphere from `center` and `radius`. */
+    fromCenterRadius(center, radius) {
+        this.center.from(center);
+        this.radius = radius;
+        return this;
+    }
+    /**
+     * Computes a bounding sphere from the corner points of an axis-aligned bounding box.  The sphere
+     * tightly and fully encompasses the box.
+     */
+    fromCornerPoints(corner, oppositeCorner) {
+        oppositeCorner = scratchVector$4.from(oppositeCorner);
+        this.center = new Vector3().from(corner).add(oppositeCorner).scale(0.5);
+        this.radius = this.center.distance(oppositeCorner);
+        return this;
+    }
+    /** Compares the provided BoundingSphere component wise */
+    equals(right) {
+        return (this === right ||
+            (Boolean(right) && this.center.equals(right.center) && this.radius === right.radius));
+    }
+    /** Duplicates a BoundingSphere instance. */
+    clone() {
+        return new BoundingSphere(this.center, this.radius);
+    }
+    /** Computes a bounding sphere that contains both the left and right bounding spheres. */
+    union(boundingSphere) {
+        const leftCenter = this.center;
+        const leftRadius = this.radius;
+        const rightCenter = boundingSphere.center;
+        const rightRadius = boundingSphere.radius;
+        const toRightCenter = scratchVector$4.copy(rightCenter).subtract(leftCenter);
+        const centerSeparation = toRightCenter.magnitude();
+        if (leftRadius >= centerSeparation + rightRadius) {
+            // Left sphere wins.
+            return this.clone();
+        }
+        if (rightRadius >= centerSeparation + leftRadius) {
+            // Right sphere wins.
+            return boundingSphere.clone();
+        }
+        // There are two tangent points, one on far side of each sphere.
+        const halfDistanceBetweenTangentPoints = (leftRadius + centerSeparation + rightRadius) * 0.5;
+        // Compute the center point halfway between the two tangent points.
+        scratchVector2$1
+            .copy(toRightCenter)
+            .scale((-leftRadius + halfDistanceBetweenTangentPoints) / centerSeparation)
+            .add(leftCenter);
+        this.center.copy(scratchVector2$1);
+        this.radius = halfDistanceBetweenTangentPoints;
+        return this;
+    }
+    /** Computes a bounding sphere by enlarging the provided sphere to contain the provided point. */
+    expand(point) {
+        const scratchPoint = scratchVector$4.from(point);
+        const radius = scratchPoint.subtract(this.center).magnitude();
+        if (radius > this.radius) {
+            this.radius = radius;
+        }
+        return this;
+    }
+    // BoundingVolume interface
+    /**
+     * Applies a 4x4 affine transformation matrix to a bounding sphere.
+     * @param sphere The bounding sphere to apply the transformation to.
+     * @param transform The transformation matrix to apply to the bounding sphere.
+     * @returns self.
+     */
+    transform(transform) {
+        this.center.transform(transform);
+        const scale = getScaling(scratchVector$4, transform);
+        this.radius = Math.max(scale[0], Math.max(scale[1], scale[2])) * this.radius;
+        return this;
+    }
+    /** Computes the estimated distance squared from the closest point on a bounding sphere to a point. */
+    distanceSquaredTo(point) {
+        const d = this.distanceTo(point);
+        return d * d;
+    }
+    /** Computes the estimated distance from the closest point on a bounding sphere to a point. */
+    distanceTo(point) {
+        const scratchPoint = scratchVector$4.from(point);
+        const delta = scratchPoint.subtract(this.center);
+        return Math.max(0, delta.len() - this.radius);
+    }
+    /** Determines which side of a plane a sphere is located. */
+    intersectPlane(plane) {
+        const center = this.center;
+        const radius = this.radius;
+        const normal = plane.normal;
+        const distanceToPlane = normal.dot(center) + plane.distance;
+        // The center point is negative side of the plane normal
+        if (distanceToPlane < -radius) {
+            return INTERSECTION.OUTSIDE;
+        }
+        // The center point is positive side of the plane, but radius extends beyond it; partial overlap
+        if (distanceToPlane < radius) {
+            return INTERSECTION.INTERSECTING;
+        }
+        // The center point and radius is positive side of the plane
+        return INTERSECTION.INSIDE;
+    }
+}
+
+// This file is derived from the Cesium math library under Apache 2 license
+// See LICENSE.md and https://github.com/AnalyticalGraphicsInc/cesium/blob/master/LICENSE.md
+const scratchVector3$1 = new Vector3();
+const scratchOffset = new Vector3();
+const scratchVectorU = new Vector3();
+const scratchVectorV = new Vector3();
+const scratchVectorW = new Vector3();
+const scratchCorner = new Vector3();
+const scratchToCenter = new Vector3();
+const MATRIX3 = {
+    COLUMN0ROW0: 0,
+    COLUMN0ROW1: 1,
+    COLUMN0ROW2: 2,
+    COLUMN1ROW0: 3,
+    COLUMN1ROW1: 4,
+    COLUMN1ROW2: 5,
+    COLUMN2ROW0: 6,
+    COLUMN2ROW1: 7,
+    COLUMN2ROW2: 8
+};
+/**
+ * An OrientedBoundingBox of some object is a closed and convex cuboid.
+ * It can provide a tighter bounding volume than `BoundingSphere` or
+ * `AxisAlignedBoundingBox` in many cases.
+ */
 class OrientedBoundingBox {
-  constructor(center = [0, 0, 0], halfAxes = [0, 0, 0, 0, 0, 0, 0, 0, 0]) {
-    this.center = new Vector3$1().from(center);
-    this.halfAxes = new Matrix3(halfAxes);
-  }
-
-  get halfSize() {
-    const xAxis = this.halfAxes.getColumn(0);
-    const yAxis = this.halfAxes.getColumn(1);
-    const zAxis = this.halfAxes.getColumn(2);
-    return [new Vector3$1(xAxis).len(), new Vector3$1(yAxis).len(), new Vector3$1(zAxis).len()];
-  }
-
-  get quaternion() {
-    const xAxis = this.halfAxes.getColumn(0);
-    const yAxis = this.halfAxes.getColumn(1);
-    const zAxis = this.halfAxes.getColumn(2);
-    const normXAxis = new Vector3$1(xAxis).normalize();
-    const normYAxis = new Vector3$1(yAxis).normalize();
-    const normZAxis = new Vector3$1(zAxis).normalize();
-    return new Quaternion().fromMatrix3(new Matrix3([...normXAxis, ...normYAxis, ...normZAxis]));
-  }
-
-  fromCenterHalfSizeQuaternion(center, halfSize, quaternion) {
-    const quaternionObject = new Quaternion(quaternion);
-    const directionsMatrix = new Matrix3().fromQuaternion(quaternionObject);
-    directionsMatrix[0] = directionsMatrix[0] * halfSize[0];
-    directionsMatrix[1] = directionsMatrix[1] * halfSize[0];
-    directionsMatrix[2] = directionsMatrix[2] * halfSize[0];
-    directionsMatrix[3] = directionsMatrix[3] * halfSize[1];
-    directionsMatrix[4] = directionsMatrix[4] * halfSize[1];
-    directionsMatrix[5] = directionsMatrix[5] * halfSize[1];
-    directionsMatrix[6] = directionsMatrix[6] * halfSize[2];
-    directionsMatrix[7] = directionsMatrix[7] * halfSize[2];
-    directionsMatrix[8] = directionsMatrix[8] * halfSize[2];
-    this.center = new Vector3$1().from(center);
-    this.halfAxes = directionsMatrix;
-    return this;
-  }
-
-  clone() {
-    return new OrientedBoundingBox(this.center, this.halfAxes);
-  }
-
-  equals(right) {
-    return this === right || Boolean(right) && this.center.equals(right.center) && this.halfAxes.equals(right.halfAxes);
-  }
-
-  getBoundingSphere(result = new BoundingSphere()) {
-    const halfAxes = this.halfAxes;
-    const u = halfAxes.getColumn(0, scratchVectorU);
-    const v = halfAxes.getColumn(1, scratchVectorV);
-    const w = halfAxes.getColumn(2, scratchVectorW);
-    const cornerVector = scratchVector3$1.copy(u).add(v).add(w);
-    result.center.copy(this.center);
-    result.radius = cornerVector.magnitude();
-    return result;
-  }
-
-  intersectPlane(plane) {
-    const center = this.center;
-    const normal = plane.normal;
-    const halfAxes = this.halfAxes;
-    const normalX = normal.x;
-    const normalY = normal.y;
-    const normalZ = normal.z;
-    const radEffective = Math.abs(normalX * halfAxes[MATRIX3.COLUMN0ROW0] + normalY * halfAxes[MATRIX3.COLUMN0ROW1] + normalZ * halfAxes[MATRIX3.COLUMN0ROW2]) + Math.abs(normalX * halfAxes[MATRIX3.COLUMN1ROW0] + normalY * halfAxes[MATRIX3.COLUMN1ROW1] + normalZ * halfAxes[MATRIX3.COLUMN1ROW2]) + Math.abs(normalX * halfAxes[MATRIX3.COLUMN2ROW0] + normalY * halfAxes[MATRIX3.COLUMN2ROW1] + normalZ * halfAxes[MATRIX3.COLUMN2ROW2]);
-    const distanceToPlane = normal.dot(center) + plane.distance;
-
-    if (distanceToPlane <= -radEffective) {
-      return INTERSECTION.OUTSIDE;
-    } else if (distanceToPlane >= radEffective) {
-      return INTERSECTION.INSIDE;
+    constructor(center = [0, 0, 0], halfAxes = [0, 0, 0, 0, 0, 0, 0, 0, 0]) {
+        this.center = new Vector3().from(center);
+        this.halfAxes = new Matrix3(halfAxes);
     }
-
-    return INTERSECTION.INTERSECTING;
-  }
-
-  distanceTo(point) {
-    return Math.sqrt(this.distanceSquaredTo(point));
-  }
-
-  distanceSquaredTo(point) {
-    const offset = scratchOffset.from(point).subtract(this.center);
-    const halfAxes = this.halfAxes;
-    const u = halfAxes.getColumn(0, scratchVectorU);
-    const v = halfAxes.getColumn(1, scratchVectorV);
-    const w = halfAxes.getColumn(2, scratchVectorW);
-    const uHalf = u.magnitude();
-    const vHalf = v.magnitude();
-    const wHalf = w.magnitude();
-    u.normalize();
-    v.normalize();
-    w.normalize();
-    let distanceSquared = 0.0;
-    let d;
-    d = Math.abs(offset.dot(u)) - uHalf;
-
-    if (d > 0) {
-      distanceSquared += d * d;
+    /** Returns an array with three halfSizes for the bounding box */
+    get halfSize() {
+        const xAxis = this.halfAxes.getColumn(0);
+        const yAxis = this.halfAxes.getColumn(1);
+        const zAxis = this.halfAxes.getColumn(2);
+        return [new Vector3(xAxis).len(), new Vector3(yAxis).len(), new Vector3(zAxis).len()];
     }
-
-    d = Math.abs(offset.dot(v)) - vHalf;
-
-    if (d > 0) {
-      distanceSquared += d * d;
+    /** Returns a quaternion describing the orientation of the bounding box */
+    get quaternion() {
+        const xAxis = this.halfAxes.getColumn(0);
+        const yAxis = this.halfAxes.getColumn(1);
+        const zAxis = this.halfAxes.getColumn(2);
+        const normXAxis = new Vector3(xAxis).normalize();
+        const normYAxis = new Vector3(yAxis).normalize();
+        const normZAxis = new Vector3(zAxis).normalize();
+        return new Quaternion().fromMatrix3(new Matrix3([...normXAxis, ...normYAxis, ...normZAxis]));
     }
-
-    d = Math.abs(offset.dot(w)) - wHalf;
-
-    if (d > 0) {
-      distanceSquared += d * d;
+    /**
+     * Create OrientedBoundingBox from quaternion based OBB,
+     */
+    fromCenterHalfSizeQuaternion(center, halfSize, quaternion) {
+        const quaternionObject = new Quaternion(quaternion);
+        const directionsMatrix = new Matrix3().fromQuaternion(quaternionObject);
+        directionsMatrix[0] = directionsMatrix[0] * halfSize[0];
+        directionsMatrix[1] = directionsMatrix[1] * halfSize[0];
+        directionsMatrix[2] = directionsMatrix[2] * halfSize[0];
+        directionsMatrix[3] = directionsMatrix[3] * halfSize[1];
+        directionsMatrix[4] = directionsMatrix[4] * halfSize[1];
+        directionsMatrix[5] = directionsMatrix[5] * halfSize[1];
+        directionsMatrix[6] = directionsMatrix[6] * halfSize[2];
+        directionsMatrix[7] = directionsMatrix[7] * halfSize[2];
+        directionsMatrix[8] = directionsMatrix[8] * halfSize[2];
+        this.center = new Vector3().from(center);
+        this.halfAxes = directionsMatrix;
+        return this;
     }
-
-    return distanceSquared;
-  }
-
-  computePlaneDistances(position, direction, result = [-0, -0]) {
-    let minDist = Number.POSITIVE_INFINITY;
-    let maxDist = Number.NEGATIVE_INFINITY;
-    const center = this.center;
-    const halfAxes = this.halfAxes;
-    const u = halfAxes.getColumn(0, scratchVectorU);
-    const v = halfAxes.getColumn(1, scratchVectorV);
-    const w = halfAxes.getColumn(2, scratchVectorW);
-    const corner = scratchCorner.copy(u).add(v).add(w).add(center);
-    const toCenter = scratchToCenter.copy(corner).subtract(position);
-    let mag = direction.dot(toCenter);
-    minDist = Math.min(mag, minDist);
-    maxDist = Math.max(mag, maxDist);
-    corner.copy(center).add(u).add(v).subtract(w);
-    toCenter.copy(corner).subtract(position);
-    mag = direction.dot(toCenter);
-    minDist = Math.min(mag, minDist);
-    maxDist = Math.max(mag, maxDist);
-    corner.copy(center).add(u).subtract(v).add(w);
-    toCenter.copy(corner).subtract(position);
-    mag = direction.dot(toCenter);
-    minDist = Math.min(mag, minDist);
-    maxDist = Math.max(mag, maxDist);
-    corner.copy(center).add(u).subtract(v).subtract(w);
-    toCenter.copy(corner).subtract(position);
-    mag = direction.dot(toCenter);
-    minDist = Math.min(mag, minDist);
-    maxDist = Math.max(mag, maxDist);
-    center.copy(corner).subtract(u).add(v).add(w);
-    toCenter.copy(corner).subtract(position);
-    mag = direction.dot(toCenter);
-    minDist = Math.min(mag, minDist);
-    maxDist = Math.max(mag, maxDist);
-    center.copy(corner).subtract(u).add(v).subtract(w);
-    toCenter.copy(corner).subtract(position);
-    mag = direction.dot(toCenter);
-    minDist = Math.min(mag, minDist);
-    maxDist = Math.max(mag, maxDist);
-    center.copy(corner).subtract(u).subtract(v).add(w);
-    toCenter.copy(corner).subtract(position);
-    mag = direction.dot(toCenter);
-    minDist = Math.min(mag, minDist);
-    maxDist = Math.max(mag, maxDist);
-    center.copy(corner).subtract(u).subtract(v).subtract(w);
-    toCenter.copy(corner).subtract(position);
-    mag = direction.dot(toCenter);
-    minDist = Math.min(mag, minDist);
-    maxDist = Math.max(mag, maxDist);
-    result[0] = minDist;
-    result[1] = maxDist;
-    return result;
-  }
-
-  transform(transformation) {
-    this.center.transformAsPoint(transformation);
-    const xAxis = this.halfAxes.getColumn(0, scratchVectorU);
-    xAxis.transformAsPoint(transformation);
-    const yAxis = this.halfAxes.getColumn(1, scratchVectorV);
-    yAxis.transformAsPoint(transformation);
-    const zAxis = this.halfAxes.getColumn(2, scratchVectorW);
-    zAxis.transformAsPoint(transformation);
-    this.halfAxes = new Matrix3([...xAxis, ...yAxis, ...zAxis]);
-    return this;
-  }
-
-  getTransform() {
-    throw new Error('not implemented');
-  }
-
+    /** Duplicates a OrientedBoundingBox instance. */
+    clone() {
+        return new OrientedBoundingBox(this.center, this.halfAxes);
+    }
+    /** Compares the provided OrientedBoundingBox component wise and returns */
+    equals(right) {
+        return (this === right ||
+            (Boolean(right) && this.center.equals(right.center) && this.halfAxes.equals(right.halfAxes)));
+    }
+    /** Computes a tight-fitting bounding sphere enclosing the provided oriented bounding box. */
+    getBoundingSphere(result = new BoundingSphere()) {
+        const halfAxes = this.halfAxes;
+        const u = halfAxes.getColumn(0, scratchVectorU);
+        const v = halfAxes.getColumn(1, scratchVectorV);
+        const w = halfAxes.getColumn(2, scratchVectorW);
+        // Calculate "corner" vector
+        const cornerVector = scratchVector3$1.copy(u).add(v).add(w);
+        result.center.copy(this.center);
+        result.radius = cornerVector.magnitude();
+        return result;
+    }
+    /** Determines which side of a plane the oriented bounding box is located. */
+    intersectPlane(plane) {
+        const center = this.center;
+        const normal = plane.normal;
+        const halfAxes = this.halfAxes;
+        const normalX = normal.x;
+        const normalY = normal.y;
+        const normalZ = normal.z;
+        // Plane is used as if it is its normal; the first three components are assumed to be normalized
+        const radEffective = Math.abs(normalX * halfAxes[MATRIX3.COLUMN0ROW0] +
+            normalY * halfAxes[MATRIX3.COLUMN0ROW1] +
+            normalZ * halfAxes[MATRIX3.COLUMN0ROW2]) +
+            Math.abs(normalX * halfAxes[MATRIX3.COLUMN1ROW0] +
+                normalY * halfAxes[MATRIX3.COLUMN1ROW1] +
+                normalZ * halfAxes[MATRIX3.COLUMN1ROW2]) +
+            Math.abs(normalX * halfAxes[MATRIX3.COLUMN2ROW0] +
+                normalY * halfAxes[MATRIX3.COLUMN2ROW1] +
+                normalZ * halfAxes[MATRIX3.COLUMN2ROW2]);
+        const distanceToPlane = normal.dot(center) + plane.distance;
+        if (distanceToPlane <= -radEffective) {
+            // The entire box is on the negative side of the plane normal
+            return INTERSECTION.OUTSIDE;
+        }
+        else if (distanceToPlane >= radEffective) {
+            // The entire box is on the positive side of the plane normal
+            return INTERSECTION.INSIDE;
+        }
+        return INTERSECTION.INTERSECTING;
+    }
+    /** Computes the estimated distance from the closest point on a bounding box to a point. */
+    distanceTo(point) {
+        return Math.sqrt(this.distanceSquaredTo(point));
+    }
+    /**
+     * Computes the estimated distance squared from the closest point
+     * on a bounding box to a point.
+     * See Geometric Tools for Computer Graphics 10.4.2
+     */
+    distanceSquaredTo(point) {
+        // Computes the estimated distance squared from the
+        // closest point on a bounding box to a point.
+        // See Geometric Tools for Computer Graphics 10.4.2
+        const offset = scratchOffset.from(point).subtract(this.center);
+        const halfAxes = this.halfAxes;
+        const u = halfAxes.getColumn(0, scratchVectorU);
+        const v = halfAxes.getColumn(1, scratchVectorV);
+        const w = halfAxes.getColumn(2, scratchVectorW);
+        const uHalf = u.magnitude();
+        const vHalf = v.magnitude();
+        const wHalf = w.magnitude();
+        u.normalize();
+        v.normalize();
+        w.normalize();
+        let distanceSquared = 0.0;
+        let d;
+        d = Math.abs(offset.dot(u)) - uHalf;
+        if (d > 0) {
+            distanceSquared += d * d;
+        }
+        d = Math.abs(offset.dot(v)) - vHalf;
+        if (d > 0) {
+            distanceSquared += d * d;
+        }
+        d = Math.abs(offset.dot(w)) - wHalf;
+        if (d > 0) {
+            distanceSquared += d * d;
+        }
+        return distanceSquared;
+    }
+    /**
+     * The distances calculated by the vector from the center of the bounding box
+     * to position projected onto direction.
+     *
+     * - If you imagine the infinite number of planes with normal direction,
+     *   this computes the smallest distance to the closest and farthest planes
+     *   from `position` that intersect the bounding box.
+     *
+     * @param position The position to calculate the distance from.
+     * @param direction The direction from position.
+     * @param result An Interval (array of length 2) to store the nearest and farthest distances.
+     * @returns Interval (array of length 2) with nearest and farthest distances
+     *   on the bounding box from position in direction.
+     */
+    // eslint-disable-next-line max-statements
+    computePlaneDistances(position, direction, result = [-0, -0]) {
+        let minDist = Number.POSITIVE_INFINITY;
+        let maxDist = Number.NEGATIVE_INFINITY;
+        const center = this.center;
+        const halfAxes = this.halfAxes;
+        const u = halfAxes.getColumn(0, scratchVectorU);
+        const v = halfAxes.getColumn(1, scratchVectorV);
+        const w = halfAxes.getColumn(2, scratchVectorW);
+        // project first corner
+        const corner = scratchCorner.copy(u).add(v).add(w).add(center);
+        const toCenter = scratchToCenter.copy(corner).subtract(position);
+        let mag = direction.dot(toCenter);
+        minDist = Math.min(mag, minDist);
+        maxDist = Math.max(mag, maxDist);
+        // project second corner
+        corner.copy(center).add(u).add(v).subtract(w);
+        toCenter.copy(corner).subtract(position);
+        mag = direction.dot(toCenter);
+        minDist = Math.min(mag, minDist);
+        maxDist = Math.max(mag, maxDist);
+        // project third corner
+        corner.copy(center).add(u).subtract(v).add(w);
+        toCenter.copy(corner).subtract(position);
+        mag = direction.dot(toCenter);
+        minDist = Math.min(mag, minDist);
+        maxDist = Math.max(mag, maxDist);
+        // project fourth corner
+        corner.copy(center).add(u).subtract(v).subtract(w);
+        toCenter.copy(corner).subtract(position);
+        mag = direction.dot(toCenter);
+        minDist = Math.min(mag, minDist);
+        maxDist = Math.max(mag, maxDist);
+        // project fifth corner
+        center.copy(corner).subtract(u).add(v).add(w);
+        toCenter.copy(corner).subtract(position);
+        mag = direction.dot(toCenter);
+        minDist = Math.min(mag, minDist);
+        maxDist = Math.max(mag, maxDist);
+        // project sixth corner
+        center.copy(corner).subtract(u).add(v).subtract(w);
+        toCenter.copy(corner).subtract(position);
+        mag = direction.dot(toCenter);
+        minDist = Math.min(mag, minDist);
+        maxDist = Math.max(mag, maxDist);
+        // project seventh corner
+        center.copy(corner).subtract(u).subtract(v).add(w);
+        toCenter.copy(corner).subtract(position);
+        mag = direction.dot(toCenter);
+        minDist = Math.min(mag, minDist);
+        maxDist = Math.max(mag, maxDist);
+        // project eighth corner
+        center.copy(corner).subtract(u).subtract(v).subtract(w);
+        toCenter.copy(corner).subtract(position);
+        mag = direction.dot(toCenter);
+        minDist = Math.min(mag, minDist);
+        maxDist = Math.max(mag, maxDist);
+        result[0] = minDist;
+        result[1] = maxDist;
+        return result;
+    }
+    /**
+     * Applies a 4x4 affine transformation matrix to a bounding sphere.
+     * @param transform The transformation matrix to apply to the bounding sphere.
+     * @returns itself, i.e. the modified BoundingVolume.
+     */
+    transform(transformation) {
+        this.center.transformAsPoint(transformation);
+        const xAxis = this.halfAxes.getColumn(0, scratchVectorU);
+        xAxis.transformAsPoint(transformation);
+        const yAxis = this.halfAxes.getColumn(1, scratchVectorV);
+        yAxis.transformAsPoint(transformation);
+        const zAxis = this.halfAxes.getColumn(2, scratchVectorW);
+        zAxis.transformAsPoint(transformation);
+        this.halfAxes = new Matrix3([...xAxis, ...yAxis, ...zAxis]);
+        return this;
+    }
+    getTransform() {
+        // const modelMatrix = Matrix4.fromRotationTranslation(this.boundingVolume.halfAxes, this.boundingVolume.center);
+        // return modelMatrix;
+        throw new Error('not implemented');
+    }
 }
 
-const scratchPosition$1 = new Vector3$1();
-const scratchNormal$1 = new Vector3$1();
+// This file is derived from the Cesium math library under Apache 2 license
+// See LICENSE.md and https://github.com/AnalyticalGraphicsInc/cesium/blob/master/LICENSE.md
+/* eslint-disable */
+const scratchPosition$1 = new Vector3();
+const scratchNormal$1 = new Vector3();
+// A plane in Hessian Normal Form
 class Plane {
-  constructor(normal = [0, 0, 1], distance = 0) {
-    this.normal = new Vector3$1();
-    this.distance = -0;
-    this.fromNormalDistance(normal, distance);
-  }
-
-  fromNormalDistance(normal, distance) {
-    assert$5(Number.isFinite(distance));
-    this.normal.from(normal).normalize();
-    this.distance = distance;
-    return this;
-  }
-
-  fromPointNormal(point, normal) {
-    point = scratchPosition$1.from(point);
-    this.normal.from(normal).normalize();
-    const distance = -this.normal.dot(point);
-    this.distance = distance;
-    return this;
-  }
-
-  fromCoefficients(a, b, c, d) {
-    this.normal.set(a, b, c);
-    assert$5(equals$1(this.normal.len(), 1));
-    this.distance = d;
-    return this;
-  }
-
-  clone(plane) {
-    return new Plane(this.normal, this.distance);
-  }
-
-  equals(right) {
-    return equals$1(this.distance, right.distance) && equals$1(this.normal, right.normal);
-  }
-
-  getPointDistance(point) {
-    return this.normal.dot(point) + this.distance;
-  }
-
-  transform(matrix4) {
-    const normal = scratchNormal$1.copy(this.normal).transformAsVector(matrix4).normalize();
-    const point = this.normal.scale(-this.distance).transform(matrix4);
-    return this.fromPointNormal(point, normal);
-  }
-
-  projectPointOntoPlane(point, result = [0, 0, 0]) {
-    point = scratchPosition$1.from(point);
-    const pointDistance = this.getPointDistance(point);
-    const scaledNormal = scratchNormal$1.copy(this.normal).scale(pointDistance);
-    return point.subtract(scaledNormal).to(result);
-  }
-
+    constructor(normal = [0, 0, 1], distance = 0) {
+        this.normal = new Vector3();
+        this.distance = -0;
+        this.fromNormalDistance(normal, distance);
+    }
+    /** Creates a plane from a normal and a distance from the origin. */
+    fromNormalDistance(normal, distance) {
+        assert$3(Number.isFinite(distance));
+        this.normal.from(normal).normalize();
+        this.distance = distance;
+        return this;
+    }
+    /** Creates a plane from a normal and a point on the plane. */
+    fromPointNormal(point, normal) {
+        point = scratchPosition$1.from(point);
+        this.normal.from(normal).normalize();
+        const distance = -this.normal.dot(point);
+        this.distance = distance;
+        return this;
+    }
+    /** Creates a plane from the general equation */
+    fromCoefficients(a, b, c, d) {
+        this.normal.set(a, b, c);
+        assert$3(equals(this.normal.len(), 1));
+        this.distance = d;
+        return this;
+    }
+    /** Duplicates a Plane instance. */
+    clone() {
+        return new Plane(this.normal, this.distance);
+    }
+    /** Compares the provided Planes by normal and distance */
+    equals(right) {
+        return equals(this.distance, right.distance) && equals(this.normal, right.normal);
+    }
+    /** Computes the signed shortest distance of a point to a plane.
+     * The sign of the distance determines which side of the plane the point is on.
+     */
+    getPointDistance(point) {
+        return this.normal.dot(point) + this.distance;
+    }
+    /** Transforms the plane by the given transformation matrix. */
+    transform(matrix4) {
+        const normal = scratchNormal$1.copy(this.normal).transformAsVector(matrix4).normalize();
+        const point = this.normal.scale(-this.distance).transform(matrix4);
+        return this.fromPointNormal(point, normal);
+    }
+    projectPointOntoPlane(point, result = [0, 0, 0]) {
+        const scratchPoint = scratchPosition$1.from(point);
+        // projectedPoint = point - (normal.point + scale) * normal
+        const pointDistance = this.getPointDistance(scratchPoint);
+        const scaledNormal = scratchNormal$1.copy(this.normal).scale(pointDistance);
+        return scratchPoint.subtract(scaledNormal).to(result);
+    }
 }
 
-const faces = [new Vector3$1([1, 0, 0]), new Vector3$1([0, 1, 0]), new Vector3$1([0, 0, 1])];
-const scratchPlaneCenter = new Vector3$1();
-const scratchPlaneNormal$1 = new Vector3$1();
-new Plane(new Vector3$1(1.0, 0.0, 0.0), 0.0);
+// This file is derived from the Cesium math library under Apache 2 license
+// See LICENSE.md and https://github.com/AnalyticalGraphicsInc/cesium/blob/master/LICENSE.md
+/* eslint-disable */
+// X, Y, Z Unit vectors
+const faces = [new Vector3([1, 0, 0]), new Vector3([0, 1, 0]), new Vector3([0, 0, 1])];
+const scratchPlaneCenter = new Vector3();
+const scratchPlaneNormal$1 = new Vector3();
+// const scratchPlane = new Plane(new Vector3(1.0, 0.0, 0.0), 0.0);
+/** A culling volume defined by planes. */
 class CullingVolume {
-  static get MASK_OUTSIDE() {
-    return 0xffffffff;
-  }
-
-  static get MASK_INSIDE() {
-    return 0x00000000;
-  }
-
-  static get MASK_INDETERMINATE() {
-    return 0x7fffffff;
-  }
-
-  constructor(planes = []) {
-    this.planes = planes;
-    assert$5(this.planes.every(plane => plane instanceof Plane));
-  }
-
-  fromBoundingSphere(boundingSphere) {
-    this.planes.length = 2 * faces.length;
-    const center = boundingSphere.center;
-    const radius = boundingSphere.radius;
-    let planeIndex = 0;
-
-    for (const faceNormal of faces) {
-      let plane0 = this.planes[planeIndex];
-      let plane1 = this.planes[planeIndex + 1];
-
-      if (!plane0) {
-        plane0 = this.planes[planeIndex] = new Plane();
-      }
-
-      if (!plane1) {
-        plane1 = this.planes[planeIndex + 1] = new Plane();
-      }
-
-      const plane0Center = scratchPlaneCenter.copy(faceNormal).scale(-radius).add(center);
-      -faceNormal.dot(plane0Center);
-      plane0.fromPointNormal(plane0Center, faceNormal);
-      const plane1Center = scratchPlaneCenter.copy(faceNormal).scale(radius).add(center);
-      const negatedFaceNormal = scratchPlaneNormal$1.copy(faceNormal).negate();
-      -negatedFaceNormal.dot(plane1Center);
-      plane1.fromPointNormal(plane1Center, negatedFaceNormal);
-      planeIndex += 2;
+    /**
+     * Create a new `CullingVolume` bounded by an array of clipping planed
+     * @param planes Array of clipping planes.
+     * */
+    constructor(planes = []) {
+        this.planes = planes;
     }
-
-    return this;
-  }
-
-  computeVisibility(boundingVolume) {
-    assert$5(boundingVolume);
-    let intersect = INTERSECTION.INSIDE;
-
-    for (const plane of this.planes) {
-      const result = boundingVolume.intersectPlane(plane);
-
-      switch (result) {
-        case INTERSECTION.OUTSIDE:
-          return INTERSECTION.OUTSIDE;
-
-        case INTERSECTION.INTERSECTING:
-          intersect = INTERSECTION.INTERSECTING;
-          break;
-      }
+    /**
+     * Constructs a culling volume from a bounding sphere. Creates six planes that create a box containing the sphere.
+     * The planes are aligned to the x, y, and z axes in world coordinates.
+     */
+    fromBoundingSphere(boundingSphere) {
+        this.planes.length = 2 * faces.length;
+        const center = boundingSphere.center;
+        const radius = boundingSphere.radius;
+        let planeIndex = 0;
+        for (const faceNormal of faces) {
+            let plane0 = this.planes[planeIndex];
+            let plane1 = this.planes[planeIndex + 1];
+            if (!plane0) {
+                plane0 = this.planes[planeIndex] = new Plane();
+            }
+            if (!plane1) {
+                plane1 = this.planes[planeIndex + 1] = new Plane();
+            }
+            const plane0Center = scratchPlaneCenter.copy(faceNormal).scale(-radius).add(center);
+            // const plane0Distance = -faceNormal.dot(plane0Center);
+            plane0.fromPointNormal(plane0Center, faceNormal);
+            const plane1Center = scratchPlaneCenter.copy(faceNormal).scale(radius).add(center);
+            const negatedFaceNormal = scratchPlaneNormal$1.copy(faceNormal).negate();
+            // const plane1Distance = -negatedFaceNormal.dot(plane1Center);
+            plane1.fromPointNormal(plane1Center, negatedFaceNormal);
+            planeIndex += 2;
+        }
+        return this;
     }
-
-    return intersect;
-  }
-
-  computeVisibilityWithPlaneMask(boundingVolume, parentPlaneMask) {
-    assert$5(boundingVolume, 'boundingVolume is required.');
-    assert$5(Number.isFinite(parentPlaneMask), 'parentPlaneMask is required.');
-
-    if (parentPlaneMask === CullingVolume.MASK_OUTSIDE || parentPlaneMask === CullingVolume.MASK_INSIDE) {
-      return parentPlaneMask;
+    /** Determines whether a bounding volume intersects the culling volume. */
+    computeVisibility(boundingVolume) {
+        // const planes = this.planes;
+        let intersect = INTERSECTION.INSIDE;
+        for (const plane of this.planes) {
+            const result = boundingVolume.intersectPlane(plane);
+            switch (result) {
+                case INTERSECTION.OUTSIDE:
+                    // We are done
+                    return INTERSECTION.OUTSIDE;
+                case INTERSECTION.INTERSECTING:
+                    // If no other intersection is outside, return INTERSECTING
+                    intersect = INTERSECTION.INTERSECTING;
+                    break;
+            }
+        }
+        return intersect;
     }
-
-    let mask = CullingVolume.MASK_INSIDE;
-    const planes = this.planes;
-
-    for (let k = 0; k < this.planes.length; ++k) {
-      const flag = k < 31 ? 1 << k : 0;
-
-      if (k < 31 && (parentPlaneMask & flag) === 0) {
-        continue;
-      }
-
-      const plane = planes[k];
-      const result = boundingVolume.intersectPlane(plane);
-
-      if (result === INTERSECTION.OUTSIDE) {
-        return CullingVolume.MASK_OUTSIDE;
-      } else if (result === INTERSECTION.INTERSECTING) {
-        mask |= flag;
-      }
+    /**
+     * Determines whether a bounding volume intersects the culling volume.
+     *
+     * @param parentPlaneMask A bit mask from the boundingVolume's parent's check against the same culling
+     *   volume, such that if (planeMask & (1 << planeIndex) === 0), for k < 31, then
+     *   the parent (and therefore this) volume is completely inside plane[planeIndex]
+     *   and that plane check can be skipped.
+     */
+    computeVisibilityWithPlaneMask(boundingVolume, parentPlaneMask) {
+        assert$3(Number.isFinite(parentPlaneMask), 'parentPlaneMask is required.');
+        if (parentPlaneMask === CullingVolume.MASK_OUTSIDE ||
+            parentPlaneMask === CullingVolume.MASK_INSIDE) {
+            // parent is completely outside or completely inside, so this child is as well.
+            return parentPlaneMask;
+        }
+        // Start with MASK_INSIDE (all zeros) so that after the loop, the return value can be compared with MASK_INSIDE.
+        // (Because if there are fewer than 31 planes, the upper bits wont be changed.)
+        let mask = CullingVolume.MASK_INSIDE;
+        const planes = this.planes;
+        for (let k = 0; k < this.planes.length; ++k) {
+            // For k greater than 31 (since 31 is the maximum number of INSIDE/INTERSECTING bits we can store), skip the optimization.
+            const flag = k < 31 ? 1 << k : 0;
+            if (k < 31 && (parentPlaneMask & flag) === 0) {
+                // boundingVolume is known to be INSIDE this plane.
+                continue;
+            }
+            const plane = planes[k];
+            const result = boundingVolume.intersectPlane(plane);
+            if (result === INTERSECTION.OUTSIDE) {
+                return CullingVolume.MASK_OUTSIDE;
+            }
+            else if (result === INTERSECTION.INTERSECTING) {
+                mask |= flag;
+            }
+        }
+        return mask;
     }
-
-    return mask;
-  }
-
 }
+/**
+ * For plane masks (as used in {@link CullingVolume#computeVisibilityWithPlaneMask}), this special value
+ * represents the case where the object bounding volume is entirely outside the culling volume.
+ */
+CullingVolume.MASK_OUTSIDE = 0xffffffff;
+/**
+ * For plane masks (as used in {@link CullingVolume.prototype.computeVisibilityWithPlaneMask}), this value
+ * represents the case where the object bounding volume is entirely inside the culling volume.
+ */
+CullingVolume.MASK_INSIDE = 0x00000000;
+/**
+ * For plane masks (as used in {@link CullingVolume.prototype.computeVisibilityWithPlaneMask}), this value
+ * represents the case where the object bounding volume (may) intersect all planes of the culling volume.
+ */
+CullingVolume.MASK_INDETERMINATE = 0x7fffffff;
 
-const scratchPlaneUpVector = new Vector3$1();
-const scratchPlaneRightVector = new Vector3$1();
-const scratchPlaneNearCenter = new Vector3$1();
-const scratchPlaneFarCenter = new Vector3$1();
-const scratchPlaneNormal = new Vector3$1();
+// This file is derived from the Cesium math library under Apache 2 license
+// See LICENSE.md and https://github.com/AnalyticalGraphicsInc/cesium/blob/master/LICENSE.md
+// Note: This class is still an experimental export, mainly used by other test cases
+// - It has not been fully adapted to math.gl conventions
+// - Documentation has not been ported
+const scratchPlaneUpVector = new Vector3();
+const scratchPlaneRightVector = new Vector3();
+const scratchPlaneNearCenter = new Vector3();
+const scratchPlaneFarCenter = new Vector3();
+const scratchPlaneNormal = new Vector3();
 class PerspectiveOffCenterFrustum {
-  constructor(options = {}) {
-    options = {
-      near: 1.0,
-      far: 500000000.0,
-      ...options
-    };
-    this.left = options.left;
-    this._left = undefined;
-    this.right = options.right;
-    this._right = undefined;
-    this.top = options.top;
-    this._top = undefined;
-    this.bottom = options.bottom;
-    this._bottom = undefined;
-    this.near = options.near;
-    this._near = this.near;
-    this.far = options.far;
-    this._far = this.far;
-    this._cullingVolume = new CullingVolume([new Plane(), new Plane(), new Plane(), new Plane(), new Plane(), new Plane()]);
-    this._perspectiveMatrix = new Matrix4$1();
-    this._infinitePerspective = new Matrix4$1();
-  }
-
-  clone() {
-    return new PerspectiveOffCenterFrustum({
-      right: this.right,
-      left: this.left,
-      top: this.top,
-      bottom: this.bottom,
-      near: this.near,
-      far: this.far
-    });
-  }
-
-  equals(other) {
-    return other && other instanceof PerspectiveOffCenterFrustum && this.right === other.right && this.left === other.left && this.top === other.top && this.bottom === other.bottom && this.near === other.near && this.far === other.far;
-  }
-
-  get projectionMatrix() {
-    update$1(this);
-    return this._perspectiveMatrix;
-  }
-
-  get infiniteProjectionMatrix() {
-    update$1(this);
-    return this._infinitePerspective;
-  }
-
-  computeCullingVolume(position, direction, up) {
-    assert$5(position, 'position is required.');
-    assert$5(direction, 'direction is required.');
-    assert$5(up, 'up is required.');
-    const planes = this._cullingVolume.planes;
-    up = scratchPlaneUpVector.copy(up).normalize();
-    const right = scratchPlaneRightVector.copy(direction).cross(up).normalize();
-    const nearCenter = scratchPlaneNearCenter.copy(direction).multiplyByScalar(this.near).add(position);
-    const farCenter = scratchPlaneFarCenter.copy(direction).multiplyByScalar(this.far).add(position);
-    let normal = scratchPlaneNormal;
-    normal.copy(right).multiplyByScalar(this.left).add(nearCenter).subtract(position).cross(up);
-    planes[0].fromPointNormal(position, normal);
-    normal.copy(right).multiplyByScalar(this.right).add(nearCenter).subtract(position).cross(up).negate();
-    planes[1].fromPointNormal(position, normal);
-    normal.copy(up).multiplyByScalar(this.bottom).add(nearCenter).subtract(position).cross(right).negate();
-    planes[2].fromPointNormal(position, normal);
-    normal.copy(up).multiplyByScalar(this.top).add(nearCenter).subtract(position).cross(right);
-    planes[3].fromPointNormal(position, normal);
-    normal = new Vector3$1().copy(direction);
-    planes[4].fromPointNormal(nearCenter, normal);
-    normal.negate();
-    planes[5].fromPointNormal(farCenter, normal);
-    return this._cullingVolume;
-  }
-
-  getPixelDimensions(drawingBufferWidth, drawingBufferHeight, distance, result) {
-    update$1(this);
-    assert$5(Number.isFinite(drawingBufferWidth) && Number.isFinite(drawingBufferHeight));
-    assert$5(drawingBufferWidth > 0);
-    assert$5(drawingBufferHeight > 0);
-    assert$5(distance > 0);
-    assert$5(result);
-    const inverseNear = 1.0 / this.near;
-    let tanTheta = this.top * inverseNear;
-    const pixelHeight = 2.0 * distance * tanTheta / drawingBufferHeight;
-    tanTheta = this.right * inverseNear;
-    const pixelWidth = 2.0 * distance * tanTheta / drawingBufferWidth;
-    result.x = pixelWidth;
-    result.y = pixelHeight;
-    return result;
-  }
-
-}
-
-function update$1(frustum) {
-  assert$5(Number.isFinite(frustum.right) && Number.isFinite(frustum.left) && Number.isFinite(frustum.top) && Number.isFinite(frustum.bottom) && Number.isFinite(frustum.near) && Number.isFinite(frustum.far));
-  const {
-    top,
-    bottom,
-    right,
-    left,
-    near,
-    far
-  } = frustum;
-
-  if (top !== frustum._top || bottom !== frustum._bottom || left !== frustum._left || right !== frustum._right || near !== frustum._near || far !== frustum._far) {
-    assert$5(frustum.near > 0 && frustum.near < frustum.far, 'near must be greater than zero and less than far.');
-    frustum._left = left;
-    frustum._right = right;
-    frustum._top = top;
-    frustum._bottom = bottom;
-    frustum._near = near;
-    frustum._far = far;
-    frustum._perspectiveMatrix = new Matrix4$1().frustum({
-      left,
-      right,
-      bottom,
-      top,
-      near,
-      far
-    });
-    frustum._infinitePerspective = new Matrix4$1().frustum({
-      left,
-      right,
-      bottom,
-      top,
-      near,
-      far: Infinity
-    });
-  }
-}
-
-const defined$4 = val => val !== null && typeof val !== 'undefined';
-
-class PerspectiveFrustum {
-  constructor(options = {}) {
-    options = {
-      near: 1.0,
-      far: 500000000.0,
-      xOffset: 0.0,
-      yOffset: 0.0,
-      ...options
-    };
-    this._offCenterFrustum = new PerspectiveOffCenterFrustum();
-    this.fov = options.fov;
-    this._fov = undefined;
-    this._fovy = undefined;
-    this._sseDenominator = undefined;
-    this.aspectRatio = options.aspectRatio;
-    this._aspectRatio = undefined;
-    this.near = options.near;
-    this._near = this.near;
-    this.far = options.far;
-    this._far = this.far;
-    this.xOffset = options.xOffset;
-    this._xOffset = this.xOffset;
-    this.yOffset = options.yOffset;
-    this._yOffset = this.yOffset;
-  }
-
-  clone() {
-    return new PerspectiveFrustum({
-      aspectRatio: this.aspectRatio,
-      fov: this.fov,
-      near: this.near,
-      far: this.far
-    });
-  }
-
-  equals(other) {
-    if (!defined$4(other) || !(other instanceof PerspectiveFrustum)) {
-      return false;
+    /**
+     * The viewing frustum is defined by 6 planes.
+     * Each plane is represented by a {@link Vector4} object, where the x, y, and z components
+     * define the unit vector normal to the plane, and the w component is the distance of the
+     * plane from the origin/camera position.
+     *
+     * @alias PerspectiveOffCenterFrustum
+     *
+     * @example
+     * const frustum = new PerspectiveOffCenterFrustum({
+     *     left : -1.0,
+     *     right : 1.0,
+     *     top : 1.0,
+     *     bottom : -1.0,
+     *     near : 1.0,
+     *     far : 100.0
+     * });
+     *
+     * @see PerspectiveFrustum
+     */
+    constructor(options = {}) {
+        this._cullingVolume = new CullingVolume([
+            new Plane(),
+            new Plane(),
+            new Plane(),
+            new Plane(),
+            new Plane(),
+            new Plane()
+        ]);
+        this._perspectiveMatrix = new Matrix4();
+        this._infinitePerspective = new Matrix4();
+        const { near = 1.0, far = 500000000.0 } = options;
+        this.left = options.left;
+        this._left = undefined;
+        this.right = options.right;
+        this._right = undefined;
+        this.top = options.top;
+        this._top = undefined;
+        this.bottom = options.bottom;
+        this._bottom = undefined;
+        this.near = near;
+        this._near = near;
+        this.far = far;
+        this._far = far;
     }
-
-    update(this);
-    update(other);
-    return this.fov === other.fov && this.aspectRatio === other.aspectRatio && this.near === other.near && this.far === other.far && this._offCenterFrustum.equals(other._offCenterFrustum);
-  }
-
-  get projectionMatrix() {
-    update(this);
-    return this._offCenterFrustum.projectionMatrix;
-  }
-
-  get infiniteProjectionMatrix() {
-    update(this);
-    return this._offCenterFrustum.infiniteProjectionMatrix;
-  }
-
-  get fovy() {
-    update(this);
-    return this._fovy;
-  }
-
-  get sseDenominator() {
-    update(this);
-    return this._sseDenominator;
-  }
-
-  computeCullingVolume(position, direction, up) {
-    update(this);
-    return this._offCenterFrustum.computeCullingVolume(position, direction, up);
-  }
-
-  getPixelDimensions(drawingBufferWidth, drawingBufferHeight, distance, result) {
-    update(this);
-    return this._offCenterFrustum.getPixelDimensions(drawingBufferWidth, drawingBufferHeight, distance, result);
-  }
-
+    /**
+     * Returns a duplicate of a PerspectiveOffCenterFrustum instance.
+     * @returns {PerspectiveOffCenterFrustum} A new PerspectiveFrustum instance.
+     * */
+    clone() {
+        return new PerspectiveOffCenterFrustum({
+            right: this.right,
+            left: this.left,
+            top: this.top,
+            bottom: this.bottom,
+            near: this.near,
+            far: this.far
+        });
+    }
+    /**
+     * Compares the provided PerspectiveOffCenterFrustum componentwise and returns
+     * <code>true</code> if they are equal, <code>false</code> otherwise.
+     *
+     * @returns {Boolean} <code>true</code> if they are equal, <code>false</code> otherwise.
+     */
+    equals(other) {
+        return (other &&
+            other instanceof PerspectiveOffCenterFrustum &&
+            this.right === other.right &&
+            this.left === other.left &&
+            this.top === other.top &&
+            this.bottom === other.bottom &&
+            this.near === other.near &&
+            this.far === other.far);
+    }
+    /**
+     * Gets the perspective projection matrix computed from the view frustum.
+     * @memberof PerspectiveOffCenterFrustum.prototype
+     * @type {Matrix4}
+     *
+     * @see PerspectiveOffCenterFrustum#infiniteProjectionMatrix
+     */
+    get projectionMatrix() {
+        this._update();
+        return this._perspectiveMatrix;
+    }
+    /**
+     * Gets the perspective projection matrix computed from the view frustum with an infinite far plane.
+     * @memberof PerspectiveOffCenterFrustum.prototype
+     * @type {Matrix4}
+     *
+     * @see PerspectiveOffCenterFrustum#projectionMatrix
+     */
+    get infiniteProjectionMatrix() {
+        this._update();
+        return this._infinitePerspective;
+    }
+    /**
+     * Creates a culling volume for this frustum.
+     * @returns {CullingVolume} A culling volume at the given position and orientation.
+     *
+     * @example
+     * // Check if a bounding volume intersects the frustum.
+     * const cullingVolume = frustum.computeCullingVolume(cameraPosition, cameraDirection, cameraUp);
+     * const intersect = cullingVolume.computeVisibility(boundingVolume);
+     */
+    // eslint-disable-next-line complexity, max-statements
+    computeCullingVolume(
+    /** A Vector3 defines the eye position. */
+    position, 
+    /** A Vector3 defines the view direction. */
+    direction, 
+    /** A Vector3 defines the up direction. */
+    up) {
+        assert$3(position, 'position is required.');
+        assert$3(direction, 'direction is required.');
+        assert$3(up, 'up is required.');
+        const planes = this._cullingVolume.planes;
+        up = scratchPlaneUpVector.copy(up).normalize();
+        const right = scratchPlaneRightVector.copy(direction).cross(up).normalize();
+        const nearCenter = scratchPlaneNearCenter
+            .copy(direction)
+            .multiplyByScalar(this.near)
+            .add(position);
+        const farCenter = scratchPlaneFarCenter
+            .copy(direction)
+            .multiplyByScalar(this.far)
+            .add(position);
+        let normal = scratchPlaneNormal;
+        // Left plane computation
+        normal.copy(right).multiplyByScalar(this.left).add(nearCenter).subtract(position).cross(up);
+        planes[0].fromPointNormal(position, normal);
+        // Right plane computation
+        normal
+            .copy(right)
+            .multiplyByScalar(this.right)
+            .add(nearCenter)
+            .subtract(position)
+            .cross(up)
+            .negate();
+        planes[1].fromPointNormal(position, normal);
+        // Bottom plane computation
+        normal
+            .copy(up)
+            .multiplyByScalar(this.bottom)
+            .add(nearCenter)
+            .subtract(position)
+            .cross(right)
+            .negate();
+        planes[2].fromPointNormal(position, normal);
+        // Top plane computation
+        normal.copy(up).multiplyByScalar(this.top).add(nearCenter).subtract(position).cross(right);
+        planes[3].fromPointNormal(position, normal);
+        normal = new Vector3().copy(direction);
+        // Near plane computation
+        planes[4].fromPointNormal(nearCenter, normal);
+        // Far plane computation
+        normal.negate();
+        planes[5].fromPointNormal(farCenter, normal);
+        return this._cullingVolume;
+    }
+    /**
+     * Returns the pixel's width and height in meters.
+     *
+     * @returns {Vector2} The modified result parameter or a new instance of {@link Vector2} with the pixel's width and height in the x and y properties, respectively.
+     *
+     * @exception {DeveloperError} drawingBufferWidth must be greater than zero.
+     * @exception {DeveloperError} drawingBufferHeight must be greater than zero.
+     *
+     * @example
+     * // Example 1
+     * // Get the width and height of a pixel.
+     * const pixelSize = camera.frustum.getPixelDimensions(scene.drawingBufferWidth, scene.drawingBufferHeight, 1.0, new Vector2());
+     *
+     * @example
+     * // Example 2
+     * // Get the width and height of a pixel if the near plane was set to 'distance'.
+     * // For example, get the size of a pixel of an image on a billboard.
+     * const position = camera.position;
+     * const direction = camera.direction;
+     * const toCenter = Vector3.subtract(primitive.boundingVolume.center, position, new Vector3());      // vector from camera to a primitive
+     * const toCenterProj = Vector3.multiplyByScalar(direction, Vector3.dot(direction, toCenter), new Vector3()); // project vector onto camera direction vector
+     * const distance = Vector3.magnitude(toCenterProj);
+     * const pixelSize = camera.frustum.getPixelDimensions(scene.drawingBufferWidth, scene.drawingBufferHeight, distance, new Vector2());
+     */
+    getPixelDimensions(
+    /** The width of the drawing buffer. */
+    drawingBufferWidth, 
+    /** The height of the drawing buffer. */
+    drawingBufferHeight, 
+    /** The distance to the near plane in meters. */
+    distance, 
+    /** The object onto which to store the result. */
+    result) {
+        this._update();
+        assert$3(Number.isFinite(drawingBufferWidth) && Number.isFinite(drawingBufferHeight));
+        // 'Both drawingBufferWidth and drawingBufferHeight are required.'
+        assert$3(drawingBufferWidth > 0);
+        // 'drawingBufferWidth must be greater than zero.'
+        assert$3(drawingBufferHeight > 0);
+        // 'drawingBufferHeight must be greater than zero.'
+        assert$3(distance > 0);
+        // 'distance is required.');
+        assert$3(result);
+        // 'A result object is required.');
+        const inverseNear = 1.0 / this.near;
+        let tanTheta = this.top * inverseNear;
+        const pixelHeight = (2.0 * distance * tanTheta) / drawingBufferHeight;
+        tanTheta = this.right * inverseNear;
+        const pixelWidth = (2.0 * distance * tanTheta) / drawingBufferWidth;
+        result.x = pixelWidth;
+        result.y = pixelHeight;
+        return result;
+    }
+    // eslint-disable-next-line complexity, max-statements
+    _update() {
+        assert$3(Number.isFinite(this.right) &&
+            Number.isFinite(this.left) &&
+            Number.isFinite(this.top) &&
+            Number.isFinite(this.bottom) &&
+            Number.isFinite(this.near) &&
+            Number.isFinite(this.far));
+        // throw new DeveloperError('right, left, top, bottom, near, or far parameters are not set.');
+        const { top, bottom, right, left, near, far } = this;
+        if (top !== this._top ||
+            bottom !== this._bottom ||
+            left !== this._left ||
+            right !== this._right ||
+            near !== this._near ||
+            far !== this._far) {
+            assert$3(this.near > 0 && this.near < this.far, 'near must be greater than zero and less than far.');
+            this._left = left;
+            this._right = right;
+            this._top = top;
+            this._bottom = bottom;
+            this._near = near;
+            this._far = far;
+            this._perspectiveMatrix = new Matrix4().frustum({
+                left,
+                right,
+                bottom,
+                top,
+                near,
+                far
+            });
+            this._infinitePerspective = new Matrix4().frustum({
+                left,
+                right,
+                bottom,
+                top,
+                near,
+                far: Infinity
+            });
+        }
+    }
 }
 
-function update(frustum) {
-  assert$5(Number.isFinite(frustum.fov) && Number.isFinite(frustum.aspectRatio) && Number.isFinite(frustum.near) && Number.isFinite(frustum.far));
-  const f = frustum._offCenterFrustum;
-
-  if (frustum.fov !== frustum._fov || frustum.aspectRatio !== frustum._aspectRatio || frustum.near !== frustum._near || frustum.far !== frustum._far || frustum.xOffset !== frustum._xOffset || frustum.yOffset !== frustum._yOffset) {
-    assert$5(frustum.fov >= 0 && frustum.fov < Math.PI);
-    assert$5(frustum.aspectRatio > 0);
-    assert$5(frustum.near >= 0 && frustum.near < frustum.far);
-    frustum._aspectRatio = frustum.aspectRatio;
-    frustum._fov = frustum.fov;
-    frustum._fovy = frustum.aspectRatio <= 1 ? frustum.fov : Math.atan(Math.tan(frustum.fov * 0.5) / frustum.aspectRatio) * 2.0;
-    frustum._near = frustum.near;
-    frustum._far = frustum.far;
-    frustum._sseDenominator = 2.0 * Math.tan(0.5 * frustum._fovy);
-    frustum._xOffset = frustum.xOffset;
-    frustum._yOffset = frustum.yOffset;
-    f.top = frustum.near * Math.tan(0.5 * frustum._fovy);
-    f.bottom = -f.top;
-    f.right = frustum.aspectRatio * f.top;
-    f.left = -f.right;
-    f.near = frustum.near;
-    f.far = frustum.far;
-    f.right += frustum.xOffset;
-    f.left += frustum.xOffset;
-    f.top += frustum.yOffset;
-    f.bottom += frustum.yOffset;
-  }
+// This file is derived from the Cesium math library under Apache 2 license
+// See LICENSE.md and https://github.com/AnalyticalGraphicsInc/cesium/blob/master/LICENSE.md
+// Note: This class is still an experimental export, mainly used by other test cases
+// - It has not been fully adapted to math.gl conventions
+// - Documentation has not been ported
+const defined$4 = (val) => val !== null && typeof val !== 'undefined';
+/**
+ * The viewing frustum is defined by 6 planes.
+ * Each plane is represented by a {@link Vector4} object, where the x, y, and z components
+ * define the unit vector normal to the plane, and the w component is the distance of the
+ * plane from the origin/camera position.
+ *
+ * @alias PerspectiveFrustum
+ *
+ * @example
+ * var frustum = new PerspectiveFrustum({
+ *     fov : Math.PI_OVER_THREE,
+ *     aspectRatio : canvas.clientWidth / canvas.clientHeight
+ *     near : 1.0,
+ *     far : 1000.0
+ * });
+ *
+ * @see PerspectiveOffCenterFrustum
+ */
+class PerspectiveFrustum {
+    constructor(options = {}) {
+        this._offCenterFrustum = new PerspectiveOffCenterFrustum();
+        const { fov, aspectRatio, near = 1.0, far = 500000000.0, xOffset = 0.0, yOffset = 0.0 } = options;
+        this.fov = fov;
+        this.aspectRatio = aspectRatio;
+        this.near = near;
+        this.far = far;
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
+    }
+    /**
+     * Returns a duplicate of a PerspectiveFrustum instance.
+     */
+    clone() {
+        return new PerspectiveFrustum({
+            aspectRatio: this.aspectRatio,
+            fov: this.fov,
+            near: this.near,
+            far: this.far
+        });
+    }
+    /**
+     * Compares the provided PerspectiveFrustum componentwise and returns
+     * <code>true</code> if they are equal, <code>false</code> otherwise.
+     */
+    equals(other) {
+        if (!defined$4(other) || !(other instanceof PerspectiveFrustum)) {
+            return false;
+        }
+        this._update();
+        other._update();
+        return (this.fov === other.fov &&
+            this.aspectRatio === other.aspectRatio &&
+            this.near === other.near &&
+            this.far === other.far &&
+            this._offCenterFrustum.equals(other._offCenterFrustum));
+    }
+    /**
+     * Gets the perspective projection matrix computed from the view this.
+     */
+    get projectionMatrix() {
+        this._update();
+        return this._offCenterFrustum.projectionMatrix;
+    }
+    /**
+     * The perspective projection matrix computed from the view frustum with an infinite far plane.
+     */
+    get infiniteProjectionMatrix() {
+        this._update();
+        return this._offCenterFrustum.infiniteProjectionMatrix;
+    }
+    /**
+     * Gets the angle of the vertical field of view, in radians.
+     */
+    get fovy() {
+        this._update();
+        return this._fovy;
+    }
+    /**
+     * @private
+     */
+    get sseDenominator() {
+        this._update();
+        return this._sseDenominator;
+    }
+    /**
+     * Creates a culling volume for this this.ion.
+     * @returns {CullingVolume} A culling volume at the given position and orientation.
+     *
+     * @example
+     * // Check if a bounding volume intersects the this.
+     * var cullingVolume = this.computeCullingVolume(cameraPosition, cameraDirection, cameraUp);
+     * var intersect = cullingVolume.computeVisibility(boundingVolume);
+     */
+    computeCullingVolume(
+    /** A Vector3 defines the eye position. */
+    position, 
+    /** A Vector3 defines the view direction. */
+    direction, 
+    /** A Vector3 defines the up direction. */
+    up) {
+        this._update();
+        return this._offCenterFrustum.computeCullingVolume(position, direction, up);
+    }
+    /**
+     * Returns the pixel's width and height in meters.
+     * @returns {Vector2} The modified result parameter or a new instance of {@link Vector2} with the pixel's width and height in the x and y properties, respectively.
+     *
+     * @exception {DeveloperError} drawingBufferWidth must be greater than zero.
+     * @exception {DeveloperError} drawingBufferHeight must be greater than zero.
+     *
+     * @example
+     * // Example 1
+     * // Get the width and height of a pixel.
+     * var pixelSize = camera.this.getPixelDimensions(scene.drawingBufferWidth, scene.drawingBufferHeight, 1.0, new Vector2());
+     *
+     * @example
+     * // Example 2
+     * // Get the width and height of a pixel if the near plane was set to 'distance'.
+     * // For example, get the size of a pixel of an image on a billboard.
+     * var position = camera.position;
+     * var direction = camera.direction;
+     * var toCenter = Vector3.subtract(primitive.boundingVolume.center, position, new Vector3());      // vector from camera to a primitive
+     * var toCenterProj = Vector3.multiplyByScalar(direction, Vector3.dot(direction, toCenter), new Vector3()); // project vector onto camera direction vector
+     * var distance = Vector3.magnitude(toCenterProj);
+     * var pixelSize = camera.this.getPixelDimensions(scene.drawingBufferWidth, scene.drawingBufferHeight, distance, new Vector2());
+     */
+    getPixelDimensions(
+    /** The width of the drawing buffer. */
+    drawingBufferWidth, 
+    /** The height of the drawing buffer. */
+    drawingBufferHeight, 
+    /** The distance to the near plane in meters. */
+    distance, 
+    /** The object onto which to store the result. */
+    result) {
+        this._update();
+        return this._offCenterFrustum.getPixelDimensions(drawingBufferWidth, drawingBufferHeight, distance, result || new Vector2());
+    }
+    // eslint-disable-next-line complexity, max-statements
+    _update() {
+        assert$3(Number.isFinite(this.fov) &&
+            Number.isFinite(this.aspectRatio) &&
+            Number.isFinite(this.near) &&
+            Number.isFinite(this.far));
+        // 'fov, aspectRatio, near, or far parameters are not set.'
+        const f = this._offCenterFrustum;
+        if (this.fov !== this._fov ||
+            this.aspectRatio !== this._aspectRatio ||
+            this.near !== this._near ||
+            this.far !== this._far ||
+            this.xOffset !== this._xOffset ||
+            this.yOffset !== this._yOffset) {
+            assert$3(this.fov >= 0 && this.fov < Math.PI);
+            // throw new DeveloperError('fov must be in the range [0, PI).');
+            assert$3(this.aspectRatio > 0);
+            // throw new DeveloperError('aspectRatio must be positive.');
+            assert$3(this.near >= 0 && this.near < this.far);
+            // throw new DeveloperError('near must be greater than zero and less than far.');
+            this._aspectRatio = this.aspectRatio;
+            this._fov = this.fov;
+            this._fovy =
+                this.aspectRatio <= 1
+                    ? this.fov
+                    : Math.atan(Math.tan(this.fov * 0.5) / this.aspectRatio) * 2.0;
+            this._near = this.near;
+            this._far = this.far;
+            this._sseDenominator = 2.0 * Math.tan(0.5 * this._fovy);
+            this._xOffset = this.xOffset;
+            this._yOffset = this.yOffset;
+            f.top = this.near * Math.tan(0.5 * this._fovy);
+            f.bottom = -f.top;
+            f.right = this.aspectRatio * f.top;
+            f.left = -f.right;
+            f.near = this.near;
+            f.far = this.far;
+            f.right += this.xOffset;
+            f.left += this.xOffset;
+            f.top += this.yOffset;
+            f.bottom += this.yOffset;
+        }
+    }
 }
 
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
+// This file is derived from the Cesium math library under Apache 2 license
+// See LICENSE.md and https://github.com/AnalyticalGraphicsInc/cesium/blob/master/LICENSE.md
+/* eslint-disable */
+new Vector3();
+new Vector3();
+new Vector3();
+new Vector3();
+new Vector3();
+new Vector3();
+new Vector3();
+new Vector3();
+new Vector3();
+new Vector3();
+new Vector3();
+new Vector3();
 
+// This file is derived from the Cesium math library under Apache 2 license
+// See LICENSE.md and https://github.com/AnalyticalGraphicsInc/cesium/blob/master/LICENSE.md
 const scratchMatrix = new Matrix3();
 const scratchUnitary = new Matrix3();
 const scratchDiagonal = new Matrix3();
 const jMatrix = new Matrix3();
 const jMatrixTranspose = new Matrix3();
-function computeEigenDecomposition(matrix, result = {}) {
-  const EIGEN_TOLERANCE = _MathUtils$1.EPSILON20;
-  const EIGEN_MAX_SWEEPS = 10;
-  let count = 0;
-  let sweep = 0;
-  const unitaryMatrix = scratchUnitary;
-  const diagonalMatrix = scratchDiagonal;
-  unitaryMatrix.identity();
-  diagonalMatrix.copy(matrix);
-  const epsilon = EIGEN_TOLERANCE * computeFrobeniusNorm(diagonalMatrix);
-
-  while (sweep < EIGEN_MAX_SWEEPS && offDiagonalFrobeniusNorm(diagonalMatrix) > epsilon) {
-    shurDecomposition(diagonalMatrix, jMatrix);
-    jMatrixTranspose.copy(jMatrix).transpose();
-    diagonalMatrix.multiplyRight(jMatrix);
-    diagonalMatrix.multiplyLeft(jMatrixTranspose);
-    unitaryMatrix.multiplyRight(jMatrix);
-
-    if (++count > 2) {
-      ++sweep;
-      count = 0;
+/**
+ * Computes the eigenvectors and eigenvalues of a symmetric matrix.
+ *
+ * - Returns a diagonal matrix and unitary matrix such that:
+ * `matrix = unitary matrix * diagonal matrix * transpose(unitary matrix)`
+ * - The values along the diagonal of the diagonal matrix are the eigenvalues. The columns
+ * of the unitary matrix are the corresponding eigenvectors.
+ * - This routine was created based upon Matrix Computations, 3rd ed., by Golub and Van Loan,
+ * section 8.4.3 The Classical Jacobi Algorithm
+ *
+ * @param matrix The 3x3 matrix to decompose into diagonal and unitary matrix. Expected to be symmetric.
+ * @param result Optional object with unitary and diagonal properties which are matrices onto which to store the result.
+ * @returns An object with unitary and diagonal properties which are the unitary and diagonal matrices, respectively.
+ *
+ * @example
+ * const a = //... symmetric matrix
+ * const result = {
+ *   unitary : new Matrix3(),
+ *   diagonal : new Matrix3()
+ * };
+ * computeEigenDecomposition(a, result);
+ *
+ * const unitaryTranspose = Matrix3.transpose(result.unitary, new Matrix3());
+ * const b = Matrix3.multiply(result.unitary, result.diagonal, new Matrix3());
+ * Matrix3.multiply(b, unitaryTranspose, b); // b is now equal to a
+ *
+ * const lambda = result.diagonal.getColumn(0, new Vector3()).x;  // first eigenvalue
+ * const v = result.unitary.getColumn(0, new Vector3());          // first eigenvector
+ * const c = v.multiplyByScalar(lambda);                          // equal to v.transformByMatrix3(a)
+ */
+function computeEigenDecomposition(matrix, 
+// @ts-expect-error accept empty object type
+result = {}) {
+    const EIGEN_TOLERANCE = EPSILON20;
+    const EIGEN_MAX_SWEEPS = 10;
+    let count = 0;
+    let sweep = 0;
+    const unitaryMatrix = scratchUnitary;
+    const diagonalMatrix = scratchDiagonal;
+    unitaryMatrix.identity();
+    diagonalMatrix.copy(matrix);
+    const epsilon = EIGEN_TOLERANCE * computeFrobeniusNorm(diagonalMatrix);
+    while (sweep < EIGEN_MAX_SWEEPS && offDiagonalFrobeniusNorm(diagonalMatrix) > epsilon) {
+        shurDecomposition(diagonalMatrix, jMatrix);
+        jMatrixTranspose.copy(jMatrix).transpose();
+        diagonalMatrix.multiplyRight(jMatrix);
+        diagonalMatrix.multiplyLeft(jMatrixTranspose);
+        unitaryMatrix.multiplyRight(jMatrix);
+        if (++count > 2) {
+            ++sweep;
+            count = 0;
+        }
     }
-  }
-
-  result.unitary = unitaryMatrix.toTarget(result.unitary);
-  result.diagonal = diagonalMatrix.toTarget(result.diagonal);
-  return result;
+    result.unitary = unitaryMatrix.toTarget(result.unitary);
+    result.diagonal = diagonalMatrix.toTarget(result.diagonal);
+    return result;
 }
-
 function computeFrobeniusNorm(matrix) {
-  let norm = 0.0;
-
-  for (let i = 0; i < 9; ++i) {
-    const temp = matrix[i];
-    norm += temp * temp;
-  }
-
-  return Math.sqrt(norm);
+    let norm = 0.0;
+    for (let i = 0; i < 9; ++i) {
+        const temp = matrix[i];
+        norm += temp * temp;
+    }
+    return Math.sqrt(norm);
 }
-
 const rowVal = [1, 0, 0];
 const colVal = [2, 2, 1];
-
+// Computes the "off-diagonal" Frobenius norm.
+// Assumes matrix is symmetric.
 function offDiagonalFrobeniusNorm(matrix) {
-  let norm = 0.0;
-
-  for (let i = 0; i < 3; ++i) {
-    const temp = matrix[scratchMatrix.getElementIndex(colVal[i], rowVal[i])];
-    norm += 2.0 * temp * temp;
-  }
-
-  return Math.sqrt(norm);
+    let norm = 0.0;
+    for (let i = 0; i < 3; ++i) {
+        const temp = matrix[scratchMatrix.getElementIndex(colVal[i], rowVal[i])];
+        norm += 2.0 * temp * temp;
+    }
+    return Math.sqrt(norm);
 }
-
+// The routine takes a matrix, which is assumed to be symmetric, and
+// finds the largest off-diagonal term, and then creates
+// a matrix (result) which can be used to help reduce it
+//
+// This routine was created based upon Matrix Computations, 3rd ed., by Golub and Van Loan,
+// section 8.4.2 The 2by2 Symmetric Schur Decomposition.
+//
+// eslint-disable-next-line max-statements
 function shurDecomposition(matrix, result) {
-  const tolerance = _MathUtils$1.EPSILON15;
-  let maxDiagonal = 0.0;
-  let rotAxis = 1;
-
-  for (let i = 0; i < 3; ++i) {
-    const temp = Math.abs(matrix[scratchMatrix.getElementIndex(colVal[i], rowVal[i])]);
-
-    if (temp > maxDiagonal) {
-      rotAxis = i;
-      maxDiagonal = temp;
+    const tolerance = EPSILON15;
+    let maxDiagonal = 0.0;
+    let rotAxis = 1;
+    // find pivot (rotAxis) based on max diagonal of matrix
+    for (let i = 0; i < 3; ++i) {
+        const temp = Math.abs(matrix[scratchMatrix.getElementIndex(colVal[i], rowVal[i])]);
+        if (temp > maxDiagonal) {
+            rotAxis = i;
+            maxDiagonal = temp;
+        }
     }
-  }
-
-  const p = rowVal[rotAxis];
-  const q = colVal[rotAxis];
-  let c = 1.0;
-  let s = 0.0;
-
-  if (Math.abs(matrix[scratchMatrix.getElementIndex(q, p)]) > tolerance) {
-    const qq = matrix[scratchMatrix.getElementIndex(q, q)];
-    const pp = matrix[scratchMatrix.getElementIndex(p, p)];
-    const qp = matrix[scratchMatrix.getElementIndex(q, p)];
-    const tau = (qq - pp) / 2.0 / qp;
-    let t;
-
-    if (tau < 0.0) {
-      t = -1.0 / (-tau + Math.sqrt(1.0 + tau * tau));
-    } else {
-      t = 1.0 / (tau + Math.sqrt(1.0 + tau * tau));
+    const p = rowVal[rotAxis];
+    const q = colVal[rotAxis];
+    let c = 1.0;
+    let s = 0.0;
+    if (Math.abs(matrix[scratchMatrix.getElementIndex(q, p)]) > tolerance) {
+        const qq = matrix[scratchMatrix.getElementIndex(q, q)];
+        const pp = matrix[scratchMatrix.getElementIndex(p, p)];
+        const qp = matrix[scratchMatrix.getElementIndex(q, p)];
+        const tau = (qq - pp) / 2.0 / qp;
+        let t;
+        if (tau < 0.0) {
+            t = -1.0 / (-tau + Math.sqrt(1.0 + tau * tau));
+        }
+        else {
+            t = 1.0 / (tau + Math.sqrt(1.0 + tau * tau));
+        }
+        c = 1.0 / Math.sqrt(1.0 + t * t);
+        s = t * c;
     }
-
-    c = 1.0 / Math.sqrt(1.0 + t * t);
-    s = t * c;
-  }
-
-  Matrix3.IDENTITY.to(result);
-  result[scratchMatrix.getElementIndex(p, p)] = result[scratchMatrix.getElementIndex(q, q)] = c;
-  result[scratchMatrix.getElementIndex(q, p)] = s;
-  result[scratchMatrix.getElementIndex(p, q)] = -s;
-  return result;
+    // Copy into result
+    Matrix3.IDENTITY.to(result);
+    result[scratchMatrix.getElementIndex(p, p)] = result[scratchMatrix.getElementIndex(q, q)] = c;
+    result[scratchMatrix.getElementIndex(q, p)] = s;
+    result[scratchMatrix.getElementIndex(p, q)] = -s;
+    return result;
 }
 
-const scratchVector2 = new Vector3$1();
-const scratchVector3 = new Vector3$1();
-const scratchVector4 = new Vector3$1();
-const scratchVector5 = new Vector3$1();
-const scratchVector6 = new Vector3$1();
+// This file is derived from the Cesium math library under Apache 2 license
+// See LICENSE.md and https://github.com/AnalyticalGraphicsInc/cesium/blob/master/LICENSE.md
+const scratchVector2 = new Vector3();
+const scratchVector3 = new Vector3();
+const scratchVector4 = new Vector3();
+const scratchVector5 = new Vector3();
+const scratchVector6 = new Vector3();
 const scratchCovarianceResult = new Matrix3();
 const scratchEigenResult = {
-  diagonal: new Matrix3(),
-  unitary: new Matrix3()
+    diagonal: new Matrix3(),
+    unitary: new Matrix3()
 };
+/**
+ * Computes an instance of an OrientedBoundingBox of the given positions.
+ *
+ * This is an implementation of Stefan Gottschalk's Collision Queries using Oriented Bounding Boxes solution (PHD thesis).
+ * Reference: http://gamma.cs.unc.edu/users/gottschalk/main.pdf
+ */
+/* eslint-disable max-statements */
 function makeOrientedBoundingBoxFromPoints(positions, result = new OrientedBoundingBox()) {
-  if (!positions || positions.length === 0) {
-    result.halfAxes = new Matrix3([0, 0, 0, 0, 0, 0, 0, 0, 0]);
-    result.center = new Vector3$1();
+    if (!positions || positions.length === 0) {
+        result.halfAxes = new Matrix3([0, 0, 0, 0, 0, 0, 0, 0, 0]);
+        result.center = new Vector3();
+        return result;
+    }
+    const length = positions.length;
+    const meanPoint = new Vector3(0, 0, 0);
+    for (const position of positions) {
+        meanPoint.add(position);
+    }
+    const invLength = 1.0 / length;
+    meanPoint.multiplyByScalar(invLength);
+    let exx = 0.0;
+    let exy = 0.0;
+    let exz = 0.0;
+    let eyy = 0.0;
+    let eyz = 0.0;
+    let ezz = 0.0;
+    for (const position of positions) {
+        const p = scratchVector2.copy(position).subtract(meanPoint);
+        exx += p.x * p.x;
+        exy += p.x * p.y;
+        exz += p.x * p.z;
+        eyy += p.y * p.y;
+        eyz += p.y * p.z;
+        ezz += p.z * p.z;
+    }
+    exx *= invLength;
+    exy *= invLength;
+    exz *= invLength;
+    eyy *= invLength;
+    eyz *= invLength;
+    ezz *= invLength;
+    const covarianceMatrix = scratchCovarianceResult;
+    covarianceMatrix[0] = exx;
+    covarianceMatrix[1] = exy;
+    covarianceMatrix[2] = exz;
+    covarianceMatrix[3] = exy;
+    covarianceMatrix[4] = eyy;
+    covarianceMatrix[5] = eyz;
+    covarianceMatrix[6] = exz;
+    covarianceMatrix[7] = eyz;
+    covarianceMatrix[8] = ezz;
+    const { unitary } = computeEigenDecomposition(covarianceMatrix, scratchEigenResult);
+    const rotation = result.halfAxes.copy(unitary);
+    let v1 = rotation.getColumn(0, scratchVector4);
+    let v2 = rotation.getColumn(1, scratchVector5);
+    let v3 = rotation.getColumn(2, scratchVector6);
+    let u1 = -Number.MAX_VALUE;
+    let u2 = -Number.MAX_VALUE;
+    let u3 = -Number.MAX_VALUE;
+    let l1 = Number.MAX_VALUE;
+    let l2 = Number.MAX_VALUE;
+    let l3 = Number.MAX_VALUE;
+    for (const position of positions) {
+        scratchVector2.copy(position);
+        u1 = Math.max(scratchVector2.dot(v1), u1);
+        u2 = Math.max(scratchVector2.dot(v2), u2);
+        u3 = Math.max(scratchVector2.dot(v3), u3);
+        l1 = Math.min(scratchVector2.dot(v1), l1);
+        l2 = Math.min(scratchVector2.dot(v2), l2);
+        l3 = Math.min(scratchVector2.dot(v3), l3);
+    }
+    v1 = v1.multiplyByScalar(0.5 * (l1 + u1));
+    v2 = v2.multiplyByScalar(0.5 * (l2 + u2));
+    v3 = v3.multiplyByScalar(0.5 * (l3 + u3));
+    result.center.copy(v1).add(v2).add(v3);
+    const scale = scratchVector3.set(u1 - l1, u2 - l2, u3 - l3).multiplyByScalar(0.5);
+    const scaleMatrix = new Matrix3([scale[0], 0, 0, 0, scale[1], 0, 0, 0, scale[2]]);
+    result.halfAxes.multiplyRight(scaleMatrix);
     return result;
-  }
-
-  const length = positions.length;
-  const meanPoint = new Vector3$1(0, 0, 0);
-
-  for (const position of positions) {
-    meanPoint.add(position);
-  }
-
-  const invLength = 1.0 / length;
-  meanPoint.multiplyByScalar(invLength);
-  let exx = 0.0;
-  let exy = 0.0;
-  let exz = 0.0;
-  let eyy = 0.0;
-  let eyz = 0.0;
-  let ezz = 0.0;
-
-  for (const position of positions) {
-    const p = scratchVector2.copy(position).subtract(meanPoint);
-    exx += p.x * p.x;
-    exy += p.x * p.y;
-    exz += p.x * p.z;
-    eyy += p.y * p.y;
-    eyz += p.y * p.z;
-    ezz += p.z * p.z;
-  }
-
-  exx *= invLength;
-  exy *= invLength;
-  exz *= invLength;
-  eyy *= invLength;
-  eyz *= invLength;
-  ezz *= invLength;
-  const covarianceMatrix = scratchCovarianceResult;
-  covarianceMatrix[0] = exx;
-  covarianceMatrix[1] = exy;
-  covarianceMatrix[2] = exz;
-  covarianceMatrix[3] = exy;
-  covarianceMatrix[4] = eyy;
-  covarianceMatrix[5] = eyz;
-  covarianceMatrix[6] = exz;
-  covarianceMatrix[7] = eyz;
-  covarianceMatrix[8] = ezz;
-  const {
-    unitary
-  } = computeEigenDecomposition(covarianceMatrix, scratchEigenResult);
-  const rotation = result.halfAxes.copy(unitary);
-  let v1 = rotation.getColumn(0, scratchVector4);
-  let v2 = rotation.getColumn(1, scratchVector5);
-  let v3 = rotation.getColumn(2, scratchVector6);
-  let u1 = -Number.MAX_VALUE;
-  let u2 = -Number.MAX_VALUE;
-  let u3 = -Number.MAX_VALUE;
-  let l1 = Number.MAX_VALUE;
-  let l2 = Number.MAX_VALUE;
-  let l3 = Number.MAX_VALUE;
-
-  for (const position of positions) {
-    scratchVector2.copy(position);
-    u1 = Math.max(scratchVector2.dot(v1), u1);
-    u2 = Math.max(scratchVector2.dot(v2), u2);
-    u3 = Math.max(scratchVector2.dot(v3), u3);
-    l1 = Math.min(scratchVector2.dot(v1), l1);
-    l2 = Math.min(scratchVector2.dot(v2), l2);
-    l3 = Math.min(scratchVector2.dot(v3), l3);
-  }
-
-  v1 = v1.multiplyByScalar(0.5 * (l1 + u1));
-  v2 = v2.multiplyByScalar(0.5 * (l2 + u2));
-  v3 = v3.multiplyByScalar(0.5 * (l3 + u3));
-  result.center.copy(v1).add(v2).add(v3);
-  const scale = scratchVector3.set(u1 - l1, u2 - l2, u3 - l3).multiplyByScalar(0.5);
-  const scaleMatrix = new Matrix3([scale[0], 0, 0, 0, scale[1], 0, 0, 0, scale[2]]);
-  result.halfAxes.multiplyRight(scaleMatrix);
-  return result;
 }
 
-const scratchVector$3 = new Vector3$1();
-const scratchPosition = new Vector3$1();
+const scratchVector$3 = new Vector3();
+const scratchPosition = new Vector3();
 const cullingVolume = new CullingVolume([new Plane(), new Plane(), new Plane(), new Plane(), new Plane(), new Plane()]);
 function getFrameState(viewport, frameNumber) {
   const {
@@ -10729,9 +8192,9 @@ function getFrameState(viewport, frameNumber) {
   const viewportCenterCartesian = worldToCartesian(viewport, viewport.center);
   const enuToFixedTransform = Ellipsoid.WGS84.eastNorthUpToFixedFrame(viewportCenterCartesian);
   const cameraPositionCartographic = viewport.unprojectPosition(viewport.cameraPosition);
-  const cameraPositionCartesian = Ellipsoid.WGS84.cartographicToCartesian(cameraPositionCartographic, new Vector3$1());
-  const cameraDirectionCartesian = new Vector3$1(enuToFixedTransform.transformAsVector(new Vector3$1(cameraDirection).scale(metersPerUnit))).normalize();
-  const cameraUpCartesian = new Vector3$1(enuToFixedTransform.transformAsVector(new Vector3$1(cameraUp).scale(metersPerUnit))).normalize();
+  const cameraPositionCartesian = Ellipsoid.WGS84.cartographicToCartesian(cameraPositionCartographic, new Vector3());
+  const cameraDirectionCartesian = new Vector3(enuToFixedTransform.transformAsVector(new Vector3(cameraDirection).scale(metersPerUnit))).normalize();
+  const cameraUpCartesian = new Vector3(enuToFixedTransform.transformAsVector(new Vector3(cameraUp).scale(metersPerUnit))).normalize();
   commonSpacePlanesToWGS84(viewport);
   const ViewportClass = viewport.constructor;
   const {
@@ -10809,13 +8272,13 @@ function commonSpacePlanesToWGS84(viewport) {
   }
 }
 function closestPointOnPlane(plane, refPoint) {
-  let out = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : new Vector3$1();
+  let out = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : new Vector3();
   const distanceToRef = plane.normal.dot(refPoint);
   out.copy(plane.normal).scale(plane.distance - distanceToRef).add(refPoint);
   return out;
 }
 function worldToCartesian(viewport, point) {
-  let out = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : new Vector3$1();
+  let out = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : new Vector3();
   const cartographicPos = viewport.unprojectPosition(point);
   return Ellipsoid.WGS84.cartographicToCartesian(cartographicPos, out);
 }
@@ -10823,7 +8286,7 @@ function worldToCartesian(viewport, point) {
 const WGS84_RADIUS_X = 6378137.0;
 const WGS84_RADIUS_Y = 6378137.0;
 const WGS84_RADIUS_Z = 6356752.3142451793;
-const scratchVector$2 = new Vector3$1();
+const scratchVector$2 = new Vector3();
 function getZoomFromBoundingVolume(boundingVolume, cartorgraphicCenter) {
   if (boundingVolume instanceof OrientedBoundingBox) {
     const {
@@ -10848,8 +8311,8 @@ function getZoomFromBoundingVolume(boundingVolume, cartorgraphicCenter) {
   return 1;
 }
 function getZoomFromFullExtent(fullExtent, cartorgraphicCenter, cartesianCenter) {
-  const extentVertex = Ellipsoid.WGS84.cartographicToCartesian([fullExtent.xmax, fullExtent.ymax, fullExtent.zmax], new Vector3$1());
-  const extentSize = Math.sqrt(Math.pow(extentVertex[0] - cartesianCenter[0], 2) + Math.pow(extentVertex[1] - cartesianCenter[1], 2) + Math.pow(extentVertex[2] - cartesianCenter[2], 2));
+  Ellipsoid.WGS84.cartographicToCartesian([fullExtent.xmax, fullExtent.ymax, fullExtent.zmax], scratchVector$2);
+  const extentSize = Math.sqrt(Math.pow(scratchVector$2[0] - cartesianCenter[0], 2) + Math.pow(scratchVector$2[1] - cartesianCenter[1], 2) + Math.pow(scratchVector$2[2] - cartesianCenter[2], 2));
   return Math.log2(WGS84_RADIUS_Z / (extentSize + cartorgraphicCenter[2]));
 }
 function getZoomFromExtent(extent, cartorgraphicCenter, cartesianCenter) {
@@ -10880,24 +8343,28 @@ const TILE_CONTENT_STATE = {
   EXPIRED: 4,
   FAILED: 5
 };
-const TILE_REFINEMENT = {
-  ADD: 1,
-  REPLACE: 2
-};
-const TILE_TYPE = {
-  EMPTY: 'empty',
-  SCENEGRAPH: 'scenegraph',
-  POINTCLOUD: 'pointcloud',
-  MESH: 'mesh'
-};
-const TILESET_TYPE = {
-  I3S: 'I3S',
-  TILES3D: 'TILES3D'
-};
-const LOD_METRIC_TYPE = {
-  GEOMETRIC_ERROR: 'geometricError',
-  MAX_SCREEN_THRESHOLD: 'maxScreenThreshold'
-};
+let TILE_REFINEMENT = function (TILE_REFINEMENT) {
+  TILE_REFINEMENT[TILE_REFINEMENT["ADD"] = 1] = "ADD";
+  TILE_REFINEMENT[TILE_REFINEMENT["REPLACE"] = 2] = "REPLACE";
+  return TILE_REFINEMENT;
+}({});
+let TILE_TYPE = function (TILE_TYPE) {
+  TILE_TYPE["EMPTY"] = "empty";
+  TILE_TYPE["SCENEGRAPH"] = "scenegraph";
+  TILE_TYPE["POINTCLOUD"] = "pointcloud";
+  TILE_TYPE["MESH"] = "mesh";
+  return TILE_TYPE;
+}({});
+let TILESET_TYPE = function (TILESET_TYPE) {
+  TILESET_TYPE["I3S"] = "I3S";
+  TILESET_TYPE["TILES3D"] = "TILES3D";
+  return TILESET_TYPE;
+}({});
+let LOD_METRIC_TYPE = function (LOD_METRIC_TYPE) {
+  LOD_METRIC_TYPE["GEOMETRIC_ERROR"] = "geometricError";
+  LOD_METRIC_TYPE["MAX_SCREEN_THRESHOLD"] = "maxScreenThreshold";
+  return LOD_METRIC_TYPE;
+}({});
 const TILE3D_OPTIMIZATION_HINT = {
   NOT_COMPUTED: -1,
   USE_OPTIMIZATION: 1,
@@ -10907,22 +8374,21 @@ const TILE3D_OPTIMIZATION_HINT = {
 function defined$3(x) {
   return x !== undefined && x !== null;
 }
-const scratchPoint = new Vector3$1();
-const scratchScale = new Vector3$1();
-const scratchNorthWest = new Vector3$1();
-const scratchSouthEast = new Vector3$1();
+const scratchPoint = new Vector3();
+const scratchScale = new Vector3();
+const scratchNorthWest = new Vector3();
+const scratchSouthEast = new Vector3();
+const scratchCenter = new Vector3();
+const scratchXAxis = new Vector3();
+const scratchYAxis = new Vector3();
+const scratchZAxis = new Vector3();
 function createBoundingVolume(boundingVolumeHeader, transform, result) {
-  assert$8(boundingVolumeHeader, '3D Tile: boundingVolume must be defined');
+  assert$6(boundingVolumeHeader, '3D Tile: boundingVolume must be defined');
   if (boundingVolumeHeader.box) {
     return createBox(boundingVolumeHeader.box, transform, result);
   }
   if (boundingVolumeHeader.region) {
-    const [west, south, east, north, minHeight, maxHeight] = boundingVolumeHeader.region;
-    const northWest = Ellipsoid.WGS84.cartographicToCartesian([degrees$1(west), degrees$1(north), minHeight], scratchNorthWest);
-    const southEast = Ellipsoid.WGS84.cartographicToCartesian([degrees$1(east), degrees$1(south), maxHeight], scratchSouthEast);
-    const centerInCartesian = new Vector3$1().addVectors(northWest, southEast).multiplyScalar(0.5);
-    const radius = new Vector3$1().subVectors(northWest, southEast).len() / 2.0;
-    return createSphere([centerInCartesian[0], centerInCartesian[1], centerInCartesian[2], radius], new Matrix4$1());
+    return createObbFromRegion(boundingVolumeHeader.region);
   }
   if (boundingVolumeHeader.sphere) {
     return createSphere(boundingVolumeHeader.sphere, transform, result);
@@ -10935,7 +8401,7 @@ function getCartographicBounds(boundingVolumeHeader, boundingVolume) {
   }
   if (boundingVolumeHeader.region) {
     const [west, south, east, north, minHeight, maxHeight] = boundingVolumeHeader.region;
-    return [[degrees$1(west), degrees$1(south), minHeight], [degrees$1(east), degrees$1(north), maxHeight]];
+    return [[degrees(west), degrees(south), minHeight], [degrees(east), degrees(north), maxHeight]];
   }
   if (boundingVolumeHeader.sphere) {
     return boundingSphereToCartographicBounds(boundingVolume);
@@ -10943,16 +8409,16 @@ function getCartographicBounds(boundingVolumeHeader, boundingVolume) {
   throw new Error('Unkown boundingVolume type');
 }
 function createBox(box, transform, result) {
-  const center = new Vector3$1(box[0], box[1], box[2]);
+  const center = new Vector3(box[0], box[1], box[2]);
   transform.transform(center, center);
   let origin = [];
   if (box.length === 10) {
     const halfSize = box.slice(3, 6);
     const quaternion = new Quaternion();
     quaternion.fromArray(box, 6);
-    const x = new Vector3$1([1, 0, 0]);
-    const y = new Vector3$1([0, 1, 0]);
-    const z = new Vector3$1([0, 0, 1]);
+    const x = new Vector3([1, 0, 0]);
+    const y = new Vector3([0, 1, 0]);
+    const z = new Vector3([0, 0, 1]);
     x.transformByQuaternion(quaternion);
     x.scale(halfSize[0]);
     y.transformByQuaternion(quaternion);
@@ -10975,7 +8441,7 @@ function createBox(box, transform, result) {
   return new OrientedBoundingBox(center, halfAxes);
 }
 function createSphere(sphere, transform, result) {
-  const center = new Vector3$1(sphere[0], sphere[1], sphere[2]);
+  const center = new Vector3(sphere[0], sphere[1], sphere[2]);
   transform.transform(center, center);
   const scale = transform.getScale(scratchScale);
   const uniformScale = Math.max(Math.max(scale[0], scale[1]), scale[2]);
@@ -10987,14 +8453,25 @@ function createSphere(sphere, transform, result) {
   }
   return new BoundingSphere(center, radius);
 }
+function createObbFromRegion(region) {
+  const [west, south, east, north, minHeight, maxHeight] = region;
+  const northWest = Ellipsoid.WGS84.cartographicToCartesian([degrees(west), degrees(north), minHeight], scratchNorthWest);
+  const southEast = Ellipsoid.WGS84.cartographicToCartesian([degrees(east), degrees(south), maxHeight], scratchSouthEast);
+  const centerInCartesian = new Vector3().addVectors(northWest, southEast).multiplyByScalar(0.5);
+  Ellipsoid.WGS84.cartesianToCartographic(centerInCartesian, scratchCenter);
+  Ellipsoid.WGS84.cartographicToCartesian([degrees(east), scratchCenter[1], scratchCenter[2]], scratchXAxis);
+  Ellipsoid.WGS84.cartographicToCartesian([scratchCenter[0], degrees(north), scratchCenter[2]], scratchYAxis);
+  Ellipsoid.WGS84.cartographicToCartesian([scratchCenter[0], scratchCenter[1], maxHeight], scratchZAxis);
+  return createBox([...centerInCartesian, ...scratchXAxis.subtract(centerInCartesian), ...scratchYAxis.subtract(centerInCartesian), ...scratchZAxis.subtract(centerInCartesian)], new Matrix4());
+}
 function orientedBoundingBoxToCartographicBounds(boundingVolume) {
   const result = emptyCartographicBounds();
   const {
     halfAxes
   } = boundingVolume;
-  const xAxis = new Vector3$1(halfAxes.getColumn(0));
-  const yAxis = new Vector3$1(halfAxes.getColumn(1));
-  const zAxis = new Vector3$1(halfAxes.getColumn(2));
+  const xAxis = new Vector3(halfAxes.getColumn(0));
+  const yAxis = new Vector3(halfAxes.getColumn(1));
+  const zAxis = new Vector3(halfAxes.getColumn(2));
   for (let x = 0; x < 2; x++) {
     for (let y = 0; y < 2; y++) {
       for (let z = 0; z < 2; z++) {
@@ -11022,13 +8499,13 @@ function boundingSphereToCartographicBounds(boundingVolume) {
   if (point) {
     zAxis = Ellipsoid.WGS84.geodeticSurfaceNormal(point);
   } else {
-    zAxis = new Vector3$1(0, 0, 1);
+    zAxis = new Vector3(0, 0, 1);
   }
-  let xAxis = new Vector3$1(zAxis[2], -zAxis[1], 0);
+  let xAxis = new Vector3(zAxis[2], -zAxis[1], 0);
   if (xAxis.len() > 0) {
     xAxis.normalize();
   } else {
-    xAxis = new Vector3$1(0, 1, 0);
+    xAxis = new Vector3(0, 1, 0);
   }
   const yAxis = xAxis.clone().cross(zAxis);
   for (const axis of [xAxis, yAxis, zAxis]) {
@@ -11055,12 +8532,12 @@ function addToCartographicBounds(target, cartesian) {
   target[1][2] = Math.max(target[1][2], scratchPoint[2]);
 }
 
-new Vector3$1();
-new Vector3$1();
-new Matrix4$1();
-new Vector3$1();
-new Vector3$1();
-new Vector3$1();
+new Vector3();
+new Vector3();
+new Matrix4();
+new Vector3();
+new Vector3();
+new Vector3();
 function fog(distanceToCamera, density) {
   const scalar = distanceToCamera * density;
   return 1.0 - Math.exp(-(scalar * scalar));
@@ -11094,13 +8571,13 @@ function getTiles3DScreenSpaceError(tile, frameState, useParentLodMetric) {
   return error;
 }
 
-const cameraPositionCartesian = new Vector3$1();
-const toEye = new Vector3$1();
-const cameraPositionEnu = new Vector3$1();
-const extraVertexEnu = new Vector3$1();
-const projectedOriginVector = new Vector3$1();
-const enuToCartesianMatrix = new Matrix4$1();
-const cartesianToEnuMatrix = new Matrix4$1();
+const cameraPositionCartesian = new Vector3();
+const toEye = new Vector3();
+const cameraPositionEnu = new Vector3();
+const extraVertexEnu = new Vector3();
+const projectedOriginVector = new Vector3();
+const enuToCartesianMatrix = new Matrix4();
+const cartesianToEnuMatrix = new Matrix4();
 function getLodStatus(tile, frameState) {
   if (tile.lodMetricValue === 0 || isNaN(tile.lodMetricValue)) {
     return 'DIG';
@@ -11154,9 +8631,9 @@ function get3dTilesOptions(tileset) {
 class ManagedArray {
   constructor() {
     let length = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-    _defineProperty(this, "_map", new Map());
-    _defineProperty(this, "_array", void 0);
-    _defineProperty(this, "_length", void 0);
+    this._map = new Map();
+    this._array = void 0;
+    this._length = void 0;
     this._array = new Array(length);
     this._length = length;
   }
@@ -11173,11 +8650,11 @@ class ManagedArray {
     return this._array;
   }
   get(index) {
-    assert$8(index < this._array.length);
+    assert$6(index < this._array.length);
     return this._array[index];
   }
   set(index, element) {
-    assert$8(index >= 0);
+    assert$6(index >= 0);
     if (index >= this.length) {
       this.length = index + 1;
     }
@@ -11211,13 +8688,13 @@ class ManagedArray {
     return element;
   }
   reserve(length) {
-    assert$8(length >= 0);
+    assert$6(length >= 0);
     if (length > this._array.length) {
       this._array.length = length;
     }
   }
   resize(length) {
-    assert$8(length >= 0);
+    assert$6(length >= 0);
     this.length = length;
   }
   trim(length) {
@@ -11250,16 +8727,16 @@ class TilesetTraverser {
     return true;
   }
   constructor(options) {
-    _defineProperty(this, "options", void 0);
-    _defineProperty(this, "root", null);
-    _defineProperty(this, "selectedTiles", {});
-    _defineProperty(this, "requestedTiles", {});
-    _defineProperty(this, "emptyTiles", {});
-    _defineProperty(this, "lastUpdate", new Date().getTime());
-    _defineProperty(this, "updateDebounceTime", 1000);
-    _defineProperty(this, "_traversalStack", new ManagedArray());
-    _defineProperty(this, "_emptyTraversalStack", new ManagedArray());
-    _defineProperty(this, "_frameNumber", null);
+    this.options = void 0;
+    this.root = null;
+    this.selectedTiles = {};
+    this.requestedTiles = {};
+    this.emptyTiles = {};
+    this.lastUpdate = new Date().getTime();
+    this.updateDebounceTime = 1000;
+    this._traversalStack = new ManagedArray();
+    this._emptyTraversalStack = new ManagedArray();
+    this._frameNumber = null;
     this.options = {
       ...DEFAULT_PROPS$1,
       ...options
@@ -11470,61 +8947,61 @@ class TilesetTraverser {
   }
 }
 
-const scratchVector$1 = new Vector3$1();
+const scratchVector$1 = new Vector3();
 function defined$2(x) {
   return x !== undefined && x !== null;
 }
 class Tile3D {
   constructor(tileset, header, parentHeader) {
     let extendedId = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
-    _defineProperty(this, "tileset", void 0);
-    _defineProperty(this, "header", void 0);
-    _defineProperty(this, "id", void 0);
-    _defineProperty(this, "url", void 0);
-    _defineProperty(this, "parent", void 0);
-    _defineProperty(this, "refine", void 0);
-    _defineProperty(this, "type", void 0);
-    _defineProperty(this, "contentUrl", void 0);
-    _defineProperty(this, "lodMetricType", 'geometricError');
-    _defineProperty(this, "lodMetricValue", 0);
-    _defineProperty(this, "boundingVolume", null);
-    _defineProperty(this, "content", null);
-    _defineProperty(this, "contentState", TILE_CONTENT_STATE.UNLOADED);
-    _defineProperty(this, "gpuMemoryUsageInBytes", 0);
-    _defineProperty(this, "children", []);
-    _defineProperty(this, "depth", 0);
-    _defineProperty(this, "viewportIds", []);
-    _defineProperty(this, "transform", new Matrix4$1());
-    _defineProperty(this, "extensions", null);
-    _defineProperty(this, "implicitTiling", null);
-    _defineProperty(this, "userData", {});
-    _defineProperty(this, "computedTransform", void 0);
-    _defineProperty(this, "hasEmptyContent", false);
-    _defineProperty(this, "hasTilesetContent", false);
-    _defineProperty(this, "traverser", new TilesetTraverser({}));
-    _defineProperty(this, "_cacheNode", null);
-    _defineProperty(this, "_frameNumber", null);
-    _defineProperty(this, "_expireDate", null);
-    _defineProperty(this, "_expiredContent", null);
-    _defineProperty(this, "_boundingBox", void 0);
-    _defineProperty(this, "_distanceToCamera", 0);
-    _defineProperty(this, "_screenSpaceError", 0);
-    _defineProperty(this, "_visibilityPlaneMask", void 0);
-    _defineProperty(this, "_visible", undefined);
-    _defineProperty(this, "_contentBoundingVolume", void 0);
-    _defineProperty(this, "_viewerRequestVolume", void 0);
-    _defineProperty(this, "_initialTransform", new Matrix4$1());
-    _defineProperty(this, "_priority", 0);
-    _defineProperty(this, "_selectedFrame", 0);
-    _defineProperty(this, "_requestedFrame", 0);
-    _defineProperty(this, "_selectionDepth", 0);
-    _defineProperty(this, "_touchedFrame", 0);
-    _defineProperty(this, "_centerZDepth", 0);
-    _defineProperty(this, "_shouldRefine", false);
-    _defineProperty(this, "_stackLength", 0);
-    _defineProperty(this, "_visitedFrame", 0);
-    _defineProperty(this, "_inRequestVolume", false);
-    _defineProperty(this, "_lodJudge", null);
+    this.tileset = void 0;
+    this.header = void 0;
+    this.id = void 0;
+    this.url = void 0;
+    this.parent = void 0;
+    this.refine = void 0;
+    this.type = void 0;
+    this.contentUrl = void 0;
+    this.lodMetricType = 'geometricError';
+    this.lodMetricValue = 0;
+    this.boundingVolume = null;
+    this.content = null;
+    this.contentState = TILE_CONTENT_STATE.UNLOADED;
+    this.gpuMemoryUsageInBytes = 0;
+    this.children = [];
+    this.depth = 0;
+    this.viewportIds = [];
+    this.transform = new Matrix4();
+    this.extensions = null;
+    this.implicitTiling = null;
+    this.userData = {};
+    this.computedTransform = void 0;
+    this.hasEmptyContent = false;
+    this.hasTilesetContent = false;
+    this.traverser = new TilesetTraverser({});
+    this._cacheNode = null;
+    this._frameNumber = null;
+    this._expireDate = null;
+    this._expiredContent = null;
+    this._boundingBox = undefined;
+    this._distanceToCamera = 0;
+    this._screenSpaceError = 0;
+    this._visibilityPlaneMask = void 0;
+    this._visible = undefined;
+    this._contentBoundingVolume = void 0;
+    this._viewerRequestVolume = void 0;
+    this._initialTransform = new Matrix4();
+    this._priority = 0;
+    this._selectedFrame = 0;
+    this._requestedFrame = 0;
+    this._selectionDepth = 0;
+    this._touchedFrame = 0;
+    this._centerZDepth = 0;
+    this._shouldRefine = false;
+    this._stackLength = 0;
+    this._visitedFrame = 0;
+    this._inRequestVolume = false;
+    this._lodJudge = null;
     this.header = header;
     this.tileset = tileset;
     this.id = extendedId || header.id;
@@ -11748,7 +9225,7 @@ class Tile3D {
       this.lodMetricType = header.lodMetricType;
     } else {
       this.lodMetricType = this.parent && this.parent.lodMetricType || this.tileset.lodMetricType;
-      console.warn("3D Tile: Required prop lodMetricType is undefined. Using parent lodMetricType");
+      console.warn(`3D Tile: Required prop lodMetricType is undefined. Using parent lodMetricType`);
     }
     if ('lodMetricValue' in header) {
       this.lodMetricValue = header.lodMetricValue;
@@ -11758,13 +9235,13 @@ class Tile3D {
     }
   }
   _initializeTransforms(tileHeader) {
-    this.transform = tileHeader.transform ? new Matrix4$1(tileHeader.transform) : new Matrix4$1();
+    this.transform = tileHeader.transform ? new Matrix4(tileHeader.transform) : new Matrix4();
     const parent = this.parent;
     const tileset = this.tileset;
     const parentTransform = parent && parent.computedTransform ? parent.computedTransform.clone() : tileset.modelMatrix.clone();
-    this.computedTransform = new Matrix4$1(parentTransform).multiplyRight(this.transform);
-    const parentInitialTransform = parent && parent._initialTransform ? parent._initialTransform.clone() : new Matrix4$1();
-    this._initialTransform = new Matrix4$1(parentInitialTransform).multiplyRight(this.transform);
+    this.computedTransform = new Matrix4(parentTransform).multiplyRight(this.transform);
+    const parentInitialTransform = parent && parent._initialTransform ? parent._initialTransform.clone() : new Matrix4();
+    this._initialTransform = new Matrix4(parentInitialTransform).multiplyRight(this.transform);
   }
   _initializeBoundingVolumes(tileHeader) {
     this._contentBoundingVolume = null;
@@ -11835,7 +9312,7 @@ class Tile3D {
     }
   }
   _updateTransform() {
-    let parentTransform = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Matrix4$1();
+    let parentTransform = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Matrix4();
     const computedTransform = parentTransform.clone().multiplyRight(this.transform);
     const didTransformChange = !computedTransform.equals(this.computedTransform);
     if (!didTransformChange) {
@@ -11915,7 +9392,7 @@ class Tileset3DTraverser extends TilesetTraverser {
 
 class I3SPendingTilesRegister {
   constructor() {
-    _defineProperty(this, "frameNumberMap", new Map());
+    this.frameNumberMap = new Map();
   }
   register(viewportId, frameNumber) {
     const viewportMap = this.frameNumberMap.get(viewportId) || new Map();
@@ -11945,8 +9422,8 @@ const STATUS = {
 };
 class I3STileManager {
   constructor() {
-    _defineProperty(this, "_statusMap", void 0);
-    _defineProperty(this, "pendingTilesRegister", new I3SPendingTilesRegister());
+    this._statusMap = void 0;
+    this.pendingTilesRegister = new I3SPendingTilesRegister();
     this._statusMap = {};
   }
   add(request, key, callback, frameState) {
@@ -12018,7 +9495,7 @@ class I3STileManager {
 class I3STilesetTraverser extends TilesetTraverser {
   constructor(options) {
     super(options);
-    _defineProperty(this, "_tileManager", void 0);
+    this._tileManager = void 0;
     this._tileManager = new I3STileManager();
   }
   traversalFinished(frameState) {
@@ -12033,7 +9510,7 @@ class I3STilesetTraverser extends TilesetTraverser {
     const childTiles = tile.children;
     const tileset = tile.tileset;
     for (const child of children) {
-      const extendedId = "".concat(child.id, "-").concat(frameState.viewport.id);
+      const extendedId = `${child.id}-${frameState.viewport.id}`;
       const childTile = childTiles && childTiles.find(t => t.id === extendedId);
       if (!childTile) {
         let request = () => this._loadTile(child.id, tileset);
@@ -12056,7 +9533,7 @@ class I3STilesetTraverser extends TilesetTraverser {
     const {
       loader
     } = tileset;
-    const nodeUrl = tileset.getTileUrl("".concat(tileset.url, "/nodes/").concat(nodeId));
+    const nodeUrl = tileset.getTileUrl(`${tileset.url}/nodes/${nodeId}`);
     const options = {
       ...tileset.loadOptions,
       i3s: {
@@ -12080,7 +9557,7 @@ class I3STilesetTraverser extends TilesetTraverser {
 const DEFAULT_PROPS = {
   description: '',
   ellipsoid: Ellipsoid.WGS84,
-  modelMatrix: new Matrix4$1(),
+  modelMatrix: new Matrix4(),
   throttleRequests: true,
   maxRequests: 64,
   maximumMemoryUsage: 32,
@@ -12115,57 +9592,57 @@ const POINTS_COUNT = 'Points/Vertices';
 const TILES_GPU_MEMORY = 'Tile Memory Use';
 class Tileset3D {
   constructor(tileset, options) {
-    _defineProperty(this, "options", void 0);
-    _defineProperty(this, "loadOptions", void 0);
-    _defineProperty(this, "type", void 0);
-    _defineProperty(this, "tileset", void 0);
-    _defineProperty(this, "loader", void 0);
-    _defineProperty(this, "url", void 0);
-    _defineProperty(this, "basePath", void 0);
-    _defineProperty(this, "modelMatrix", void 0);
-    _defineProperty(this, "ellipsoid", void 0);
-    _defineProperty(this, "lodMetricType", void 0);
-    _defineProperty(this, "lodMetricValue", void 0);
-    _defineProperty(this, "refine", void 0);
-    _defineProperty(this, "root", null);
-    _defineProperty(this, "roots", {});
-    _defineProperty(this, "asset", {});
-    _defineProperty(this, "description", '');
-    _defineProperty(this, "properties", void 0);
-    _defineProperty(this, "extras", null);
-    _defineProperty(this, "attributions", {});
-    _defineProperty(this, "credits", {});
-    _defineProperty(this, "stats", void 0);
-    _defineProperty(this, "contentFormats", {
+    this.options = void 0;
+    this.loadOptions = void 0;
+    this.type = void 0;
+    this.tileset = void 0;
+    this.loader = void 0;
+    this.url = void 0;
+    this.basePath = void 0;
+    this.modelMatrix = void 0;
+    this.ellipsoid = void 0;
+    this.lodMetricType = void 0;
+    this.lodMetricValue = void 0;
+    this.refine = void 0;
+    this.root = null;
+    this.roots = {};
+    this.asset = {};
+    this.description = '';
+    this.properties = void 0;
+    this.extras = null;
+    this.attributions = {};
+    this.credits = {};
+    this.stats = void 0;
+    this.contentFormats = {
       draco: false,
       meshopt: false,
       dds: false,
       ktx2: false
-    });
-    _defineProperty(this, "cartographicCenter", null);
-    _defineProperty(this, "cartesianCenter", null);
-    _defineProperty(this, "zoom", 1);
-    _defineProperty(this, "boundingVolume", null);
-    _defineProperty(this, "dynamicScreenSpaceErrorComputedDensity", 0.0);
-    _defineProperty(this, "maximumMemoryUsage", 32);
-    _defineProperty(this, "gpuMemoryUsageInBytes", 0);
-    _defineProperty(this, "_frameNumber", 0);
-    _defineProperty(this, "_queryParams", {});
-    _defineProperty(this, "_extensionsUsed", []);
-    _defineProperty(this, "_tiles", {});
-    _defineProperty(this, "_pendingCount", 0);
-    _defineProperty(this, "selectedTiles", []);
-    _defineProperty(this, "traverseCounter", 0);
-    _defineProperty(this, "geometricError", 0);
-    _defineProperty(this, "lastUpdatedVieports", null);
-    _defineProperty(this, "_requestedTiles", []);
-    _defineProperty(this, "_emptyTiles", []);
-    _defineProperty(this, "frameStateData", {});
-    _defineProperty(this, "_traverser", void 0);
-    _defineProperty(this, "_cache", new TilesetCache());
-    _defineProperty(this, "_requestScheduler", void 0);
-    _defineProperty(this, "updatePromise", null);
-    _defineProperty(this, "tilesetInitializationPromise", void 0);
+    };
+    this.cartographicCenter = null;
+    this.cartesianCenter = null;
+    this.zoom = 1;
+    this.boundingVolume = null;
+    this.dynamicScreenSpaceErrorComputedDensity = 0.0;
+    this.maximumMemoryUsage = 32;
+    this.gpuMemoryUsageInBytes = 0;
+    this._frameNumber = 0;
+    this._queryParams = {};
+    this._extensionsUsed = [];
+    this._tiles = {};
+    this._pendingCount = 0;
+    this.selectedTiles = [];
+    this.traverseCounter = 0;
+    this.geometricError = 0;
+    this.lastUpdatedVieports = null;
+    this._requestedTiles = [];
+    this._emptyTiles = [];
+    this.frameStateData = {};
+    this._traverser = void 0;
+    this._cache = new TilesetCache();
+    this._requestScheduler = void 0;
+    this.updatePromise = null;
+    this.tilesetInitializationPromise = void 0;
     this.options = {
       ...DEFAULT_PROPS,
       ...options
@@ -12213,18 +9690,16 @@ class Tileset3D {
       ...props
     };
   }
-  setOptions(options) {
-    this.options = {
-      ...this.options,
-      ...options
-    };
-  }
   getTileUrl(tilePath) {
     const isDataUrl = tilePath.startsWith('data:');
     if (isDataUrl) {
       return tilePath;
     }
-    return "".concat(tilePath).concat(tilePath.includes('?') ? '&' : '?').concat(this.queryParams);
+    let tileUrl = tilePath;
+    if (this.queryParams.length) {
+      tileUrl = `${tilePath}${tilePath.includes('?') ? '&' : '?'}${this.queryParams}`;
+    }
+    return tileUrl;
   }
   hasExtension(extensionName) {
     return Boolean(this._extensionsUsed.indexOf(extensionName) > -1);
@@ -12408,21 +9883,23 @@ class Tileset3D {
         zmin,
         zmax
       } = fullExtent;
-      this.cartographicCenter = new Vector3$1(xmin + (xmax - xmin) / 2, ymin + (ymax - ymin) / 2, zmin + (zmax - zmin) / 2);
-      this.cartesianCenter = Ellipsoid.WGS84.cartographicToCartesian(this.cartographicCenter, new Vector3$1());
+      this.cartographicCenter = new Vector3(xmin + (xmax - xmin) / 2, ymin + (ymax - ymin) / 2, zmin + (zmax - zmin) / 2);
+      this.cartesianCenter = new Vector3();
+      Ellipsoid.WGS84.cartographicToCartesian(this.cartographicCenter, this.cartesianCenter);
       this.zoom = getZoomFromFullExtent(fullExtent, this.cartographicCenter, this.cartesianCenter);
       return;
     }
     const extent = (_this$tileset$store = this.tileset.store) === null || _this$tileset$store === void 0 ? void 0 : _this$tileset$store.extent;
     if (extent) {
       const [xmin, ymin, xmax, ymax] = extent;
-      this.cartographicCenter = new Vector3$1(xmin + (xmax - xmin) / 2, ymin + (ymax - ymin) / 2, 0);
-      this.cartesianCenter = Ellipsoid.WGS84.cartographicToCartesian(this.cartographicCenter, new Vector3$1());
+      this.cartographicCenter = new Vector3(xmin + (xmax - xmin) / 2, ymin + (ymax - ymin) / 2, 0);
+      this.cartesianCenter = new Vector3();
+      Ellipsoid.WGS84.cartographicToCartesian(this.cartographicCenter, this.cartesianCenter);
       this.zoom = getZoomFromExtent(extent, this.cartographicCenter, this.cartesianCenter);
       return;
     }
     console.warn('Extent is not defined in the tileset header');
-    this.cartographicCenter = new Vector3$1();
+    this.cartographicCenter = new Vector3();
     this.zoom = 1;
     return;
   }
@@ -12433,14 +9910,15 @@ class Tileset3D {
     } = root.boundingVolume;
     if (!center) {
       console.warn('center was not pre-calculated for the root tile');
-      this.cartographicCenter = new Vector3$1();
+      this.cartographicCenter = new Vector3();
       this.zoom = 1;
       return;
     }
     if (center[0] !== 0 || center[1] !== 0 || center[2] !== 0) {
-      this.cartographicCenter = Ellipsoid.WGS84.cartesianToCartographic(center, new Vector3$1());
+      this.cartographicCenter = new Vector3();
+      Ellipsoid.WGS84.cartesianToCartographic(center, this.cartographicCenter);
     } else {
-      this.cartographicCenter = new Vector3$1(0, 0, -Ellipsoid.WGS84.radii[0]);
+      this.cartographicCenter = new Vector3(0, 0, -Ellipsoid.WGS84.radii[0]);
     }
     this.cartesianCenter = center;
     this.zoom = getZoomFromBoundingVolume(root.boundingVolume, this.cartographicCenter);
@@ -12525,7 +10003,7 @@ class Tileset3D {
     this.stats.get(TILES_LOAD_FAILED).incrementCount();
     const message = error.message || error.toString();
     const url = tile.url;
-    console.error("A 3D tile failed to load: ".concat(tile.url, " ").concat(message));
+    console.error(`A 3D tile failed to load: ${tile.url} ${message}`);
     this.options.onTileError(tile, message, url);
   }
   _onTileLoad(tile, loaded) {
@@ -12646,8 +10124,8 @@ class Tileset3D {
     if (!this.asset) {
       throw new Error('Tileset must have an asset property.');
     }
-    if (this.asset.version !== '0.0' && this.asset.version !== '1.0') {
-      throw new Error('The tileset must be 3D Tiles version 0.0 or 1.0.');
+    if (this.asset.version !== '0.0' && this.asset.version !== '1.0' && this.asset.version !== '1.1') {
+      throw new Error('The tileset must be 3D Tiles version either 0.0 or 1.0 or 1.1.');
     }
     if ('tilesetVersion' in this.asset) {
       this._queryParams.v = this.asset.tilesetVersion;
@@ -12668,7 +10146,7 @@ class Tileset3D {
   }
 }
 
-const VERSION$5 = "3.4.14" ;
+const VERSION$4 = typeof __VERSION__ !== 'undefined' ? __VERSION__ : 'latest';
 
 const TILE3D_TYPE = {
   COMPOSITE: 'cmpt',
@@ -12681,7 +10159,7 @@ const TILE3D_TYPE = {
 };
 
 function getStringFromArrayBuffer(arrayBuffer, byteOffset, byteLength) {
-  assert$8(arrayBuffer instanceof ArrayBuffer);
+  assert$6(arrayBuffer instanceof ArrayBuffer);
   const textDecoder = new TextDecoder('utf8');
   const typedArray = new Uint8Array(arrayBuffer, byteOffset, byteLength);
   const string = textDecoder.decode(typedArray);
@@ -12690,10 +10168,14 @@ function getStringFromArrayBuffer(arrayBuffer, byteOffset, byteLength) {
 function getMagicString$1(arrayBuffer) {
   let byteOffset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
   const dataView = new DataView(arrayBuffer);
-  return "".concat(String.fromCharCode(dataView.getUint8(byteOffset + 0))).concat(String.fromCharCode(dataView.getUint8(byteOffset + 1))).concat(String.fromCharCode(dataView.getUint8(byteOffset + 2))).concat(String.fromCharCode(dataView.getUint8(byteOffset + 3)));
+  return `\
+${String.fromCharCode(dataView.getUint8(byteOffset + 0))}\
+${String.fromCharCode(dataView.getUint8(byteOffset + 1))}\
+${String.fromCharCode(dataView.getUint8(byteOffset + 2))}\
+${String.fromCharCode(dataView.getUint8(byteOffset + 3))}`;
 }
 
-const VERSION$4 = "3.4.14" ;
+const VERSION$3 = typeof __VERSION__ !== 'undefined' ? __VERSION__ : 'latest';
 
 const DEFAULT_DRACO_OPTIONS = {
   draco: {
@@ -12705,10 +10187,9 @@ const DEFAULT_DRACO_OPTIONS = {
 };
 const DracoLoader$1 = {
   name: 'Draco',
-  id: isBrowser$1 ? 'draco' : 'draco-nodejs',
+  id: 'draco',
   module: 'draco',
-  shapes: ['mesh'],
-  version: VERSION$4,
+  version: VERSION$3,
   worker: true,
   extensions: ['drc'],
   mimeTypes: ['application/octet-stream'],
@@ -12717,400 +10198,8 @@ const DracoLoader$1 = {
   options: DEFAULT_DRACO_OPTIONS
 };
 
-function getMeshBoundingBox(attributes) {
-  let minX = Infinity;
-  let minY = Infinity;
-  let minZ = Infinity;
-  let maxX = -Infinity;
-  let maxY = -Infinity;
-  let maxZ = -Infinity;
-  const positions = attributes.POSITION ? attributes.POSITION.value : [];
-  const len = positions && positions.length;
-  for (let i = 0; i < len; i += 3) {
-    const x = positions[i];
-    const y = positions[i + 1];
-    const z = positions[i + 2];
-    minX = x < minX ? x : minX;
-    minY = y < minY ? y : minY;
-    minZ = z < minZ ? z : minZ;
-    maxX = x > maxX ? x : maxX;
-    maxY = y > maxY ? y : maxY;
-    maxZ = z > maxZ ? z : maxZ;
-  }
-  return [[minX, minY, minZ], [maxX, maxY, maxZ]];
-}
-
-function assert$3(condition, message) {
-  if (!condition) {
-    throw new Error(message || 'loader assertion failed.');
-  }
-}
-
-class Schema {
-  constructor(fields, metadata) {
-    _defineProperty(this, "fields", void 0);
-    _defineProperty(this, "metadata", void 0);
-    assert$3(Array.isArray(fields));
-    checkNames(fields);
-    this.fields = fields;
-    this.metadata = metadata || new Map();
-  }
-  compareTo(other) {
-    if (this.metadata !== other.metadata) {
-      return false;
-    }
-    if (this.fields.length !== other.fields.length) {
-      return false;
-    }
-    for (let i = 0; i < this.fields.length; ++i) {
-      if (!this.fields[i].compareTo(other.fields[i])) {
-        return false;
-      }
-    }
-    return true;
-  }
-  select() {
-    const nameMap = Object.create(null);
-    for (var _len = arguments.length, columnNames = new Array(_len), _key = 0; _key < _len; _key++) {
-      columnNames[_key] = arguments[_key];
-    }
-    for (const name of columnNames) {
-      nameMap[name] = true;
-    }
-    const selectedFields = this.fields.filter(field => nameMap[field.name]);
-    return new Schema(selectedFields, this.metadata);
-  }
-  selectAt() {
-    for (var _len2 = arguments.length, columnIndices = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-      columnIndices[_key2] = arguments[_key2];
-    }
-    const selectedFields = columnIndices.map(index => this.fields[index]).filter(Boolean);
-    return new Schema(selectedFields, this.metadata);
-  }
-  assign(schemaOrFields) {
-    let fields;
-    let metadata = this.metadata;
-    if (schemaOrFields instanceof Schema) {
-      const otherSchema = schemaOrFields;
-      fields = otherSchema.fields;
-      metadata = mergeMaps(mergeMaps(new Map(), this.metadata), otherSchema.metadata);
-    } else {
-      fields = schemaOrFields;
-    }
-    const fieldMap = Object.create(null);
-    for (const field of this.fields) {
-      fieldMap[field.name] = field;
-    }
-    for (const field of fields) {
-      fieldMap[field.name] = field;
-    }
-    const mergedFields = Object.values(fieldMap);
-    return new Schema(mergedFields, metadata);
-  }
-}
-function checkNames(fields) {
-  const usedNames = {};
-  for (const field of fields) {
-    if (usedNames[field.name]) {
-      console.warn('Schema: duplicated field name', field.name, field);
-    }
-    usedNames[field.name] = true;
-  }
-}
-function mergeMaps(m1, m2) {
-  return new Map([...(m1 || new Map()), ...(m2 || new Map())]);
-}
-
-class Field {
-  constructor(name, type) {
-    let nullable = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-    let metadata = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : new Map();
-    _defineProperty(this, "name", void 0);
-    _defineProperty(this, "type", void 0);
-    _defineProperty(this, "nullable", void 0);
-    _defineProperty(this, "metadata", void 0);
-    this.name = name;
-    this.type = type;
-    this.nullable = nullable;
-    this.metadata = metadata;
-  }
-  get typeId() {
-    return this.type && this.type.typeId;
-  }
-  clone() {
-    return new Field(this.name, this.type, this.nullable, this.metadata);
-  }
-  compareTo(other) {
-    return this.name === other.name && this.type === other.type && this.nullable === other.nullable && this.metadata === other.metadata;
-  }
-  toString() {
-    return "".concat(this.type).concat(this.nullable ? ', nullable' : '').concat(this.metadata ? ", metadata: ".concat(this.metadata) : '');
-  }
-}
-
-let Type = function (Type) {
-  Type[Type["NONE"] = 0] = "NONE";
-  Type[Type["Null"] = 1] = "Null";
-  Type[Type["Int"] = 2] = "Int";
-  Type[Type["Float"] = 3] = "Float";
-  Type[Type["Binary"] = 4] = "Binary";
-  Type[Type["Utf8"] = 5] = "Utf8";
-  Type[Type["Bool"] = 6] = "Bool";
-  Type[Type["Decimal"] = 7] = "Decimal";
-  Type[Type["Date"] = 8] = "Date";
-  Type[Type["Time"] = 9] = "Time";
-  Type[Type["Timestamp"] = 10] = "Timestamp";
-  Type[Type["Interval"] = 11] = "Interval";
-  Type[Type["List"] = 12] = "List";
-  Type[Type["Struct"] = 13] = "Struct";
-  Type[Type["Union"] = 14] = "Union";
-  Type[Type["FixedSizeBinary"] = 15] = "FixedSizeBinary";
-  Type[Type["FixedSizeList"] = 16] = "FixedSizeList";
-  Type[Type["Map"] = 17] = "Map";
-  Type[Type["Dictionary"] = -1] = "Dictionary";
-  Type[Type["Int8"] = -2] = "Int8";
-  Type[Type["Int16"] = -3] = "Int16";
-  Type[Type["Int32"] = -4] = "Int32";
-  Type[Type["Int64"] = -5] = "Int64";
-  Type[Type["Uint8"] = -6] = "Uint8";
-  Type[Type["Uint16"] = -7] = "Uint16";
-  Type[Type["Uint32"] = -8] = "Uint32";
-  Type[Type["Uint64"] = -9] = "Uint64";
-  Type[Type["Float16"] = -10] = "Float16";
-  Type[Type["Float32"] = -11] = "Float32";
-  Type[Type["Float64"] = -12] = "Float64";
-  Type[Type["DateDay"] = -13] = "DateDay";
-  Type[Type["DateMillisecond"] = -14] = "DateMillisecond";
-  Type[Type["TimestampSecond"] = -15] = "TimestampSecond";
-  Type[Type["TimestampMillisecond"] = -16] = "TimestampMillisecond";
-  Type[Type["TimestampMicrosecond"] = -17] = "TimestampMicrosecond";
-  Type[Type["TimestampNanosecond"] = -18] = "TimestampNanosecond";
-  Type[Type["TimeSecond"] = -19] = "TimeSecond";
-  Type[Type["TimeMillisecond"] = -20] = "TimeMillisecond";
-  Type[Type["TimeMicrosecond"] = -21] = "TimeMicrosecond";
-  Type[Type["TimeNanosecond"] = -22] = "TimeNanosecond";
-  Type[Type["DenseUnion"] = -23] = "DenseUnion";
-  Type[Type["SparseUnion"] = -24] = "SparseUnion";
-  Type[Type["IntervalDayTime"] = -25] = "IntervalDayTime";
-  Type[Type["IntervalYearMonth"] = -26] = "IntervalYearMonth";
-  return Type;
-}({});
-
-let _Symbol$toStringTag, _Symbol$toStringTag2, _Symbol$toStringTag7;
-class DataType {
-  static isNull(x) {
-    return x && x.typeId === Type.Null;
-  }
-  static isInt(x) {
-    return x && x.typeId === Type.Int;
-  }
-  static isFloat(x) {
-    return x && x.typeId === Type.Float;
-  }
-  static isBinary(x) {
-    return x && x.typeId === Type.Binary;
-  }
-  static isUtf8(x) {
-    return x && x.typeId === Type.Utf8;
-  }
-  static isBool(x) {
-    return x && x.typeId === Type.Bool;
-  }
-  static isDecimal(x) {
-    return x && x.typeId === Type.Decimal;
-  }
-  static isDate(x) {
-    return x && x.typeId === Type.Date;
-  }
-  static isTime(x) {
-    return x && x.typeId === Type.Time;
-  }
-  static isTimestamp(x) {
-    return x && x.typeId === Type.Timestamp;
-  }
-  static isInterval(x) {
-    return x && x.typeId === Type.Interval;
-  }
-  static isList(x) {
-    return x && x.typeId === Type.List;
-  }
-  static isStruct(x) {
-    return x && x.typeId === Type.Struct;
-  }
-  static isUnion(x) {
-    return x && x.typeId === Type.Union;
-  }
-  static isFixedSizeBinary(x) {
-    return x && x.typeId === Type.FixedSizeBinary;
-  }
-  static isFixedSizeList(x) {
-    return x && x.typeId === Type.FixedSizeList;
-  }
-  static isMap(x) {
-    return x && x.typeId === Type.Map;
-  }
-  static isDictionary(x) {
-    return x && x.typeId === Type.Dictionary;
-  }
-  get typeId() {
-    return Type.NONE;
-  }
-  compareTo(other) {
-    return this === other;
-  }
-}
-_Symbol$toStringTag = Symbol.toStringTag;
-class Int extends DataType {
-  constructor(isSigned, bitWidth) {
-    super();
-    _defineProperty(this, "isSigned", void 0);
-    _defineProperty(this, "bitWidth", void 0);
-    this.isSigned = isSigned;
-    this.bitWidth = bitWidth;
-  }
-  get typeId() {
-    return Type.Int;
-  }
-  get [_Symbol$toStringTag]() {
-    return 'Int';
-  }
-  toString() {
-    return "".concat(this.isSigned ? 'I' : 'Ui', "nt").concat(this.bitWidth);
-  }
-}
-class Int8 extends Int {
-  constructor() {
-    super(true, 8);
-  }
-}
-class Int16 extends Int {
-  constructor() {
-    super(true, 16);
-  }
-}
-class Int32 extends Int {
-  constructor() {
-    super(true, 32);
-  }
-}
-class Uint8 extends Int {
-  constructor() {
-    super(false, 8);
-  }
-}
-class Uint16 extends Int {
-  constructor() {
-    super(false, 16);
-  }
-}
-class Uint32 extends Int {
-  constructor() {
-    super(false, 32);
-  }
-}
-const Precision = {
-  HALF: 16,
-  SINGLE: 32,
-  DOUBLE: 64
-};
-_Symbol$toStringTag2 = Symbol.toStringTag;
-class Float extends DataType {
-  constructor(precision) {
-    super();
-    _defineProperty(this, "precision", void 0);
-    this.precision = precision;
-  }
-  get typeId() {
-    return Type.Float;
-  }
-  get [_Symbol$toStringTag2]() {
-    return 'Float';
-  }
-  toString() {
-    return "Float".concat(this.precision);
-  }
-}
-class Float32 extends Float {
-  constructor() {
-    super(Precision.SINGLE);
-  }
-}
-class Float64 extends Float {
-  constructor() {
-    super(Precision.DOUBLE);
-  }
-}
-_Symbol$toStringTag7 = Symbol.toStringTag;
-class FixedSizeList extends DataType {
-  constructor(listSize, child) {
-    super();
-    _defineProperty(this, "listSize", void 0);
-    _defineProperty(this, "children", void 0);
-    this.listSize = listSize;
-    this.children = [child];
-  }
-  get typeId() {
-    return Type.FixedSizeList;
-  }
-  get valueType() {
-    return this.children[0].type;
-  }
-  get valueField() {
-    return this.children[0];
-  }
-  get [_Symbol$toStringTag7]() {
-    return 'FixedSizeList';
-  }
-  toString() {
-    return "FixedSizeList[".concat(this.listSize, "]<").concat(this.valueType, ">");
-  }
-}
-
-function getArrowTypeFromTypedArray(array) {
-  switch (array.constructor) {
-    case Int8Array:
-      return new Int8();
-    case Uint8Array:
-      return new Uint8();
-    case Int16Array:
-      return new Int16();
-    case Uint16Array:
-      return new Uint16();
-    case Int32Array:
-      return new Int32();
-    case Uint32Array:
-      return new Uint32();
-    case Float32Array:
-      return new Float32();
-    case Float64Array:
-      return new Float64();
-    default:
-      throw new Error('array type not supported');
-  }
-}
-
-function deduceMeshField(attributeName, attribute, optionalMetadata) {
-  const type = getArrowTypeFromTypedArray(attribute.value);
-  const metadata = optionalMetadata ? optionalMetadata : makeMeshAttributeMetadata(attribute);
-  const field = new Field(attributeName, new FixedSizeList(attribute.size, new Field('value', type)), false, metadata);
-  return field;
-}
-function makeMeshAttributeMetadata(attribute) {
-  const result = new Map();
-  if ('byteOffset' in attribute) {
-    result.set('byteOffset', attribute.byteOffset.toString(10));
-  }
-  if ('byteStride' in attribute) {
-    result.set('byteStride', attribute.byteStride.toString(10));
-  }
-  if ('normalized' in attribute) {
-    result.set('normalized', attribute.normalized.toString());
-  }
-  return result;
-}
-
 function getDracoSchema(attributes, loaderData, indices) {
-  const metadataMap = makeMetadata(loaderData.metadata);
+  const metadata = makeMetadata(loaderData.metadata);
   const fields = [];
   const namedLoaderDataAttributes = transformAttributesLoaderData(loaderData.attributes);
   for (const attributeName in attributes) {
@@ -13122,7 +10211,10 @@ function getDracoSchema(attributes, loaderData, indices) {
     const indicesField = getArrowFieldFromAttribute('indices', indices);
     fields.push(indicesField);
   }
-  return new Schema(fields, metadataMap);
+  return {
+    fields,
+    metadata
+  };
 }
 function transformAttributesLoaderData(loaderData) {
   const result = {};
@@ -13138,11 +10230,12 @@ function getArrowFieldFromAttribute(attributeName, attribute, loaderData) {
   return field;
 }
 function makeMetadata(metadata) {
-  const metadataMap = new Map();
+  Object.entries(metadata);
+  const serializedMetadata = {};
   for (const key in metadata) {
-    metadataMap.set("".concat(key, ".string"), JSON.stringify(metadata[key]));
+    serializedMetadata[`${key}.string`] = JSON.stringify(metadata[key]);
   }
-  return metadataMap;
+  return serializedMetadata;
 }
 
 const DRACO_TO_GLTF_ATTRIBUTE_NAME_MAP = {
@@ -13163,9 +10256,9 @@ const DRACO_DATA_TYPE_TO_TYPED_ARRAY_MAP = {
 const INDEX_ITEM_SIZE = 4;
 class DracoParser {
   constructor(draco) {
-    _defineProperty(this, "draco", void 0);
-    _defineProperty(this, "decoder", void 0);
-    _defineProperty(this, "metadataQuerier", void 0);
+    this.draco = void 0;
+    this.decoder = void 0;
+    this.metadataQuerier = void 0;
     this.draco = draco;
     this.decoder = new this.draco.Decoder();
     this.metadataQuerier = new this.draco.MetadataQuerier();
@@ -13194,7 +10287,7 @@ class DracoParser {
           throw new Error('DRACO: Unknown geometry type.');
       }
       if (!dracoStatus.ok() || !dracoGeometry.ptr) {
-        const message = "DRACO decompression failed: ".concat(dracoStatus.error_msg());
+        const message = `DRACO decompression failed: ${dracoStatus.error_msg()}`;
         throw new Error(message);
       }
       const loaderData = this._getDracoLoaderData(dracoGeometry, geometry_type, options);
@@ -13374,7 +10467,7 @@ class DracoParser {
     if (attribute.metadata[entryName]) {
       return attribute.metadata[entryName].string;
     }
-    return "CUSTOM_ATTRIBUTE_".concat(uniqueId);
+    return `CUSTOM_ATTRIBUTE_${uniqueId}`;
   }
   _getTopLevelMetadata(dracoGeometry) {
     const dracoMetadata = this.decoder.GetMetadata(dracoGeometry);
@@ -13501,11 +10594,21 @@ function getUint32Array(dracoArray) {
   return intArray;
 }
 
-const DRACO_DECODER_VERSION = '1.5.5';
-const STATIC_DECODER_URL = "https://www.gstatic.com/draco/versioned/decoders/".concat(DRACO_DECODER_VERSION);
-const DRACO_JS_DECODER_URL = "".concat(STATIC_DECODER_URL, "/draco_decoder.js");
-const DRACO_WASM_WRAPPER_URL = "".concat(STATIC_DECODER_URL, "/draco_wasm_wrapper.js");
-const DRACO_WASM_DECODER_URL = "".concat(STATIC_DECODER_URL, "/draco_decoder.wasm");
+const DRACO_DECODER_VERSION = '1.5.6';
+const DRACO_ENCODER_VERSION = '1.4.1';
+const STATIC_DECODER_URL = `https://www.gstatic.com/draco/versioned/decoders/${DRACO_DECODER_VERSION}`;
+const DRACO_EXTERNAL_LIBRARIES = {
+  DECODER: 'draco_wasm_wrapper.js',
+  DECODER_WASM: 'draco_decoder.wasm',
+  FALLBACK_DECODER: 'draco_decoder.js',
+  ENCODER: 'draco_encoder.js'
+};
+const DRACO_EXTERNAL_LIBRARY_URLS = {
+  [DRACO_EXTERNAL_LIBRARIES.DECODER]: `${STATIC_DECODER_URL}/${DRACO_EXTERNAL_LIBRARIES.DECODER}`,
+  [DRACO_EXTERNAL_LIBRARIES.DECODER_WASM]: `${STATIC_DECODER_URL}/${DRACO_EXTERNAL_LIBRARIES.DECODER_WASM}`,
+  [DRACO_EXTERNAL_LIBRARIES.FALLBACK_DECODER]: `${STATIC_DECODER_URL}/${DRACO_EXTERNAL_LIBRARIES.FALLBACK_DECODER}`,
+  [DRACO_EXTERNAL_LIBRARIES.ENCODER]: `https://raw.githubusercontent.com/google/draco/${DRACO_ENCODER_VERSION}/javascript/${DRACO_EXTERNAL_LIBRARIES.ENCODER}`
+};
 let loadDecoderPromise;
 async function loadDracoDecoderModule(options) {
   const modules = options.modules || {};
@@ -13525,11 +10628,11 @@ async function loadDracoDecoder(options) {
   let wasmBinary;
   switch (options.draco && options.draco.decoderType) {
     case 'js':
-      DracoDecoderModule = await loadLibrary(DRACO_JS_DECODER_URL, 'draco', options);
+      DracoDecoderModule = await loadLibrary(DRACO_EXTERNAL_LIBRARY_URLS[DRACO_EXTERNAL_LIBRARIES.FALLBACK_DECODER], 'draco', options, DRACO_EXTERNAL_LIBRARIES.FALLBACK_DECODER);
       break;
     case 'wasm':
     default:
-      [DracoDecoderModule, wasmBinary] = await Promise.all([await loadLibrary(DRACO_WASM_WRAPPER_URL, 'draco', options), await loadLibrary(DRACO_WASM_DECODER_URL, 'draco', options)]);
+      [DracoDecoderModule, wasmBinary] = await Promise.all([await loadLibrary(DRACO_EXTERNAL_LIBRARY_URLS[DRACO_EXTERNAL_LIBRARIES.DECODER], 'draco', options, DRACO_EXTERNAL_LIBRARIES.DECODER), await loadLibrary(DRACO_EXTERNAL_LIBRARY_URLS[DRACO_EXTERNAL_LIBRARIES.DECODER_WASM], 'draco', options, DRACO_EXTERNAL_LIBRARIES.DECODER_WASM)]);
   }
   DracoDecoderModule = DracoDecoderModule || globalThis.DracoDecoderModule;
   return await initializeDracoDecoder(DracoDecoderModule, wasmBinary);
@@ -13662,7 +10765,7 @@ class GLType {
 
 function assert$2(condition, message) {
   if (!condition) {
-    throw new Error("math.gl assertion failed. ".concat(message));
+    throw new Error(`math.gl assertion failed. ${message}`);
   }
 }
 
@@ -13678,7 +10781,7 @@ function decodeRGB565(rgb565) {
 }
 
 new Vector2();
-new Vector3$1();
+new Vector3();
 new Vector2();
 new Vector2();
 function fromSNorm(value) {
@@ -13691,7 +10794,7 @@ function signNotZero(value) {
 function octDecodeInRange(x, y, rangeMax, result) {
   assert$2(result);
   if (x < 0 || x > rangeMax || y < 0 || y > rangeMax) {
-    throw new Error("x and y must be unsigned normalized integers between 0 and ".concat(rangeMax));
+    throw new Error(`x and y must be unsigned normalized integers between 0 and ${rangeMax}`);
   }
   result.x = fromSNorm(x, rangeMax);
   result.y = fromSNorm(y, rangeMax);
@@ -13707,12 +10810,16 @@ function octDecode(x, y, result) {
   return octDecodeInRange(x, y, 255, result);
 }
 
+function emod(n) {
+  return (n % 1 + 1) % 1;
+}
+
 class Tile3DFeatureTable {
   constructor(featureTableJson, featureTableBinary) {
-    _defineProperty(this, "json", void 0);
-    _defineProperty(this, "buffer", void 0);
-    _defineProperty(this, "featuresLength", 0);
-    _defineProperty(this, "_cachedTypedArrays", {});
+    this.json = void 0;
+    this.buffer = void 0;
+    this.featuresLength = 0;
+    this._cachedTypedArrays = {};
     this.json = featureTableJson;
     this.buffer = featureTableBinary;
   }
@@ -13853,7 +10960,7 @@ function createTypedArrayFromAccessor(tile3DAccessor, buffer, byteOffset, length
   const {
     componentType
   } = tile3DAccessor;
-  assert$8(tile3DAccessor.componentType);
+  assert$6(tile3DAccessor.componentType);
   const type = typeof componentType === 'string' ? GLType.fromName(componentType) : componentType;
   const size = COMPONENTS_PER_ATTRIBUTE[tile3DAccessor.type];
   const unpacker = UNPACKER[tile3DAccessor.type];
@@ -14025,7 +11132,7 @@ function validateInstance(hierarchy, instanceIndex, stack) {
   if (!defined$1(parentIds)) {
     return;
   }
-  assert(instanceIndex < instancesLength, "Parent index ".concat(instanceIndex, " exceeds the total number of instances: ").concat(instancesLength));
+  assert(instanceIndex < instancesLength, `Parent index ${instanceIndex} exceeds the total number of instances: ${instancesLength}`);
   assert(stack.indexOf(instanceIndex) === -1, 'Circular dependency detected in the batch table hierarchy.');
   stack.push(instanceIndex);
   const parentCount = defined$1(parentCounts) ? parentCounts[instanceIndex] : 1;
@@ -14052,14 +11159,14 @@ class Tile3DBatchTableParser {
   constructor(json, binary, featureCount) {
     var _this$json;
     let options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-    _defineProperty(this, "json", void 0);
-    _defineProperty(this, "binary", void 0);
-    _defineProperty(this, "featureCount", void 0);
-    _defineProperty(this, "_extensions", void 0);
-    _defineProperty(this, "_properties", void 0);
-    _defineProperty(this, "_binaryProperties", void 0);
-    _defineProperty(this, "_hierarchy", void 0);
-    assert$8(featureCount >= 0);
+    this.json = void 0;
+    this.binary = void 0;
+    this.featureCount = void 0;
+    this._extensions = void 0;
+    this._properties = void 0;
+    this._binaryProperties = void 0;
+    this._hierarchy = void 0;
+    assert$6(featureCount >= 0);
     this.json = json || {};
     this.binary = binary;
     this.featureCount = featureCount;
@@ -14083,7 +11190,7 @@ class Tile3DBatchTableParser {
   }
   isClass(batchId, className) {
     this._checkBatchId(batchId);
-    assert$8(typeof className === 'string', className);
+    assert$6(typeof className === 'string', className);
     if (this._hierarchy) {
       const result = traverseHierarchy(this._hierarchy, batchId, (hierarchy, instanceIndex) => {
         const classId = hierarchy.classIds[instanceIndex];
@@ -14095,7 +11202,7 @@ class Tile3DBatchTableParser {
     return false;
   }
   isExactClass(batchId, className) {
-    assert$8(typeof className === 'string', className);
+    assert$6(typeof className === 'string', className);
     return this.getExactClassName(batchId) === className;
   }
   getExactClassName(batchId) {
@@ -14109,7 +11216,7 @@ class Tile3DBatchTableParser {
   }
   hasProperty(batchId, name) {
     this._checkBatchId(batchId);
-    assert$8(typeof name === 'string', name);
+    assert$6(typeof name === 'string', name);
     return defined(this._properties[name]) || this._hasPropertyInHierarchy(batchId, name);
   }
   getPropertyNames(batchId, results) {
@@ -14125,7 +11232,7 @@ class Tile3DBatchTableParser {
   }
   getProperty(batchId, name) {
     this._checkBatchId(batchId);
-    assert$8(typeof name === 'string', name);
+    assert$6(typeof name === 'string', name);
     if (this._binaryProperties) {
       const binaryProperty = this._binaryProperties[name];
       if (defined(binaryProperty)) {
@@ -14147,7 +11254,7 @@ class Tile3DBatchTableParser {
   setProperty(batchId, name, value) {
     const featureCount = this.featureCount;
     this._checkBatchId(batchId);
-    assert$8(typeof name === 'string', name);
+    assert$6(typeof name === 'string', name);
     if (this._binaryProperties) {
       const binaryProperty = this._binaryProperties[name];
       if (binaryProperty) {
@@ -14194,8 +11301,8 @@ class Tile3DBatchTableParser {
   _initializeBinaryProperty(name, property) {
     if ('byteOffset' in property) {
       const tile3DAccessor = property;
-      assert$8(this.binary, "Property ".concat(name, " requires a batch table binary."));
-      assert$8(tile3DAccessor.type, "Property ".concat(name, " requires a type."));
+      assert$6(this.binary, `Property ${name} requires a batch table binary.`);
+      assert$6(tile3DAccessor.type, `Property ${name} requires a type.`);
       const accessor = createTypedArrayFromAccessor(tile3DAccessor, this.binary.buffer, this.binary.byteOffset | 0, this.featureCount);
       return {
         typedArray: accessor.values,
@@ -14252,7 +11359,7 @@ class Tile3DBatchTableParser {
       const indexInClass = hierarchy.classIndexes[instanceIndex];
       const propertyValues = instanceClass.instances[name];
       if (defined(propertyValues)) {
-        assert$8(instanceIndex === batchId, "Inherited property \"".concat(name, "\" is read-only."));
+        assert$6(instanceIndex === batchId, `Inherited property "${name}" is read-only.`);
         if (defined(propertyValues.typedArray)) {
           this._setBinaryProperty(propertyValues, indexInClass, value);
         } else {
@@ -14277,7 +11384,7 @@ function parse3DTileHeaderSync(tile, arrayBuffer) {
   tile.byteLength = view.getUint32(byteOffset, true);
   byteOffset += SIZEOF_UINT32$1;
   if (tile.version !== 1) {
-    throw new Error("3D Tile Version ".concat(tile.version, " not supported"));
+    throw new Error(`3D Tile Version ${tile.version} not supported`);
   }
   return byteOffset;
 }
@@ -14330,29 +11437,29 @@ function parse3DTileFeatureTable(tile, arrayBuffer, byteOffset, options) {
     featureTableJsonByteLength,
     featureTableBinaryByteLength,
     batchLength
-  } = tile.header;
+  } = tile.header || {};
   tile.featureTableJson = {
     BATCH_LENGTH: batchLength || 0
   };
-  if (featureTableJsonByteLength > 0) {
+  if (featureTableJsonByteLength && featureTableJsonByteLength > 0) {
     const featureTableString = getStringFromArrayBuffer(arrayBuffer, byteOffset, featureTableJsonByteLength);
     tile.featureTableJson = JSON.parse(featureTableString);
   }
-  byteOffset += featureTableJsonByteLength;
+  byteOffset += featureTableJsonByteLength || 0;
   tile.featureTableBinary = new Uint8Array(arrayBuffer, byteOffset, featureTableBinaryByteLength);
-  byteOffset += featureTableBinaryByteLength;
+  byteOffset += featureTableBinaryByteLength || 0;
   return byteOffset;
 }
 function parse3DTileBatchTable(tile, arrayBuffer, byteOffset, options) {
   const {
     batchTableJsonByteLength,
     batchTableBinaryByteLength
-  } = tile.header;
-  if (batchTableJsonByteLength > 0) {
+  } = tile.header || {};
+  if (batchTableJsonByteLength && batchTableJsonByteLength > 0) {
     const batchTableString = getStringFromArrayBuffer(arrayBuffer, byteOffset, batchTableJsonByteLength);
     tile.batchTableJson = JSON.parse(batchTableString);
     byteOffset += batchTableJsonByteLength;
-    if (batchTableBinaryByteLength > 0) {
+    if (batchTableBinaryByteLength && batchTableBinaryByteLength > 0) {
       tile.batchTableBinary = new Uint8Array(arrayBuffer, byteOffset, batchTableBinaryByteLength);
       tile.batchTableBinary = new Uint8Array(tile.batchTableBinary);
       byteOffset += batchTableBinaryByteLength;
@@ -14368,7 +11475,7 @@ function normalize3DTileColorAttribute(tile, colors, batchTable) {
   const {
     batchIds,
     isRGB565,
-    pointCount
+    pointCount = 0
   } = tile;
   if (batchIds && batchTable) {
     const colorArray = new Uint8ClampedArray(pointCount * 3);
@@ -14387,7 +11494,7 @@ function normalize3DTileColorAttribute(tile, colors, batchTable) {
       normalized: true
     };
   }
-  if (isRGB565) {
+  if (colors && isRGB565) {
     const colorArray = new Uint8ClampedArray(pointCount * 3);
     for (let i = 0; i < pointCount; i++) {
       const color = decodeRGB565(colors[i]);
@@ -14412,20 +11519,20 @@ function normalize3DTileColorAttribute(tile, colors, batchTable) {
   }
   return {
     type: GL$1.UNSIGNED_BYTE,
-    value: colors,
+    value: colors || new Uint8ClampedArray(),
     size: 4,
     normalized: true
   };
 }
 
-const scratchNormal = new Vector3$1();
+const scratchNormal = new Vector3();
 function normalize3DTileNormalAttribute(tile, normals) {
   if (!normals) {
     return null;
   }
   if (tile.isOctEncoded16P) {
-    const decodedArray = new Float32Array(tile.pointsLength * 3);
-    for (let i = 0; i < tile.pointsLength; i++) {
+    const decodedArray = new Float32Array((tile.pointsLength || 0) * 3);
+    for (let i = 0; i < (tile.pointsLength || 0); i++) {
       octDecode(normals[i * 2], normals[i * 2 + 1], scratchNormal);
       scratchNormal.toArray(decodedArray, i * 3);
     }
@@ -14458,7 +11565,7 @@ function normalize3DTilePositionAttribute(tile, positions, options) {
   };
 }
 function decodeQuantizedPositions(tile, positions) {
-  const scratchPosition = new Vector3$1();
+  const scratchPosition = new Vector3();
   const decodedArray = new Float32Array(tile.pointCount * 3);
   for (let i = 0; i < tile.pointCount; i++) {
     scratchPosition.set(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]).scale(1 / tile.quantizedRange).multiply(tile.quantizedVolumeScale).add(tile.quantizedVolumeOffset).toArray(decodedArray, i * 3);
@@ -14511,6 +11618,12 @@ function parsePointCloudTables(tile) {
   };
 }
 function parsePositions(tile, featureTable, options) {
+  tile.attributes = tile.attributes || {
+    positions: null,
+    colors: null,
+    normals: null,
+    batchIds: null
+  };
   if (!tile.attributes.positions) {
     if (featureTable.hasProperty('POSITION')) {
       tile.attributes.positions = featureTable.getPropertyArray('POSITION', GL$1.FLOAT, 3);
@@ -14534,6 +11647,12 @@ function parsePositions(tile, featureTable, options) {
   }
 }
 function parseColors(tile, featureTable, batchTable) {
+  tile.attributes = tile.attributes || {
+    positions: null,
+    colors: null,
+    normals: null,
+    batchIds: null
+  };
   if (!tile.attributes.colors) {
     let colors = null;
     if (featureTable.hasProperty('RGBA')) {
@@ -14552,6 +11671,12 @@ function parseColors(tile, featureTable, batchTable) {
   }
 }
 function parseNormals(tile, featureTable) {
+  tile.attributes = tile.attributes || {
+    positions: null,
+    colors: null,
+    normals: null,
+    batchIds: null
+  };
   if (!tile.attributes.normals) {
     let normals = null;
     if (featureTable.hasProperty('NORMAL')) {
@@ -14597,7 +11722,7 @@ async function parseDraco(tile, featureTable, batchTable, options, context) {
     if (!dracoFeatureTableProperties || !Number.isFinite(dracoByteOffset) || !dracoByteLength) {
       throw new Error('Draco properties, byteOffset, and byteLength must be defined');
     }
-    dracoBuffer = tile.featureTableBinary.slice(dracoByteOffset, dracoByteOffset + dracoByteLength);
+    dracoBuffer = (tile.featureTableBinary || []).slice(dracoByteOffset, dracoByteOffset + dracoByteLength);
     tile.hasPositions = Number.isFinite(dracoFeatureTableProperties.POSITION);
     tile.hasColors = Number.isFinite(dracoFeatureTableProperties.RGB) || Number.isFinite(dracoFeatureTableProperties.RGBA);
     tile.hasNormals = Number.isFinite(dracoFeatureTableProperties.NORMAL);
@@ -14620,18 +11745,18 @@ async function parseDraco(tile, featureTable, batchTable, options, context) {
   return await loadDraco(tile, dracoData, options, context);
 }
 async function loadDraco(tile, dracoData, options, context) {
-  const {
-    parse
-  } = context;
+  if (!context) {
+    return;
+  }
   const dracoOptions = {
     ...options,
     draco: {
-      ...options.draco,
+      ...(options === null || options === void 0 ? void 0 : options.draco),
       extraAttributes: dracoData.batchTableProperties || {}
     }
   };
   delete dracoOptions['3d-tiles'];
-  const data = await parse(dracoData.buffer, DracoLoader, dracoOptions);
+  const data = await parseFromContext(dracoData.buffer, DracoLoader, dracoOptions, context);
   const decodedPositions = data.attributes.POSITION && data.attributes.POSITION.value;
   const decodedColors = data.attributes.COLOR_0 && data.attributes.COLOR_0.value;
   const decodedNormals = data.attributes.NORMAL && data.attributes.NORMAL.value;
@@ -14641,8 +11766,8 @@ async function loadDraco(tile, dracoData, options, context) {
   if (isQuantizedDraco) {
     const quantization = data.POSITION.data.quantization;
     const range = quantization.range;
-    tile.quantizedVolumeScale = new Vector3$1(range, range, range);
-    tile.quantizedVolumeOffset = new Vector3$1(quantization.minValues);
+    tile.quantizedVolumeScale = new Vector3(range, range, range);
+    tile.quantizedVolumeOffset = new Vector3(quantization.minValues);
     tile.quantizedRange = (1 << quantization.quantizationBits) - 1.0;
     tile.isQuantizedDraco = true;
   }
@@ -14667,451 +11792,13 @@ async function loadDraco(tile, dracoData, options, context) {
   };
 }
 
-const VERSION$3 = "3.4.14" ;
+const VERSION$2 = typeof __VERSION__ !== 'undefined' ? __VERSION__ : 'latest';
 
-const VERSION$2 = "3.4.14" ;
-
-const VERSION$1 = "3.4.14" ;
-const BASIS_CDN_ENCODER_WASM = "https://unpkg.com/@loaders.gl/textures@".concat(VERSION$1, "/dist/libs/basis_encoder.wasm");
-const BASIS_CDN_ENCODER_JS = "https://unpkg.com/@loaders.gl/textures@".concat(VERSION$1, "/dist/libs/basis_encoder.js");
-let loadBasisTranscoderPromise;
-async function loadBasisTrascoderModule(options) {
-  const modules = options.modules || {};
-  if (modules.basis) {
-    return modules.basis;
-  }
-  loadBasisTranscoderPromise = loadBasisTranscoderPromise || loadBasisTrascoder(options);
-  return await loadBasisTranscoderPromise;
-}
-async function loadBasisTrascoder(options) {
-  let BASIS = null;
-  let wasmBinary = null;
-  [BASIS, wasmBinary] = await Promise.all([await loadLibrary('basis_transcoder.js', 'textures', options), await loadLibrary('basis_transcoder.wasm', 'textures', options)]);
-  BASIS = BASIS || globalThis.BASIS;
-  return await initializeBasisTrascoderModule(BASIS, wasmBinary);
-}
-function initializeBasisTrascoderModule(BasisModule, wasmBinary) {
-  const options = {};
-  if (wasmBinary) {
-    options.wasmBinary = wasmBinary;
-  }
-  return new Promise(resolve => {
-    BasisModule(options).then(module => {
-      const {
-        BasisFile,
-        initializeBasis
-      } = module;
-      initializeBasis();
-      resolve({
-        BasisFile
-      });
-    });
-  });
-}
-let loadBasisEncoderPromise;
-async function loadBasisEncoderModule(options) {
-  const modules = options.modules || {};
-  if (modules.basisEncoder) {
-    return modules.basisEncoder;
-  }
-  loadBasisEncoderPromise = loadBasisEncoderPromise || loadBasisEncoder(options);
-  return await loadBasisEncoderPromise;
-}
-async function loadBasisEncoder(options) {
-  let BASIS_ENCODER = null;
-  let wasmBinary = null;
-  [BASIS_ENCODER, wasmBinary] = await Promise.all([await loadLibrary(BASIS_CDN_ENCODER_JS, 'textures', options), await loadLibrary(BASIS_CDN_ENCODER_WASM, 'textures', options)]);
-  BASIS_ENCODER = BASIS_ENCODER || globalThis.BASIS;
-  return await initializeBasisEncoderModule(BASIS_ENCODER, wasmBinary);
-}
-function initializeBasisEncoderModule(BasisEncoderModule, wasmBinary) {
-  const options = {};
-  if (wasmBinary) {
-    options.wasmBinary = wasmBinary;
-  }
-  return new Promise(resolve => {
-    BasisEncoderModule(options).then(module => {
-      const {
-        BasisFile,
-        KTX2File,
-        initializeBasis,
-        BasisEncoder
-      } = module;
-      initializeBasis();
-      resolve({
-        BasisFile,
-        KTX2File,
-        BasisEncoder
-      });
-    });
-  });
-}
-
-const GL_EXTENSIONS_CONSTANTS = {
-  COMPRESSED_RGB_S3TC_DXT1_EXT: 0x83f0,
-  COMPRESSED_RGBA_S3TC_DXT1_EXT: 0x83f1,
-  COMPRESSED_RGBA_S3TC_DXT3_EXT: 0x83f2,
-  COMPRESSED_RGBA_S3TC_DXT5_EXT: 0x83f3,
-  COMPRESSED_R11_EAC: 0x9270,
-  COMPRESSED_SIGNED_R11_EAC: 0x9271,
-  COMPRESSED_RG11_EAC: 0x9272,
-  COMPRESSED_SIGNED_RG11_EAC: 0x9273,
-  COMPRESSED_RGB8_ETC2: 0x9274,
-  COMPRESSED_RGBA8_ETC2_EAC: 0x9275,
-  COMPRESSED_SRGB8_ETC2: 0x9276,
-  COMPRESSED_SRGB8_ALPHA8_ETC2_EAC: 0x9277,
-  COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2: 0x9278,
-  COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2: 0x9279,
-  COMPRESSED_RGB_PVRTC_4BPPV1_IMG: 0x8c00,
-  COMPRESSED_RGBA_PVRTC_4BPPV1_IMG: 0x8c02,
-  COMPRESSED_RGB_PVRTC_2BPPV1_IMG: 0x8c01,
-  COMPRESSED_RGBA_PVRTC_2BPPV1_IMG: 0x8c03,
-  COMPRESSED_RGB_ETC1_WEBGL: 0x8d64,
-  COMPRESSED_RGB_ATC_WEBGL: 0x8c92,
-  COMPRESSED_RGBA_ATC_EXPLICIT_ALPHA_WEBGL: 0x8c93,
-  COMPRESSED_RGBA_ATC_INTERPOLATED_ALPHA_WEBGL: 0x87ee,
-  COMPRESSED_RGBA_ASTC_4X4_KHR: 0x93b0,
-  COMPRESSED_RGBA_ASTC_5X4_KHR: 0x93b1,
-  COMPRESSED_RGBA_ASTC_5X5_KHR: 0x93b2,
-  COMPRESSED_RGBA_ASTC_6X5_KHR: 0x93b3,
-  COMPRESSED_RGBA_ASTC_6X6_KHR: 0x93b4,
-  COMPRESSED_RGBA_ASTC_8X5_KHR: 0x93b5,
-  COMPRESSED_RGBA_ASTC_8X6_KHR: 0x93b6,
-  COMPRESSED_RGBA_ASTC_8X8_KHR: 0x93b7,
-  COMPRESSED_RGBA_ASTC_10X5_KHR: 0x93b8,
-  COMPRESSED_RGBA_ASTC_10X6_KHR: 0x93b9,
-  COMPRESSED_RGBA_ASTC_10X8_KHR: 0x93ba,
-  COMPRESSED_RGBA_ASTC_10X10_KHR: 0x93bb,
-  COMPRESSED_RGBA_ASTC_12X10_KHR: 0x93bc,
-  COMPRESSED_RGBA_ASTC_12X12_KHR: 0x93bd,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_4X4_KHR: 0x93d0,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_5X4_KHR: 0x93d1,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_5X5_KHR: 0x93d2,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_6X5_KHR: 0x93d3,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_6X6_KHR: 0x93d4,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_8X5_KHR: 0x93d5,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_8X6_KHR: 0x93d6,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_8X8_KHR: 0x93d7,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_10X5_KHR: 0x93d8,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_10X6_KHR: 0x93d9,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_10X8_KHR: 0x93da,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_10X10_KHR: 0x93db,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_12X10_KHR: 0x93dc,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_12X12_KHR: 0x93dd,
-  COMPRESSED_RED_RGTC1_EXT: 0x8dbb,
-  COMPRESSED_SIGNED_RED_RGTC1_EXT: 0x8dbc,
-  COMPRESSED_RED_GREEN_RGTC2_EXT: 0x8dbd,
-  COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT: 0x8dbe,
-  COMPRESSED_SRGB_S3TC_DXT1_EXT: 0x8c4c,
-  COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT: 0x8c4d,
-  COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT: 0x8c4e,
-  COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT: 0x8c4f
-};
-
-const BROWSER_PREFIXES = ['', 'WEBKIT_', 'MOZ_'];
-const WEBGL_EXTENSIONS = {
-  WEBGL_compressed_texture_s3tc: 'dxt',
-  WEBGL_compressed_texture_s3tc_srgb: 'dxt-srgb',
-  WEBGL_compressed_texture_etc1: 'etc1',
-  WEBGL_compressed_texture_etc: 'etc2',
-  WEBGL_compressed_texture_pvrtc: 'pvrtc',
-  WEBGL_compressed_texture_atc: 'atc',
-  WEBGL_compressed_texture_astc: 'astc',
-  EXT_texture_compression_rgtc: 'rgtc'
-};
-let formats = null;
-function getSupportedGPUTextureFormats(gl) {
-  if (!formats) {
-    gl = gl || getWebGLContext() || undefined;
-    formats = new Set();
-    for (const prefix of BROWSER_PREFIXES) {
-      for (const extension in WEBGL_EXTENSIONS) {
-        if (gl && gl.getExtension("".concat(prefix).concat(extension))) {
-          const gpuTextureFormat = WEBGL_EXTENSIONS[extension];
-          formats.add(gpuTextureFormat);
-        }
-      }
-    }
-  }
-  return formats;
-}
-function getWebGLContext() {
-  try {
-    const canvas = document.createElement('canvas');
-    return canvas.getContext('webgl');
-  } catch (error) {
-    return null;
-  }
-}
-
-var n,i,s,a,r,o,l,f;!function(t){t[t.NONE=0]="NONE",t[t.BASISLZ=1]="BASISLZ",t[t.ZSTD=2]="ZSTD",t[t.ZLIB=3]="ZLIB";}(n||(n={})),function(t){t[t.BASICFORMAT=0]="BASICFORMAT";}(i||(i={})),function(t){t[t.UNSPECIFIED=0]="UNSPECIFIED",t[t.ETC1S=163]="ETC1S",t[t.UASTC=166]="UASTC";}(s||(s={})),function(t){t[t.UNSPECIFIED=0]="UNSPECIFIED",t[t.SRGB=1]="SRGB";}(a||(a={})),function(t){t[t.UNSPECIFIED=0]="UNSPECIFIED",t[t.LINEAR=1]="LINEAR",t[t.SRGB=2]="SRGB",t[t.ITU=3]="ITU",t[t.NTSC=4]="NTSC",t[t.SLOG=5]="SLOG",t[t.SLOG2=6]="SLOG2";}(r||(r={})),function(t){t[t.ALPHA_STRAIGHT=0]="ALPHA_STRAIGHT",t[t.ALPHA_PREMULTIPLIED=1]="ALPHA_PREMULTIPLIED";}(o||(o={})),function(t){t[t.RGB=0]="RGB",t[t.RRR=3]="RRR",t[t.GGG=4]="GGG",t[t.AAA=15]="AAA";}(l||(l={})),function(t){t[t.RGB=0]="RGB",t[t.RGBA=3]="RGBA",t[t.RRR=4]="RRR",t[t.RRRG=5]="RRRG";}(f||(f={}));
-
-const KTX2_ID = [0xab, 0x4b, 0x54, 0x58, 0x20, 0x32, 0x30, 0xbb, 0x0d, 0x0a, 0x1a, 0x0a];
-function isKTX(data) {
-  const id = new Uint8Array(data);
-  const notKTX = id.byteLength < KTX2_ID.length || id[0] !== KTX2_ID[0] || id[1] !== KTX2_ID[1] || id[2] !== KTX2_ID[2] || id[3] !== KTX2_ID[3] || id[4] !== KTX2_ID[4] || id[5] !== KTX2_ID[5] || id[6] !== KTX2_ID[6] || id[7] !== KTX2_ID[7] || id[8] !== KTX2_ID[8] || id[9] !== KTX2_ID[9] || id[10] !== KTX2_ID[10] || id[11] !== KTX2_ID[11];
-  return !notKTX;
-}
-
-const OutputFormat = {
-  etc1: {
-    basisFormat: 0,
-    compressed: true,
-    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGB_ETC1_WEBGL
-  },
-  etc2: {
-    basisFormat: 1,
-    compressed: true
-  },
-  bc1: {
-    basisFormat: 2,
-    compressed: true,
-    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGB_S3TC_DXT1_EXT
-  },
-  bc3: {
-    basisFormat: 3,
-    compressed: true,
-    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGBA_S3TC_DXT5_EXT
-  },
-  bc4: {
-    basisFormat: 4,
-    compressed: true
-  },
-  bc5: {
-    basisFormat: 5,
-    compressed: true
-  },
-  'bc7-m6-opaque-only': {
-    basisFormat: 6,
-    compressed: true
-  },
-  'bc7-m5': {
-    basisFormat: 7,
-    compressed: true
-  },
-  'pvrtc1-4-rgb': {
-    basisFormat: 8,
-    compressed: true,
-    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGB_PVRTC_4BPPV1_IMG
-  },
-  'pvrtc1-4-rgba': {
-    basisFormat: 9,
-    compressed: true,
-    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG
-  },
-  'astc-4x4': {
-    basisFormat: 10,
-    compressed: true,
-    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGBA_ASTC_4X4_KHR
-  },
-  'atc-rgb': {
-    basisFormat: 11,
-    compressed: true
-  },
-  'atc-rgba-interpolated-alpha': {
-    basisFormat: 12,
-    compressed: true
-  },
-  rgba32: {
-    basisFormat: 13,
-    compressed: false
-  },
-  rgb565: {
-    basisFormat: 14,
-    compressed: false
-  },
-  bgr565: {
-    basisFormat: 15,
-    compressed: false
-  },
-  rgba4444: {
-    basisFormat: 16,
-    compressed: false
-  }
-};
-async function parseBasis(data, options) {
-  if (options.basis.containerFormat === 'auto') {
-    if (isKTX(data)) {
-      const fileConstructors = await loadBasisEncoderModule(options);
-      return parseKTX2File(fileConstructors.KTX2File, data, options);
-    }
-    const {
-      BasisFile
-    } = await loadBasisTrascoderModule(options);
-    return parseBasisFile(BasisFile, data, options);
-  }
-  switch (options.basis.module) {
-    case 'encoder':
-      const fileConstructors = await loadBasisEncoderModule(options);
-      switch (options.basis.containerFormat) {
-        case 'ktx2':
-          return parseKTX2File(fileConstructors.KTX2File, data, options);
-        case 'basis':
-        default:
-          return parseBasisFile(fileConstructors.BasisFile, data, options);
-      }
-    case 'transcoder':
-    default:
-      const {
-        BasisFile
-      } = await loadBasisTrascoderModule(options);
-      return parseBasisFile(BasisFile, data, options);
-  }
-}
-function parseBasisFile(BasisFile, data, options) {
-  const basisFile = new BasisFile(new Uint8Array(data));
-  try {
-    if (!basisFile.startTranscoding()) {
-      throw new Error('Failed to start basis transcoding');
-    }
-    const imageCount = basisFile.getNumImages();
-    const images = [];
-    for (let imageIndex = 0; imageIndex < imageCount; imageIndex++) {
-      const levelsCount = basisFile.getNumLevels(imageIndex);
-      const levels = [];
-      for (let levelIndex = 0; levelIndex < levelsCount; levelIndex++) {
-        levels.push(transcodeImage(basisFile, imageIndex, levelIndex, options));
-      }
-      images.push(levels);
-    }
-    return images;
-  } finally {
-    basisFile.close();
-    basisFile.delete();
-  }
-}
-function transcodeImage(basisFile, imageIndex, levelIndex, options) {
-  const width = basisFile.getImageWidth(imageIndex, levelIndex);
-  const height = basisFile.getImageHeight(imageIndex, levelIndex);
-  const hasAlpha = basisFile.getHasAlpha();
-  const {
-    compressed,
-    format,
-    basisFormat
-  } = getBasisOptions(options, hasAlpha);
-  const decodedSize = basisFile.getImageTranscodedSizeInBytes(imageIndex, levelIndex, basisFormat);
-  const decodedData = new Uint8Array(decodedSize);
-  if (!basisFile.transcodeImage(decodedData, imageIndex, levelIndex, basisFormat, 0, 0)) {
-    throw new Error('failed to start Basis transcoding');
-  }
-  return {
-    width,
-    height,
-    data: decodedData,
-    compressed,
-    format,
-    hasAlpha
-  };
-}
-function parseKTX2File(KTX2File, data, options) {
-  const ktx2File = new KTX2File(new Uint8Array(data));
-  try {
-    if (!ktx2File.startTranscoding()) {
-      throw new Error('failed to start KTX2 transcoding');
-    }
-    const levelsCount = ktx2File.getLevels();
-    const levels = [];
-    for (let levelIndex = 0; levelIndex < levelsCount; levelIndex++) {
-      levels.push(transcodeKTX2Image(ktx2File, levelIndex, options));
-      break;
-    }
-    return [levels];
-  } finally {
-    ktx2File.close();
-    ktx2File.delete();
-  }
-}
-function transcodeKTX2Image(ktx2File, levelIndex, options) {
-  const {
-    alphaFlag,
-    height,
-    width
-  } = ktx2File.getImageLevelInfo(levelIndex, 0, 0);
-  const {
-    compressed,
-    format,
-    basisFormat
-  } = getBasisOptions(options, alphaFlag);
-  const decodedSize = ktx2File.getImageTranscodedSizeInBytes(levelIndex, 0, 0, basisFormat);
-  const decodedData = new Uint8Array(decodedSize);
-  if (!ktx2File.transcodeImage(decodedData, levelIndex, 0, 0, basisFormat, 0, -1, -1)) {
-    throw new Error('Failed to transcode KTX2 image');
-  }
-  return {
-    width,
-    height,
-    data: decodedData,
-    compressed,
-    levelSize: decodedSize,
-    hasAlpha: alphaFlag,
-    format
-  };
-}
-function getBasisOptions(options, hasAlpha) {
-  let format = options && options.basis && options.basis.format;
-  if (format === 'auto') {
-    format = selectSupportedBasisFormat();
-  }
-  if (typeof format === 'object') {
-    format = hasAlpha ? format.alpha : format.noAlpha;
-  }
-  format = format.toLowerCase();
-  return OutputFormat[format];
-}
-function selectSupportedBasisFormat() {
-  const supportedFormats = getSupportedGPUTextureFormats();
-  if (supportedFormats.has('astc')) {
-    return 'astc-4x4';
-  } else if (supportedFormats.has('dxt')) {
-    return {
-      alpha: 'bc3',
-      noAlpha: 'bc1'
-    };
-  } else if (supportedFormats.has('pvrtc')) {
-    return {
-      alpha: 'pvrtc1-4-rgba',
-      noAlpha: 'pvrtc1-4-rgb'
-    };
-  } else if (supportedFormats.has('etc1')) {
-    return 'etc1';
-  } else if (supportedFormats.has('etc2')) {
-    return 'etc2';
-  }
-  return 'rgb565';
-}
-
-const BasisWorkerLoader = {
-  name: 'Basis',
-  id: isBrowser$1 ? 'basis' : 'basis-nodejs',
-  module: 'textures',
-  version: VERSION$2,
-  worker: true,
-  extensions: ['basis', 'ktx2'],
-  mimeTypes: ['application/octet-stream', 'image/ktx2'],
-  tests: ['sB'],
-  binary: true,
-  options: {
-    basis: {
-      format: 'auto',
-      libraryPath: 'libs/',
-      containerFormat: 'auto',
-      module: 'transcoder'
-    }
-  }
-};
-const BasisLoader = {
-  ...BasisWorkerLoader,
-  parse: parseBasis
-};
-
-const VERSION = "3.4.14" ;
-
-const {
-  _parseImageNode
-} = globalThis;
+var _globalThis$loaders;
+const parseImageNode = (_globalThis$loaders = globalThis.loaders) === null || _globalThis$loaders === void 0 ? void 0 : _globalThis$loaders.parseImageNode;
 const IMAGE_SUPPORTED = typeof Image !== 'undefined';
 const IMAGE_BITMAP_SUPPORTED = typeof ImageBitmap !== 'undefined';
-const NODE_IMAGE_SUPPORTED = Boolean(_parseImageNode);
+const NODE_IMAGE_SUPPORTED = Boolean(parseImageNode);
 const DATA_SUPPORTED = isBrowser$2 ? true : NODE_IMAGE_SUPPORTED;
 function isImageTypeSupported(type) {
   switch (type) {
@@ -15124,7 +11811,7 @@ function isImageTypeSupported(type) {
     case 'data':
       return DATA_SUPPORTED;
     default:
-      throw new Error("@loaders.gl/images: image ".concat(type, " not supported in this environment"));
+      throw new Error(`@loaders.gl/images: image ${type} not supported in this environment`);
   }
 }
 function getDefaultImageType() {
@@ -15195,7 +11882,7 @@ function getBlobOrSVGDataUrl(arrayBuffer, url) {
     } catch (error) {
       throw new Error(error.message);
     }
-    const src = "data:image/svg+xml;base64,".concat(btoa(xmlText));
+    const src = `data:image/svg+xml;base64,${btoa(xmlText)}`;
     return src;
   }
   return getBlob(arrayBuffer, url);
@@ -15229,7 +11916,10 @@ async function loadToImage(url, options) {
   return await new Promise((resolve, reject) => {
     try {
       image.onload = () => resolve(image);
-      image.onerror = err => reject(new Error("Could not load image ".concat(url, ": ").concat(err)));
+      image.onerror = error => {
+        const message = error instanceof Error ? error.message : 'error';
+        reject(new Error(message));
+      };
     } catch (error) {
       reject(error);
     }
@@ -15311,7 +12001,7 @@ function checkString(buffer, header) {
 }
 
 const BIG_ENDIAN = false;
-const LITTLE_ENDIAN = true;
+const LITTLE_ENDIAN$1 = true;
 function getBinaryImageMetadata(binaryData) {
   const dataView = toDataView(binaryData);
   return getPngMetadata(dataView) || getJpegMetadata(dataView) || getGifMetadata(dataView) || getBmpMetadata(dataView) || getISOBMFFMetadata(dataView);
@@ -15348,20 +12038,20 @@ function getGifMetadata(binaryData) {
   }
   return {
     mimeType: 'image/gif',
-    width: dataView.getUint16(6, LITTLE_ENDIAN),
-    height: dataView.getUint16(8, LITTLE_ENDIAN)
+    width: dataView.getUint16(6, LITTLE_ENDIAN$1),
+    height: dataView.getUint16(8, LITTLE_ENDIAN$1)
   };
 }
 function getBmpMetadata(binaryData) {
   const dataView = toDataView(binaryData);
-  const isBmp = dataView.byteLength >= 14 && dataView.getUint16(0, BIG_ENDIAN) === 0x424d && dataView.getUint32(2, LITTLE_ENDIAN) === dataView.byteLength;
+  const isBmp = dataView.byteLength >= 14 && dataView.getUint16(0, BIG_ENDIAN) === 0x424d && dataView.getUint32(2, LITTLE_ENDIAN$1) === dataView.byteLength;
   if (!isBmp) {
     return null;
   }
   return {
     mimeType: 'image/bmp',
-    width: dataView.getUint32(18, LITTLE_ENDIAN),
-    height: dataView.getUint32(22, LITTLE_ENDIAN)
+    width: dataView.getUint32(18, LITTLE_ENDIAN$1),
+    height: dataView.getUint32(22, LITTLE_ENDIAN$1)
   };
 }
 function getJpegMetadata(binaryData) {
@@ -15417,12 +12107,13 @@ function toDataView(data) {
 }
 
 async function parseToNodeImage(arrayBuffer, options) {
+  var _globalThis$loaders;
   const {
     mimeType
   } = getBinaryImageMetadata(arrayBuffer) || {};
-  const _parseImageNode = globalThis._parseImageNode;
-  assert$8(_parseImageNode);
-  return await _parseImageNode(arrayBuffer, mimeType);
+  const parseImageNode = (_globalThis$loaders = globalThis.loaders) === null || _globalThis$loaders === void 0 ? void 0 : _globalThis$loaders.parseImageNode;
+  assert$6(parseImageNode);
+  return await parseImageNode(arrayBuffer, mimeType);
 }
 
 async function parseImage(arrayBuffer, options, context) {
@@ -15445,7 +12136,7 @@ async function parseImage(arrayBuffer, options, context) {
       image = await parseToNodeImage(arrayBuffer);
       break;
     default:
-      assert$8(false);
+      assert$6(false);
   }
   if (imageType === 'data') {
     image = getImageData(image);
@@ -15475,7 +12166,7 @@ const ImageLoader = {
   id: 'image',
   module: 'images',
   name: 'Images',
-  version: VERSION,
+  version: VERSION$2,
   mimeTypes: MIME_TYPES,
   extensions: EXTENSIONS$1,
   parse: parseImage,
@@ -15492,12 +12183,11 @@ function isImageFormatSupported(mimeType) {
   return mimeTypeSupportedSync[mimeType];
 }
 function checkNodeImageFormatSupport(mimeType) {
+  var _globalThis$loaders, _globalThis$loaders2;
   const NODE_FORMAT_SUPPORT = ['image/png', 'image/jpeg', 'image/gif'];
-  const {
-    _parseImageNode,
-    _imageFormatsNode = NODE_FORMAT_SUPPORT
-  } = globalThis;
-  return Boolean(_parseImageNode) && _imageFormatsNode.includes(mimeType);
+  const imageFormatsNode = ((_globalThis$loaders = globalThis.loaders) === null || _globalThis$loaders === void 0 ? void 0 : _globalThis$loaders.imageFormatsNode) || NODE_FORMAT_SUPPORT;
+  const parseImageNode = (_globalThis$loaders2 = globalThis.loaders) === null || _globalThis$loaders2 === void 0 ? void 0 : _globalThis$loaders2.parseImageNode;
+  return Boolean(parseImageNode) && imageFormatsNode.includes(mimeType);
 }
 function checkBrowserImageFormatSupport(mimeType) {
   switch (mimeType) {
@@ -15512,7 +12202,7 @@ function testBrowserImageFormatSupport(mimeType) {
   try {
     const element = document.createElement('canvas');
     const dataURL = element.toDataURL(mimeType);
-    return dataURL.indexOf("data:".concat(mimeType)) === 0;
+    return dataURL.indexOf(`data:${mimeType}`) === 0;
   } catch {
     return false;
   }
@@ -15524,32 +12214,7 @@ function assert$1(condition, message) {
   }
 }
 
-function resolveUrl(url, options) {
-  const absolute = url.startsWith('data:') || url.startsWith('http:') || url.startsWith('https:');
-  if (absolute) {
-    return url;
-  }
-  const baseUrl = options.baseUri || options.uri;
-  if (!baseUrl) {
-    throw new Error("'baseUri' must be provided to resolve relative url ".concat(url));
-  }
-  return baseUrl.substr(0, baseUrl.lastIndexOf('/') + 1) + url;
-}
-
-function getTypedArrayForBufferView(json, buffers, bufferViewIndex) {
-  const bufferView = json.bufferViews[bufferViewIndex];
-  assert$1(bufferView);
-  const bufferIndex = bufferView.buffer;
-  const binChunk = buffers[bufferIndex];
-  assert$1(binChunk);
-  const byteOffset = (bufferView.byteOffset || 0) + binChunk.byteOffset;
-  return new Uint8Array(binChunk.arrayBuffer, byteOffset, bufferView.byteLength);
-}
-
-const TYPES = ['SCALAR', 'VEC2', 'VEC3', 'VEC4'];
-const ARRAY_CONSTRUCTOR_TO_WEBGL_CONSTANT = [[Int8Array, 5120], [Uint8Array, 5121], [Int16Array, 5122], [Uint16Array, 5123], [Uint32Array, 5125], [Float32Array, 5126], [Float64Array, 5130]];
-const ARRAY_TO_COMPONENT_TYPE = new Map(ARRAY_CONSTRUCTOR_TO_WEBGL_CONSTANT);
-const ATTRIBUTE_TYPE_TO_COMPONENTS = {
+const COMPONENTS$1 = {
   SCALAR: 1,
   VEC2: 2,
   VEC3: 3,
@@ -15558,7 +12223,7 @@ const ATTRIBUTE_TYPE_TO_COMPONENTS = {
   MAT3: 9,
   MAT4: 16
 };
-const ATTRIBUTE_COMPONENT_TYPE_TO_BYTE_SIZE = {
+const BYTES$1 = {
   5120: 1,
   5121: 1,
   5122: 2,
@@ -15566,7 +12231,29 @@ const ATTRIBUTE_COMPONENT_TYPE_TO_BYTE_SIZE = {
   5125: 4,
   5126: 4
 };
-const ATTRIBUTE_COMPONENT_TYPE_TO_ARRAY = {
+
+const MIPMAP_FACTOR = 1.33;
+const TYPES = ['SCALAR', 'VEC2', 'VEC3', 'VEC4'];
+const ARRAY_CONSTRUCTOR_TO_WEBGL_CONSTANT = [[Int8Array, 5120], [Uint8Array, 5121], [Int16Array, 5122], [Uint16Array, 5123], [Uint32Array, 5125], [Float32Array, 5126], [Float64Array, 5130]];
+const ARRAY_TO_COMPONENT_TYPE = new Map(ARRAY_CONSTRUCTOR_TO_WEBGL_CONSTANT);
+const ATTRIBUTE_TYPE_TO_COMPONENTS$1 = {
+  SCALAR: 1,
+  VEC2: 2,
+  VEC3: 3,
+  VEC4: 4,
+  MAT2: 4,
+  MAT3: 9,
+  MAT4: 16
+};
+const ATTRIBUTE_COMPONENT_TYPE_TO_BYTE_SIZE$1 = {
+  5120: 1,
+  5121: 1,
+  5122: 2,
+  5123: 2,
+  5125: 4,
+  5126: 4
+};
+const ATTRIBUTE_COMPONENT_TYPE_TO_ARRAY$1 = {
   5120: Int8Array,
   5121: Uint8Array,
   5122: Int16Array,
@@ -15586,16 +12273,20 @@ function getComponentTypeFromArray(typedArray) {
   return componentType;
 }
 function getAccessorArrayTypeAndLength(accessor, bufferView) {
-  const ArrayType = ATTRIBUTE_COMPONENT_TYPE_TO_ARRAY[accessor.componentType];
-  const components = ATTRIBUTE_TYPE_TO_COMPONENTS[accessor.type];
-  const bytesPerComponent = ATTRIBUTE_COMPONENT_TYPE_TO_BYTE_SIZE[accessor.componentType];
+  const ArrayType = ATTRIBUTE_COMPONENT_TYPE_TO_ARRAY$1[accessor.componentType];
+  const components = ATTRIBUTE_TYPE_TO_COMPONENTS$1[accessor.type];
+  const bytesPerComponent = ATTRIBUTE_COMPONENT_TYPE_TO_BYTE_SIZE$1[accessor.componentType];
   const length = accessor.count * components;
   const byteLength = accessor.count * components * bytesPerComponent;
   assert$1(byteLength >= 0 && byteLength <= bufferView.byteLength);
+  const componentByteSize = BYTES$1[accessor.componentType];
+  const numberOfComponentsInElement = COMPONENTS$1[accessor.type];
   return {
     ArrayType,
     length,
-    byteLength
+    byteLength,
+    componentByteSize,
+    numberOfComponentsInElement
   };
 }
 function getMemoryUsageGLTF(gltf) {
@@ -15615,26 +12306,74 @@ function getMemoryUsageGLTF(gltf) {
     } = image.image;
     return acc + width * height;
   }, 0);
-  return bufferMemory + Math.ceil(4 * pixelCount * 1.33);
+  return bufferMemory + Math.ceil(4 * pixelCount * MIPMAP_FACTOR);
 }
 
-const DEFAULT_GLTF_JSON = {
-  asset: {
-    version: '2.0',
-    generator: 'loaders.gl'
-  },
-  buffers: []
-};
+function getTypedArrayForBufferView(json, buffers, bufferViewIndex) {
+  const bufferView = json.bufferViews[bufferViewIndex];
+  assert$1(bufferView);
+  const bufferIndex = bufferView.buffer;
+  const binChunk = buffers[bufferIndex];
+  assert$1(binChunk);
+  const byteOffset = (bufferView.byteOffset || 0) + binChunk.byteOffset;
+  return new Uint8Array(binChunk.arrayBuffer, byteOffset, bufferView.byteLength);
+}
+function getTypedArrayForAccessor(json, buffers, accessor) {
+  var _json$accessors, _json$bufferViews;
+  const gltfAccessor = typeof accessor === 'number' ? (_json$accessors = json.accessors) === null || _json$accessors === void 0 ? void 0 : _json$accessors[accessor] : accessor;
+  if (!gltfAccessor) {
+    throw new Error(`No gltf accessor ${JSON.stringify(accessor)}`);
+  }
+  const bufferView = (_json$bufferViews = json.bufferViews) === null || _json$bufferViews === void 0 ? void 0 : _json$bufferViews[gltfAccessor.bufferView || 0];
+  if (!bufferView) {
+    throw new Error(`No gltf buffer view for accessor ${bufferView}`);
+  }
+  const {
+    arrayBuffer,
+    byteOffset: bufferByteOffset
+  } = buffers[bufferView.buffer];
+  const byteOffset = (bufferByteOffset || 0) + (gltfAccessor.byteOffset || 0) + (bufferView.byteOffset || 0);
+  const {
+    ArrayType,
+    length,
+    componentByteSize,
+    numberOfComponentsInElement
+  } = getAccessorArrayTypeAndLength(gltfAccessor, bufferView);
+  const elementByteSize = componentByteSize * numberOfComponentsInElement;
+  const elementAddressScale = bufferView.byteStride || elementByteSize;
+  if (typeof bufferView.byteStride === 'undefined' || bufferView.byteStride === elementByteSize) {
+    const result = new ArrayType(arrayBuffer, byteOffset, length);
+    return result;
+  }
+  const result = new ArrayType(length);
+  for (let i = 0; i < gltfAccessor.count; i++) {
+    const values = new ArrayType(arrayBuffer, byteOffset + i * elementAddressScale, numberOfComponentsInElement);
+    result.set(values, i * numberOfComponentsInElement);
+  }
+  return result;
+}
+
+function makeDefaultGLTFJson() {
+  return {
+    asset: {
+      version: '2.0',
+      generator: 'loaders.gl'
+    },
+    buffers: [],
+    extensions: {},
+    extensionsRequired: [],
+    extensionsUsed: []
+  };
+}
 class GLTFScenegraph {
   constructor(gltf) {
-    _defineProperty(this, "gltf", void 0);
-    _defineProperty(this, "sourceBuffers", void 0);
-    _defineProperty(this, "byteLength", void 0);
-    this.gltf = gltf || {
-      json: {
-        ...DEFAULT_GLTF_JSON
-      },
-      buffers: []
+    this.gltf = void 0;
+    this.sourceBuffers = void 0;
+    this.byteLength = void 0;
+    this.gltf = {
+      json: (gltf === null || gltf === void 0 ? void 0 : gltf.json) || makeDefaultGLTFJson(),
+      buffers: (gltf === null || gltf === void 0 ? void 0 : gltf.buffers) || [],
+      images: (gltf === null || gltf === void 0 ? void 0 : gltf.images) || []
     };
     this.sourceBuffers = [];
     this.byteLength = 0;
@@ -15654,10 +12393,15 @@ class GLTFScenegraph {
     const extras = this.json.extras || {};
     return extras[key];
   }
+  hasExtension(extensionName) {
+    const isUsedExtension = this.getUsedExtensions().find(name => name === extensionName);
+    const isRequiredExtension = this.getRequiredExtensions().find(name => name === extensionName);
+    return typeof isUsedExtension === 'string' || typeof isRequiredExtension === 'string';
+  }
   getExtension(extensionName) {
     const isExtension = this.getUsedExtensions().find(name => name === extensionName);
     const extensions = this.json.extensions || {};
-    return isExtension ? extensions[extensionName] || true : null;
+    return isExtension ? extensions[extensionName] : null;
   }
   getRequiredExtension(extensionName) {
     const isRequired = this.getRequiredExtensions().find(name => name === extensionName);
@@ -15715,7 +12459,7 @@ class GLTFScenegraph {
     }
     const object = this.json[array] && this.json[array][index];
     if (!object) {
-      throw new Error("glTF file error: Could not find ".concat(array, "[").concat(index, "]"));
+      throw new Error(`glTF file error: Could not find ${array}[${index}]`);
     }
     return object;
   }
@@ -15728,16 +12472,8 @@ class GLTFScenegraph {
     return new Uint8Array(binChunk.arrayBuffer, byteOffset, bufferView.byteLength);
   }
   getTypedArrayForAccessor(accessor) {
-    accessor = this.getAccessor(accessor);
-    const bufferView = this.getBufferView(accessor.bufferView);
-    const buffer = this.getBuffer(bufferView.buffer);
-    const arrayBuffer = buffer.data;
-    const {
-      ArrayType,
-      length
-    } = getAccessorArrayTypeAndLength(accessor, bufferView);
-    const byteOffset = bufferView.byteOffset + accessor.byteOffset;
-    return new ArrayType(arrayBuffer, byteOffset, length);
+    const gltfAccessor = this.getAccessor(accessor);
+    return getTypedArrayForAccessor(this.gltf.json, this.gltf.buffers, gltfAccessor);
   }
   getTypedArrayForImageData(image) {
     image = this.getAccessor(image);
@@ -15767,10 +12503,15 @@ class GLTFScenegraph {
     extensions[extensionName] = data;
   }
   removeObjectExtension(object, extensionName) {
-    const extensions = object.extensions || {};
-    const extension = extensions[extensionName];
+    const extensions = (object === null || object === void 0 ? void 0 : object.extensions) || {};
+    if (extensions[extensionName]) {
+      this.json.extensionsRemoved = this.json.extensionsRemoved || [];
+      const extensionsRemoved = this.json.extensionsRemoved;
+      if (!extensionsRemoved.includes(extensionName)) {
+        extensionsRemoved.push(extensionName);
+      }
+    }
     delete extensions[extensionName];
-    return extension;
   }
   addExtension(extensionName) {
     let extensionData = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -15801,24 +12542,22 @@ class GLTFScenegraph {
     }
   }
   removeExtension(extensionName) {
-    if (!this.getExtension(extensionName)) {
-      return;
+    var _this$json$extensions;
+    if ((_this$json$extensions = this.json.extensions) !== null && _this$json$extensions !== void 0 && _this$json$extensions[extensionName]) {
+      this.json.extensionsRemoved = this.json.extensionsRemoved || [];
+      const extensionsRemoved = this.json.extensionsRemoved;
+      if (!extensionsRemoved.includes(extensionName)) {
+        extensionsRemoved.push(extensionName);
+      }
+    }
+    if (this.json.extensions) {
+      delete this.json.extensions[extensionName];
     }
     if (this.json.extensionsRequired) {
       this._removeStringFromArray(this.json.extensionsRequired, extensionName);
     }
     if (this.json.extensionsUsed) {
       this._removeStringFromArray(this.json.extensionsUsed, extensionName);
-    }
-    if (this.json.extensions) {
-      delete this.json.extensions[extensionName];
-    }
-    if (!Array.isArray(this.json.extensionsRemoved)) {
-      this.json.extensionsRemoved = [];
-    }
-    const extensionsRemoved = this.json.extensionsRemoved;
-    if (!extensionsRemoved.includes(extensionName)) {
-      extensionsRemoved.push(extensionName);
     }
   }
   setDefaultScene(sceneIndex) {
@@ -15899,13 +12638,15 @@ class GLTFScenegraph {
     return this.json.images.length - 1;
   }
   addBufferView(buffer) {
+    let bufferIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    let byteOffset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this.byteLength;
     const byteLength = buffer.byteLength;
     assert$1(Number.isFinite(byteLength));
     this.sourceBuffers = this.sourceBuffers || [];
     this.sourceBuffers.push(buffer);
     const glTFBufferView = {
-      buffer: 0,
-      byteOffset: this.byteLength,
+      buffer: bufferIndex,
+      byteOffset,
       byteLength
     };
     this.byteLength += padToNBytes(byteLength, 4);
@@ -16054,6 +12795,1299 @@ class GLTFScenegraph {
   }
 }
 
+const ATTRIBUTE_TYPE_TO_COMPONENTS = {
+  SCALAR: 1,
+  VEC2: 2,
+  VEC3: 3,
+  VEC4: 4,
+  MAT2: 4,
+  MAT3: 9,
+  MAT4: 16,
+  BOOLEAN: 1,
+  STRING: 1,
+  ENUM: 1
+};
+const ATTRIBUTE_COMPONENT_TYPE_TO_ARRAY = {
+  INT8: Int8Array,
+  UINT8: Uint8Array,
+  INT16: Int16Array,
+  UINT16: Uint16Array,
+  INT32: Int32Array,
+  UINT32: Uint32Array,
+  INT64: BigInt64Array,
+  UINT64: BigUint64Array,
+  FLOAT32: Float32Array,
+  FLOAT64: Float64Array
+};
+const ATTRIBUTE_COMPONENT_TYPE_TO_BYTE_SIZE = {
+  INT8: 1,
+  UINT8: 1,
+  INT16: 2,
+  UINT16: 2,
+  INT32: 4,
+  UINT32: 4,
+  INT64: 8,
+  UINT64: 8,
+  FLOAT32: 4,
+  FLOAT64: 8
+};
+function getArrayElementByteSize(attributeType, componentType) {
+  return ATTRIBUTE_COMPONENT_TYPE_TO_BYTE_SIZE[componentType] * ATTRIBUTE_TYPE_TO_COMPONENTS[attributeType];
+}
+function getOffsetsForProperty(scenegraph, bufferViewIndex, offsetType, numberOfElements) {
+  if (offsetType !== 'UINT8' && offsetType !== 'UINT16' && offsetType !== 'UINT32' && offsetType !== 'UINT64') {
+    return null;
+  }
+  const arrayOffsetsBytes = scenegraph.getTypedArrayForBufferView(bufferViewIndex);
+  const arrayOffsets = convertRawBufferToMetadataArray(arrayOffsetsBytes, 'SCALAR', offsetType, numberOfElements + 1);
+  if (arrayOffsets instanceof BigInt64Array || arrayOffsets instanceof BigUint64Array) {
+    return null;
+  }
+  return arrayOffsets;
+}
+function convertRawBufferToMetadataArray(data, attributeType, componentType) {
+  let elementCount = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
+  const numberOfComponents = ATTRIBUTE_TYPE_TO_COMPONENTS[attributeType];
+  const ArrayType = ATTRIBUTE_COMPONENT_TYPE_TO_ARRAY[componentType];
+  const size = ATTRIBUTE_COMPONENT_TYPE_TO_BYTE_SIZE[componentType];
+  const length = elementCount * numberOfComponents;
+  const byteLength = length * size;
+  let buffer = data.buffer;
+  let offset = data.byteOffset;
+  if (offset % size !== 0) {
+    const bufferArray = new Uint8Array(buffer);
+    buffer = bufferArray.slice(offset, offset + byteLength).buffer;
+    offset = 0;
+  }
+  return new ArrayType(buffer, offset, length);
+}
+function getPrimitiveTextureData(scenegraph, textureInfo, primitive) {
+  var _json$textures, _json$textures$textur;
+  const texCoordAccessorKey = `TEXCOORD_${textureInfo.texCoord || 0}`;
+  const texCoordAccessorIndex = primitive.attributes[texCoordAccessorKey];
+  const textureCoordinates = scenegraph.getTypedArrayForAccessor(texCoordAccessorIndex);
+  const json = scenegraph.gltf.json;
+  const textureIndex = textureInfo.index;
+  const imageIndex = (_json$textures = json.textures) === null || _json$textures === void 0 ? void 0 : (_json$textures$textur = _json$textures[textureIndex]) === null || _json$textures$textur === void 0 ? void 0 : _json$textures$textur.source;
+  if (typeof imageIndex !== 'undefined') {
+    var _json$images, _json$images$imageInd, _scenegraph$gltf$imag;
+    const mimeType = (_json$images = json.images) === null || _json$images === void 0 ? void 0 : (_json$images$imageInd = _json$images[imageIndex]) === null || _json$images$imageInd === void 0 ? void 0 : _json$images$imageInd.mimeType;
+    const parsedImage = (_scenegraph$gltf$imag = scenegraph.gltf.images) === null || _scenegraph$gltf$imag === void 0 ? void 0 : _scenegraph$gltf$imag[imageIndex];
+    if (parsedImage && typeof parsedImage.width !== 'undefined') {
+      const textureData = [];
+      for (let index = 0; index < textureCoordinates.length; index += 2) {
+        const value = getImageValueByCoordinates(parsedImage, mimeType, textureCoordinates, index, textureInfo.channels);
+        textureData.push(value);
+      }
+      return textureData;
+    }
+  }
+  return [];
+}
+function primitivePropertyDataToAttributes(scenegraph, attributeName, propertyData, featureTable, primitive) {
+  if (!(propertyData !== null && propertyData !== void 0 && propertyData.length)) {
+    return;
+  }
+  const featureIndices = [];
+  for (const texelData of propertyData) {
+    let index = featureTable.findIndex(item => item === texelData);
+    if (index === -1) {
+      index = featureTable.push(texelData) - 1;
+    }
+    featureIndices.push(index);
+  }
+  const typedArray = new Uint32Array(featureIndices);
+  const bufferIndex = scenegraph.gltf.buffers.push({
+    arrayBuffer: typedArray.buffer,
+    byteOffset: typedArray.byteOffset,
+    byteLength: typedArray.byteLength
+  }) - 1;
+  const bufferViewIndex = scenegraph.addBufferView(typedArray, bufferIndex, 0);
+  const accessorIndex = scenegraph.addAccessor(bufferViewIndex, {
+    size: 1,
+    componentType: getComponentTypeFromArray(typedArray),
+    count: typedArray.length
+  });
+  primitive.attributes[attributeName] = accessorIndex;
+}
+function getImageValueByCoordinates(parsedImage, mimeType, textureCoordinates, index) {
+  let channels = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : [0];
+  const CHANNELS_MAP = {
+    r: {
+      offset: 0,
+      shift: 0
+    },
+    g: {
+      offset: 1,
+      shift: 8
+    },
+    b: {
+      offset: 2,
+      shift: 16
+    },
+    a: {
+      offset: 3,
+      shift: 24
+    }
+  };
+  const u = textureCoordinates[index];
+  const v = textureCoordinates[index + 1];
+  let components = 1;
+  if (mimeType && (mimeType.indexOf('image/jpeg') !== -1 || mimeType.indexOf('image/png') !== -1)) components = 4;
+  const offset = coordinatesToOffset(u, v, parsedImage, components);
+  let value = 0;
+  for (const c of channels) {
+    const map = typeof c === 'number' ? Object.values(CHANNELS_MAP)[c] : CHANNELS_MAP[c];
+    const imageOffset = offset + map.offset;
+    const imageData = getImageData(parsedImage);
+    if (imageData.data.length <= imageOffset) {
+      throw new Error(`${imageData.data.length} <= ${imageOffset}`);
+    }
+    const imageValue = imageData.data[imageOffset];
+    value |= imageValue << map.shift;
+  }
+  return value;
+}
+function coordinatesToOffset(u, v, parsedImage) {
+  let componentsCount = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
+  const w = parsedImage.width;
+  const iX = emod(u) * (w - 1);
+  const indX = Math.round(iX);
+  const h = parsedImage.height;
+  const iY = emod(v) * (h - 1);
+  const indY = Math.round(iY);
+  const components = parsedImage.components ? parsedImage.components : componentsCount;
+  const offset = (indY * w + indX) * components;
+  return offset;
+}
+function parseVariableLengthArrayNumeric(valuesData, numberOfElements, arrayOffsets, valuesDataBytesLength, valueSize) {
+  const attributeValueArray = [];
+  for (let index = 0; index < numberOfElements; index++) {
+    const arrayOffset = arrayOffsets[index];
+    const arrayByteSize = arrayOffsets[index + 1] - arrayOffsets[index];
+    if (arrayByteSize + arrayOffset > valuesDataBytesLength) {
+      break;
+    }
+    const typedArrayOffset = arrayOffset / valueSize;
+    const elementCount = arrayByteSize / valueSize;
+    attributeValueArray.push(valuesData.slice(typedArrayOffset, typedArrayOffset + elementCount));
+  }
+  return attributeValueArray;
+}
+function parseFixedLengthArrayNumeric(valuesData, numberOfElements, arrayCount) {
+  const attributeValueArray = [];
+  for (let index = 0; index < numberOfElements; index++) {
+    const elementOffset = index * arrayCount;
+    attributeValueArray.push(valuesData.slice(elementOffset, elementOffset + arrayCount));
+  }
+  return attributeValueArray;
+}
+function getPropertyDataString(numberOfElements, valuesDataBytes, arrayOffsets, stringOffsets) {
+  if (arrayOffsets) {
+    throw new Error('Not implemented - arrayOffsets for strings is specified');
+  }
+  if (stringOffsets) {
+    const stringsArray = [];
+    const textDecoder = new TextDecoder('utf8');
+    let stringOffset = 0;
+    for (let index = 0; index < numberOfElements; index++) {
+      const stringByteSize = stringOffsets[index + 1] - stringOffsets[index];
+      if (stringByteSize + stringOffset <= valuesDataBytes.length) {
+        const stringData = valuesDataBytes.subarray(stringOffset, stringByteSize + stringOffset);
+        const stringAttribute = textDecoder.decode(stringData);
+        stringsArray.push(stringAttribute);
+        stringOffset += stringByteSize;
+      }
+    }
+    return stringsArray;
+  }
+  return [];
+}
+
+const EXT_MESH_FEATURES_NAME = 'EXT_mesh_features';
+const name$a = EXT_MESH_FEATURES_NAME;
+async function decode$9(gltfData, options) {
+  const scenegraph = new GLTFScenegraph(gltfData);
+  decodeExtMeshFeatures(scenegraph, options);
+}
+function decodeExtMeshFeatures(scenegraph, options) {
+  const json = scenegraph.gltf.json;
+  if (!json.meshes) {
+    return;
+  }
+  for (const mesh of json.meshes) {
+    for (const primitive of mesh.primitives) {
+      processMeshPrimitiveFeatures(scenegraph, primitive, options);
+    }
+  }
+}
+function processMeshPrimitiveFeatures(scenegraph, primitive, options) {
+  var _options$gltf, _primitive$extensions;
+  if (!(options !== null && options !== void 0 && (_options$gltf = options.gltf) !== null && _options$gltf !== void 0 && _options$gltf.loadBuffers)) {
+    return;
+  }
+  const extension = (_primitive$extensions = primitive.extensions) === null || _primitive$extensions === void 0 ? void 0 : _primitive$extensions[EXT_MESH_FEATURES_NAME];
+  const featureIds = extension === null || extension === void 0 ? void 0 : extension.featureIds;
+  if (!featureIds) {
+    return;
+  }
+  for (const featureId of featureIds) {
+    var _options$gltf2;
+    let featureIdData;
+    if (typeof featureId.attribute !== 'undefined') {
+      const accessorKey = `_FEATURE_ID_${featureId.attribute}`;
+      const accessorIndex = primitive.attributes[accessorKey];
+      featureIdData = scenegraph.getTypedArrayForAccessor(accessorIndex);
+    } else if (typeof featureId.texture !== 'undefined' && options !== null && options !== void 0 && (_options$gltf2 = options.gltf) !== null && _options$gltf2 !== void 0 && _options$gltf2.loadImages) {
+      featureIdData = getPrimitiveTextureData(scenegraph, featureId.texture, primitive);
+    } else {
+      featureIdData = [];
+    }
+    featureId.data = featureIdData;
+  }
+}
+
+var EXT_mesh_features = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    decode: decode$9,
+    name: name$a
+});
+
+const EXT_STRUCTURAL_METADATA_NAME = 'EXT_structural_metadata';
+const name$9 = EXT_STRUCTURAL_METADATA_NAME;
+async function decode$8(gltfData, options) {
+  const scenegraph = new GLTFScenegraph(gltfData);
+  decodeExtStructuralMetadata(scenegraph, options);
+}
+function decodeExtStructuralMetadata(scenegraph, options) {
+  var _options$gltf, _options$gltf2;
+  if (!((_options$gltf = options.gltf) !== null && _options$gltf !== void 0 && _options$gltf.loadBuffers)) {
+    return;
+  }
+  const extension = scenegraph.getExtension(EXT_STRUCTURAL_METADATA_NAME);
+  if (!extension) {
+    return;
+  }
+  if ((_options$gltf2 = options.gltf) !== null && _options$gltf2 !== void 0 && _options$gltf2.loadImages) {
+    decodePropertyTextures$1(scenegraph, extension);
+  }
+  decodePropertyTables$1(scenegraph, extension);
+}
+function decodePropertyTextures$1(scenegraph, extension) {
+  const propertyTextures = extension.propertyTextures;
+  const json = scenegraph.gltf.json;
+  if (propertyTextures && json.meshes) {
+    for (const mesh of json.meshes) {
+      for (const primitive of mesh.primitives) {
+        processPrimitivePropertyTextures(scenegraph, propertyTextures, primitive, extension);
+      }
+    }
+  }
+}
+function decodePropertyTables$1(scenegraph, extension) {
+  const schema = extension.schema;
+  if (!schema) {
+    return;
+  }
+  const schemaClasses = schema.classes;
+  const propertyTables = extension.propertyTables;
+  if (schemaClasses && propertyTables) {
+    for (const schemaName in schemaClasses) {
+      const propertyTable = findPropertyTableByClass$1(propertyTables, schemaName);
+      if (propertyTable) {
+        processPropertyTable$1(scenegraph, schema, propertyTable);
+      }
+    }
+  }
+}
+function findPropertyTableByClass$1(propertyTables, schemaClassName) {
+  for (const propertyTable of propertyTables) {
+    if (propertyTable.class === schemaClassName) {
+      return propertyTable;
+    }
+  }
+  return null;
+}
+function processPrimitivePropertyTextures(scenegraph, propertyTextures, primitive, extension) {
+  var _primitive$extensions;
+  if (!propertyTextures) {
+    return;
+  }
+  const primitiveExtension = (_primitive$extensions = primitive.extensions) === null || _primitive$extensions === void 0 ? void 0 : _primitive$extensions[EXT_STRUCTURAL_METADATA_NAME];
+  const primitivePropertyTextureIndices = primitiveExtension === null || primitiveExtension === void 0 ? void 0 : primitiveExtension.propertyTextures;
+  if (!primitivePropertyTextureIndices) {
+    return;
+  }
+  for (const primitivePropertyTextureIndex of primitivePropertyTextureIndices) {
+    const propertyTexture = propertyTextures[primitivePropertyTextureIndex];
+    processPrimitivePropertyTexture(scenegraph, propertyTexture, primitive, extension);
+  }
+}
+function processPrimitivePropertyTexture(scenegraph, propertyTexture, primitive, extension) {
+  if (!propertyTexture.properties) {
+    return;
+  }
+  if (!extension.dataAttributeNames) {
+    extension.dataAttributeNames = [];
+  }
+  const className = propertyTexture.class;
+  for (const propertyName in propertyTexture.properties) {
+    var _propertyTexture$prop;
+    const attributeName = `${className}_${propertyName}`;
+    const textureInfoTopLevel = (_propertyTexture$prop = propertyTexture.properties) === null || _propertyTexture$prop === void 0 ? void 0 : _propertyTexture$prop[propertyName];
+    if (!textureInfoTopLevel) {
+      continue;
+    }
+    if (!textureInfoTopLevel.data) {
+      textureInfoTopLevel.data = [];
+    }
+    const featureTextureTable = textureInfoTopLevel.data;
+    const propertyData = getPrimitiveTextureData(scenegraph, textureInfoTopLevel, primitive);
+    if (propertyData === null) {
+      continue;
+    }
+    primitivePropertyDataToAttributes(scenegraph, attributeName, propertyData, featureTextureTable, primitive);
+    textureInfoTopLevel.data = featureTextureTable;
+    extension.dataAttributeNames.push(attributeName);
+  }
+}
+function processPropertyTable$1(scenegraph, schema, propertyTable) {
+  var _schema$classes;
+  const schemaClass = (_schema$classes = schema.classes) === null || _schema$classes === void 0 ? void 0 : _schema$classes[propertyTable.class];
+  if (!schemaClass) {
+    throw new Error(`Incorrect data in the EXT_structural_metadata extension: no schema class with name ${propertyTable.class}`);
+  }
+  const numberOfElements = propertyTable.count;
+  for (const propertyName in schemaClass.properties) {
+    var _propertyTable$proper;
+    const classProperty = schemaClass.properties[propertyName];
+    const propertyTableProperty = (_propertyTable$proper = propertyTable.properties) === null || _propertyTable$proper === void 0 ? void 0 : _propertyTable$proper[propertyName];
+    if (propertyTableProperty) {
+      const data = getPropertyDataFromBinarySource$1(scenegraph, schema, classProperty, numberOfElements, propertyTableProperty);
+      propertyTableProperty.data = data;
+    }
+  }
+}
+function getPropertyDataFromBinarySource$1(scenegraph, schema, classProperty, numberOfElements, propertyTableProperty) {
+  let data = [];
+  const valuesBufferView = propertyTableProperty.values;
+  const valuesDataBytes = scenegraph.getTypedArrayForBufferView(valuesBufferView);
+  const arrayOffsets = getArrayOffsetsForProperty$1(scenegraph, classProperty, propertyTableProperty, numberOfElements);
+  const stringOffsets = getStringOffsetsForProperty$1(scenegraph, propertyTableProperty, numberOfElements);
+  switch (classProperty.type) {
+    case 'SCALAR':
+    case 'VEC2':
+    case 'VEC3':
+    case 'VEC4':
+    case 'MAT2':
+    case 'MAT3':
+    case 'MAT4':
+      {
+        data = getPropertyDataNumeric$1(classProperty, numberOfElements, valuesDataBytes, arrayOffsets);
+        break;
+      }
+    case 'BOOLEAN':
+      {
+        throw new Error(`Not implemented - classProperty.type=${classProperty.type}`);
+      }
+    case 'STRING':
+      {
+        data = getPropertyDataString(numberOfElements, valuesDataBytes, arrayOffsets, stringOffsets);
+        break;
+      }
+    case 'ENUM':
+      {
+        data = getPropertyDataENUM(schema, classProperty, numberOfElements, valuesDataBytes, arrayOffsets);
+        break;
+      }
+    default:
+      throw new Error(`Unknown classProperty type ${classProperty.type}`);
+  }
+  return data;
+}
+function getArrayOffsetsForProperty$1(scenegraph, classProperty, propertyTableProperty, numberOfElements) {
+  if (classProperty.array && typeof classProperty.count === 'undefined' && typeof propertyTableProperty.arrayOffsets !== 'undefined') {
+    return getOffsetsForProperty(scenegraph, propertyTableProperty.arrayOffsets, propertyTableProperty.arrayOffsetType || 'UINT32', numberOfElements);
+  }
+  return null;
+}
+function getStringOffsetsForProperty$1(scenegraph, propertyTableProperty, numberOfElements) {
+  if (typeof propertyTableProperty.stringOffsets !== 'undefined') {
+    return getOffsetsForProperty(scenegraph, propertyTableProperty.stringOffsets, propertyTableProperty.stringOffsetType || 'UINT32', numberOfElements);
+  }
+  return null;
+}
+function getPropertyDataNumeric$1(classProperty, numberOfElements, valuesDataBytes, arrayOffsets) {
+  const isArray = classProperty.array;
+  const arrayCount = classProperty.count;
+  const elementSize = getArrayElementByteSize(classProperty.type, classProperty.componentType);
+  const elementCount = valuesDataBytes.byteLength / elementSize;
+  let valuesData;
+  if (classProperty.componentType) {
+    valuesData = convertRawBufferToMetadataArray(valuesDataBytes, classProperty.type, classProperty.componentType, elementCount);
+  } else {
+    valuesData = valuesDataBytes;
+  }
+  if (isArray) {
+    if (arrayOffsets) {
+      return parseVariableLengthArrayNumeric(valuesData, numberOfElements, arrayOffsets, valuesDataBytes.length, elementSize);
+    }
+    if (arrayCount) {
+      return parseFixedLengthArrayNumeric(valuesData, numberOfElements, arrayCount);
+    }
+    return [];
+  }
+  return valuesData;
+}
+function getPropertyDataENUM(schema, classProperty, numberOfElements, valuesDataBytes, arrayOffsets) {
+  var _schema$enums;
+  const enumType = classProperty.enumType;
+  if (!enumType) {
+    throw new Error('Incorrect data in the EXT_structural_metadata extension: classProperty.enumType is not set for type ENUM');
+  }
+  const enumEntry = (_schema$enums = schema.enums) === null || _schema$enums === void 0 ? void 0 : _schema$enums[enumType];
+  if (!enumEntry) {
+    throw new Error(`Incorrect data in the EXT_structural_metadata extension: schema.enums does't contain ${enumType}`);
+  }
+  const enumValueType = enumEntry.valueType || 'UINT16';
+  const elementSize = getArrayElementByteSize(classProperty.type, enumValueType);
+  const elementCount = valuesDataBytes.byteLength / elementSize;
+  let valuesData = convertRawBufferToMetadataArray(valuesDataBytes, classProperty.type, enumValueType, elementCount);
+  if (!valuesData) {
+    valuesData = valuesDataBytes;
+  }
+  if (classProperty.array) {
+    if (arrayOffsets) {
+      return parseVariableLengthArrayENUM({
+        valuesData,
+        numberOfElements,
+        arrayOffsets,
+        valuesDataBytesLength: valuesDataBytes.length,
+        elementSize,
+        enumEntry
+      });
+    }
+    const arrayCount = classProperty.count;
+    if (arrayCount) {
+      return parseFixedLengthArrayENUM(valuesData, numberOfElements, arrayCount, enumEntry);
+    }
+    return [];
+  }
+  return getEnumsArray(valuesData, 0, numberOfElements, enumEntry);
+}
+function parseVariableLengthArrayENUM(params) {
+  const {
+    valuesData,
+    numberOfElements,
+    arrayOffsets,
+    valuesDataBytesLength,
+    elementSize,
+    enumEntry
+  } = params;
+  const attributeValueArray = [];
+  for (let index = 0; index < numberOfElements; index++) {
+    const arrayOffset = arrayOffsets[index];
+    const arrayByteSize = arrayOffsets[index + 1] - arrayOffsets[index];
+    if (arrayByteSize + arrayOffset > valuesDataBytesLength) {
+      break;
+    }
+    const typedArrayOffset = arrayOffset / elementSize;
+    const elementCount = arrayByteSize / elementSize;
+    const array = getEnumsArray(valuesData, typedArrayOffset, elementCount, enumEntry);
+    attributeValueArray.push(array);
+  }
+  return attributeValueArray;
+}
+function parseFixedLengthArrayENUM(valuesData, numberOfElements, arrayCount, enumEntry) {
+  const attributeValueArray = [];
+  for (let index = 0; index < numberOfElements; index++) {
+    const elementOffset = arrayCount * index;
+    const array = getEnumsArray(valuesData, elementOffset, arrayCount, enumEntry);
+    attributeValueArray.push(array);
+  }
+  return attributeValueArray;
+}
+function getEnumsArray(valuesData, offset, count, enumEntry) {
+  const array = [];
+  for (let i = 0; i < count; i++) {
+    if (valuesData instanceof BigInt64Array || valuesData instanceof BigUint64Array) {
+      array.push('');
+    } else {
+      const value = valuesData[offset + i];
+      const enumObject = getEnumByValue(enumEntry, value);
+      if (enumObject) {
+        array.push(enumObject.name);
+      } else {
+        array.push('');
+      }
+    }
+  }
+  return array;
+}
+function getEnumByValue(enumEntry, value) {
+  for (const enumValue of enumEntry.values) {
+    if (enumValue.value === value) {
+      return enumValue;
+    }
+  }
+  return null;
+}
+
+var EXT_structural_metadata = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    decode: decode$8,
+    name: name$9
+});
+
+const EXT_FEATURE_METADATA_NAME = 'EXT_feature_metadata';
+const name$8 = EXT_FEATURE_METADATA_NAME;
+async function decode$7(gltfData, options) {
+  const scenegraph = new GLTFScenegraph(gltfData);
+  decodeExtFeatureMetadata(scenegraph, options);
+}
+function decodeExtFeatureMetadata(scenegraph, options) {
+  var _options$gltf, _options$gltf2;
+  if (!((_options$gltf = options.gltf) !== null && _options$gltf !== void 0 && _options$gltf.loadBuffers)) {
+    return;
+  }
+  const extension = scenegraph.getExtension(EXT_FEATURE_METADATA_NAME);
+  if (!extension) {
+    return;
+  }
+  if ((_options$gltf2 = options.gltf) !== null && _options$gltf2 !== void 0 && _options$gltf2.loadImages) {
+    decodePropertyTextures(scenegraph, extension);
+  }
+  decodePropertyTables(scenegraph, extension);
+}
+function decodePropertyTextures(scenegraph, extension) {
+  const schema = extension.schema;
+  if (!schema) {
+    return;
+  }
+  const schemaClasses = schema.classes;
+  const {
+    featureTextures
+  } = extension;
+  if (schemaClasses && featureTextures) {
+    for (const schemaName in schemaClasses) {
+      const schemaClass = schemaClasses[schemaName];
+      const featureTexture = findFeatureTextureByClass(featureTextures, schemaName);
+      if (featureTexture) {
+        handleFeatureTextureProperties(scenegraph, featureTexture, schemaClass);
+      }
+    }
+  }
+}
+function decodePropertyTables(scenegraph, extension) {
+  const schema = extension.schema;
+  if (!schema) {
+    return;
+  }
+  const schemaClasses = schema.classes;
+  const propertyTables = extension.featureTables;
+  if (schemaClasses && propertyTables) {
+    for (const schemaName in schemaClasses) {
+      const propertyTable = findPropertyTableByClass(propertyTables, schemaName);
+      if (propertyTable) {
+        processPropertyTable(scenegraph, schema, propertyTable);
+      }
+    }
+  }
+}
+function findPropertyTableByClass(propertyTables, schemaClassName) {
+  for (const propertyTableName in propertyTables) {
+    const propertyTable = propertyTables[propertyTableName];
+    if (propertyTable.class === schemaClassName) {
+      return propertyTable;
+    }
+  }
+  return null;
+}
+function findFeatureTextureByClass(featureTextures, schemaClassName) {
+  for (const featureTexturesName in featureTextures) {
+    const featureTable = featureTextures[featureTexturesName];
+    if (featureTable.class === schemaClassName) {
+      return featureTable;
+    }
+  }
+  return null;
+}
+function processPropertyTable(scenegraph, schema, propertyTable) {
+  var _schema$classes;
+  if (!propertyTable.class) {
+    return;
+  }
+  const schemaClass = (_schema$classes = schema.classes) === null || _schema$classes === void 0 ? void 0 : _schema$classes[propertyTable.class];
+  if (!schemaClass) {
+    throw new Error(`Incorrect data in the EXT_structural_metadata extension: no schema class with name ${propertyTable.class}`);
+  }
+  const numberOfElements = propertyTable.count;
+  for (const propertyName in schemaClass.properties) {
+    var _propertyTable$proper;
+    const classProperty = schemaClass.properties[propertyName];
+    const propertyTableProperty = (_propertyTable$proper = propertyTable.properties) === null || _propertyTable$proper === void 0 ? void 0 : _propertyTable$proper[propertyName];
+    if (propertyTableProperty) {
+      const data = getPropertyDataFromBinarySource(scenegraph, schema, classProperty, numberOfElements, propertyTableProperty);
+      propertyTableProperty.data = data;
+    }
+  }
+}
+function handleFeatureTextureProperties(scenegraph, featureTexture, schemaClass) {
+  const attributeName = featureTexture.class;
+  for (const propertyName in schemaClass.properties) {
+    var _featureTexture$prope;
+    const featureTextureProperty = featureTexture === null || featureTexture === void 0 ? void 0 : (_featureTexture$prope = featureTexture.properties) === null || _featureTexture$prope === void 0 ? void 0 : _featureTexture$prope[propertyName];
+    if (featureTextureProperty) {
+      const data = getPropertyDataFromTexture(scenegraph, featureTextureProperty, attributeName);
+      featureTextureProperty.data = data;
+    }
+  }
+}
+function getPropertyDataFromBinarySource(scenegraph, schema, classProperty, numberOfFeatures, featureTableProperty) {
+  let data = [];
+  const bufferView = featureTableProperty.bufferView;
+  const dataArray = scenegraph.getTypedArrayForBufferView(bufferView);
+  const arrayOffsets = getArrayOffsetsForProperty(scenegraph, classProperty, featureTableProperty, numberOfFeatures);
+  const stringOffsets = getStringOffsetsForProperty(scenegraph, classProperty, featureTableProperty, numberOfFeatures);
+  if (classProperty.type === 'STRING' || classProperty.componentType === 'STRING') {
+    data = getPropertyDataString(numberOfFeatures, dataArray, arrayOffsets, stringOffsets);
+  } else if (isNumericProperty(classProperty)) {
+    data = getPropertyDataNumeric(classProperty, numberOfFeatures, dataArray, arrayOffsets);
+  }
+  return data;
+}
+function getArrayOffsetsForProperty(scenegraph, classProperty, propertyTableProperty, numberOfElements) {
+  if (classProperty.type === 'ARRAY' && typeof classProperty.componentCount === 'undefined' && typeof propertyTableProperty.arrayOffsetBufferView !== 'undefined') {
+    return getOffsetsForProperty(scenegraph, propertyTableProperty.arrayOffsetBufferView, propertyTableProperty.offsetType || 'UINT32', numberOfElements);
+  }
+  return null;
+}
+function getStringOffsetsForProperty(scenegraph, classProperty, propertyTableProperty, numberOfElements) {
+  if (typeof propertyTableProperty.stringOffsetBufferView !== 'undefined') {
+    return getOffsetsForProperty(scenegraph, propertyTableProperty.stringOffsetBufferView, propertyTableProperty.offsetType || 'UINT32', numberOfElements);
+  }
+  return null;
+}
+function isNumericProperty(schemaProperty) {
+  const types = ['UINT8', 'INT16', 'UINT16', 'INT32', 'UINT32', 'INT64', 'UINT64', 'FLOAT32', 'FLOAT64'];
+  return types.includes(schemaProperty.type) || typeof schemaProperty.componentType !== 'undefined' && types.includes(schemaProperty.componentType);
+}
+function getPropertyDataNumeric(classProperty, numberOfElements, valuesDataBytes, arrayOffsets) {
+  const isArray = classProperty.type === 'ARRAY';
+  const arrayCount = classProperty.componentCount;
+  const attributeType = 'SCALAR';
+  const componentType = classProperty.componentType || classProperty.type;
+  const elementSize = getArrayElementByteSize(attributeType, componentType);
+  const elementCount = valuesDataBytes.byteLength / elementSize;
+  const valuesData = convertRawBufferToMetadataArray(valuesDataBytes, attributeType, componentType, elementCount);
+  if (isArray) {
+    if (arrayOffsets) {
+      return parseVariableLengthArrayNumeric(valuesData, numberOfElements, arrayOffsets, valuesDataBytes.length, elementSize);
+    }
+    if (arrayCount) {
+      return parseFixedLengthArrayNumeric(valuesData, numberOfElements, arrayCount);
+    }
+    return [];
+  }
+  return valuesData;
+}
+function getPropertyDataFromTexture(scenegraph, featureTextureProperty, attributeName) {
+  const json = scenegraph.gltf.json;
+  if (!json.meshes) {
+    return [];
+  }
+  const featureTextureTable = [];
+  for (const mesh of json.meshes) {
+    for (const primitive of mesh.primitives) {
+      processPrimitiveTextures(scenegraph, attributeName, featureTextureProperty, featureTextureTable, primitive);
+    }
+  }
+  return featureTextureTable;
+}
+function processPrimitiveTextures(scenegraph, attributeName, featureTextureProperty, featureTextureTable, primitive) {
+  const textureInfoTopLevel = {
+    channels: featureTextureProperty.channels,
+    ...featureTextureProperty.texture
+  };
+  const propertyData = getPrimitiveTextureData(scenegraph, textureInfoTopLevel, primitive);
+  if (!propertyData) {
+    return;
+  }
+  primitivePropertyDataToAttributes(scenegraph, attributeName, propertyData, featureTextureTable, primitive);
+}
+
+var EXT_feature_metadata = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    decode: decode$7,
+    name: name$8
+});
+
+const VERSION$1 = typeof __VERSION__ !== 'undefined' ? __VERSION__ : 'latest';
+
+const VERSION = typeof __VERSION__ !== 'undefined' ? __VERSION__ : 'latest';
+
+const BASIS_EXTERNAL_LIBRARIES = {
+  TRANSCODER: 'basis_transcoder.js',
+  TRANSCODER_WASM: 'basis_transcoder.wasm',
+  ENCODER: 'basis_encoder.js',
+  ENCODER_WASM: 'basis_encoder.wasm'
+};
+let loadBasisTranscoderPromise;
+async function loadBasisTranscoderModule(options) {
+  const modules = options.modules || {};
+  if (modules.basis) {
+    return modules.basis;
+  }
+  loadBasisTranscoderPromise = loadBasisTranscoderPromise || loadBasisTranscoder(options);
+  return await loadBasisTranscoderPromise;
+}
+async function loadBasisTranscoder(options) {
+  let BASIS = null;
+  let wasmBinary = null;
+  [BASIS, wasmBinary] = await Promise.all([await loadLibrary(BASIS_EXTERNAL_LIBRARIES.TRANSCODER, 'textures', options), await loadLibrary(BASIS_EXTERNAL_LIBRARIES.TRANSCODER_WASM, 'textures', options)]);
+  BASIS = BASIS || globalThis.BASIS;
+  return await initializeBasisTranscoderModule(BASIS, wasmBinary);
+}
+function initializeBasisTranscoderModule(BasisModule, wasmBinary) {
+  const options = {};
+  if (wasmBinary) {
+    options.wasmBinary = wasmBinary;
+  }
+  return new Promise(resolve => {
+    BasisModule(options).then(module => {
+      const {
+        BasisFile,
+        initializeBasis
+      } = module;
+      initializeBasis();
+      resolve({
+        BasisFile
+      });
+    });
+  });
+}
+let loadBasisEncoderPromise;
+async function loadBasisEncoderModule(options) {
+  const modules = options.modules || {};
+  if (modules.basisEncoder) {
+    return modules.basisEncoder;
+  }
+  loadBasisEncoderPromise = loadBasisEncoderPromise || loadBasisEncoder(options);
+  return await loadBasisEncoderPromise;
+}
+async function loadBasisEncoder(options) {
+  let BASIS_ENCODER = null;
+  let wasmBinary = null;
+  [BASIS_ENCODER, wasmBinary] = await Promise.all([await loadLibrary(BASIS_EXTERNAL_LIBRARIES.ENCODER, 'textures', options), await loadLibrary(BASIS_EXTERNAL_LIBRARIES.ENCODER_WASM, 'textures', options)]);
+  BASIS_ENCODER = BASIS_ENCODER || globalThis.BASIS;
+  return await initializeBasisEncoderModule(BASIS_ENCODER, wasmBinary);
+}
+function initializeBasisEncoderModule(BasisEncoderModule, wasmBinary) {
+  const options = {};
+  if (wasmBinary) {
+    options.wasmBinary = wasmBinary;
+  }
+  return new Promise(resolve => {
+    BasisEncoderModule(options).then(module => {
+      const {
+        BasisFile,
+        KTX2File,
+        initializeBasis,
+        BasisEncoder
+      } = module;
+      initializeBasis();
+      resolve({
+        BasisFile,
+        KTX2File,
+        BasisEncoder
+      });
+    });
+  });
+}
+
+const GL_EXTENSIONS_CONSTANTS = {
+  COMPRESSED_RGB_S3TC_DXT1_EXT: 0x83f0,
+  COMPRESSED_RGBA_S3TC_DXT1_EXT: 0x83f1,
+  COMPRESSED_RGBA_S3TC_DXT3_EXT: 0x83f2,
+  COMPRESSED_RGBA_S3TC_DXT5_EXT: 0x83f3,
+  COMPRESSED_R11_EAC: 0x9270,
+  COMPRESSED_SIGNED_R11_EAC: 0x9271,
+  COMPRESSED_RG11_EAC: 0x9272,
+  COMPRESSED_SIGNED_RG11_EAC: 0x9273,
+  COMPRESSED_RGB8_ETC2: 0x9274,
+  COMPRESSED_RGBA8_ETC2_EAC: 0x9275,
+  COMPRESSED_SRGB8_ETC2: 0x9276,
+  COMPRESSED_SRGB8_ALPHA8_ETC2_EAC: 0x9277,
+  COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2: 0x9278,
+  COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2: 0x9279,
+  COMPRESSED_RGB_PVRTC_4BPPV1_IMG: 0x8c00,
+  COMPRESSED_RGBA_PVRTC_4BPPV1_IMG: 0x8c02,
+  COMPRESSED_RGB_PVRTC_2BPPV1_IMG: 0x8c01,
+  COMPRESSED_RGBA_PVRTC_2BPPV1_IMG: 0x8c03,
+  COMPRESSED_RGB_ETC1_WEBGL: 0x8d64,
+  COMPRESSED_RGB_ATC_WEBGL: 0x8c92,
+  COMPRESSED_RGBA_ATC_EXPLICIT_ALPHA_WEBGL: 0x8c93,
+  COMPRESSED_RGBA_ATC_INTERPOLATED_ALPHA_WEBGL: 0x87ee,
+  COMPRESSED_RGBA_ASTC_4X4_KHR: 0x93b0,
+  COMPRESSED_RGBA_ASTC_5X4_KHR: 0x93b1,
+  COMPRESSED_RGBA_ASTC_5X5_KHR: 0x93b2,
+  COMPRESSED_RGBA_ASTC_6X5_KHR: 0x93b3,
+  COMPRESSED_RGBA_ASTC_6X6_KHR: 0x93b4,
+  COMPRESSED_RGBA_ASTC_8X5_KHR: 0x93b5,
+  COMPRESSED_RGBA_ASTC_8X6_KHR: 0x93b6,
+  COMPRESSED_RGBA_ASTC_8X8_KHR: 0x93b7,
+  COMPRESSED_RGBA_ASTC_10X5_KHR: 0x93b8,
+  COMPRESSED_RGBA_ASTC_10X6_KHR: 0x93b9,
+  COMPRESSED_RGBA_ASTC_10X8_KHR: 0x93ba,
+  COMPRESSED_RGBA_ASTC_10X10_KHR: 0x93bb,
+  COMPRESSED_RGBA_ASTC_12X10_KHR: 0x93bc,
+  COMPRESSED_RGBA_ASTC_12X12_KHR: 0x93bd,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_4X4_KHR: 0x93d0,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_5X4_KHR: 0x93d1,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_5X5_KHR: 0x93d2,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_6X5_KHR: 0x93d3,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_6X6_KHR: 0x93d4,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_8X5_KHR: 0x93d5,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_8X6_KHR: 0x93d6,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_8X8_KHR: 0x93d7,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_10X5_KHR: 0x93d8,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_10X6_KHR: 0x93d9,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_10X8_KHR: 0x93da,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_10X10_KHR: 0x93db,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_12X10_KHR: 0x93dc,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_12X12_KHR: 0x93dd,
+  COMPRESSED_RED_RGTC1_EXT: 0x8dbb,
+  COMPRESSED_SIGNED_RED_RGTC1_EXT: 0x8dbc,
+  COMPRESSED_RED_GREEN_RGTC2_EXT: 0x8dbd,
+  COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT: 0x8dbe,
+  COMPRESSED_SRGB_S3TC_DXT1_EXT: 0x8c4c,
+  COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT: 0x8c4d,
+  COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT: 0x8c4e,
+  COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT: 0x8c4f
+};
+
+const BROWSER_PREFIXES = ['', 'WEBKIT_', 'MOZ_'];
+const WEBGL_EXTENSIONS = {
+  WEBGL_compressed_texture_s3tc: 'dxt',
+  WEBGL_compressed_texture_s3tc_srgb: 'dxt-srgb',
+  WEBGL_compressed_texture_etc1: 'etc1',
+  WEBGL_compressed_texture_etc: 'etc2',
+  WEBGL_compressed_texture_pvrtc: 'pvrtc',
+  WEBGL_compressed_texture_atc: 'atc',
+  WEBGL_compressed_texture_astc: 'astc',
+  EXT_texture_compression_rgtc: 'rgtc'
+};
+let formats = null;
+function getSupportedGPUTextureFormats(gl) {
+  if (!formats) {
+    gl = gl || getWebGLContext() || undefined;
+    formats = new Set();
+    for (const prefix of BROWSER_PREFIXES) {
+      for (const extension in WEBGL_EXTENSIONS) {
+        if (gl && gl.getExtension(`${prefix}${extension}`)) {
+          const gpuTextureFormat = WEBGL_EXTENSIONS[extension];
+          formats.add(gpuTextureFormat);
+        }
+      }
+    }
+  }
+  return formats;
+}
+function getWebGLContext() {
+  try {
+    const canvas = document.createElement('canvas');
+    return canvas.getContext('webgl');
+  } catch (error) {
+    return null;
+  }
+}
+
+var n,i,s,a,r,o,l,f;!function(t){t[t.NONE=0]="NONE",t[t.BASISLZ=1]="BASISLZ",t[t.ZSTD=2]="ZSTD",t[t.ZLIB=3]="ZLIB";}(n||(n={})),function(t){t[t.BASICFORMAT=0]="BASICFORMAT";}(i||(i={})),function(t){t[t.UNSPECIFIED=0]="UNSPECIFIED",t[t.ETC1S=163]="ETC1S",t[t.UASTC=166]="UASTC";}(s||(s={})),function(t){t[t.UNSPECIFIED=0]="UNSPECIFIED",t[t.SRGB=1]="SRGB";}(a||(a={})),function(t){t[t.UNSPECIFIED=0]="UNSPECIFIED",t[t.LINEAR=1]="LINEAR",t[t.SRGB=2]="SRGB",t[t.ITU=3]="ITU",t[t.NTSC=4]="NTSC",t[t.SLOG=5]="SLOG",t[t.SLOG2=6]="SLOG2";}(r||(r={})),function(t){t[t.ALPHA_STRAIGHT=0]="ALPHA_STRAIGHT",t[t.ALPHA_PREMULTIPLIED=1]="ALPHA_PREMULTIPLIED";}(o||(o={})),function(t){t[t.RGB=0]="RGB",t[t.RRR=3]="RRR",t[t.GGG=4]="GGG",t[t.AAA=15]="AAA";}(l||(l={})),function(t){t[t.RGB=0]="RGB",t[t.RGBA=3]="RGBA",t[t.RRR=4]="RRR",t[t.RRRG=5]="RRRG";}(f||(f={}));
+
+const KTX2_ID = [0xab, 0x4b, 0x54, 0x58, 0x20, 0x32, 0x30, 0xbb, 0x0d, 0x0a, 0x1a, 0x0a];
+function isKTX(data) {
+  const id = new Uint8Array(data);
+  const notKTX = id.byteLength < KTX2_ID.length || id[0] !== KTX2_ID[0] || id[1] !== KTX2_ID[1] || id[2] !== KTX2_ID[2] || id[3] !== KTX2_ID[3] || id[4] !== KTX2_ID[4] || id[5] !== KTX2_ID[5] || id[6] !== KTX2_ID[6] || id[7] !== KTX2_ID[7] || id[8] !== KTX2_ID[8] || id[9] !== KTX2_ID[9] || id[10] !== KTX2_ID[10] || id[11] !== KTX2_ID[11];
+  return !notKTX;
+}
+
+const OutputFormat = {
+  etc1: {
+    basisFormat: 0,
+    compressed: true,
+    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGB_ETC1_WEBGL
+  },
+  etc2: {
+    basisFormat: 1,
+    compressed: true
+  },
+  bc1: {
+    basisFormat: 2,
+    compressed: true,
+    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGB_S3TC_DXT1_EXT
+  },
+  bc3: {
+    basisFormat: 3,
+    compressed: true,
+    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGBA_S3TC_DXT5_EXT
+  },
+  bc4: {
+    basisFormat: 4,
+    compressed: true
+  },
+  bc5: {
+    basisFormat: 5,
+    compressed: true
+  },
+  'bc7-m6-opaque-only': {
+    basisFormat: 6,
+    compressed: true
+  },
+  'bc7-m5': {
+    basisFormat: 7,
+    compressed: true
+  },
+  'pvrtc1-4-rgb': {
+    basisFormat: 8,
+    compressed: true,
+    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGB_PVRTC_4BPPV1_IMG
+  },
+  'pvrtc1-4-rgba': {
+    basisFormat: 9,
+    compressed: true,
+    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG
+  },
+  'astc-4x4': {
+    basisFormat: 10,
+    compressed: true,
+    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGBA_ASTC_4X4_KHR
+  },
+  'atc-rgb': {
+    basisFormat: 11,
+    compressed: true
+  },
+  'atc-rgba-interpolated-alpha': {
+    basisFormat: 12,
+    compressed: true
+  },
+  rgba32: {
+    basisFormat: 13,
+    compressed: false
+  },
+  rgb565: {
+    basisFormat: 14,
+    compressed: false
+  },
+  bgr565: {
+    basisFormat: 15,
+    compressed: false
+  },
+  rgba4444: {
+    basisFormat: 16,
+    compressed: false
+  }
+};
+async function parseBasis(data, options) {
+  if (options.basis.containerFormat === 'auto') {
+    if (isKTX(data)) {
+      const fileConstructors = await loadBasisEncoderModule(options);
+      return parseKTX2File(fileConstructors.KTX2File, data, options);
+    }
+    const {
+      BasisFile
+    } = await loadBasisTranscoderModule(options);
+    return parseBasisFile(BasisFile, data, options);
+  }
+  switch (options.basis.module) {
+    case 'encoder':
+      const fileConstructors = await loadBasisEncoderModule(options);
+      switch (options.basis.containerFormat) {
+        case 'ktx2':
+          return parseKTX2File(fileConstructors.KTX2File, data, options);
+        case 'basis':
+        default:
+          return parseBasisFile(fileConstructors.BasisFile, data, options);
+      }
+    case 'transcoder':
+    default:
+      const {
+        BasisFile
+      } = await loadBasisTranscoderModule(options);
+      return parseBasisFile(BasisFile, data, options);
+  }
+}
+function parseBasisFile(BasisFile, data, options) {
+  const basisFile = new BasisFile(new Uint8Array(data));
+  try {
+    if (!basisFile.startTranscoding()) {
+      throw new Error('Failed to start basis transcoding');
+    }
+    const imageCount = basisFile.getNumImages();
+    const images = [];
+    for (let imageIndex = 0; imageIndex < imageCount; imageIndex++) {
+      const levelsCount = basisFile.getNumLevels(imageIndex);
+      const levels = [];
+      for (let levelIndex = 0; levelIndex < levelsCount; levelIndex++) {
+        levels.push(transcodeImage(basisFile, imageIndex, levelIndex, options));
+      }
+      images.push(levels);
+    }
+    return images;
+  } finally {
+    basisFile.close();
+    basisFile.delete();
+  }
+}
+function transcodeImage(basisFile, imageIndex, levelIndex, options) {
+  const width = basisFile.getImageWidth(imageIndex, levelIndex);
+  const height = basisFile.getImageHeight(imageIndex, levelIndex);
+  const hasAlpha = basisFile.getHasAlpha();
+  const {
+    compressed,
+    format,
+    basisFormat
+  } = getBasisOptions(options, hasAlpha);
+  const decodedSize = basisFile.getImageTranscodedSizeInBytes(imageIndex, levelIndex, basisFormat);
+  const decodedData = new Uint8Array(decodedSize);
+  if (!basisFile.transcodeImage(decodedData, imageIndex, levelIndex, basisFormat, 0, 0)) {
+    throw new Error('failed to start Basis transcoding');
+  }
+  return {
+    width,
+    height,
+    data: decodedData,
+    compressed,
+    format,
+    hasAlpha
+  };
+}
+function parseKTX2File(KTX2File, data, options) {
+  const ktx2File = new KTX2File(new Uint8Array(data));
+  try {
+    if (!ktx2File.startTranscoding()) {
+      throw new Error('failed to start KTX2 transcoding');
+    }
+    const levelsCount = ktx2File.getLevels();
+    const levels = [];
+    for (let levelIndex = 0; levelIndex < levelsCount; levelIndex++) {
+      levels.push(transcodeKTX2Image(ktx2File, levelIndex, options));
+      break;
+    }
+    return [levels];
+  } finally {
+    ktx2File.close();
+    ktx2File.delete();
+  }
+}
+function transcodeKTX2Image(ktx2File, levelIndex, options) {
+  const {
+    alphaFlag,
+    height,
+    width
+  } = ktx2File.getImageLevelInfo(levelIndex, 0, 0);
+  const {
+    compressed,
+    format,
+    basisFormat
+  } = getBasisOptions(options, alphaFlag);
+  const decodedSize = ktx2File.getImageTranscodedSizeInBytes(levelIndex, 0, 0, basisFormat);
+  const decodedData = new Uint8Array(decodedSize);
+  if (!ktx2File.transcodeImage(decodedData, levelIndex, 0, 0, basisFormat, 0, -1, -1)) {
+    throw new Error('Failed to transcode KTX2 image');
+  }
+  return {
+    width,
+    height,
+    data: decodedData,
+    compressed,
+    levelSize: decodedSize,
+    hasAlpha: alphaFlag,
+    format
+  };
+}
+function getBasisOptions(options, hasAlpha) {
+  let format = options && options.basis && options.basis.format;
+  if (format === 'auto') {
+    format = selectSupportedBasisFormat();
+  }
+  if (typeof format === 'object') {
+    format = hasAlpha ? format.alpha : format.noAlpha;
+  }
+  format = format.toLowerCase();
+  return OutputFormat[format];
+}
+function selectSupportedBasisFormat() {
+  const supportedFormats = getSupportedGPUTextureFormats();
+  if (supportedFormats.has('astc')) {
+    return 'astc-4x4';
+  } else if (supportedFormats.has('dxt')) {
+    return {
+      alpha: 'bc3',
+      noAlpha: 'bc1'
+    };
+  } else if (supportedFormats.has('pvrtc')) {
+    return {
+      alpha: 'pvrtc1-4-rgba',
+      noAlpha: 'pvrtc1-4-rgb'
+    };
+  } else if (supportedFormats.has('etc1')) {
+    return 'etc1';
+  } else if (supportedFormats.has('etc2')) {
+    return 'etc2';
+  }
+  return 'rgb565';
+}
+
+const BasisWorkerLoader = {
+  name: 'Basis',
+  id: 'basis',
+  module: 'textures',
+  version: VERSION,
+  worker: true,
+  extensions: ['basis', 'ktx2'],
+  mimeTypes: ['application/octet-stream', 'image/ktx2'],
+  tests: ['sB'],
+  binary: true,
+  options: {
+    basis: {
+      format: 'auto',
+      libraryPath: 'libs/',
+      containerFormat: 'auto',
+      module: 'transcoder'
+    }
+  }
+};
+const BasisLoader = {
+  ...BasisWorkerLoader,
+  parse: parseBasis
+};
+
+const LITTLE_ENDIAN = true;
+const MAGIC_glTF = 0x676c5446;
+const GLB_FILE_HEADER_SIZE = 12;
+const GLB_CHUNK_HEADER_SIZE = 8;
+const GLB_CHUNK_TYPE_JSON = 0x4e4f534a;
+const GLB_CHUNK_TYPE_BIN = 0x004e4942;
+const GLB_V1_CONTENT_FORMAT_JSON = 0x0;
+const GLB_CHUNK_TYPE_JSON_XVIZ_DEPRECATED = 0;
+const GLB_CHUNK_TYPE_BIX_XVIZ_DEPRECATED = 1;
+function getMagicString(dataView) {
+  let byteOffset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  return `\
+${String.fromCharCode(dataView.getUint8(byteOffset + 0))}\
+${String.fromCharCode(dataView.getUint8(byteOffset + 1))}\
+${String.fromCharCode(dataView.getUint8(byteOffset + 2))}\
+${String.fromCharCode(dataView.getUint8(byteOffset + 3))}`;
+}
+function isGLB(arrayBuffer) {
+  let byteOffset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  const dataView = new DataView(arrayBuffer);
+  const {
+    magic = MAGIC_glTF
+  } = options;
+  const magic1 = dataView.getUint32(byteOffset, false);
+  return magic1 === magic || magic1 === MAGIC_glTF;
+}
+function parseGLBSync(glb, arrayBuffer) {
+  let byteOffset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  const dataView = new DataView(arrayBuffer);
+  const type = getMagicString(dataView, byteOffset + 0);
+  const version = dataView.getUint32(byteOffset + 4, LITTLE_ENDIAN);
+  const byteLength = dataView.getUint32(byteOffset + 8, LITTLE_ENDIAN);
+  Object.assign(glb, {
+    header: {
+      byteOffset,
+      byteLength,
+      hasBinChunk: false
+    },
+    type,
+    version,
+    json: {},
+    binChunks: []
+  });
+  byteOffset += GLB_FILE_HEADER_SIZE;
+  switch (glb.version) {
+    case 1:
+      return parseGLBV1(glb, dataView, byteOffset);
+    case 2:
+      return parseGLBV2(glb, dataView, byteOffset, {});
+    default:
+      throw new Error(`Invalid GLB version ${glb.version}. Only supports version 1 and 2.`);
+  }
+}
+function parseGLBV1(glb, dataView, byteOffset) {
+  assert$6(glb.header.byteLength > GLB_FILE_HEADER_SIZE + GLB_CHUNK_HEADER_SIZE);
+  const contentLength = dataView.getUint32(byteOffset + 0, LITTLE_ENDIAN);
+  const contentFormat = dataView.getUint32(byteOffset + 4, LITTLE_ENDIAN);
+  byteOffset += GLB_CHUNK_HEADER_SIZE;
+  assert$6(contentFormat === GLB_V1_CONTENT_FORMAT_JSON);
+  parseJSONChunk(glb, dataView, byteOffset, contentLength);
+  byteOffset += contentLength;
+  byteOffset += parseBINChunk(glb, dataView, byteOffset, glb.header.byteLength);
+  return byteOffset;
+}
+function parseGLBV2(glb, dataView, byteOffset, options) {
+  assert$6(glb.header.byteLength > GLB_FILE_HEADER_SIZE + GLB_CHUNK_HEADER_SIZE);
+  parseGLBChunksSync(glb, dataView, byteOffset, options);
+  return byteOffset + glb.header.byteLength;
+}
+function parseGLBChunksSync(glb, dataView, byteOffset, options) {
+  while (byteOffset + 8 <= glb.header.byteLength) {
+    const chunkLength = dataView.getUint32(byteOffset + 0, LITTLE_ENDIAN);
+    const chunkFormat = dataView.getUint32(byteOffset + 4, LITTLE_ENDIAN);
+    byteOffset += GLB_CHUNK_HEADER_SIZE;
+    switch (chunkFormat) {
+      case GLB_CHUNK_TYPE_JSON:
+        parseJSONChunk(glb, dataView, byteOffset, chunkLength);
+        break;
+      case GLB_CHUNK_TYPE_BIN:
+        parseBINChunk(glb, dataView, byteOffset, chunkLength);
+        break;
+      case GLB_CHUNK_TYPE_JSON_XVIZ_DEPRECATED:
+        if (!options.strict) {
+          parseJSONChunk(glb, dataView, byteOffset, chunkLength);
+        }
+        break;
+      case GLB_CHUNK_TYPE_BIX_XVIZ_DEPRECATED:
+        if (!options.strict) {
+          parseBINChunk(glb, dataView, byteOffset, chunkLength);
+        }
+        break;
+    }
+    byteOffset += padToNBytes(chunkLength, 4);
+  }
+  return byteOffset;
+}
+function parseJSONChunk(glb, dataView, byteOffset, chunkLength) {
+  const jsonChunk = new Uint8Array(dataView.buffer, byteOffset, chunkLength);
+  const textDecoder = new TextDecoder('utf8');
+  const jsonText = textDecoder.decode(jsonChunk);
+  glb.json = JSON.parse(jsonText);
+  return padToNBytes(chunkLength, 4);
+}
+function parseBINChunk(glb, dataView, byteOffset, chunkLength) {
+  glb.header.hasBinChunk = true;
+  glb.binChunks.push({
+    byteOffset,
+    byteLength: chunkLength,
+    arrayBuffer: dataView.buffer
+  });
+  return padToNBytes(chunkLength, 4);
+}
+
+function resolveUrl(url, options) {
+  const absolute = url.startsWith('data:') || url.startsWith('http:') || url.startsWith('https:');
+  if (absolute) {
+    return url;
+  }
+  const baseUrl = options.baseUri || options.uri;
+  if (!baseUrl) {
+    throw new Error(`'baseUri' must be provided to resolve relative url ${url}`);
+  }
+  return baseUrl.substr(0, baseUrl.lastIndexOf('/') + 1) + url;
+}
+
 const wasm_base = 'B9h9z9tFBBBF8fL9gBB9gLaaaaaFa9gEaaaB9gFaFa9gEaaaFaEMcBFFFGGGEIIILF9wFFFLEFBFKNFaFCx/IFMO/LFVK9tv9t9vq95GBt9f9f939h9z9t9f9j9h9s9s9f9jW9vq9zBBp9tv9z9o9v9wW9f9kv9j9v9kv9WvqWv94h919m9mvqBF8Z9tv9z9o9v9wW9f9kv9j9v9kv9J9u9kv94h919m9mvqBGy9tv9z9o9v9wW9f9kv9j9v9kv9J9u9kv949TvZ91v9u9jvBEn9tv9z9o9v9wW9f9kv9j9v9kv69p9sWvq9P9jWBIi9tv9z9o9v9wW9f9kv9j9v9kv69p9sWvq9R919hWBLn9tv9z9o9v9wW9f9kv9j9v9kv69p9sWvq9F949wBKI9z9iqlBOc+x8ycGBM/qQFTa8jUUUUBCU/EBlHL8kUUUUBC9+RKGXAGCFJAI9LQBCaRKAE2BBC+gF9HQBALAEAIJHOAGlAGTkUUUBRNCUoBAG9uC/wgBZHKCUGAKCUG9JyRVAECFJRICBRcGXEXAcAF9PQFAVAFAclAcAVJAF9JyRMGXGXAG9FQBAMCbJHKC9wZRSAKCIrCEJCGrRQANCUGJRfCBRbAIRTEXGXAOATlAQ9PQBCBRISEMATAQJRIGXAS9FQBCBRtCBREEXGXAOAIlCi9PQBCBRISLMANCU/CBJAEJRKGXGXGXGXGXATAECKrJ2BBAtCKZrCEZfIBFGEBMAKhB83EBAKCNJhB83EBSEMAKAI2BIAI2BBHmCKrHYAYCE6HYy86BBAKCFJAICIJAYJHY2BBAmCIrCEZHPAPCE6HPy86BBAKCGJAYAPJHY2BBAmCGrCEZHPAPCE6HPy86BBAKCEJAYAPJHY2BBAmCEZHmAmCE6Hmy86BBAKCIJAYAmJHY2BBAI2BFHmCKrHPAPCE6HPy86BBAKCLJAYAPJHY2BBAmCIrCEZHPAPCE6HPy86BBAKCKJAYAPJHY2BBAmCGrCEZHPAPCE6HPy86BBAKCOJAYAPJHY2BBAmCEZHmAmCE6Hmy86BBAKCNJAYAmJHY2BBAI2BGHmCKrHPAPCE6HPy86BBAKCVJAYAPJHY2BBAmCIrCEZHPAPCE6HPy86BBAKCcJAYAPJHY2BBAmCGrCEZHPAPCE6HPy86BBAKCMJAYAPJHY2BBAmCEZHmAmCE6Hmy86BBAKCSJAYAmJHm2BBAI2BEHICKrHYAYCE6HYy86BBAKCQJAmAYJHm2BBAICIrCEZHYAYCE6HYy86BBAKCfJAmAYJHm2BBAICGrCEZHYAYCE6HYy86BBAKCbJAmAYJHK2BBAICEZHIAICE6HIy86BBAKAIJRISGMAKAI2BNAI2BBHmCIrHYAYCb6HYy86BBAKCFJAICNJAYJHY2BBAmCbZHmAmCb6Hmy86BBAKCGJAYAmJHm2BBAI2BFHYCIrHPAPCb6HPy86BBAKCEJAmAPJHm2BBAYCbZHYAYCb6HYy86BBAKCIJAmAYJHm2BBAI2BGHYCIrHPAPCb6HPy86BBAKCLJAmAPJHm2BBAYCbZHYAYCb6HYy86BBAKCKJAmAYJHm2BBAI2BEHYCIrHPAPCb6HPy86BBAKCOJAmAPJHm2BBAYCbZHYAYCb6HYy86BBAKCNJAmAYJHm2BBAI2BIHYCIrHPAPCb6HPy86BBAKCVJAmAPJHm2BBAYCbZHYAYCb6HYy86BBAKCcJAmAYJHm2BBAI2BLHYCIrHPAPCb6HPy86BBAKCMJAmAPJHm2BBAYCbZHYAYCb6HYy86BBAKCSJAmAYJHm2BBAI2BKHYCIrHPAPCb6HPy86BBAKCQJAmAPJHm2BBAYCbZHYAYCb6HYy86BBAKCfJAmAYJHm2BBAI2BOHICIrHYAYCb6HYy86BBAKCbJAmAYJHK2BBAICbZHIAICb6HIy86BBAKAIJRISFMAKAI8pBB83BBAKCNJAICNJ8pBB83BBAICTJRIMAtCGJRtAECTJHEAS9JQBMMGXAIQBCBRISEMGXAM9FQBANAbJ2BBRtCBRKAfREEXAEANCU/CBJAKJ2BBHTCFrCBATCFZl9zAtJHt86BBAEAGJREAKCFJHKAM9HQBMMAfCFJRfAIRTAbCFJHbAG9HQBMMABAcAG9sJANCUGJAMAG9sTkUUUBpANANCUGJAMCaJAG9sJAGTkUUUBpMAMCBAIyAcJRcAIQBMC9+RKSFMCBC99AOAIlAGCAAGCA9Ly6yRKMALCU/EBJ8kUUUUBAKM+OmFTa8jUUUUBCoFlHL8kUUUUBC9+RKGXAFCE9uHOCtJAI9LQBCaRKAE2BBHNC/wFZC/gF9HQBANCbZHVCF9LQBALCoBJCgFCUFT+JUUUBpALC84Jha83EBALC8wJha83EBALC8oJha83EBALCAJha83EBALCiJha83EBALCTJha83EBALha83ENALha83EBAEAIJC9wJRcAECFJHNAOJRMGXAF9FQBCQCbAVCF6yRSABRECBRVCBRQCBRfCBRICBRKEXGXAMAcuQBC9+RKSEMGXGXAN2BBHOC/vF9LQBALCoBJAOCIrCa9zAKJCbZCEWJHb8oGIRTAb8oGBRtGXAOCbZHbAS9PQBALAOCa9zAIJCbZCGWJ8oGBAVAbyROAb9FRbGXGXAGCG9HQBABAt87FBABCIJAO87FBABCGJAT87FBSFMAEAtjGBAECNJAOjGBAECIJATjGBMAVAbJRVALCoBJAKCEWJHmAOjGBAmATjGIALAICGWJAOjGBALCoBJAKCFJCbZHKCEWJHTAtjGBATAOjGIAIAbJRIAKCFJRKSGMGXGXAbCb6QBAQAbJAbC989zJCFJRQSFMAM1BBHbCgFZROGXGXAbCa9MQBAMCFJRMSFMAM1BFHbCgBZCOWAOCgBZqROGXAbCa9MQBAMCGJRMSFMAM1BGHbCgBZCfWAOqROGXAbCa9MQBAMCEJRMSFMAM1BEHbCgBZCdWAOqROGXAbCa9MQBAMCIJRMSFMAM2BIC8cWAOqROAMCLJRMMAOCFrCBAOCFZl9zAQJRQMGXGXAGCG9HQBABAt87FBABCIJAQ87FBABCGJAT87FBSFMAEAtjGBAECNJAQjGBAECIJATjGBMALCoBJAKCEWJHOAQjGBAOATjGIALAICGWJAQjGBALCoBJAKCFJCbZHKCEWJHOAtjGBAOAQjGIAICFJRIAKCFJRKSFMGXAOCDF9LQBALAIAcAOCbZJ2BBHbCIrHTlCbZCGWJ8oGBAVCFJHtATyROALAIAblCbZCGWJ8oGBAtAT9FHmJHtAbCbZHTyRbAT9FRTGXGXAGCG9HQBABAV87FBABCIJAb87FBABCGJAO87FBSFMAEAVjGBAECNJAbjGBAECIJAOjGBMALAICGWJAVjGBALCoBJAKCEWJHYAOjGBAYAVjGIALAICFJHICbZCGWJAOjGBALCoBJAKCFJCbZCEWJHYAbjGBAYAOjGIALAIAmJCbZHICGWJAbjGBALCoBJAKCGJCbZHKCEWJHOAVjGBAOAbjGIAKCFJRKAIATJRIAtATJRVSFMAVCBAM2BBHYyHTAOC/+F6HPJROAYCbZRtGXGXAYCIrHmQBAOCFJRbSFMAORbALAIAmlCbZCGWJ8oGBROMGXGXAtQBAbCFJRVSFMAbRVALAIAYlCbZCGWJ8oGBRbMGXGXAP9FQBAMCFJRYSFMAM1BFHYCgFZRTGXGXAYCa9MQBAMCGJRYSFMAM1BGHYCgBZCOWATCgBZqRTGXAYCa9MQBAMCEJRYSFMAM1BEHYCgBZCfWATqRTGXAYCa9MQBAMCIJRYSFMAM1BIHYCgBZCdWATqRTGXAYCa9MQBAMCLJRYSFMAMCKJRYAM2BLC8cWATqRTMATCFrCBATCFZl9zAQJHQRTMGXGXAmCb6QBAYRPSFMAY1BBHMCgFZROGXGXAMCa9MQBAYCFJRPSFMAY1BFHMCgBZCOWAOCgBZqROGXAMCa9MQBAYCGJRPSFMAY1BGHMCgBZCfWAOqROGXAMCa9MQBAYCEJRPSFMAY1BEHMCgBZCdWAOqROGXAMCa9MQBAYCIJRPSFMAYCLJRPAY2BIC8cWAOqROMAOCFrCBAOCFZl9zAQJHQROMGXGXAtCb6QBAPRMSFMAP1BBHMCgFZRbGXGXAMCa9MQBAPCFJRMSFMAP1BFHMCgBZCOWAbCgBZqRbGXAMCa9MQBAPCGJRMSFMAP1BGHMCgBZCfWAbqRbGXAMCa9MQBAPCEJRMSFMAP1BEHMCgBZCdWAbqRbGXAMCa9MQBAPCIJRMSFMAPCLJRMAP2BIC8cWAbqRbMAbCFrCBAbCFZl9zAQJHQRbMGXGXAGCG9HQBABAT87FBABCIJAb87FBABCGJAO87FBSFMAEATjGBAECNJAbjGBAECIJAOjGBMALCoBJAKCEWJHYAOjGBAYATjGIALAICGWJATjGBALCoBJAKCFJCbZCEWJHYAbjGBAYAOjGIALAICFJHICbZCGWJAOjGBALCoBJAKCGJCbZCEWJHOATjGBAOAbjGIALAIAm9FAmCb6qJHICbZCGWJAbjGBAIAt9FAtCb6qJRIAKCEJRKMANCFJRNABCKJRBAECSJREAKCbZRKAICbZRIAfCEJHfAF9JQBMMCBC99AMAc6yRKMALCoFJ8kUUUUBAKM/tIFGa8jUUUUBCTlRLC9+RKGXAFCLJAI9LQBCaRKAE2BBC/+FZC/QF9HQBALhB83ENAECFJRKAEAIJC98JREGXAF9FQBGXAGCG6QBEXGXAKAE9JQBC9+bMAK1BBHGCgFZRIGXGXAGCa9MQBAKCFJRKSFMAK1BFHGCgBZCOWAICgBZqRIGXAGCa9MQBAKCGJRKSFMAK1BGHGCgBZCfWAIqRIGXAGCa9MQBAKCEJRKSFMAK1BEHGCgBZCdWAIqRIGXAGCa9MQBAKCIJRKSFMAK2BIC8cWAIqRIAKCLJRKMALCNJAICFZCGWqHGAICGrCBAICFrCFZl9zAG8oGBJHIjGBABAIjGBABCIJRBAFCaJHFQBSGMMEXGXAKAE9JQBC9+bMAK1BBHGCgFZRIGXGXAGCa9MQBAKCFJRKSFMAK1BFHGCgBZCOWAICgBZqRIGXAGCa9MQBAKCGJRKSFMAK1BGHGCgBZCfWAIqRIGXAGCa9MQBAKCEJRKSFMAK1BEHGCgBZCdWAIqRIGXAGCa9MQBAKCIJRKSFMAK2BIC8cWAIqRIAKCLJRKMABAICGrCBAICFrCFZl9zALCNJAICFZCGWqHI8oGBJHG87FBAIAGjGBABCGJRBAFCaJHFQBMMCBC99AKAE6yRKMAKM+lLKFaF99GaG99FaG99GXGXAGCI9HQBAF9FQFEXGXGX9DBBB8/9DBBB+/ABCGJHG1BB+yAB1BBHE+yHI+L+TABCFJHL1BBHK+yHO+L+THN9DBBBB9gHVyAN9DBB/+hANAN+U9DBBBBANAVyHcAc+MHMAECa3yAI+SHIAI+UAcAMAKCa3yAO+SHcAc+U+S+S+R+VHO+U+SHN+L9DBBB9P9d9FQBAN+oRESFMCUUUU94REMAGAE86BBGXGX9DBBB8/9DBBB+/Ac9DBBBB9gyAcAO+U+SHN+L9DBBB9P9d9FQBAN+oRGSFMCUUUU94RGMALAG86BBGXGX9DBBB8/9DBBB+/AI9DBBBB9gyAIAO+U+SHN+L9DBBB9P9d9FQBAN+oRGSFMCUUUU94RGMABAG86BBABCIJRBAFCaJHFQBSGMMAF9FQBEXGXGX9DBBB8/9DBBB+/ABCIJHG8uFB+yAB8uFBHE+yHI+L+TABCGJHL8uFBHK+yHO+L+THN9DBBBB9gHVyAN9DB/+g6ANAN+U9DBBBBANAVyHcAc+MHMAECa3yAI+SHIAI+UAcAMAKCa3yAO+SHcAc+U+S+S+R+VHO+U+SHN+L9DBBB9P9d9FQBAN+oRESFMCUUUU94REMAGAE87FBGXGX9DBBB8/9DBBB+/Ac9DBBBB9gyAcAO+U+SHN+L9DBBB9P9d9FQBAN+oRGSFMCUUUU94RGMALAG87FBGXGX9DBBB8/9DBBB+/AI9DBBBB9gyAIAO+U+SHN+L9DBBB9P9d9FQBAN+oRGSFMCUUUU94RGMABAG87FBABCNJRBAFCaJHFQBMMM/SEIEaE99EaF99GXAF9FQBCBREABRIEXGXGX9D/zI818/AICKJ8uFBHLCEq+y+VHKAI8uFB+y+UHO9DB/+g6+U9DBBB8/9DBBB+/AO9DBBBB9gy+SHN+L9DBBB9P9d9FQBAN+oRVSFMCUUUU94RVMAICIJ8uFBRcAICGJ8uFBRMABALCFJCEZAEqCFWJAV87FBGXGXAKAM+y+UHN9DB/+g6+U9DBBB8/9DBBB+/AN9DBBBB9gy+SHS+L9DBBB9P9d9FQBAS+oRMSFMCUUUU94RMMABALCGJCEZAEqCFWJAM87FBGXGXAKAc+y+UHK9DB/+g6+U9DBBB8/9DBBB+/AK9DBBBB9gy+SHS+L9DBBB9P9d9FQBAS+oRcSFMCUUUU94RcMABALCaJCEZAEqCFWJAc87FBGXGX9DBBU8/AOAO+U+TANAN+U+TAKAK+U+THO9DBBBBAO9DBBBB9gy+R9DB/+g6+U9DBBB8/+SHO+L9DBBB9P9d9FQBAO+oRcSFMCUUUU94RcMABALCEZAEqCFWJAc87FBAICNJRIAECIJREAFCaJHFQBMMM9JBGXAGCGrAF9sHF9FQBEXABAB8oGBHGCNWCN91+yAGCi91CnWCUUU/8EJ+++U84GBABCIJRBAFCaJHFQBMMM9TFEaCBCB8oGUkUUBHFABCEJC98ZJHBjGUkUUBGXGXAB8/BCTWHGuQBCaREABAGlCggEJCTrXBCa6QFMAFREMAEM/lFFFaGXGXAFABqCEZ9FQBABRESFMGXGXAGCT9PQBABRESFMABREEXAEAF8oGBjGBAECIJAFCIJ8oGBjGBAECNJAFCNJ8oGBjGBAECSJAFCSJ8oGBjGBAECTJREAFCTJRFAGC9wJHGCb9LQBMMAGCI9JQBEXAEAF8oGBjGBAFCIJRFAECIJREAGC98JHGCE9LQBMMGXAG9FQBEXAEAF2BB86BBAECFJREAFCFJRFAGCaJHGQBMMABMoFFGaGXGXABCEZ9FQBABRESFMAFCgFZC+BwsN9sRIGXGXAGCT9PQBABRESFMABREEXAEAIjGBAECSJAIjGBAECNJAIjGBAECIJAIjGBAECTJREAGC9wJHGCb9LQBMMAGCI9JQBEXAEAIjGBAECIJREAGC98JHGCE9LQBMMGXAG9FQBEXAEAF86BBAECFJREAGCaJHGQBMMABMMMFBCUNMIT9kBB';
 const wasm_simd = 'B9h9z9tFBBBF8dL9gBB9gLaaaaaFa9gEaaaB9gGaaB9gFaFaEQSBBFBFFGEGEGIILF9wFFFLEFBFKNFaFCx/aFMO/LFVK9tv9t9vq95GBt9f9f939h9z9t9f9j9h9s9s9f9jW9vq9zBBp9tv9z9o9v9wW9f9kv9j9v9kv9WvqWv94h919m9mvqBG8Z9tv9z9o9v9wW9f9kv9j9v9kv9J9u9kv94h919m9mvqBIy9tv9z9o9v9wW9f9kv9j9v9kv9J9u9kv949TvZ91v9u9jvBLn9tv9z9o9v9wW9f9kv9j9v9kv69p9sWvq9P9jWBKi9tv9z9o9v9wW9f9kv9j9v9kv69p9sWvq9R919hWBNn9tv9z9o9v9wW9f9kv9j9v9kv69p9sWvq9F949wBcI9z9iqlBMc/j9JSIBTEM9+FLa8jUUUUBCTlRBCBRFEXCBRGCBREEXABCNJAGJAECUaAFAGrCFZHIy86BBAEAIJREAGCFJHGCN9HQBMAFCx+YUUBJAE86BBAFCEWCxkUUBJAB8pEN83EBAFCFJHFCUG9HQBMMkRIbaG97FaK978jUUUUBCU/KBlHL8kUUUUBC9+RKGXAGCFJAI9LQBCaRKAE2BBC+gF9HQBALAEAIJHOAGlAG/8cBBCUoBAG9uC/wgBZHKCUGAKCUG9JyRNAECFJRKCBRVGXEXAVAF9PQFANAFAVlAVANJAF9JyRcGXGXAG9FQBAcCbJHIC9wZHMCE9sRSAMCFWRQAICIrCEJCGrRfCBRbEXAKRTCBRtGXEXGXAOATlAf9PQBCBRKSLMALCU/CBJAtAM9sJRmATAfJRKCBREGXAMCoB9JQBAOAKlC/gB9JQBCBRIEXAmAIJREGXGXGXGXGXATAICKrJ2BBHYCEZfIBFGEBMAECBDtDMIBSEMAEAKDBBIAKDBBBHPCID+MFAPDQBTFtGmEYIPLdKeOnHPCGD+MFAPDQBTFtGmEYIPLdKeOnC0+G+MiDtD9OHdCEDbD8jHPD8dBhUg/8/4/w/goB9+h84k7HeCEWCxkUUBJDBEBAeCx+YUUBJDBBBHnAnDQBBBBBBBBBBBBBBBBAPD8dFhUg/8/4/w/goB9+h84k7HeCEWCxkUUBJDBEBD9uDQBFGEILKOTtmYPdenDfAdAPD9SDMIBAKCIJAnDeBJAeCx+YUUBJ2BBJRKSGMAEAKDBBNAKDBBBHPCID+MFAPDQBTFtGmEYIPLdKeOnC+P+e+8/4BDtD9OHdCbDbD8jHPD8dBhUg/8/4/w/goB9+h84k7HeCEWCxkUUBJDBEBAeCx+YUUBJDBBBHnAnDQBBBBBBBBBBBBBBBBAPD8dFhUg/8/4/w/goB9+h84k7HeCEWCxkUUBJDBEBD9uDQBFGEILKOTtmYPdenDfAdAPD9SDMIBAKCNJAnDeBJAeCx+YUUBJ2BBJRKSFMAEAKDBBBDMIBAKCTJRKMGXGXGXGXGXAYCGrCEZfIBFGEBMAECBDtDMITSEMAEAKDBBIAKDBBBHPCID+MFAPDQBTFtGmEYIPLdKeOnHPCGD+MFAPDQBTFtGmEYIPLdKeOnC0+G+MiDtD9OHdCEDbD8jHPD8dBhUg/8/4/w/goB9+h84k7HeCEWCxkUUBJDBEBAeCx+YUUBJDBBBHnAnDQBBBBBBBBBBBBBBBBAPD8dFhUg/8/4/w/goB9+h84k7HeCEWCxkUUBJDBEBD9uDQBFGEILKOTtmYPdenDfAdAPD9SDMITAKCIJAnDeBJAeCx+YUUBJ2BBJRKSGMAEAKDBBNAKDBBBHPCID+MFAPDQBTFtGmEYIPLdKeOnC+P+e+8/4BDtD9OHdCbDbD8jHPD8dBhUg/8/4/w/goB9+h84k7HeCEWCxkUUBJDBEBAeCx+YUUBJDBBBHnAnDQBBBBBBBBBBBBBBBBAPD8dFhUg/8/4/w/goB9+h84k7HeCEWCxkUUBJDBEBD9uDQBFGEILKOTtmYPdenDfAdAPD9SDMITAKCNJAnDeBJAeCx+YUUBJ2BBJRKSFMAEAKDBBBDMITAKCTJRKMGXGXGXGXGXAYCIrCEZfIBFGEBMAECBDtDMIASEMAEAKDBBIAKDBBBHPCID+MFAPDQBTFtGmEYIPLdKeOnHPCGD+MFAPDQBTFtGmEYIPLdKeOnC0+G+MiDtD9OHdCEDbD8jHPD8dBhUg/8/4/w/goB9+h84k7HeCEWCxkUUBJDBEBAeCx+YUUBJDBBBHnAnDQBBBBBBBBBBBBBBBBAPD8dFhUg/8/4/w/goB9+h84k7HeCEWCxkUUBJDBEBD9uDQBFGEILKOTtmYPdenDfAdAPD9SDMIAAKCIJAnDeBJAeCx+YUUBJ2BBJRKSGMAEAKDBBNAKDBBBHPCID+MFAPDQBTFtGmEYIPLdKeOnC+P+e+8/4BDtD9OHdCbDbD8jHPD8dBhUg/8/4/w/goB9+h84k7HeCEWCxkUUBJDBEBAeCx+YUUBJDBBBHnAnDQBBBBBBBBBBBBBBBBAPD8dFhUg/8/4/w/goB9+h84k7HeCEWCxkUUBJDBEBD9uDQBFGEILKOTtmYPdenDfAdAPD9SDMIAAKCNJAnDeBJAeCx+YUUBJ2BBJRKSFMAEAKDBBBDMIAAKCTJRKMGXGXGXGXGXAYCKrfIBFGEBMAECBDtDMI8wSEMAEAKDBBIAKDBBBHPCID+MFAPDQBTFtGmEYIPLdKeOnHPCGD+MFAPDQBTFtGmEYIPLdKeOnC0+G+MiDtD9OHdCEDbD8jHPD8dBhUg/8/4/w/goB9+h84k7HYCEWCxkUUBJDBEBAYCx+YUUBJDBBBHnAnDQBBBBBBBBBBBBBBBBAPD8dFhUg/8/4/w/goB9+h84k7HYCEWCxkUUBJDBEBD9uDQBFGEILKOTtmYPdenDfAdAPD9SDMI8wAKCIJAnDeBJAYCx+YUUBJ2BBJRKSGMAEAKDBBNAKDBBBHPCID+MFAPDQBTFtGmEYIPLdKeOnC+P+e+8/4BDtD9OHdCbDbD8jHPD8dBhUg/8/4/w/goB9+h84k7HYCEWCxkUUBJDBEBAYCx+YUUBJDBBBHnAnDQBBBBBBBBBBBBBBBBAPD8dFhUg/8/4/w/goB9+h84k7HYCEWCxkUUBJDBEBD9uDQBFGEILKOTtmYPdenDfAdAPD9SDMI8wAKCNJAnDeBJAYCx+YUUBJ2BBJRKSFMAEAKDBBBDMI8wAKCTJRKMAICoBJREAICUFJAM9LQFAERIAOAKlC/fB9LQBMMGXAEAM9PQBAECErRIEXGXAOAKlCi9PQBCBRKSOMAmAEJRYGXGXGXGXGXATAECKrJ2BBAICKZrCEZfIBFGEBMAYCBDtDMIBSEMAYAKDBBIAKDBBBHPCID+MFAPDQBTFtGmEYIPLdKeOnHPCGD+MFAPDQBTFtGmEYIPLdKeOnC0+G+MiDtD9OHdCEDbD8jHPD8dBhUg/8/4/w/goB9+h84k7HeCEWCxkUUBJDBEBAeCx+YUUBJDBBBHnAnDQBBBBBBBBBBBBBBBBAPD8dFhUg/8/4/w/goB9+h84k7HeCEWCxkUUBJDBEBD9uDQBFGEILKOTtmYPdenDfAdAPD9SDMIBAKCIJAnDeBJAeCx+YUUBJ2BBJRKSGMAYAKDBBNAKDBBBHPCID+MFAPDQBTFtGmEYIPLdKeOnC+P+e+8/4BDtD9OHdCbDbD8jHPD8dBhUg/8/4/w/goB9+h84k7HeCEWCxkUUBJDBEBAeCx+YUUBJDBBBHnAnDQBBBBBBBBBBBBBBBBAPD8dFhUg/8/4/w/goB9+h84k7HeCEWCxkUUBJDBEBD9uDQBFGEILKOTtmYPdenDfAdAPD9SDMIBAKCNJAnDeBJAeCx+YUUBJ2BBJRKSFMAYAKDBBBDMIBAKCTJRKMAICGJRIAECTJHEAM9JQBMMGXAK9FQBAKRTAtCFJHtCI6QGSFMMCBRKSEMGXAM9FQBALCUGJAbJREALAbJDBGBRnCBRYEXAEALCU/CBJAYJHIDBIBHdCFD9tAdCFDbHPD9OD9hD9RHdAIAMJDBIBHiCFD9tAiAPD9OD9hD9RHiDQBTFtGmEYIPLdKeOnH8ZAIAQJDBIBHpCFD9tApAPD9OD9hD9RHpAIASJDBIBHyCFD9tAyAPD9OD9hD9RHyDQBTFtGmEYIPLdKeOnH8cDQBFTtGEmYILPdKOenHPAPDQBFGEBFGEBFGEBFGEAnD9uHnDyBjGBAEAGJHIAnAPAPDQILKOILKOILKOILKOD9uHnDyBjGBAIAGJHIAnAPAPDQNVcMNVcMNVcMNVcMD9uHnDyBjGBAIAGJHIAnAPAPDQSQfbSQfbSQfbSQfbD9uHnDyBjGBAIAGJHIAnA8ZA8cDQNVi8ZcMpySQ8c8dfb8e8fHPAPDQBFGEBFGEBFGEBFGED9uHnDyBjGBAIAGJHIAnAPAPDQILKOILKOILKOILKOD9uHnDyBjGBAIAGJHIAnAPAPDQNVcMNVcMNVcMNVcMD9uHnDyBjGBAIAGJHIAnAPAPDQSQfbSQfbSQfbSQfbD9uHnDyBjGBAIAGJHIAnAdAiDQNiV8ZcpMyS8cQ8df8eb8fHdApAyDQNiV8ZcpMyS8cQ8df8eb8fHiDQBFTtGEmYILPdKOenHPAPDQBFGEBFGEBFGEBFGED9uHnDyBjGBAIAGJHIAnAPAPDQILKOILKOILKOILKOD9uHnDyBjGBAIAGJHIAnAPAPDQNVcMNVcMNVcMNVcMD9uHnDyBjGBAIAGJHIAnAPAPDQSQfbSQfbSQfbSQfbD9uHnDyBjGBAIAGJHIAnAdAiDQNVi8ZcMpySQ8c8dfb8e8fHPAPDQBFGEBFGEBFGEBFGED9uHnDyBjGBAIAGJHIAnAPAPDQILKOILKOILKOILKOD9uHnDyBjGBAIAGJHIAnAPAPDQNVcMNVcMNVcMNVcMD9uHnDyBjGBAIAGJHIAnAPAPDQSQfbSQfbSQfbSQfbD9uHnDyBjGBAIAGJREAYCTJHYAM9JQBMMAbCIJHbAG9JQBMMABAVAG9sJALCUGJAcAG9s/8cBBALALCUGJAcCaJAG9sJAG/8cBBMAcCBAKyAVJRVAKQBMC9+RKSFMCBC99AOAKlAGCAAGCA9Ly6yRKMALCU/KBJ8kUUUUBAKMNBT+BUUUBM+KmFTa8jUUUUBCoFlHL8kUUUUBC9+RKGXAFCE9uHOCtJAI9LQBCaRKAE2BBHNC/wFZC/gF9HQBANCbZHVCF9LQBALCoBJCgFCUF/8MBALC84Jha83EBALC8wJha83EBALC8oJha83EBALCAJha83EBALCiJha83EBALCTJha83EBALha83ENALha83EBAEAIJC9wJRcAECFJHNAOJRMGXAF9FQBCQCbAVCF6yRSABRECBRVCBRQCBRfCBRICBRKEXGXAMAcuQBC9+RKSEMGXGXAN2BBHOC/vF9LQBALCoBJAOCIrCa9zAKJCbZCEWJHb8oGIRTAb8oGBRtGXAOCbZHbAS9PQBALAOCa9zAIJCbZCGWJ8oGBAVAbyROAb9FRbGXGXAGCG9HQBABAt87FBABCIJAO87FBABCGJAT87FBSFMAEAtjGBAECNJAOjGBAECIJATjGBMAVAbJRVALCoBJAKCEWJHmAOjGBAmATjGIALAICGWJAOjGBALCoBJAKCFJCbZHKCEWJHTAtjGBATAOjGIAIAbJRIAKCFJRKSGMGXGXAbCb6QBAQAbJAbC989zJCFJRQSFMAM1BBHbCgFZROGXGXAbCa9MQBAMCFJRMSFMAM1BFHbCgBZCOWAOCgBZqROGXAbCa9MQBAMCGJRMSFMAM1BGHbCgBZCfWAOqROGXAbCa9MQBAMCEJRMSFMAM1BEHbCgBZCdWAOqROGXAbCa9MQBAMCIJRMSFMAM2BIC8cWAOqROAMCLJRMMAOCFrCBAOCFZl9zAQJRQMGXGXAGCG9HQBABAt87FBABCIJAQ87FBABCGJAT87FBSFMAEAtjGBAECNJAQjGBAECIJATjGBMALCoBJAKCEWJHOAQjGBAOATjGIALAICGWJAQjGBALCoBJAKCFJCbZHKCEWJHOAtjGBAOAQjGIAICFJRIAKCFJRKSFMGXAOCDF9LQBALAIAcAOCbZJ2BBHbCIrHTlCbZCGWJ8oGBAVCFJHtATyROALAIAblCbZCGWJ8oGBAtAT9FHmJHtAbCbZHTyRbAT9FRTGXGXAGCG9HQBABAV87FBABCIJAb87FBABCGJAO87FBSFMAEAVjGBAECNJAbjGBAECIJAOjGBMALAICGWJAVjGBALCoBJAKCEWJHYAOjGBAYAVjGIALAICFJHICbZCGWJAOjGBALCoBJAKCFJCbZCEWJHYAbjGBAYAOjGIALAIAmJCbZHICGWJAbjGBALCoBJAKCGJCbZHKCEWJHOAVjGBAOAbjGIAKCFJRKAIATJRIAtATJRVSFMAVCBAM2BBHYyHTAOC/+F6HPJROAYCbZRtGXGXAYCIrHmQBAOCFJRbSFMAORbALAIAmlCbZCGWJ8oGBROMGXGXAtQBAbCFJRVSFMAbRVALAIAYlCbZCGWJ8oGBRbMGXGXAP9FQBAMCFJRYSFMAM1BFHYCgFZRTGXGXAYCa9MQBAMCGJRYSFMAM1BGHYCgBZCOWATCgBZqRTGXAYCa9MQBAMCEJRYSFMAM1BEHYCgBZCfWATqRTGXAYCa9MQBAMCIJRYSFMAM1BIHYCgBZCdWATqRTGXAYCa9MQBAMCLJRYSFMAMCKJRYAM2BLC8cWATqRTMATCFrCBATCFZl9zAQJHQRTMGXGXAmCb6QBAYRPSFMAY1BBHMCgFZROGXGXAMCa9MQBAYCFJRPSFMAY1BFHMCgBZCOWAOCgBZqROGXAMCa9MQBAYCGJRPSFMAY1BGHMCgBZCfWAOqROGXAMCa9MQBAYCEJRPSFMAY1BEHMCgBZCdWAOqROGXAMCa9MQBAYCIJRPSFMAYCLJRPAY2BIC8cWAOqROMAOCFrCBAOCFZl9zAQJHQROMGXGXAtCb6QBAPRMSFMAP1BBHMCgFZRbGXGXAMCa9MQBAPCFJRMSFMAP1BFHMCgBZCOWAbCgBZqRbGXAMCa9MQBAPCGJRMSFMAP1BGHMCgBZCfWAbqRbGXAMCa9MQBAPCEJRMSFMAP1BEHMCgBZCdWAbqRbGXAMCa9MQBAPCIJRMSFMAPCLJRMAP2BIC8cWAbqRbMAbCFrCBAbCFZl9zAQJHQRbMGXGXAGCG9HQBABAT87FBABCIJAb87FBABCGJAO87FBSFMAEATjGBAECNJAbjGBAECIJAOjGBMALCoBJAKCEWJHYAOjGBAYATjGIALAICGWJATjGBALCoBJAKCFJCbZCEWJHYAbjGBAYAOjGIALAICFJHICbZCGWJAOjGBALCoBJAKCGJCbZCEWJHOATjGBAOAbjGIALAIAm9FAmCb6qJHICbZCGWJAbjGBAIAt9FAtCb6qJRIAKCEJRKMANCFJRNABCKJRBAECSJREAKCbZRKAICbZRIAfCEJHfAF9JQBMMCBC99AMAc6yRKMALCoFJ8kUUUUBAKM/tIFGa8jUUUUBCTlRLC9+RKGXAFCLJAI9LQBCaRKAE2BBC/+FZC/QF9HQBALhB83ENAECFJRKAEAIJC98JREGXAF9FQBGXAGCG6QBEXGXAKAE9JQBC9+bMAK1BBHGCgFZRIGXGXAGCa9MQBAKCFJRKSFMAK1BFHGCgBZCOWAICgBZqRIGXAGCa9MQBAKCGJRKSFMAK1BGHGCgBZCfWAIqRIGXAGCa9MQBAKCEJRKSFMAK1BEHGCgBZCdWAIqRIGXAGCa9MQBAKCIJRKSFMAK2BIC8cWAIqRIAKCLJRKMALCNJAICFZCGWqHGAICGrCBAICFrCFZl9zAG8oGBJHIjGBABAIjGBABCIJRBAFCaJHFQBSGMMEXGXAKAE9JQBC9+bMAK1BBHGCgFZRIGXGXAGCa9MQBAKCFJRKSFMAK1BFHGCgBZCOWAICgBZqRIGXAGCa9MQBAKCGJRKSFMAK1BGHGCgBZCfWAIqRIGXAGCa9MQBAKCEJRKSFMAK1BEHGCgBZCdWAIqRIGXAGCa9MQBAKCIJRKSFMAK2BIC8cWAIqRIAKCLJRKMABAICGrCBAICFrCFZl9zALCNJAICFZCGWqHI8oGBJHG87FBAIAGjGBABCGJRBAFCaJHFQBMMCBC99AKAE6yRKMAKM/xLGEaK978jUUUUBCAlHE8kUUUUBGXGXAGCI9HQBGXAFC98ZHI9FQBABRGCBRLEXAGAGDBBBHKCiD+rFCiD+sFD/6FHOAKCND+rFCiD+sFD/6FAOD/gFAKCTD+rFCiD+sFD/6FHND/gFD/kFD/lFHVCBDtD+2FHcAOCUUUU94DtHMD9OD9RD/kFHO9DBB/+hDYAOAOD/mFAVAVD/mFANAcANAMD9OD9RD/kFHOAOD/mFD/kFD/kFD/jFD/nFHND/mF9DBBX9LDYHcD/kFCgFDtD9OAKCUUU94DtD9OD9QAOAND/mFAcD/kFCND+rFCU/+EDtD9OD9QAVAND/mFAcD/kFCTD+rFCUU/8ODtD9OD9QDMBBAGCTJRGALCIJHLAI9JQBMMAIAF9PQFAEAFCEZHLCGWHGqCBCTAGl/8MBAEABAICGWJHIAG/8cBBGXAL9FQBAEAEDBIBHKCiD+rFCiD+sFD/6FHOAKCND+rFCiD+sFD/6FAOD/gFAKCTD+rFCiD+sFD/6FHND/gFD/kFD/lFHVCBDtD+2FHcAOCUUUU94DtHMD9OD9RD/kFHO9DBB/+hDYAOAOD/mFAVAVD/mFANAcANAMD9OD9RD/kFHOAOD/mFD/kFD/kFD/jFD/nFHND/mF9DBBX9LDYHcD/kFCgFDtD9OAKCUUU94DtD9OD9QAOAND/mFAcD/kFCND+rFCU/+EDtD9OD9QAVAND/mFAcD/kFCTD+rFCUU/8ODtD9OD9QDMIBMAIAEAG/8cBBSFMABAFC98ZHGT+HUUUBAGAF9PQBAEAFCEZHICEWHLJCBCAALl/8MBAEABAGCEWJHGAL/8cBBAEAIT+HUUUBAGAEAL/8cBBMAECAJ8kUUUUBM+yEGGaO97GXAF9FQBCBRGEXABCTJHEAEDBBBHICBDtHLCUU98D8cFCUU98D8cEHKD9OABDBBBHOAIDQILKOSQfbPden8c8d8e8fCggFDtD9OD/6FAOAIDQBFGENVcMTtmYi8ZpyHICTD+sFD/6FHND/gFAICTD+rFCTD+sFD/6FHVD/gFD/kFD/lFHI9DB/+g6DYAVAIALD+2FHLAVCUUUU94DtHcD9OD9RD/kFHVAVD/mFAIAID/mFANALANAcD9OD9RD/kFHIAID/mFD/kFD/kFD/jFD/nFHND/mF9DBBX9LDYHLD/kFCTD+rFAVAND/mFALD/kFCggEDtD9OD9QHVAIAND/mFALD/kFCaDbCBDnGCBDnECBDnKCBDnOCBDncCBDnMCBDnfCBDnbD9OHIDQNVi8ZcMpySQ8c8dfb8e8fD9QDMBBABAOAKD9OAVAIDQBFTtGEmYILPdKOenD9QDMBBABCAJRBAGCIJHGAF9JQBMMM94FEa8jUUUUBCAlHE8kUUUUBABAFC98ZHIT+JUUUBGXAIAF9PQBAEAFCEZHLCEWHFJCBCAAFl/8MBAEABAICEWJHBAF/8cBBAEALT+JUUUBABAEAF/8cBBMAECAJ8kUUUUBM/hEIGaF97FaL978jUUUUBCTlRGGXAF9FQBCBREEXAGABDBBBHIABCTJHLDBBBHKDQILKOSQfbPden8c8d8e8fHOCTD+sFHNCID+rFDMIBAB9DBBU8/DY9D/zI818/DYANCEDtD9QD/6FD/nFHNAIAKDQBFGENVcMTtmYi8ZpyHICTD+rFCTD+sFD/6FD/mFHKAKD/mFANAICTD+sFD/6FD/mFHVAVD/mFANAOCTD+rFCTD+sFD/6FD/mFHOAOD/mFD/kFD/kFD/lFCBDtD+4FD/jF9DB/+g6DYHND/mF9DBBX9LDYHID/kFCggEDtHcD9OAVAND/mFAID/kFCTD+rFD9QHVAOAND/mFAID/kFCTD+rFAKAND/mFAID/kFAcD9OD9QHNDQBFTtGEmYILPdKOenHID8dBAGDBIBDyB+t+J83EBABCNJAID8dFAGDBIBDyF+t+J83EBALAVANDQNVi8ZcMpySQ8c8dfb8e8fHND8dBAGDBIBDyG+t+J83EBABCiJAND8dFAGDBIBDyE+t+J83EBABCAJRBAECIJHEAF9JQBMMM/3FGEaF978jUUUUBCoBlREGXAGCGrAF9sHIC98ZHL9FQBCBRGABRFEXAFAFDBBBHKCND+rFCND+sFD/6FAKCiD+sFCnD+rFCUUU/8EDtD+uFD/mFDMBBAFCTJRFAGCIJHGAL9JQBMMGXALAI9PQBAEAICEZHGCGWHFqCBCoBAFl/8MBAEABALCGWJHLAF/8cBBGXAG9FQBAEAEDBIBHKCND+rFCND+sFD/6FAKCiD+sFCnD+rFCUUU/8EDtD+uFD/mFDMIBMALAEAF/8cBBMM9TFEaCBCB8oGUkUUBHFABCEJC98ZJHBjGUkUUBGXGXAB8/BCTWHGuQBCaREABAGlCggEJCTrXBCa6QFMAFREMAEMMMFBCUNMIT9tBB';
 const detector = new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 4, 1, 96, 0, 0, 3, 3, 2, 0, 0, 5, 3, 1, 0, 1, 12, 1, 0, 10, 22, 2, 12, 0, 65, 0, 65, 0, 65, 0, 252, 10, 0, 0, 11, 7, 0, 65, 0, 253, 15, 26, 11]);
@@ -16079,7 +14113,7 @@ const DECODERS = {
 async function meshoptDecodeGltfBuffer(target, count, size, source, mode) {
   let filter = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 'NONE';
   const instance = await loadWasmInstance();
-  decode$7(instance, instance.exports[DECODERS[mode]], target, count, size, source, instance.exports[FILTERS[filter || 'NONE']]);
+  decode$6(instance, instance.exports[DECODERS[mode]], target, count, size, source, instance.exports[FILTERS[filter || 'NONE']]);
 }
 let wasmPromise;
 async function loadWasmInstance() {
@@ -16110,7 +14144,7 @@ function unpack(data) {
   }
   return result.buffer.slice(0, write);
 }
-function decode$7(instance, fun, target, count, size, source, filter) {
+function decode$6(instance, fun, target, count, size, source, filter) {
   const sbrk = instance.exports.sbrk;
   const count4 = count + 3 & ~3;
   const tp = sbrk(count4 * size);
@@ -16124,16 +14158,16 @@ function decode$7(instance, fun, target, count, size, source, filter) {
   target.set(heap.subarray(tp, tp + count * size));
   sbrk(tp - sbrk(0));
   if (res !== 0) {
-    throw new Error("Malformed buffer data: ".concat(res));
+    throw new Error(`Malformed buffer data: ${res}`);
   }
 }
 
 const EXT_MESHOPT_COMPRESSION = 'EXT_meshopt_compression';
-const name$8 = EXT_MESHOPT_COMPRESSION;
-async function decode$6(gltfData, options) {
-  var _options$gltf;
+const name$7 = EXT_MESHOPT_COMPRESSION;
+async function decode$5(gltfData, options) {
+  var _options$gltf, _options$gltf2;
   const scenegraph = new GLTFScenegraph(gltfData);
-  if (!(options !== null && options !== void 0 && (_options$gltf = options.gltf) !== null && _options$gltf !== void 0 && _options$gltf.decompressMeshes)) {
+  if (!(options !== null && options !== void 0 && (_options$gltf = options.gltf) !== null && _options$gltf !== void 0 && _options$gltf.decompressMeshes) || !((_options$gltf2 = options.gltf) !== null && _options$gltf2 !== void 0 && _options$gltf2.loadBuffers)) {
     return;
   }
   const promises = [];
@@ -16159,24 +14193,23 @@ async function decodeMeshoptBufferView(scenegraph, bufferView) {
     const source = new Uint8Array(buffer.arrayBuffer, buffer.byteOffset + byteOffset, byteLength);
     const result = new Uint8Array(scenegraph.gltf.buffers[bufferView.buffer].arrayBuffer, bufferView.byteOffset, bufferView.byteLength);
     await meshoptDecodeGltfBuffer(result, count, byteStride, source, mode, filter);
-    return result;
+    scenegraph.removeObjectExtension(bufferView, EXT_MESHOPT_COMPRESSION);
   }
-  return null;
 }
 
 var EXT_meshopt_compression = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    decode: decode$6,
-    name: name$8
+    decode: decode$5,
+    name: name$7
 });
 
 const EXT_TEXTURE_WEBP = 'EXT_texture_webp';
-const name$7 = EXT_TEXTURE_WEBP;
+const name$6 = EXT_TEXTURE_WEBP;
 function preprocess$3(gltfData, options) {
   const scenegraph = new GLTFScenegraph(gltfData);
   if (!isImageFormatSupported('image/webp')) {
     if (scenegraph.getRequiredExtensions().includes(EXT_TEXTURE_WEBP)) {
-      throw new Error("gltf: Required extension ".concat(EXT_TEXTURE_WEBP, " not supported by browser"));
+      throw new Error(`gltf: Required extension ${EXT_TEXTURE_WEBP} not supported by browser`);
     }
     return;
   }
@@ -16195,12 +14228,12 @@ function preprocess$3(gltfData, options) {
 
 var EXT_texture_webp = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    name: name$7,
+    name: name$6,
     preprocess: preprocess$3
 });
 
 const KHR_TEXTURE_BASISU = 'KHR_texture_basisu';
-const name$6 = KHR_TEXTURE_BASISU;
+const name$5 = KHR_TEXTURE_BASISU;
 function preprocess$2(gltfData, options) {
   const scene = new GLTFScenegraph(gltfData);
   const {
@@ -16210,15 +14243,15 @@ function preprocess$2(gltfData, options) {
     const extension = scene.getObjectExtension(texture, KHR_TEXTURE_BASISU);
     if (extension) {
       texture.source = extension.source;
+      scene.removeObjectExtension(texture, KHR_TEXTURE_BASISU);
     }
-    scene.removeObjectExtension(texture, KHR_TEXTURE_BASISU);
   }
   scene.removeExtension(KHR_TEXTURE_BASISU);
 }
 
 var KHR_texture_basisu = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    name: name$6,
+    name: name$5,
     preprocess: preprocess$2
 });
 
@@ -16284,14 +14317,14 @@ function toTypedArray(array, ArrayType) {
 }
 
 const KHR_DRACO_MESH_COMPRESSION = 'KHR_draco_mesh_compression';
-const name$5 = KHR_DRACO_MESH_COMPRESSION;
+const name$4 = KHR_DRACO_MESH_COMPRESSION;
 function preprocess$1(gltfData, options, context) {
   const scenegraph = new GLTFScenegraph(gltfData);
   for (const primitive of makeMeshPrimitiveIterator(scenegraph)) {
     if (scenegraph.getObjectExtension(primitive, KHR_DRACO_MESH_COMPRESSION)) ;
   }
 }
-async function decode$5(gltfData, options, context) {
+async function decode$4(gltfData, options, context) {
   var _options$gltf;
   if (!(options !== null && options !== void 0 && (_options$gltf = options.gltf) !== null && _options$gltf !== void 0 && _options$gltf.decompressMeshes)) {
     return;
@@ -16321,14 +14354,11 @@ async function decompressPrimitive(scenegraph, primitive, options, context) {
   }
   const buffer = scenegraph.getTypedArrayForBufferView(dracoExtension.bufferView);
   const bufferCopy = sliceArrayBuffer(buffer.buffer, buffer.byteOffset);
-  const {
-    parse
-  } = context;
   const dracoOptions = {
     ...options
   };
   delete dracoOptions['3d-tiles'];
-  const decodedData = await parse(bufferCopy, DracoLoader, dracoOptions, context);
+  const decodedData = await parseFromContext(bufferCopy, DracoLoader, dracoOptions, context);
   const decodedAttributes = getGLTFAccessors(decodedData.attributes);
   for (const [attributeName, decodedAttribute] of Object.entries(decodedAttributes)) {
     if (attributeName in primitive.attributes) {
@@ -16344,6 +14374,7 @@ async function decompressPrimitive(scenegraph, primitive, options, context) {
   if (decodedData.indices) {
     primitive.indices = getGLTFAccessor(decodedData.indices);
   }
+  scenegraph.removeObjectExtension(primitive, KHR_DRACO_MESH_COMPRESSION);
   checkPrimitive(primitive);
 }
 function compressMesh(attributes, indices) {
@@ -16391,39 +14422,22 @@ function* makeMeshPrimitiveIterator(scenegraph) {
 
 var KHR_draco_mesh_compression = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    decode: decode$5,
+    decode: decode$4,
     encode: encode$3,
-    name: name$5,
+    name: name$4,
     preprocess: preprocess$1
 });
 
-const COMPONENTS$1 = {
-  SCALAR: 1,
-  VEC2: 2,
-  VEC3: 3,
-  VEC4: 4,
-  MAT2: 4,
-  MAT3: 9,
-  MAT4: 16
-};
-const BYTES$1 = {
-  5120: 1,
-  5121: 1,
-  5122: 2,
-  5123: 2,
-  5125: 4,
-  5126: 4
-};
-
 const EXT_MESHOPT_TRANSFORM = 'KHR_texture_transform';
-const name$4 = EXT_MESHOPT_TRANSFORM;
-const scratchVector = new Vector3$1();
+const name$3 = EXT_MESHOPT_TRANSFORM;
+const scratchVector = new Vector3();
 const scratchRotationMatrix = new Matrix3();
 const scratchScaleMatrix = new Matrix3();
-async function decode$4(gltfData, options) {
+async function decode$3(gltfData, options) {
+  var _options$gltf;
   const gltfScenegraph = new GLTFScenegraph(gltfData);
-  const extension = gltfScenegraph.getExtension(EXT_MESHOPT_TRANSFORM);
-  if (!extension) {
+  const hasExtension = gltfScenegraph.hasExtension(EXT_MESHOPT_TRANSFORM);
+  if (!hasExtension || !((_options$gltf = options.gltf) !== null && _options$gltf !== void 0 && _options$gltf.loadBuffers)) {
     return;
   }
   const materials = gltfData.json.materials || [];
@@ -16504,7 +14518,7 @@ function transformPrimitive(gltfData, primitive, transformParameters) {
     texCoord,
     matrix
   } = transformParameters;
-  const texCoordAccessor = primitive.attributes["TEXCOORD_".concat(originalTexCoord)];
+  const texCoordAccessor = primitive.attributes[`TEXCOORD_${originalTexCoord}`];
   if (Number.isFinite(texCoordAccessor)) {
     var _gltfData$json$access;
     const accessor = (_gltfData$json$access = gltfData.json.accessors) === null || _gltfData$json$access === void 0 ? void 0 : _gltfData$json$access[texCoordAccessor];
@@ -16578,7 +14592,7 @@ function createAttribute(newTexCoord, originalAccessor, primitive, gltfData, new
     count: originalAccessor.count,
     type: 'VEC2'
   });
-  primitive.attributes["TEXCOORD_".concat(newTexCoord)] = accessors.length - 1;
+  primitive.attributes[`TEXCOORD_${newTexCoord}`] = accessors.length - 1;
 }
 function makeTransformationMatrix(extensionData) {
   const {
@@ -16586,21 +14600,21 @@ function makeTransformationMatrix(extensionData) {
     rotation = 0,
     scale = [1, 1]
   } = extensionData;
-  const translationMatirx = new Matrix3().set(1, 0, 0, 0, 1, 0, offset[0], offset[1], 1);
-  const rotationMatirx = scratchRotationMatrix.set(Math.cos(rotation), Math.sin(rotation), 0, -Math.sin(rotation), Math.cos(rotation), 0, 0, 0, 1);
+  const translationMatrix = new Matrix3().set(1, 0, 0, 0, 1, 0, offset[0], offset[1], 1);
+  const rotationMatrix = scratchRotationMatrix.set(Math.cos(rotation), Math.sin(rotation), 0, -Math.sin(rotation), Math.cos(rotation), 0, 0, 0, 1);
   const scaleMatrix = scratchScaleMatrix.set(scale[0], 0, 0, 0, scale[1], 0, 0, 0, 1);
-  return translationMatirx.multiplyRight(rotationMatirx).multiplyRight(scaleMatrix);
+  return translationMatrix.multiplyRight(rotationMatrix).multiplyRight(scaleMatrix);
 }
 
 var KHR_texture_transform = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    decode: decode$4,
-    name: name$4
+    decode: decode$3,
+    name: name$3
 });
 
 const KHR_LIGHTS_PUNCTUAL = 'KHR_lights_punctual';
-const name$3 = KHR_LIGHTS_PUNCTUAL;
-async function decode$3(gltfData) {
+const name$2 = KHR_LIGHTS_PUNCTUAL;
+async function decode$2(gltfData) {
   const gltfScenegraph = new GLTFScenegraph(gltfData);
   const {
     json
@@ -16640,14 +14654,14 @@ async function encode$2(gltfData) {
 
 var KHR_lights_punctual = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    decode: decode$3,
+    decode: decode$2,
     encode: encode$2,
-    name: name$3
+    name: name$2
 });
 
 const KHR_MATERIALS_UNLIT = 'KHR_materials_unlit';
-const name$2 = KHR_MATERIALS_UNLIT;
-async function decode$2(gltfData) {
+const name$1 = KHR_MATERIALS_UNLIT;
+async function decode$1(gltfData) {
   const gltfScenegraph = new GLTFScenegraph(gltfData);
   const {
     json
@@ -16679,14 +14693,14 @@ function encode$1(gltfData) {
 
 var KHR_materials_unlit = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    decode: decode$2,
+    decode: decode$1,
     encode: encode$1,
-    name: name$2
+    name: name$1
 });
 
 const KHR_TECHNIQUES_WEBGL = 'KHR_techniques_webgl';
-const name$1 = KHR_TECHNIQUES_WEBGL;
-async function decode$1(gltfData) {
+const name = KHR_TECHNIQUES_WEBGL;
+async function decode(gltfData) {
   const gltfScenegraph = new GLTFScenegraph(gltfData);
   const {
     json
@@ -16746,93 +14760,12 @@ function resolveValues(technique, gltfScenegraph) {
 
 var KHR_techniques_webgl = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    decode: decode$1,
-    encode: encode,
-    name: name$1
-});
-
-const EXT_FEATURE_METADATA = 'EXT_feature_metadata';
-const name = EXT_FEATURE_METADATA;
-async function decode(gltfData) {
-  const scenegraph = new GLTFScenegraph(gltfData);
-  decodeExtFeatureMetadata(scenegraph);
-}
-function decodeExtFeatureMetadata(scenegraph) {
-  var _extension$schema;
-  const extension = scenegraph.getExtension(EXT_FEATURE_METADATA);
-  const schemaClasses = extension === null || extension === void 0 ? void 0 : (_extension$schema = extension.schema) === null || _extension$schema === void 0 ? void 0 : _extension$schema.classes;
-  const featureTables = extension === null || extension === void 0 ? void 0 : extension.featureTables;
-  const featureTextures = extension === null || extension === void 0 ? void 0 : extension.featureTextures;
-  if (featureTextures) {
-    console.warn('featureTextures is not yet supported in the "EXT_feature_metadata" extension.');
-  }
-  if (schemaClasses && featureTables) {
-    for (const schemaName in schemaClasses) {
-      const schemaClass = schemaClasses[schemaName];
-      const featureTable = findFeatureTableByName(featureTables, schemaName);
-      if (featureTable) {
-        handleFeatureTableProperties(scenegraph, featureTable, schemaClass);
-      }
-    }
-  }
-}
-function handleFeatureTableProperties(scenegraph, featureTable, schemaClass) {
-  for (const propertyName in schemaClass.properties) {
-    var _featureTable$propert;
-    const schemaProperty = schemaClass.properties[propertyName];
-    const featureTableProperty = featureTable === null || featureTable === void 0 ? void 0 : (_featureTable$propert = featureTable.properties) === null || _featureTable$propert === void 0 ? void 0 : _featureTable$propert[propertyName];
-    const numberOfFeatures = featureTable.count;
-    if (featureTableProperty) {
-      const data = getPropertyDataFromBinarySource(scenegraph, schemaProperty, numberOfFeatures, featureTableProperty);
-      featureTableProperty.data = data;
-    }
-  }
-}
-function getPropertyDataFromBinarySource(scenegraph, schemaProperty, numberOfFeatures, featureTableProperty) {
-  const bufferView = featureTableProperty.bufferView;
-  let data = scenegraph.getTypedArrayForBufferView(bufferView);
-  switch (schemaProperty.type) {
-    case 'STRING':
-      {
-        const stringOffsetBufferView = featureTableProperty.stringOffsetBufferView;
-        const offsetsData = scenegraph.getTypedArrayForBufferView(stringOffsetBufferView);
-        data = getStringAttributes(data, offsetsData, numberOfFeatures);
-        break;
-      }
-  }
-  return data;
-}
-function findFeatureTableByName(featureTables, schemaClassName) {
-  for (const featureTableName in featureTables) {
-    const featureTable = featureTables[featureTableName];
-    if (featureTable.class === schemaClassName) {
-      return featureTable;
-    }
-  }
-  return null;
-}
-function getStringAttributes(data, offsetsData, stringsCount) {
-  const stringsArray = [];
-  const textDecoder = new TextDecoder('utf8');
-  let stringOffset = 0;
-  const bytesPerStringSize = 4;
-  for (let index = 0; index < stringsCount; index++) {
-    const stringByteSize = offsetsData[(index + 1) * bytesPerStringSize] - offsetsData[index * bytesPerStringSize];
-    const stringData = data.subarray(stringOffset, stringByteSize + stringOffset);
-    const stringAttribute = textDecoder.decode(stringData);
-    stringsArray.push(stringAttribute);
-    stringOffset += stringByteSize;
-  }
-  return stringsArray;
-}
-
-var EXT_feature_metadata = /*#__PURE__*/Object.freeze({
-    __proto__: null,
     decode: decode,
+    encode: encode,
     name: name
 });
 
-const EXTENSIONS = [EXT_meshopt_compression, EXT_texture_webp, KHR_texture_basisu, KHR_draco_mesh_compression, KHR_lights_punctual, KHR_materials_unlit, KHR_techniques_webgl, KHR_texture_transform, EXT_feature_metadata];
+const EXTENSIONS = [EXT_structural_metadata, EXT_mesh_features, EXT_meshopt_compression, EXT_texture_webp, KHR_texture_basisu, KHR_draco_mesh_compression, KHR_lights_punctual, KHR_materials_unlit, KHR_techniques_webgl, KHR_texture_transform, EXT_feature_metadata];
 function preprocessExtensions(gltf) {
   let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   let context = arguments.length > 2 ? arguments[2] : undefined;
@@ -16907,7 +14840,7 @@ const GLTF_KEYS = {
 };
 class GLTFV1Normalizer {
   constructor() {
-    _defineProperty(this, "idToIndexMap", {
+    this.idToIndexMap = {
       animations: {},
       accessors: {},
       buffers: {},
@@ -16920,8 +14853,8 @@ class GLTFV1Normalizer {
       scenes: {},
       skins: {},
       textures: {}
-    });
-    _defineProperty(this, "json", void 0);
+    };
+    this.json = void 0;
   }
   normalize(gltf, options) {
     this.json = gltf.json;
@@ -16933,7 +14866,7 @@ class GLTFV1Normalizer {
       case '1.0':
         break;
       default:
-        console.warn("glTF: Unknown version ".concat(json.asset.version));
+        console.warn(`glTF: Unknown version ${json.asset.version}`);
         return;
     }
     if (!options.normalize) {
@@ -17029,7 +14962,7 @@ class GLTFV1Normalizer {
   }
   _convertIdsToIndices(json, topLevelArrayName) {
     if (!json[topLevelArrayName]) {
-      console.warn("gltf v1: json doesn't contain attribute ".concat(topLevelArrayName));
+      console.warn(`gltf v1: json doesn't contain attribute ${topLevelArrayName}`);
       json[topLevelArrayName] = [];
     }
     for (const object of json[topLevelArrayName]) {
@@ -17045,7 +14978,7 @@ class GLTFV1Normalizer {
     if (arrayName in this.idToIndexMap) {
       const index = this.idToIndexMap[arrayName][id];
       if (!Number.isFinite(index)) {
-        throw new Error("gltf v1: failed to resolve ".concat(key, " with id ").concat(id));
+        throw new Error(`gltf v1: failed to resolve ${key} with id ${id}`);
       }
       return index;
     }
@@ -17079,455 +15012,8 @@ function normalizeGLTFV1(gltf) {
   return new GLTFV1Normalizer().normalize(gltf, options);
 }
 
-const COMPONENTS = {
-  SCALAR: 1,
-  VEC2: 2,
-  VEC3: 3,
-  VEC4: 4,
-  MAT2: 4,
-  MAT3: 9,
-  MAT4: 16
-};
-const BYTES = {
-  5120: 1,
-  5121: 1,
-  5122: 2,
-  5123: 2,
-  5125: 4,
-  5126: 4
-};
-const GL_SAMPLER = {
-  TEXTURE_MAG_FILTER: 0x2800,
-  TEXTURE_MIN_FILTER: 0x2801,
-  TEXTURE_WRAP_S: 0x2802,
-  TEXTURE_WRAP_T: 0x2803,
-  REPEAT: 0x2901,
-  LINEAR: 0x2601,
-  NEAREST_MIPMAP_LINEAR: 0x2702
-};
-const SAMPLER_PARAMETER_GLTF_TO_GL = {
-  magFilter: GL_SAMPLER.TEXTURE_MAG_FILTER,
-  minFilter: GL_SAMPLER.TEXTURE_MIN_FILTER,
-  wrapS: GL_SAMPLER.TEXTURE_WRAP_S,
-  wrapT: GL_SAMPLER.TEXTURE_WRAP_T
-};
-const DEFAULT_SAMPLER = {
-  [GL_SAMPLER.TEXTURE_MAG_FILTER]: GL_SAMPLER.LINEAR,
-  [GL_SAMPLER.TEXTURE_MIN_FILTER]: GL_SAMPLER.NEAREST_MIPMAP_LINEAR,
-  [GL_SAMPLER.TEXTURE_WRAP_S]: GL_SAMPLER.REPEAT,
-  [GL_SAMPLER.TEXTURE_WRAP_T]: GL_SAMPLER.REPEAT
-};
-function getBytesFromComponentType(componentType) {
-  return BYTES[componentType];
-}
-function getSizeFromAccessorType(type) {
-  return COMPONENTS[type];
-}
-class GLTFPostProcessor {
-  constructor() {
-    _defineProperty(this, "baseUri", '');
-    _defineProperty(this, "json", {});
-    _defineProperty(this, "buffers", []);
-    _defineProperty(this, "images", []);
-  }
-  postProcess(gltf) {
-    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    const {
-      json,
-      buffers = [],
-      images = [],
-      baseUri = ''
-    } = gltf;
-    assert$1(json);
-    this.baseUri = baseUri;
-    this.json = json;
-    this.buffers = buffers;
-    this.images = images;
-    this._resolveTree(this.json, options);
-    return this.json;
-  }
-  _resolveTree(json) {
-    if (json.bufferViews) {
-      json.bufferViews = json.bufferViews.map((bufView, i) => this._resolveBufferView(bufView, i));
-    }
-    if (json.images) {
-      json.images = json.images.map((image, i) => this._resolveImage(image, i));
-    }
-    if (json.samplers) {
-      json.samplers = json.samplers.map((sampler, i) => this._resolveSampler(sampler, i));
-    }
-    if (json.textures) {
-      json.textures = json.textures.map((texture, i) => this._resolveTexture(texture, i));
-    }
-    if (json.accessors) {
-      json.accessors = json.accessors.map((accessor, i) => this._resolveAccessor(accessor, i));
-    }
-    if (json.materials) {
-      json.materials = json.materials.map((material, i) => this._resolveMaterial(material, i));
-    }
-    if (json.meshes) {
-      json.meshes = json.meshes.map((mesh, i) => this._resolveMesh(mesh, i));
-    }
-    if (json.nodes) {
-      json.nodes = json.nodes.map((node, i) => this._resolveNode(node, i));
-    }
-    if (json.skins) {
-      json.skins = json.skins.map((skin, i) => this._resolveSkin(skin, i));
-    }
-    if (json.scenes) {
-      json.scenes = json.scenes.map((scene, i) => this._resolveScene(scene, i));
-    }
-    if (json.scene !== undefined) {
-      json.scene = json.scenes[this.json.scene];
-    }
-  }
-  getScene(index) {
-    return this._get('scenes', index);
-  }
-  getNode(index) {
-    return this._get('nodes', index);
-  }
-  getSkin(index) {
-    return this._get('skins', index);
-  }
-  getMesh(index) {
-    return this._get('meshes', index);
-  }
-  getMaterial(index) {
-    return this._get('materials', index);
-  }
-  getAccessor(index) {
-    return this._get('accessors', index);
-  }
-  getCamera(index) {
-    return null;
-  }
-  getTexture(index) {
-    return this._get('textures', index);
-  }
-  getSampler(index) {
-    return this._get('samplers', index);
-  }
-  getImage(index) {
-    return this._get('images', index);
-  }
-  getBufferView(index) {
-    return this._get('bufferViews', index);
-  }
-  getBuffer(index) {
-    return this._get('buffers', index);
-  }
-  _get(array, index) {
-    if (typeof index === 'object') {
-      return index;
-    }
-    const object = this.json[array] && this.json[array][index];
-    if (!object) {
-      console.warn("glTF file error: Could not find ".concat(array, "[").concat(index, "]"));
-    }
-    return object;
-  }
-  _resolveScene(scene, index) {
-    scene.id = scene.id || "scene-".concat(index);
-    scene.nodes = (scene.nodes || []).map(node => this.getNode(node));
-    return scene;
-  }
-  _resolveNode(node, index) {
-    node.id = node.id || "node-".concat(index);
-    if (node.children) {
-      node.children = node.children.map(child => this.getNode(child));
-    }
-    if (node.mesh !== undefined) {
-      node.mesh = this.getMesh(node.mesh);
-    } else if (node.meshes !== undefined && node.meshes.length) {
-      node.mesh = node.meshes.reduce((accum, meshIndex) => {
-        const mesh = this.getMesh(meshIndex);
-        accum.id = mesh.id;
-        accum.primitives = accum.primitives.concat(mesh.primitives);
-        return accum;
-      }, {
-        primitives: []
-      });
-    }
-    if (node.camera !== undefined) {
-      node.camera = this.getCamera(node.camera);
-    }
-    if (node.skin !== undefined) {
-      node.skin = this.getSkin(node.skin);
-    }
-    return node;
-  }
-  _resolveSkin(skin, index) {
-    skin.id = skin.id || "skin-".concat(index);
-    skin.inverseBindMatrices = this.getAccessor(skin.inverseBindMatrices);
-    return skin;
-  }
-  _resolveMesh(mesh, index) {
-    mesh.id = mesh.id || "mesh-".concat(index);
-    if (mesh.primitives) {
-      mesh.primitives = mesh.primitives.map(primitive => {
-        primitive = {
-          ...primitive
-        };
-        const attributes = primitive.attributes;
-        primitive.attributes = {};
-        for (const attribute in attributes) {
-          primitive.attributes[attribute] = this.getAccessor(attributes[attribute]);
-        }
-        if (primitive.indices !== undefined) {
-          primitive.indices = this.getAccessor(primitive.indices);
-        }
-        if (primitive.material !== undefined) {
-          primitive.material = this.getMaterial(primitive.material);
-        }
-        return primitive;
-      });
-    }
-    return mesh;
-  }
-  _resolveMaterial(material, index) {
-    material.id = material.id || "material-".concat(index);
-    if (material.normalTexture) {
-      material.normalTexture = {
-        ...material.normalTexture
-      };
-      material.normalTexture.texture = this.getTexture(material.normalTexture.index);
-    }
-    if (material.occlusionTexture) {
-      material.occlustionTexture = {
-        ...material.occlustionTexture
-      };
-      material.occlusionTexture.texture = this.getTexture(material.occlusionTexture.index);
-    }
-    if (material.emissiveTexture) {
-      material.emmisiveTexture = {
-        ...material.emmisiveTexture
-      };
-      material.emissiveTexture.texture = this.getTexture(material.emissiveTexture.index);
-    }
-    if (!material.emissiveFactor) {
-      material.emissiveFactor = material.emmisiveTexture ? [1, 1, 1] : [0, 0, 0];
-    }
-    if (material.pbrMetallicRoughness) {
-      material.pbrMetallicRoughness = {
-        ...material.pbrMetallicRoughness
-      };
-      const mr = material.pbrMetallicRoughness;
-      if (mr.baseColorTexture) {
-        mr.baseColorTexture = {
-          ...mr.baseColorTexture
-        };
-        mr.baseColorTexture.texture = this.getTexture(mr.baseColorTexture.index);
-      }
-      if (mr.metallicRoughnessTexture) {
-        mr.metallicRoughnessTexture = {
-          ...mr.metallicRoughnessTexture
-        };
-        mr.metallicRoughnessTexture.texture = this.getTexture(mr.metallicRoughnessTexture.index);
-      }
-    }
-    return material;
-  }
-  _resolveAccessor(accessor, index) {
-    accessor.id = accessor.id || "accessor-".concat(index);
-    if (accessor.bufferView !== undefined) {
-      accessor.bufferView = this.getBufferView(accessor.bufferView);
-    }
-    accessor.bytesPerComponent = getBytesFromComponentType(accessor.componentType);
-    accessor.components = getSizeFromAccessorType(accessor.type);
-    accessor.bytesPerElement = accessor.bytesPerComponent * accessor.components;
-    if (accessor.bufferView) {
-      const buffer = accessor.bufferView.buffer;
-      const {
-        ArrayType,
-        byteLength
-      } = getAccessorArrayTypeAndLength(accessor, accessor.bufferView);
-      const byteOffset = (accessor.bufferView.byteOffset || 0) + (accessor.byteOffset || 0) + buffer.byteOffset;
-      let cutBuffer = buffer.arrayBuffer.slice(byteOffset, byteOffset + byteLength);
-      if (accessor.bufferView.byteStride) {
-        cutBuffer = this._getValueFromInterleavedBuffer(buffer, byteOffset, accessor.bufferView.byteStride, accessor.bytesPerElement, accessor.count);
-      }
-      accessor.value = new ArrayType(cutBuffer);
-    }
-    return accessor;
-  }
-  _getValueFromInterleavedBuffer(buffer, byteOffset, byteStride, bytesPerElement, count) {
-    const result = new Uint8Array(count * bytesPerElement);
-    for (let i = 0; i < count; i++) {
-      const elementOffset = byteOffset + i * byteStride;
-      result.set(new Uint8Array(buffer.arrayBuffer.slice(elementOffset, elementOffset + bytesPerElement)), i * bytesPerElement);
-    }
-    return result.buffer;
-  }
-  _resolveTexture(texture, index) {
-    texture.id = texture.id || "texture-".concat(index);
-    texture.sampler = 'sampler' in texture ? this.getSampler(texture.sampler) : DEFAULT_SAMPLER;
-    texture.source = this.getImage(texture.source);
-    return texture;
-  }
-  _resolveSampler(sampler, index) {
-    sampler.id = sampler.id || "sampler-".concat(index);
-    sampler.parameters = {};
-    for (const key in sampler) {
-      const glEnum = this._enumSamplerParameter(key);
-      if (glEnum !== undefined) {
-        sampler.parameters[glEnum] = sampler[key];
-      }
-    }
-    return sampler;
-  }
-  _enumSamplerParameter(key) {
-    return SAMPLER_PARAMETER_GLTF_TO_GL[key];
-  }
-  _resolveImage(image, index) {
-    image.id = image.id || "image-".concat(index);
-    if (image.bufferView !== undefined) {
-      image.bufferView = this.getBufferView(image.bufferView);
-    }
-    const preloadedImage = this.images[index];
-    if (preloadedImage) {
-      image.image = preloadedImage;
-    }
-    return image;
-  }
-  _resolveBufferView(bufferView, index) {
-    const bufferIndex = bufferView.buffer;
-    const result = {
-      id: "bufferView-".concat(index),
-      ...bufferView,
-      buffer: this.buffers[bufferIndex]
-    };
-    const arrayBuffer = this.buffers[bufferIndex].arrayBuffer;
-    let byteOffset = this.buffers[bufferIndex].byteOffset || 0;
-    if ('byteOffset' in bufferView) {
-      byteOffset += bufferView.byteOffset;
-    }
-    result.data = new Uint8Array(arrayBuffer, byteOffset, bufferView.byteLength);
-    return result;
-  }
-  _resolveCamera(camera, index) {
-    camera.id = camera.id || "camera-".concat(index);
-    if (camera.perspective) ;
-    if (camera.orthographic) ;
-    return camera;
-  }
-}
-function postProcessGLTF(gltf, options) {
-  return new GLTFPostProcessor().postProcess(gltf, options);
-}
-
-const MAGIC_glTF = 0x676c5446;
-const GLB_FILE_HEADER_SIZE = 12;
-const GLB_CHUNK_HEADER_SIZE = 8;
-const GLB_CHUNK_TYPE_JSON = 0x4e4f534a;
-const GLB_CHUNK_TYPE_BIN = 0x004e4942;
-const GLB_CHUNK_TYPE_JSON_XVIZ_DEPRECATED = 0;
-const GLB_CHUNK_TYPE_BIX_XVIZ_DEPRECATED = 1;
-const GLB_V1_CONTENT_FORMAT_JSON = 0x0;
-const LE = true;
-function getMagicString(dataView) {
-  let byteOffset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-  return "".concat(String.fromCharCode(dataView.getUint8(byteOffset + 0))).concat(String.fromCharCode(dataView.getUint8(byteOffset + 1))).concat(String.fromCharCode(dataView.getUint8(byteOffset + 2))).concat(String.fromCharCode(dataView.getUint8(byteOffset + 3)));
-}
-function isGLB(arrayBuffer) {
-  let byteOffset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-  let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  const dataView = new DataView(arrayBuffer);
-  const {
-    magic = MAGIC_glTF
-  } = options;
-  const magic1 = dataView.getUint32(byteOffset, false);
-  return magic1 === magic || magic1 === MAGIC_glTF;
-}
-function parseGLBSync(glb, arrayBuffer) {
-  let byteOffset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-  const dataView = new DataView(arrayBuffer);
-  const type = getMagicString(dataView, byteOffset + 0);
-  const version = dataView.getUint32(byteOffset + 4, LE);
-  const byteLength = dataView.getUint32(byteOffset + 8, LE);
-  Object.assign(glb, {
-    header: {
-      byteOffset,
-      byteLength,
-      hasBinChunk: false
-    },
-    type,
-    version,
-    json: {},
-    binChunks: []
-  });
-  byteOffset += GLB_FILE_HEADER_SIZE;
-  switch (glb.version) {
-    case 1:
-      return parseGLBV1(glb, dataView, byteOffset);
-    case 2:
-      return parseGLBV2(glb, dataView, byteOffset, {});
-    default:
-      throw new Error("Invalid GLB version ".concat(glb.version, ". Only supports v1 and v2."));
-  }
-}
-function parseGLBV1(glb, dataView, byteOffset) {
-  assert$8(glb.header.byteLength > GLB_FILE_HEADER_SIZE + GLB_CHUNK_HEADER_SIZE);
-  const contentLength = dataView.getUint32(byteOffset + 0, LE);
-  const contentFormat = dataView.getUint32(byteOffset + 4, LE);
-  byteOffset += GLB_CHUNK_HEADER_SIZE;
-  assert$8(contentFormat === GLB_V1_CONTENT_FORMAT_JSON);
-  parseJSONChunk(glb, dataView, byteOffset, contentLength);
-  byteOffset += contentLength;
-  byteOffset += parseBINChunk(glb, dataView, byteOffset, glb.header.byteLength);
-  return byteOffset;
-}
-function parseGLBV2(glb, dataView, byteOffset, options) {
-  assert$8(glb.header.byteLength > GLB_FILE_HEADER_SIZE + GLB_CHUNK_HEADER_SIZE);
-  parseGLBChunksSync(glb, dataView, byteOffset, options);
-  return byteOffset + glb.header.byteLength;
-}
-function parseGLBChunksSync(glb, dataView, byteOffset, options) {
-  while (byteOffset + 8 <= glb.header.byteLength) {
-    const chunkLength = dataView.getUint32(byteOffset + 0, LE);
-    const chunkFormat = dataView.getUint32(byteOffset + 4, LE);
-    byteOffset += GLB_CHUNK_HEADER_SIZE;
-    switch (chunkFormat) {
-      case GLB_CHUNK_TYPE_JSON:
-        parseJSONChunk(glb, dataView, byteOffset, chunkLength);
-        break;
-      case GLB_CHUNK_TYPE_BIN:
-        parseBINChunk(glb, dataView, byteOffset, chunkLength);
-        break;
-      case GLB_CHUNK_TYPE_JSON_XVIZ_DEPRECATED:
-        if (!options.strict) {
-          parseJSONChunk(glb, dataView, byteOffset, chunkLength);
-        }
-        break;
-      case GLB_CHUNK_TYPE_BIX_XVIZ_DEPRECATED:
-        if (!options.strict) {
-          parseBINChunk(glb, dataView, byteOffset, chunkLength);
-        }
-        break;
-    }
-    byteOffset += padToNBytes(chunkLength, 4);
-  }
-  return byteOffset;
-}
-function parseJSONChunk(glb, dataView, byteOffset, chunkLength) {
-  const jsonChunk = new Uint8Array(dataView.buffer, byteOffset, chunkLength);
-  const textDecoder = new TextDecoder('utf8');
-  const jsonText = textDecoder.decode(jsonChunk);
-  glb.json = JSON.parse(jsonText);
-  return padToNBytes(chunkLength, 4);
-}
-function parseBINChunk(glb, dataView, byteOffset, chunkLength) {
-  glb.header.hasBinChunk = true;
-  glb.binChunks.push({
-    byteOffset,
-    byteLength: chunkLength,
-    arrayBuffer: dataView.buffer
-  });
-  return padToNBytes(chunkLength, 4);
-}
-
 async function parseGLTF(gltf, arrayBufferOrString) {
-  var _options$gltf, _options$gltf2, _options$gltf3, _options$gltf4;
+  var _options$gltf, _options$gltf2, _options$gltf3;
   let byteOffset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
   let options = arguments.length > 3 ? arguments[3] : undefined;
   let context = arguments.length > 4 ? arguments[4] : undefined;
@@ -17536,18 +15022,14 @@ async function parseGLTF(gltf, arrayBufferOrString) {
     normalize: options === null || options === void 0 ? void 0 : (_options$gltf = options.gltf) === null || _options$gltf === void 0 ? void 0 : _options$gltf.normalize
   });
   preprocessExtensions(gltf, options, context);
-  const promises = [];
   if (options !== null && options !== void 0 && (_options$gltf2 = options.gltf) !== null && _options$gltf2 !== void 0 && _options$gltf2.loadBuffers && gltf.json.buffers) {
     await loadBuffers(gltf, options, context);
   }
   if (options !== null && options !== void 0 && (_options$gltf3 = options.gltf) !== null && _options$gltf3 !== void 0 && _options$gltf3.loadImages) {
-    const promise = loadImages(gltf, options, context);
-    promises.push(promise);
+    await loadImages(gltf, options, context);
   }
-  const promise = decodeExtensions(gltf, options, context);
-  promises.push(promise);
-  await Promise.all(promises);
-  return options !== null && options !== void 0 && (_options$gltf4 = options.gltf) !== null && _options$gltf4 !== void 0 && _options$gltf4.postProcess ? postProcessGLTF(gltf, options) : gltf;
+  await decodeExtensions(gltf, options, context);
+  return gltf;
 }
 function parseGLTFContainerSync(gltf, data, byteOffset, options) {
   if (options.uri) {
@@ -17562,7 +15044,7 @@ function parseGLTFContainerSync(gltf, data, byteOffset, options) {
   } else if (data instanceof ArrayBuffer) {
     const glb = {};
     byteOffset = parseGLBSync(glb, data, byteOffset, options.glb);
-    assert$1(glb.type === 'glTF', "Invalid GLB magic string ".concat(glb.type));
+    assert$1(glb.type === 'glTF', `Invalid GLB magic string ${glb.type}`);
     gltf._glb = glb;
     gltf.json = glb.json;
   } else {
@@ -17631,13 +15113,12 @@ function getReferencesImageIndices(gltf) {
   return Array.from(imageIndices).sort();
 }
 async function loadImage(gltf, image, index, options, context) {
-  const {
-    fetch,
-    parse
-  } = context;
   let arrayBuffer;
   if (image.uri && !image.hasOwnProperty('bufferView')) {
     const uri = resolveUrl(image.uri, options);
+    const {
+      fetch
+    } = context;
     const response = await fetch(uri);
     arrayBuffer = await response.arrayBuffer();
     image.bufferView = {
@@ -17649,7 +15130,8 @@ async function loadImage(gltf, image, index, options, context) {
     arrayBuffer = sliceArrayBuffer(array.buffer, array.byteOffset, array.byteLength);
   }
   assert$1(arrayBuffer, 'glTF image has no data');
-  let parsedImage = await parse(arrayBuffer, [ImageLoader, BasisLoader], {
+  let parsedImage = await parseFromContext(arrayBuffer, [ImageLoader, BasisLoader], {
+    ...options,
     mimeType: image.mimeType,
     basis: options.basis || {
       format: selectSupportedBasisFormat()
@@ -17672,7 +15154,7 @@ const GLTFLoader = {
   name: 'glTF',
   id: 'gltf',
   module: 'gltf',
-  version: VERSION$3,
+  version: VERSION$1,
   extensions: ['gltf', 'glb'],
   mimeTypes: ['model/gltf+json', 'model/gltf-binary'],
   text: true,
@@ -17684,19 +15166,9 @@ const GLTFLoader = {
       normalize: true,
       loadBuffers: true,
       loadImages: true,
-      decompressMeshes: true,
-      postProcess: true
+      decompressMeshes: true
     },
     log: console
-  },
-  deprecatedOptions: {
-    fetchImages: 'gltf.loadImages',
-    createImages: 'gltf.loadImages',
-    decompress: 'gltf.decompressMeshes',
-    postProcess: 'gltf.postProcess',
-    gltf: {
-      decompress: 'gltf.decompressMeshes'
-    }
   }
 };
 async function parse$1(arrayBuffer) {
@@ -17717,39 +15189,435 @@ async function parse$1(arrayBuffer) {
   return await parseGLTF(gltf, arrayBuffer, byteOffset, options, context);
 }
 
+const COMPONENTS = {
+  SCALAR: 1,
+  VEC2: 2,
+  VEC3: 3,
+  VEC4: 4,
+  MAT2: 4,
+  MAT3: 9,
+  MAT4: 16
+};
+const BYTES = {
+  5120: 1,
+  5121: 1,
+  5122: 2,
+  5123: 2,
+  5125: 4,
+  5126: 4
+};
+const GL_SAMPLER = {
+  TEXTURE_MAG_FILTER: 0x2800,
+  TEXTURE_MIN_FILTER: 0x2801,
+  TEXTURE_WRAP_S: 0x2802,
+  TEXTURE_WRAP_T: 0x2803,
+  REPEAT: 0x2901,
+  LINEAR: 0x2601,
+  NEAREST_MIPMAP_LINEAR: 0x2702
+};
+const SAMPLER_PARAMETER_GLTF_TO_GL = {
+  magFilter: GL_SAMPLER.TEXTURE_MAG_FILTER,
+  minFilter: GL_SAMPLER.TEXTURE_MIN_FILTER,
+  wrapS: GL_SAMPLER.TEXTURE_WRAP_S,
+  wrapT: GL_SAMPLER.TEXTURE_WRAP_T
+};
+const DEFAULT_SAMPLER_PARAMETERS = {
+  [GL_SAMPLER.TEXTURE_MAG_FILTER]: GL_SAMPLER.LINEAR,
+  [GL_SAMPLER.TEXTURE_MIN_FILTER]: GL_SAMPLER.NEAREST_MIPMAP_LINEAR,
+  [GL_SAMPLER.TEXTURE_WRAP_S]: GL_SAMPLER.REPEAT,
+  [GL_SAMPLER.TEXTURE_WRAP_T]: GL_SAMPLER.REPEAT
+};
+function makeDefaultSampler() {
+  return {
+    id: 'default-sampler',
+    parameters: DEFAULT_SAMPLER_PARAMETERS
+  };
+}
+function getBytesFromComponentType(componentType) {
+  return BYTES[componentType];
+}
+function getSizeFromAccessorType(type) {
+  return COMPONENTS[type];
+}
+class GLTFPostProcessor {
+  constructor() {
+    this.baseUri = '';
+    this.jsonUnprocessed = void 0;
+    this.json = void 0;
+    this.buffers = [];
+    this.images = [];
+  }
+  postProcess(gltf) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    const {
+      json,
+      buffers = [],
+      images = []
+    } = gltf;
+    const {
+      baseUri = ''
+    } = gltf;
+    assert$1(json);
+    this.baseUri = baseUri;
+    this.buffers = buffers;
+    this.images = images;
+    this.jsonUnprocessed = json;
+    this.json = this._resolveTree(gltf.json, options);
+    return this.json;
+  }
+  _resolveTree(gltf) {
+    const json = {
+      ...gltf
+    };
+    this.json = json;
+    if (gltf.bufferViews) {
+      json.bufferViews = gltf.bufferViews.map((bufView, i) => this._resolveBufferView(bufView, i));
+    }
+    if (gltf.images) {
+      json.images = gltf.images.map((image, i) => this._resolveImage(image, i));
+    }
+    if (gltf.samplers) {
+      json.samplers = gltf.samplers.map((sampler, i) => this._resolveSampler(sampler, i));
+    }
+    if (gltf.textures) {
+      json.textures = gltf.textures.map((texture, i) => this._resolveTexture(texture, i));
+    }
+    if (gltf.accessors) {
+      json.accessors = gltf.accessors.map((accessor, i) => this._resolveAccessor(accessor, i));
+    }
+    if (gltf.materials) {
+      json.materials = gltf.materials.map((material, i) => this._resolveMaterial(material, i));
+    }
+    if (gltf.meshes) {
+      json.meshes = gltf.meshes.map((mesh, i) => this._resolveMesh(mesh, i));
+    }
+    if (gltf.nodes) {
+      json.nodes = gltf.nodes.map((node, i) => this._resolveNode(node, i));
+      json.nodes = json.nodes.map((node, i) => this._resolveNodeChildren(node));
+    }
+    if (gltf.skins) {
+      json.skins = gltf.skins.map((skin, i) => this._resolveSkin(skin, i));
+    }
+    if (gltf.scenes) {
+      json.scenes = gltf.scenes.map((scene, i) => this._resolveScene(scene, i));
+    }
+    if (typeof this.json.scene === 'number' && json.scenes) {
+      json.scene = json.scenes[this.json.scene];
+    }
+    return json;
+  }
+  getScene(index) {
+    return this._get(this.json.scenes, index);
+  }
+  getNode(index) {
+    return this._get(this.json.nodes, index);
+  }
+  getSkin(index) {
+    return this._get(this.json.skins, index);
+  }
+  getMesh(index) {
+    return this._get(this.json.meshes, index);
+  }
+  getMaterial(index) {
+    return this._get(this.json.materials, index);
+  }
+  getAccessor(index) {
+    return this._get(this.json.accessors, index);
+  }
+  getCamera(index) {
+    return this._get(this.json.cameras, index);
+  }
+  getTexture(index) {
+    return this._get(this.json.textures, index);
+  }
+  getSampler(index) {
+    return this._get(this.json.samplers, index);
+  }
+  getImage(index) {
+    return this._get(this.json.images, index);
+  }
+  getBufferView(index) {
+    return this._get(this.json.bufferViews, index);
+  }
+  getBuffer(index) {
+    return this._get(this.json.buffers, index);
+  }
+  _get(array, index) {
+    if (typeof index === 'object') {
+      return index;
+    }
+    const object = array && array[index];
+    if (!object) {
+      console.warn(`glTF file error: Could not find ${array}[${index}]`);
+    }
+    return object;
+  }
+  _resolveScene(scene, index) {
+    return {
+      ...scene,
+      id: scene.id || `scene-${index}`,
+      nodes: (scene.nodes || []).map(node => this.getNode(node))
+    };
+  }
+  _resolveNode(gltfNode, index) {
+    const node = {
+      ...gltfNode,
+      id: (gltfNode === null || gltfNode === void 0 ? void 0 : gltfNode.id) || `node-${index}`
+    };
+    if (gltfNode.mesh !== undefined) {
+      node.mesh = this.getMesh(gltfNode.mesh);
+    }
+    if (gltfNode.camera !== undefined) {
+      node.camera = this.getCamera(gltfNode.camera);
+    }
+    if (gltfNode.skin !== undefined) {
+      node.skin = this.getSkin(gltfNode.skin);
+    }
+    if (gltfNode.meshes !== undefined && gltfNode.meshes.length) {
+      node.mesh = gltfNode.meshes.reduce((accum, meshIndex) => {
+        const mesh = this.getMesh(meshIndex);
+        accum.id = mesh.id;
+        accum.primitives = accum.primitives.concat(mesh.primitives);
+        return accum;
+      }, {
+        primitives: []
+      });
+    }
+    return node;
+  }
+  _resolveNodeChildren(node) {
+    if (node.children) {
+      node.children = node.children.map(child => this.getNode(child));
+    }
+    return node;
+  }
+  _resolveSkin(gltfSkin, index) {
+    const inverseBindMatrices = typeof gltfSkin.inverseBindMatrices === 'number' ? this.getAccessor(gltfSkin.inverseBindMatrices) : undefined;
+    return {
+      ...gltfSkin,
+      id: gltfSkin.id || `skin-${index}`,
+      inverseBindMatrices
+    };
+  }
+  _resolveMesh(gltfMesh, index) {
+    const mesh = {
+      ...gltfMesh,
+      id: gltfMesh.id || `mesh-${index}`,
+      primitives: []
+    };
+    if (gltfMesh.primitives) {
+      mesh.primitives = gltfMesh.primitives.map(gltfPrimitive => {
+        const primitive = {
+          ...gltfPrimitive,
+          attributes: {},
+          indices: undefined,
+          material: undefined
+        };
+        const attributes = gltfPrimitive.attributes;
+        for (const attribute in attributes) {
+          primitive.attributes[attribute] = this.getAccessor(attributes[attribute]);
+        }
+        if (gltfPrimitive.indices !== undefined) {
+          primitive.indices = this.getAccessor(gltfPrimitive.indices);
+        }
+        if (gltfPrimitive.material !== undefined) {
+          primitive.material = this.getMaterial(gltfPrimitive.material);
+        }
+        return primitive;
+      });
+    }
+    return mesh;
+  }
+  _resolveMaterial(gltfMaterial, index) {
+    const material = {
+      ...gltfMaterial,
+      id: gltfMaterial.id || `material-${index}`
+    };
+    if (material.normalTexture) {
+      material.normalTexture = {
+        ...material.normalTexture
+      };
+      material.normalTexture.texture = this.getTexture(material.normalTexture.index);
+    }
+    if (material.occlusionTexture) {
+      material.occlusionTexture = {
+        ...material.occlusionTexture
+      };
+      material.occlusionTexture.texture = this.getTexture(material.occlusionTexture.index);
+    }
+    if (material.emissiveTexture) {
+      material.emissiveTexture = {
+        ...material.emissiveTexture
+      };
+      material.emissiveTexture.texture = this.getTexture(material.emissiveTexture.index);
+    }
+    if (!material.emissiveFactor) {
+      material.emissiveFactor = material.emissiveTexture ? [1, 1, 1] : [0, 0, 0];
+    }
+    if (material.pbrMetallicRoughness) {
+      material.pbrMetallicRoughness = {
+        ...material.pbrMetallicRoughness
+      };
+      const mr = material.pbrMetallicRoughness;
+      if (mr.baseColorTexture) {
+        mr.baseColorTexture = {
+          ...mr.baseColorTexture
+        };
+        mr.baseColorTexture.texture = this.getTexture(mr.baseColorTexture.index);
+      }
+      if (mr.metallicRoughnessTexture) {
+        mr.metallicRoughnessTexture = {
+          ...mr.metallicRoughnessTexture
+        };
+        mr.metallicRoughnessTexture.texture = this.getTexture(mr.metallicRoughnessTexture.index);
+      }
+    }
+    return material;
+  }
+  _resolveAccessor(gltfAccessor, index) {
+    const bytesPerComponent = getBytesFromComponentType(gltfAccessor.componentType);
+    const components = getSizeFromAccessorType(gltfAccessor.type);
+    const bytesPerElement = bytesPerComponent * components;
+    const accessor = {
+      ...gltfAccessor,
+      id: gltfAccessor.id || `accessor-${index}`,
+      bytesPerComponent,
+      components,
+      bytesPerElement,
+      value: undefined,
+      bufferView: undefined,
+      sparse: undefined
+    };
+    if (gltfAccessor.bufferView !== undefined) {
+      accessor.bufferView = this.getBufferView(gltfAccessor.bufferView);
+    }
+    if (accessor.bufferView) {
+      const buffer = accessor.bufferView.buffer;
+      const {
+        ArrayType,
+        byteLength
+      } = getAccessorArrayTypeAndLength(accessor, accessor.bufferView);
+      const byteOffset = (accessor.bufferView.byteOffset || 0) + (accessor.byteOffset || 0) + buffer.byteOffset;
+      let cutBuffer = buffer.arrayBuffer.slice(byteOffset, byteOffset + byteLength);
+      if (accessor.bufferView.byteStride) {
+        cutBuffer = this._getValueFromInterleavedBuffer(buffer, byteOffset, accessor.bufferView.byteStride, accessor.bytesPerElement, accessor.count);
+      }
+      accessor.value = new ArrayType(cutBuffer);
+    }
+    return accessor;
+  }
+  _getValueFromInterleavedBuffer(buffer, byteOffset, byteStride, bytesPerElement, count) {
+    const result = new Uint8Array(count * bytesPerElement);
+    for (let i = 0; i < count; i++) {
+      const elementOffset = byteOffset + i * byteStride;
+      result.set(new Uint8Array(buffer.arrayBuffer.slice(elementOffset, elementOffset + bytesPerElement)), i * bytesPerElement);
+    }
+    return result.buffer;
+  }
+  _resolveTexture(gltfTexture, index) {
+    return {
+      ...gltfTexture,
+      id: gltfTexture.id || `texture-${index}`,
+      sampler: typeof gltfTexture.sampler === 'number' ? this.getSampler(gltfTexture.sampler) : makeDefaultSampler(),
+      source: typeof gltfTexture.source === 'number' ? this.getImage(gltfTexture.source) : undefined
+    };
+  }
+  _resolveSampler(gltfSampler, index) {
+    const sampler = {
+      id: gltfSampler.id || `sampler-${index}`,
+      ...gltfSampler,
+      parameters: {}
+    };
+    for (const key in sampler) {
+      const glEnum = this._enumSamplerParameter(key);
+      if (glEnum !== undefined) {
+        sampler.parameters[glEnum] = sampler[key];
+      }
+    }
+    return sampler;
+  }
+  _enumSamplerParameter(key) {
+    return SAMPLER_PARAMETER_GLTF_TO_GL[key];
+  }
+  _resolveImage(gltfImage, index) {
+    const image = {
+      ...gltfImage,
+      id: gltfImage.id || `image-${index}`,
+      image: null,
+      bufferView: gltfImage.bufferView !== undefined ? this.getBufferView(gltfImage.bufferView) : undefined
+    };
+    const preloadedImage = this.images[index];
+    if (preloadedImage) {
+      image.image = preloadedImage;
+    }
+    return image;
+  }
+  _resolveBufferView(gltfBufferView, index) {
+    const bufferIndex = gltfBufferView.buffer;
+    const arrayBuffer = this.buffers[bufferIndex].arrayBuffer;
+    let byteOffset = this.buffers[bufferIndex].byteOffset || 0;
+    if (gltfBufferView.byteOffset) {
+      byteOffset += gltfBufferView.byteOffset;
+    }
+    const bufferView = {
+      id: `bufferView-${index}`,
+      ...gltfBufferView,
+      buffer: this.buffers[bufferIndex],
+      data: new Uint8Array(arrayBuffer, byteOffset, gltfBufferView.byteLength)
+    };
+    return bufferView;
+  }
+  _resolveCamera(gltfCamera, index) {
+    const camera = {
+      ...gltfCamera,
+      id: gltfCamera.id || `camera-${index}`
+    };
+    if (camera.perspective) ;
+    if (camera.orthographic) ;
+    return camera;
+  }
+}
+function postProcessGLTF(gltf, options) {
+  return new GLTFPostProcessor().postProcess(gltf, options);
+}
+
 const GLTF_FORMAT = {
   URI: 0,
   EMBEDDED: 1
 };
 function parse3DTileGLTFViewSync(tile, arrayBuffer, byteOffset, options) {
   tile.rotateYtoZ = true;
-  const gltfByteLength = tile.byteOffset + tile.byteLength - byteOffset;
+  const gltfByteLength = (tile.byteOffset || 0) + (tile.byteLength || 0) - byteOffset;
   if (gltfByteLength === 0) {
     throw new Error('glTF byte length must be greater than 0.');
   }
-  tile.gltfUpAxis = options['3d-tiles'] && options['3d-tiles'].assetGltfUpAxis ? options['3d-tiles'].assetGltfUpAxis : 'Y';
+  tile.gltfUpAxis = options !== null && options !== void 0 && options['3d-tiles'] && options['3d-tiles'].assetGltfUpAxis ? options['3d-tiles'].assetGltfUpAxis : 'Y';
   tile.gltfArrayBuffer = sliceArrayBuffer(arrayBuffer, byteOffset, gltfByteLength);
   tile.gltfByteOffset = 0;
   tile.gltfByteLength = gltfByteLength;
   if (byteOffset % 4 === 0) ; else {
-    console.warn("".concat(tile.type, ": embedded glb is not aligned to a 4-byte boundary."));
+    console.warn(`${tile.type}: embedded glb is not aligned to a 4-byte boundary.`);
   }
-  return tile.byteOffset + tile.byteLength;
+  return (tile.byteOffset || 0) + (tile.byteLength || 0);
 }
 async function extractGLTF(tile, gltfFormat, options, context) {
-  const tile3DOptions = options['3d-tiles'] || {};
+  const tile3DOptions = (options === null || options === void 0 ? void 0 : options['3d-tiles']) || {};
   extractGLTFBufferOrURL(tile, gltfFormat);
   if (tile3DOptions.loadGLTF) {
-    const {
-      parse,
-      fetch
-    } = context;
+    if (!context) {
+      return;
+    }
     if (tile.gltfUrl) {
-      tile.gltfArrayBuffer = await fetch(tile.gltfUrl, options);
+      const {
+        fetch
+      } = context;
+      const response = await fetch(tile.gltfUrl, options);
+      tile.gltfArrayBuffer = await response.arrayBuffer();
       tile.gltfByteOffset = 0;
     }
     if (tile.gltfArrayBuffer) {
-      tile.gltf = await parse(tile.gltfArrayBuffer, GLTFLoader, options, context);
+      const gltfWithBuffers = await parseFromContext(tile.gltfArrayBuffer, GLTFLoader, options, context);
+      tile.gltf = postProcessGLTF(gltfWithBuffers);
       tile.gpuMemoryUsageInBytes = getMemoryUsageGLTF(tile.gltf);
       delete tile.gltfArrayBuffer;
       delete tile.gltfByteOffset;
@@ -17760,10 +15628,12 @@ async function extractGLTF(tile, gltfFormat, options, context) {
 function extractGLTFBufferOrURL(tile, gltfFormat, options) {
   switch (gltfFormat) {
     case GLTF_FORMAT.URI:
-      const gltfUrlBytes = new Uint8Array(tile.gltfArrayBuffer, tile.gltfByteOffset);
-      const textDecoder = new TextDecoder();
-      const gltfUrl = textDecoder.decode(gltfUrlBytes);
-      tile.gltfUrl = gltfUrl.replace(/[\s\0]+$/, '');
+      if (tile.gltfArrayBuffer) {
+        const gltfUrlBytes = new Uint8Array(tile.gltfArrayBuffer, tile.gltfByteOffset);
+        const textDecoder = new TextDecoder();
+        const gltfUrl = textDecoder.decode(gltfUrlBytes);
+        tile.gltfUrl = gltfUrl.replace(/[\s\0]+$/, '');
+      }
       delete tile.gltfArrayBuffer;
       delete tile.gltfByteOffset;
       delete tile.gltfByteLength;
@@ -17797,13 +15667,14 @@ function parseBatchedModel(tile, arrayBuffer, byteOffset, options, context) {
 
 async function parseInstancedModel3DTile(tile, arrayBuffer, byteOffset, options, context) {
   byteOffset = parseInstancedModel(tile, arrayBuffer, byteOffset, options);
-  await extractGLTF(tile, tile.gltfFormat, options, context);
+  await extractGLTF(tile, tile.gltfFormat || 0, options, context);
   return byteOffset;
 }
 function parseInstancedModel(tile, arrayBuffer, byteOffset, options, context) {
+  var _tile$header;
   byteOffset = parse3DTileHeaderSync(tile, arrayBuffer, byteOffset);
   if (tile.version !== 1) {
-    throw new Error("Instanced 3D Model version ".concat(tile.version, " is not supported"));
+    throw new Error(`Instanced 3D Model version ${tile.version} is not supported`);
   }
   byteOffset = parse3DTileTablesHeaderSync(tile, arrayBuffer, byteOffset);
   const view = new DataView(arrayBuffer);
@@ -17811,7 +15682,7 @@ function parseInstancedModel(tile, arrayBuffer, byteOffset, options, context) {
   byteOffset += 4;
   byteOffset = parse3DTileTablesSync(tile, arrayBuffer, byteOffset);
   byteOffset = parse3DTileGLTFViewSync(tile, arrayBuffer, byteOffset, options);
-  if (tile.featureTableJsonByteLength === 0) {
+  if (!(tile !== null && tile !== void 0 && (_tile$header = tile.header) !== null && _tile$header !== void 0 && _tile$header.featureTableJsonByteLength) || tile.header.featureTableJsonByteLength === 0) {
     throw new Error('i3dm parser: featureTableJsonByteLength is zero.');
   }
   const featureTable = new Tile3DFeatureTable(tile.featureTableJson, tile.featureTableBinary);
@@ -17827,41 +15698,31 @@ function parseInstancedModel(tile, arrayBuffer, byteOffset, options, context) {
   return byteOffset;
 }
 function extractInstancedAttributes(tile, featureTable, batchTable, instancesLength) {
-  const collectionOptions = {
-    instances: new Array(instancesLength),
-    batchTable: tile._batchTable,
-    cull: false,
-    url: undefined,
-    gltf: undefined,
-    basePath: undefined,
-    incrementallyLoadTextures: false,
-    forwardAxis: [1, 0, 0]
-  };
-  const instances = collectionOptions.instances;
-  const instancePosition = new Vector3$1();
-  new Vector3$1();
-  new Vector3$1();
-  new Vector3$1();
+  const instances = new Array(instancesLength);
+  const instancePosition = new Vector3();
+  new Vector3();
+  new Vector3();
+  new Vector3();
   const instanceRotation = new Matrix3();
   const instanceQuaternion = new Quaternion();
-  const instanceScale = new Vector3$1();
+  const instanceScale = new Vector3();
   const instanceTranslationRotationScale = {};
-  const instanceTransform = new Matrix4$1();
+  const instanceTransform = new Matrix4();
   const scratch1 = [];
   const scratch2 = [];
-  const scratchVector1 = new Vector3$1();
-  const scratchVector2 = new Vector3$1();
+  const scratch3 = [];
+  const scratch4 = [];
   for (let i = 0; i < instancesLength; i++) {
     let position;
     if (featureTable.hasProperty('POSITION')) {
       position = featureTable.getProperty('POSITION', GL$1.FLOAT, 3, i, instancePosition);
     } else if (featureTable.hasProperty('POSITION_QUANTIZED')) {
       position = featureTable.getProperty('POSITION_QUANTIZED', GL$1.UNSIGNED_SHORT, 3, i, instancePosition);
-      const quantizedVolumeOffset = featureTable.getGlobalProperty('QUANTIZED_VOLUME_OFFSET', GL$1.FLOAT, 3, scratchVector1);
+      const quantizedVolumeOffset = featureTable.getGlobalProperty('QUANTIZED_VOLUME_OFFSET', GL$1.FLOAT, 3);
       if (!quantizedVolumeOffset) {
         throw new Error('i3dm parser: QUANTIZED_VOLUME_OFFSET must be defined for quantized positions.');
       }
-      const quantizedVolumeScale = featureTable.getGlobalProperty('QUANTIZED_VOLUME_SCALE', GL$1.FLOAT, 3, scratchVector2);
+      const quantizedVolumeScale = featureTable.getGlobalProperty('QUANTIZED_VOLUME_SCALE', GL$1.FLOAT, 3);
       if (!quantizedVolumeScale) {
         throw new Error('i3dm parser: QUANTIZED_VOLUME_SCALE must be defined for quantized positions.');
       }
@@ -17883,8 +15744,8 @@ function extractInstancedAttributes(tile, featureTable, batchTable, instancesLen
       }
       tile.hasCustomOrientation = true;
     } else {
-      tile.octNormalUp = featureTable.getProperty('NORMAL_UP_OCT32P', GL$1.UNSIGNED_SHORT, 2, scratch1);
-      tile.octNormalRight = featureTable.getProperty('NORMAL_RIGHT_OCT32P', GL$1.UNSIGNED_SHORT, 2, scratch2);
+      tile.octNormalUp = featureTable.getProperty('NORMAL_UP_OCT32P', GL$1.UNSIGNED_SHORT, 2, i, scratch1);
+      tile.octNormalRight = featureTable.getProperty('NORMAL_RIGHT_OCT32P', GL$1.UNSIGNED_SHORT, 2, i, scratch2);
       if (tile.octNormalUp) {
         if (!tile.octNormalRight) {
           throw new Error('i3dm: oct-encoded orientation requires NORMAL_UP_OCT32P and NORMAL_RIGHT_OCT32P');
@@ -17900,7 +15761,7 @@ function extractInstancedAttributes(tile, featureTable, batchTable, instancesLen
     instanceQuaternion.fromMatrix3(instanceRotation);
     instanceTranslationRotationScale.rotation = instanceQuaternion;
     instanceScale.set(1.0, 1.0, 1.0);
-    const scale = featureTable.getProperty('SCALE', GL$1.FLOAT, 1, i);
+    const scale = featureTable.getProperty('SCALE', GL$1.FLOAT, 1, i, scratch3);
     if (Number.isFinite(scale)) {
       instanceScale.multiplyByScalar(scale);
     }
@@ -17909,11 +15770,11 @@ function extractInstancedAttributes(tile, featureTable, batchTable, instancesLen
       instanceScale.scale(nonUniformScale);
     }
     instanceTranslationRotationScale.scale = instanceScale;
-    let batchId = featureTable.getProperty('BATCH_ID', GL$1.UNSIGNED_SHORT, 1, i);
+    let batchId = featureTable.getProperty('BATCH_ID', GL$1.UNSIGNED_SHORT, 1, i, scratch4);
     if (batchId === undefined) {
       batchId = i;
     }
-    const rotationMatrix = new Matrix4$1().fromQuaternion(instanceTranslationRotationScale.rotation);
+    const rotationMatrix = new Matrix4().fromQuaternion(instanceTranslationRotationScale.rotation);
     instanceTransform.identity();
     instanceTransform.translate(instanceTranslationRotationScale.translation);
     instanceTransform.multiplyRight(rotationMatrix);
@@ -17933,8 +15794,10 @@ async function parseComposite3DTile(tile, arrayBuffer, byteOffset, options, cont
   tile.tilesLength = view.getUint32(byteOffset, true);
   byteOffset += 4;
   tile.tiles = [];
-  while (tile.tiles.length < tile.tilesLength && tile.byteLength - byteOffset > 12) {
-    const subtile = {};
+  while (tile.tiles.length < tile.tilesLength && (tile.byteLength || 0) - byteOffset > 12) {
+    const subtile = {
+      shape: 'tile3d'
+    };
     tile.tiles.push(subtile);
     byteOffset = await parse3DTile(arrayBuffer, byteOffset, options, context, subtile);
   }
@@ -17942,20 +15805,29 @@ async function parseComposite3DTile(tile, arrayBuffer, byteOffset, options, cont
 }
 
 async function parseGltf3DTile(tile, arrayBuffer, options, context) {
+  var _options$3dTiles, _options$3dTiles2;
   tile.rotateYtoZ = true;
-  tile.gltfUpAxis = options['3d-tiles'] && options['3d-tiles'].assetGltfUpAxis ? options['3d-tiles'].assetGltfUpAxis : 'Y';
-  const {
-    parse
-  } = context;
-  tile.gltf = await parse(arrayBuffer, GLTFLoader, options, context);
-  tile.gpuMemoryUsageInBytes = getMemoryUsageGLTF(tile.gltf);
+  tile.gltfUpAxis = options !== null && options !== void 0 && (_options$3dTiles = options['3d-tiles']) !== null && _options$3dTiles !== void 0 && _options$3dTiles.assetGltfUpAxis ? options['3d-tiles'].assetGltfUpAxis : 'Y';
+  if (options !== null && options !== void 0 && (_options$3dTiles2 = options['3d-tiles']) !== null && _options$3dTiles2 !== void 0 && _options$3dTiles2.loadGLTF) {
+    if (!context) {
+      return arrayBuffer.byteLength;
+    }
+    const gltfWithBuffers = await parseFromContext(arrayBuffer, GLTFLoader, options, context);
+    tile.gltf = postProcessGLTF(gltfWithBuffers);
+    tile.gpuMemoryUsageInBytes = getMemoryUsageGLTF(tile.gltf);
+  } else {
+    tile.gltfArrayBuffer = arrayBuffer;
+  }
+  return arrayBuffer.byteLength;
 }
 
 async function parse3DTile(arrayBuffer) {
   let byteOffset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
   let options = arguments.length > 2 ? arguments[2] : undefined;
   let context = arguments.length > 3 ? arguments[3] : undefined;
-  let tile = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+  let tile = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {
+    shape: 'tile3d'
+  };
   tile.byteOffset = byteOffset;
   tile.type = getMagicString$1(arrayBuffer, byteOffset);
   switch (tile.type) {
@@ -17970,7 +15842,7 @@ async function parse3DTile(arrayBuffer) {
     case TILE3D_TYPE.POINT_CLOUD:
       return await parsePointCloud3DTile(tile, arrayBuffer, byteOffset, options, context);
     default:
-      throw new Error("3DTileLoader: unknown type ".concat(tile.type));
+      throw new Error(`3DTileLoader: unknown type ${tile.type}`);
   }
 }
 
@@ -17995,44 +15867,38 @@ async function parse3DTilesSubtree(data, options, context) {
   if (binaryByteLength) {
     internalBinaryBuffer = data.slice(24 + jsonByteLength);
   }
-  if ('bufferView' in subtree.tileAvailability) {
-    subtree.tileAvailability.explicitBitstream = await getExplicitBitstream(subtree, 'tileAvailability', internalBinaryBuffer, context);
+  await loadExplicitBitstream(subtree, subtree.tileAvailability, internalBinaryBuffer, context);
+  if (Array.isArray(subtree.contentAvailability)) {
+    for (const contentAvailability of subtree.contentAvailability) {
+      await loadExplicitBitstream(subtree, contentAvailability, internalBinaryBuffer, context);
+    }
+  } else {
+    await loadExplicitBitstream(subtree, subtree.contentAvailability, internalBinaryBuffer, context);
   }
-  if ('bufferView' in subtree.contentAvailability) {
-    subtree.contentAvailability.explicitBitstream = await getExplicitBitstream(subtree, 'contentAvailability', internalBinaryBuffer, context);
-  }
-  if ('bufferView' in subtree.childSubtreeAvailability) {
-    subtree.childSubtreeAvailability.explicitBitstream = await getExplicitBitstream(subtree, 'childSubtreeAvailability', internalBinaryBuffer, context);
-  }
+  await loadExplicitBitstream(subtree, subtree.childSubtreeAvailability, internalBinaryBuffer, context);
   return subtree;
 }
-function resolveBufferUri(bitstreamRelativeUri, basePath) {
-  const hasProtocol = basePath.startsWith('http');
-  if (hasProtocol) {
-    const resolvedUri = new URL(bitstreamRelativeUri, basePath);
-    return decodeURI(resolvedUri.toString());
+async function loadExplicitBitstream(subtree, availabilityObject, internalBinaryBuffer, context) {
+  const bufferViewIndex = Number.isFinite(availabilityObject.bitstream) ? availabilityObject.bitstream : availabilityObject.bufferView;
+  if (typeof bufferViewIndex !== 'number') {
+    return;
   }
-  const basePathWithProtocol = "http://".concat(basePath);
-  const resolvedUri = new URL(bitstreamRelativeUri, basePathWithProtocol);
-  return "/".concat(resolvedUri.host).concat(resolvedUri.pathname);
-}
-async function getExplicitBitstream(subtree, name, internalBinaryBuffer, context) {
-  const bufferViewIndex = subtree[name].bufferView;
   const bufferView = subtree.bufferViews[bufferViewIndex];
   const buffer = subtree.buffers[bufferView.buffer];
-  if (!(context !== null && context !== void 0 && context.url) || !context.fetch) {
+  if (!(context !== null && context !== void 0 && context.baseUrl)) {
     throw new Error('Url is not provided');
   }
   if (!context.fetch) {
     throw new Error('fetch is not provided');
   }
   if (buffer.uri) {
-    const bufferUri = resolveBufferUri(buffer.uri, context === null || context === void 0 ? void 0 : context.url);
+    const bufferUri = `${(context === null || context === void 0 ? void 0 : context.baseUrl) || ''}/${buffer.uri}`;
     const response = await context.fetch(bufferUri);
     const data = await response.arrayBuffer();
-    return new Uint8Array(data, bufferView.byteOffset, bufferView.byteLength);
+    availabilityObject.explicitBitstream = new Uint8Array(data, bufferView.byteOffset, bufferView.byteLength);
+    return;
   }
-  return new Uint8Array(internalBinaryBuffer, bufferView.byteOffset, bufferView.byteLength);
+  availabilityObject.explicitBitstream = new Uint8Array(internalBinaryBuffer, bufferView.byteOffset, bufferView.byteLength);
 }
 function parseUint64Value(buffer) {
   const dataView = new DataView(buffer);
@@ -18045,7 +15911,7 @@ const Tile3DSubtreeLoader = {
   id: '3d-tiles-subtree',
   name: '3D Tiles Subtree',
   module: '3d-tiles',
-  version: VERSION$5,
+  version: VERSION$4,
   extensions: ['subtree'],
   mimeTypes: ['application/octet-stream'],
   tests: ['subtree'],
@@ -19556,7 +17422,7 @@ const POS_BITS = 2 * MAX_LEVEL + 1;
 const RADIAN_TO_DEGREE = 180 / Math.PI;
 function getS2CellFromQuadKey(hilbertQuadkey) {
   if (hilbertQuadkey.length === 0) {
-    throw new Error("Invalid Hilbert quad key ".concat(hilbertQuadkey));
+    throw new Error(`Invalid Hilbert quad key ${hilbertQuadkey}`);
   }
   const parts = hilbertQuadkey.split('/');
   const face = parseInt(parts[0], 10);
@@ -19613,7 +17479,7 @@ function getS2QuadkeyFromCellId(cellId) {
       posS = '0' + posS;
     }
   }
-  return "".concat(faceS, "/").concat(posS);
+  return `${faceS}/${posS}`;
 }
 function IJToST(ij, level, offsets) {
   const maxSize = 1 << level;
@@ -19734,7 +17600,7 @@ function getS2Region(s2cell) {
     let corners = null;
     let len = 0;
     for (let i = 0; i < 4; i++) {
-      const key = "".concat(s2cell.face, "/").concat(i);
+      const key = `${s2cell.face}/${i}`;
       const cell = getS2Cell(key);
       const corns = getS2BoundaryFlatFromS2Cell(cell);
       if (typeof corners === 'undefined' || corners === null) corners = new Float64Array(4 * corns.length);
@@ -19778,14 +17644,14 @@ function getS2OrientedBoundingBoxCornerPoints(tokenOrKey, heightInfo) {
   const E = region.east;
   const N = region.north;
   const points = [];
-  points.push(new Vector3$1(W, N, min));
-  points.push(new Vector3$1(E, N, min));
-  points.push(new Vector3$1(E, S, min));
-  points.push(new Vector3$1(W, S, min));
-  points.push(new Vector3$1(W, N, max));
-  points.push(new Vector3$1(E, N, max));
-  points.push(new Vector3$1(E, S, max));
-  points.push(new Vector3$1(W, S, max));
+  points.push(new Vector3(W, N, min));
+  points.push(new Vector3(E, N, min));
+  points.push(new Vector3(E, S, min));
+  points.push(new Vector3(W, S, min));
+  points.push(new Vector3(W, N, max));
+  points.push(new Vector3(E, N, max));
+  points.push(new Vector3(E, S, max));
+  points.push(new Vector3(W, S, max));
   return points;
 }
 
@@ -19800,7 +17666,7 @@ function convertS2BoundingVolumetoOBB(s2VolumeInfo) {
   const centerLng = center[0];
   const centerLat = center[1];
   const point = Ellipsoid.WGS84.cartographicToCartesian([centerLng, centerLat, heightInfo.maximumHeight]);
-  const centerPointAdditional = new Vector3$1(point[0], point[1], point[2]);
+  const centerPointAdditional = new Vector3(point[0], point[1], point[2]);
   corners.push(centerPointAdditional);
   const obb = makeOrientedBoundingBoxFromPoints(corners);
   const box = [...obb.center, ...obb.halfAxes];
@@ -19843,7 +17709,7 @@ function getChildS2VolumeBox(s2VolumeBox, index, subdivisionScheme) {
 }
 async function parseImplicitTiles(params) {
   const {
-    options,
+    implicitOptions,
     parentData = {
       mortonIndex: 0,
       x: 0,
@@ -19858,7 +17724,8 @@ async function parseImplicitTiles(params) {
       y: 0,
       z: 0
     },
-    s2VolumeBox
+    s2VolumeBox,
+    loaderOptions
   } = params;
   let {
     subtree,
@@ -19871,34 +17738,42 @@ async function parseImplicitTiles(params) {
     contentUrlTemplate,
     subtreesUriTemplate,
     basePath
-  } = options;
+  } = implicitOptions;
   const tile = {
     children: [],
     lodMetricValue: 0,
     contentUrl: ''
   };
+  if (!maximumLevel) {
+    log$1.once(`Missing 'maximumLevel' or 'availableLevels' property. The subtree ${contentUrlTemplate} won't be loaded...`);
+    return tile;
+  }
+  const lev = level + globalData.level;
+  if (lev > maximumLevel) {
+    return tile;
+  }
   const childrenPerTile = SUBDIVISION_COUNT_MAP[subdivisionScheme];
+  const bitsPerTile = Math.log2(childrenPerTile);
   const childX = childIndex & 0b01;
   const childY = childIndex >> 1 & 0b01;
   const childZ = childIndex >> 2 & 0b01;
   const levelOffset = (childrenPerTile ** level - 1) / (childrenPerTile - 1);
-  let childTileMortonIndex = concatBits(parentData.mortonIndex, childIndex);
+  let childTileMortonIndex = concatBits(parentData.mortonIndex, childIndex, bitsPerTile);
   let tileAvailabilityIndex = levelOffset + childTileMortonIndex;
-  let childTileX = concatBits(parentData.x, childX);
-  let childTileY = concatBits(parentData.y, childY);
-  let childTileZ = concatBits(parentData.z, childZ);
+  let childTileX = concatBits(parentData.x, childX, 1);
+  let childTileY = concatBits(parentData.y, childY, 1);
+  let childTileZ = concatBits(parentData.z, childZ, 1);
   let isChildSubtreeAvailable = false;
-  if (level + 1 > subtreeLevels) {
+  if (level >= subtreeLevels) {
     isChildSubtreeAvailable = getAvailabilityResult(subtree.childSubtreeAvailability, childTileMortonIndex);
   }
-  const x = concatBits(globalData.x, childTileX);
-  const y = concatBits(globalData.y, childTileY);
-  const z = concatBits(globalData.z, childTileZ);
-  const lev = level + globalData.level;
+  const x = concatBits(globalData.x, childTileX, level * bitsPerTile);
+  const y = concatBits(globalData.y, childTileY, level * bitsPerTile);
+  const z = concatBits(globalData.z, childTileZ, level * bitsPerTile);
   if (isChildSubtreeAvailable) {
-    const subtreePath = "".concat(basePath, "/").concat(subtreesUriTemplate);
+    const subtreePath = `${basePath}/${subtreesUriTemplate}`;
     const childSubtreeUrl = replaceContentUrlTemplate(subtreePath, lev, x, y, z);
-    const childSubtree = await load(childSubtreeUrl, Tile3DSubtreeLoader);
+    const childSubtree = await load(childSubtreeUrl, Tile3DSubtreeLoader, loaderOptions);
     subtree = childSubtree;
     globalData.mortonIndex = childTileMortonIndex;
     globalData.x = childTileX;
@@ -19913,7 +17788,7 @@ async function parseImplicitTiles(params) {
     level = 0;
   }
   const isTileAvailable = getAvailabilityResult(subtree.tileAvailability, tileAvailabilityIndex);
-  if (!isTileAvailable || level > maximumLevel) {
+  if (!isTileAvailable) {
     return tile;
   }
   const isContentAvailable = getAvailabilityResult(subtree.contentAvailability, tileAvailabilityIndex);
@@ -19931,11 +17806,14 @@ async function parseImplicitTiles(params) {
     const childS2VolumeBox = getChildS2VolumeBox(s2VolumeBox, index, subdivisionScheme);
     const childTileParsed = await parseImplicitTiles({
       subtree,
-      options,
+      implicitOptions,
+      loaderOptions,
       parentData: pData,
       childIndex: index,
       level: childTileLevel,
-      globalData,
+      globalData: {
+        ...globalData
+      },
       s2VolumeBox: childS2VolumeBox
     });
     if (childTileParsed.contentUrl || childTileParsed.children.length) {
@@ -19945,18 +17823,27 @@ async function parseImplicitTiles(params) {
         childTileY,
         childTileZ
       };
-      const formattedTile = formatTileData(childTileParsed, globalLevel, childCoordinates, options, s2VolumeBox);
+      const formattedTile = formatTileData(childTileParsed, globalLevel, childCoordinates, implicitOptions, s2VolumeBox);
       tile.children.push(formattedTile);
     }
   }
   return tile;
 }
 function getAvailabilityResult(availabilityData, index) {
-  if ('constant' in availabilityData) {
-    return Boolean(availabilityData.constant);
+  let availabilityObject;
+  if (Array.isArray(availabilityData)) {
+    availabilityObject = availabilityData[0];
+    if (availabilityData.length > 1) {
+      log$1.once('Not supported extension "3DTILES_multiple_contents" has been detected');
+    }
+  } else {
+    availabilityObject = availabilityData;
   }
-  if (availabilityData.explicitBitstream) {
-    return getBooleanValueFromBitstream(index, availabilityData.explicitBitstream);
+  if ('constant' in availabilityObject) {
+    return Boolean(availabilityObject.constant);
+  }
+  if (availabilityObject.explicitBitstream) {
+    return getBooleanValueFromBitstream(index, availabilityObject.explicitBitstream);
   }
   return false;
 }
@@ -19970,7 +17857,7 @@ function formatTileData(tile, level, childCoordinates, options, s2VolumeBox) {
     rootLodMetricValue,
     rootBoundingVolume
   } = options;
-  const uri = tile.contentUrl && tile.contentUrl.replace("".concat(basePath, "/"), '');
+  const uri = tile.contentUrl && tile.contentUrl.replace(`${basePath}/`, '');
   const lodMetricValue = rootLodMetricValue / 2 ** level;
   const boundingVolume = s2VolumeBox !== null && s2VolumeBox !== void 0 && s2VolumeBox.box ? {
     box: s2VolumeBox.box
@@ -20014,10 +17901,10 @@ function calculateBoundingVolumeForChildTile(level, rootBoundingVolume, childCoo
   if (rootBoundingVolume.box) {
     return rootBoundingVolume;
   }
-  throw new Error("Unsupported bounding volume type ".concat(rootBoundingVolume));
+  throw new Error(`Unsupported bounding volume type ${rootBoundingVolume}`);
 }
-function concatBits(first, second) {
-  return parseInt(first.toString(2) + second.toString(2), 2);
+function concatBits(higher, lower, shift) {
+  return (higher << shift) + lower;
 }
 function replaceContentUrlTemplate(templateUrl, level, x, y, z) {
   const mapUrl = generateMapUrl({
@@ -20031,7 +17918,7 @@ function replaceContentUrlTemplate(templateUrl, level, x, y, z) {
 function generateMapUrl(items) {
   const mapUrl = {};
   for (const key in items) {
-    mapUrl["{".concat(key, "}")] = items[key];
+    mapUrl[`{${key}}`] = items[key];
   }
   return mapUrl;
 }
@@ -20043,10 +17930,11 @@ function getBooleanValueFromBitstream(availabilityIndex, availabilityBuffer) {
 }
 
 function getTileType(tile) {
-  if (!tile.contentUrl) {
+  let tileContentUrl = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  if (!tileContentUrl) {
     return TILE_TYPE.EMPTY;
   }
-  const contentUrl = tile.contentUrl.split('?')[0];
+  const contentUrl = tileContentUrl.split('?')[0];
   const fileExtension = contentUrl.split('.').pop();
   switch (fileExtension) {
     case 'pnts':
@@ -20057,7 +17945,7 @@ function getTileType(tile) {
     case 'gltf':
       return TILE_TYPE.SCENEGRAPH;
     default:
-      return fileExtension;
+      return fileExtension || TILE_TYPE.EMPTY;
   }
 }
 function getRefine(refine) {
@@ -20072,66 +17960,77 @@ function getRefine(refine) {
       return refine;
   }
 }
-function resolveUri(uri, basePath) {
+function resolveUri() {
+  let uri = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  let basePath = arguments.length > 1 ? arguments[1] : undefined;
   const urlSchemeRegex = /^[a-z][0-9a-z+.-]*:/i;
   if (urlSchemeRegex.test(basePath)) {
-    const url = new URL(uri, "".concat(basePath, "/"));
+    const url = new URL(uri, `${basePath}/`);
     return decodeURI(url.toString());
   } else if (uri.startsWith('/')) {
     return uri;
   }
-  return "".concat(basePath, "/").concat(uri);
+  return resolve(basePath, uri);
 }
-function normalizeTileData(tile, options) {
+function normalizeTileData(tile, basePath) {
   if (!tile) {
     return null;
   }
+  let tileContentUrl;
   if (tile.content) {
-    const contentUri = tile.content.uri || tile.content.url;
-    tile.contentUrl = resolveUri(contentUri, options.basePath);
+    var _tile$content;
+    const contentUri = tile.content.uri || ((_tile$content = tile.content) === null || _tile$content === void 0 ? void 0 : _tile$content.url);
+    tileContentUrl = resolveUri(contentUri, basePath);
   }
-  tile.id = tile.contentUrl;
-  tile.lodMetricType = LOD_METRIC_TYPE.GEOMETRIC_ERROR;
-  tile.lodMetricValue = tile.geometricError;
-  tile.transformMatrix = tile.transform;
-  tile.type = getTileType(tile);
-  tile.refine = getRefine(tile.refine);
-  return tile;
+  const tilePostprocessed = {
+    ...tile,
+    id: tileContentUrl,
+    contentUrl: tileContentUrl,
+    lodMetricType: LOD_METRIC_TYPE.GEOMETRIC_ERROR,
+    lodMetricValue: tile.geometricError,
+    transformMatrix: tile.transform,
+    type: getTileType(tile, tileContentUrl),
+    refine: getRefine(tile.refine)
+  };
+  return tilePostprocessed;
 }
-async function normalizeTileHeaders(tileset, options) {
-  const basePath = tileset.basePath;
-  let root;
-  const rootImplicitTilingExtension = getImplicitTilingExtensionData(tileset === null || tileset === void 0 ? void 0 : tileset.root);
+async function normalizeTileHeaders(tileset, basePath, options) {
+  let root = null;
+  const rootImplicitTilingExtension = getImplicitTilingExtensionData(tileset.root);
   if (rootImplicitTilingExtension && tileset.root) {
-    root = await normalizeImplicitTileHeaders(tileset.root, tileset, rootImplicitTilingExtension, options);
+    root = await normalizeImplicitTileHeaders(tileset.root, tileset, basePath, rootImplicitTilingExtension, options);
   } else {
-    root = normalizeTileData(tileset.root, tileset);
+    root = normalizeTileData(tileset.root, basePath);
   }
   const stack = [];
   stack.push(root);
   while (stack.length > 0) {
     const tile = stack.pop() || {};
     const children = tile.children || [];
-    for (let childHeader of children) {
+    const childrenPostprocessed = [];
+    for (const childHeader of children) {
       const childImplicitTilingExtension = getImplicitTilingExtensionData(childHeader);
+      let childHeaderPostprocessed;
       if (childImplicitTilingExtension) {
-        childHeader = await normalizeImplicitTileHeaders(childHeader, tileset, childImplicitTilingExtension, options);
+        childHeaderPostprocessed = await normalizeImplicitTileHeaders(childHeader, tileset, basePath, childImplicitTilingExtension, options);
       } else {
-        normalizeTileData(childHeader, {
-          basePath
-        });
+        childHeaderPostprocessed = normalizeTileData(childHeader, basePath);
       }
-      stack.push(childHeader);
+      if (childHeaderPostprocessed) {
+        childrenPostprocessed.push(childHeaderPostprocessed);
+        stack.push(childHeaderPostprocessed);
+      }
     }
+    tile.children = childrenPostprocessed;
   }
   return root;
 }
-async function normalizeImplicitTileHeaders(tile, tileset, implicitTilingExtension, options) {
-  var _tileset$root, _tile$boundingVolume$;
-  const basePath = tileset.basePath;
+async function normalizeImplicitTileHeaders(tile, tileset, basePath, implicitTilingExtension, options) {
+  var _tile$content2, _tileset$root, _tile$boundingVolume$;
   const {
     subdivisionScheme,
     maximumLevel,
+    availableLevels,
     subtreeLevels,
     subtrees: {
       uri: subtreesUriTemplate
@@ -20140,7 +18039,7 @@ async function normalizeImplicitTileHeaders(tile, tileset, implicitTilingExtensi
   const replacedUrlTemplate = replaceContentUrlTemplate(subtreesUriTemplate, 0, 0, 0, 0);
   const subtreeUrl = resolveUri(replacedUrlTemplate, basePath);
   const subtree = await load(subtreeUrl, Tile3DSubtreeLoader, options);
-  const contentUrlTemplate = resolveUri(tile.content.uri, basePath);
+  const contentUrlTemplate = resolveUri((_tile$content2 = tile.content) === null || _tile$content2 === void 0 ? void 0 : _tile$content2.uri, basePath);
   const refine = tileset === null || tileset === void 0 ? void 0 : (_tileset$root = tileset.root) === null || _tileset$root === void 0 ? void 0 : _tileset$root.refine;
   const rootLodMetricValue = tile.geometricError;
   const s2VolumeInfo = (_tile$boundingVolume$ = tile.boundingVolume.extensions) === null || _tile$boundingVolume$ === void 0 ? void 0 : _tile$boundingVolume$['3DTILES_bounding_volume_S2'];
@@ -20158,7 +18057,7 @@ async function normalizeImplicitTileHeaders(tile, tileset, implicitTilingExtensi
     subtreesUriTemplate,
     subdivisionScheme,
     subtreeLevels,
-    maximumLevel,
+    maximumLevel: Number.isFinite(availableLevels) ? availableLevels - 1 : maximumLevel,
     refine,
     basePath,
     lodMetricType: LOD_METRIC_TYPE.GEOMETRIC_ERROR,
@@ -20167,34 +18066,41 @@ async function normalizeImplicitTileHeaders(tile, tileset, implicitTilingExtensi
     getTileType,
     getRefine
   };
-  return await normalizeImplicitTileData(tile, subtree, implicitOptions);
+  return await normalizeImplicitTileData(tile, basePath, subtree, implicitOptions, options);
 }
-async function normalizeImplicitTileData(tile, rootSubtree, options) {
+async function normalizeImplicitTileData(tile, basePath, rootSubtree, implicitOptions, loaderOptions) {
   if (!tile) {
     return null;
   }
-  tile.lodMetricType = LOD_METRIC_TYPE.GEOMETRIC_ERROR;
-  tile.lodMetricValue = tile.geometricError;
-  tile.transformMatrix = tile.transform;
   const {
     children,
     contentUrl
   } = await parseImplicitTiles({
     subtree: rootSubtree,
-    options,
-    s2VolumeBox: tile
+    implicitOptions,
+    loaderOptions
   });
+  let tileContentUrl;
+  let tileContent = null;
   if (contentUrl) {
-    tile.contentUrl = contentUrl;
-    tile.content = {
-      uri: contentUrl.replace("".concat(options.basePath, "/"), '')
+    tileContentUrl = contentUrl;
+    tileContent = {
+      uri: contentUrl.replace(`${basePath}/`, '')
     };
   }
-  tile.refine = getRefine(tile.refine);
-  tile.type = getTileType(tile);
-  tile.children = children;
-  tile.id = tile.contentUrl;
-  return tile;
+  const tilePostprocessed = {
+    ...tile,
+    id: tileContentUrl,
+    contentUrl: tileContentUrl,
+    lodMetricType: LOD_METRIC_TYPE.GEOMETRIC_ERROR,
+    lodMetricValue: tile.geometricError,
+    transformMatrix: tile.transform,
+    type: getTileType(tile, tileContentUrl),
+    refine: getRefine(tile.refine),
+    content: tileContent || tile.content,
+    children
+  };
+  return tilePostprocessed;
 }
 function getImplicitTilingExtensionData(tile) {
   var _tile$extensions;
@@ -20205,7 +18111,7 @@ const Tiles3DLoader = {
   id: '3d-tiles',
   name: '3D Tiles',
   module: '3d-tiles',
-  version: VERSION$5,
+  version: VERSION$4,
   extensions: ['cmpt', 'pnts', 'b3dm', 'i3dm'],
   mimeTypes: ['application/octet-stream'],
   tests: ['cmpt', 'pnts', 'b3dm', 'i3dm'],
@@ -20219,12 +18125,42 @@ const Tiles3DLoader = {
     }
   }
 };
-function getBaseUri(tileset) {
-  return dirname(tileset.url);
+async function parse(data) {
+  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  let context = arguments.length > 2 ? arguments[2] : undefined;
+  const loaderOptions = options['3d-tiles'] || {};
+  let isTileset;
+  if (loaderOptions.isTileset === 'auto') {
+    isTileset = (context === null || context === void 0 ? void 0 : context.url) && context.url.indexOf('.json') !== -1;
+  } else {
+    isTileset = loaderOptions.isTileset;
+  }
+  return isTileset ? parseTileset(data, options, context) : parseTile(data, options, context);
+}
+async function parseTileset(data, options, context) {
+  var _tilesetJson$root;
+  const tilesetJson = JSON.parse(new TextDecoder().decode(data));
+  const tilesetUrl = (context === null || context === void 0 ? void 0 : context.url) || '';
+  const basePath = getBaseUri(tilesetUrl);
+  const normalizedRoot = await normalizeTileHeaders(tilesetJson, basePath, options || {});
+  const tilesetJsonPostprocessed = {
+    ...tilesetJson,
+    shape: 'tileset3d',
+    loader: Tiles3DLoader,
+    url: tilesetUrl,
+    queryString: (context === null || context === void 0 ? void 0 : context.queryString) || '',
+    basePath,
+    root: normalizedRoot || tilesetJson.root,
+    type: TILESET_TYPE.TILES3D,
+    lodMetricType: LOD_METRIC_TYPE.GEOMETRIC_ERROR,
+    lodMetricValue: ((_tilesetJson$root = tilesetJson.root) === null || _tilesetJson$root === void 0 ? void 0 : _tilesetJson$root.geometricError) || 0
+  };
+  return tilesetJsonPostprocessed;
 }
 async function parseTile(arrayBuffer, options, context) {
   const tile = {
     content: {
+      shape: 'tile3d',
       featureIds: null
     }
   };
@@ -20232,33 +18168,8 @@ async function parseTile(arrayBuffer, options, context) {
   await parse3DTile(arrayBuffer, byteOffset, options, context, tile.content);
   return tile.content;
 }
-async function parseTileset(data, options, context) {
-  var _tilesetJson$root;
-  const tilesetJson = JSON.parse(new TextDecoder().decode(data));
-  tilesetJson.loader = options.loader || Tiles3DLoader;
-  tilesetJson.url = context.url;
-  tilesetJson.queryString = context.queryString;
-  tilesetJson.basePath = getBaseUri(tilesetJson);
-  tilesetJson.root = await normalizeTileHeaders(tilesetJson, options);
-  tilesetJson.type = TILESET_TYPE.TILES3D;
-  tilesetJson.lodMetricType = LOD_METRIC_TYPE.GEOMETRIC_ERROR;
-  tilesetJson.lodMetricValue = ((_tilesetJson$root = tilesetJson.root) === null || _tilesetJson$root === void 0 ? void 0 : _tilesetJson$root.lodMetricValue) || 0;
-  return tilesetJson;
-}
-async function parse(data, options, context) {
-  const loaderOptions = options['3d-tiles'] || {};
-  let isTileset;
-  if (loaderOptions.isTileset === 'auto') {
-    isTileset = context.url && context.url.indexOf('.json') !== -1;
-  } else {
-    isTileset = loaderOptions.isTileset;
-  }
-  if (isTileset) {
-    data = await parseTileset(data, options, context);
-  } else {
-    data = await parseTile(data, options, context);
-  }
-  return data;
+function getBaseUri(tilesetUrl) {
+  return dirname(tilesetUrl);
 }
 
 const CESIUM_ION_URL = 'https://api.cesium.com/v1/assets';
@@ -20276,22 +18187,20 @@ async function getIonTilesetMetadata(accessToken, assetId) {
     type,
     url
   } = ionAssetMetadata;
-  assert$8(type === '3DTILES' && url);
+  assert$6(type === '3DTILES' && url);
   ionAssetMetadata.headers = {
-    Authorization: "Bearer ".concat(ionAssetMetadata.accessToken)
+    Authorization: `Bearer ${ionAssetMetadata.accessToken}`
   };
   return ionAssetMetadata;
 }
 async function getIonAssets(accessToken) {
-  assert$8(accessToken);
+  assert$6(accessToken);
   const url = CESIUM_ION_URL;
   const headers = {
-    Authorization: "Bearer ".concat(accessToken)
+    Authorization: `Bearer ${accessToken}`
   };
   const response = await fetchFile(url, {
-    fetch: {
-      headers
-    }
+    headers
   });
   if (!response.ok) {
     throw new Error(response.statusText);
@@ -20299,24 +18208,20 @@ async function getIonAssets(accessToken) {
   return await response.json();
 }
 async function getIonAssetMetadata(accessToken, assetId) {
-  assert$8(accessToken, assetId);
+  assert$6(accessToken, assetId);
   const headers = {
-    Authorization: "Bearer ".concat(accessToken)
+    Authorization: `Bearer ${accessToken}`
   };
-  const url = "".concat(CESIUM_ION_URL, "/").concat(assetId);
-  let response = await fetchFile("".concat(url), {
-    fetch: {
-      headers
-    }
+  const url = `${CESIUM_ION_URL}/${assetId}`;
+  let response = await fetchFile(`${url}`, {
+    headers
   });
   if (!response.ok) {
     throw new Error(response.statusText);
   }
   let metadata = await response.json();
-  response = await fetchFile("".concat(url, "/endpoint"), {
-    fetch: {
-      headers
-    }
+  response = await fetchFile(`${url}/endpoint`, {
+    headers
   });
   if (!response.ok) {
     throw new Error(response.statusText);
@@ -20396,7 +18301,7 @@ function getCameraFrustum(camera) {
     camera.updateMatrixWorld(); // make sure camera's world matrix is updated
     camera.matrixWorldInverse.copy(camera.matrixWorld).invert();
     const frustum = new Frustum();
-    frustum.setFromProjectionMatrix(new Matrix4$2().multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse));
+    frustum.setFromProjectionMatrix(new Matrix4$1().multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse));
     return frustum;
 }
 function loadersPlaneToMesh(plane) {
@@ -20404,9 +18309,9 @@ function loadersPlaneToMesh(plane) {
     // Create a basic rectangle geometry from math.gl plane
     const planeGeometry = new PlaneGeometry(10, 5);
     // Align the geometry to the plane
-    const coplanarPoint = new Vector3$2(...plane.projectPointOntoPlane([0, 0, 0]));
-    const normal = new Vector3$2(plane.normal.x, plane.normal.y, plane.normal.z);
-    const focalPoint = new Vector3$2().copy(coplanarPoint).add(normal);
+    const coplanarPoint = new Vector3$1(...plane.projectPointOntoPlane([0, 0, 0]));
+    const normal = new Vector3$1(plane.normal.x, plane.normal.y, plane.normal.z);
+    const focalPoint = new Vector3$1().copy(coplanarPoint).add(normal);
     planeGeometry.lookAt(focalPoint);
     planeGeometry.translate(coplanarPoint.x, coplanarPoint.y, coplanarPoint.z);
     // Edges
@@ -20430,7 +18335,7 @@ function loadersBoundingBoxToMesh(tile) {
     }
     const boxColor = new Color(redColor, 1.0, 0.0);
     const boxGeometry = new BoxGeometry(1, 1, 1);
-    const boxTransform = new Matrix4$2();
+    const boxTransform = new Matrix4$1();
     if (boundingVolume.halfAxes) {
         boxTransform.copy(getMatrix4FromHalfAxes(boundingVolume.halfAxes));
     }
@@ -20440,12 +18345,12 @@ function loadersBoundingBoxToMesh(tile) {
     boxGeometry.applyMatrix4(boxTransform);
     const edges = new EdgesGeometry(boxGeometry);
     const dispPlane = new LineSegments(edges, new LineBasicMaterial({ color: boxColor }));
-    dispPlane.position.copy(new Vector3$2(...boundingVolume.center));
+    dispPlane.position.copy(new Vector3$1(...boundingVolume.center));
     return dispPlane;
 }
 function getMatrix4FromHalfAxes(halfAxes) {
     const m = halfAxes;
-    const rotateMatrix = new Matrix4$2().fromArray([
+    const rotateMatrix = new Matrix4$1().fromArray([
         m[0] * 2,
         m[1] * 2,
         m[2] * 2,
@@ -20769,8 +18674,8 @@ class Loader3DTiles {
                 pointSize: { type: 'f', value: options.pointSize },
                 gradient: { type: 't', value: gradientTexture },
                 grayscale: { type: 't', value: grayscaleTexture },
-                rootCenter: { type: 'vec3', value: new Vector3$2() },
-                rootNormal: { type: 'vec3', value: new Vector3$2() },
+                rootCenter: { type: 'vec3', value: new Vector3$1() },
+                rootNormal: { type: 'vec3', value: new Vector3$1() },
                 coloring: { type: 'i', value: options.pointCloudColoring },
                 hideGround: { type: 'b', value: true },
                 elevationRange: { type: 'vec2', value: new Vector2$1(0, 400) },
@@ -20859,9 +18764,9 @@ class Loader3DTiles {
                     } }) }));
             //
             // transformations
-            const threeMat = new Matrix4$2();
-            const tileTrasnform = new Matrix4$2();
-            const rootCenter = new Vector3$2();
+            const threeMat = new Matrix4$1();
+            const tileTrasnform = new Matrix4$1();
+            const rootCenter = new Vector3$1();
             let orientationDetected = false;
             if (tileset.root.boundingVolume) {
                 if (tileset.root.header.boundingVolume.region) {
@@ -20883,7 +18788,7 @@ class Loader3DTiles {
             let disposeFlag = false;
             let loadingEnded = false;
             pointcloudUniforms.rootCenter.value.copy(rootCenter);
-            pointcloudUniforms.rootNormal.value.copy(new Vector3$2(0, 0, 1).normalize());
+            pointcloudUniforms.rootNormal.value.copy(new Vector3$1(0, 0, 1).normalize());
             // Extra stats
             tileset.stats.get('Loader concurrency').count = options.maxConcurrency;
             tileset.stats.get('Maximum SSE').count = options.maximumScreenSpaceError;
@@ -20891,11 +18796,11 @@ class Loader3DTiles {
             let timer = 0;
             let lastCameraTransform = null;
             let lastCameraAspect = null;
-            const lastCameraPosition = new Vector3$2(Infinity, Infinity, Infinity);
+            const lastCameraPosition = new Vector3$1(Infinity, Infinity, Infinity);
             let sseDenominator = null;
             root.updateMatrixWorld(true);
-            const lastRootTransform = new Matrix4$2().copy(root.matrixWorld);
-            const rootTransformInverse = new Matrix4$2().copy(lastRootTransform).invert();
+            const lastRootTransform = new Matrix4$1().copy(root.matrixWorld);
+            const rootTransformInverse = new Matrix4$1().copy(lastRootTransform).invert();
             detectOrientation(tileset.root);
             updateResetTransform();
             if (options.debug) {
@@ -20919,13 +18824,13 @@ class Loader3DTiles {
                     return;
                 }
                 const halfAxes = tile.boundingVolume.halfAxes;
-                const orientationMatrix = new Matrix4$2()
+                const orientationMatrix = new Matrix4$1()
                     .extractRotation(getMatrix4FromHalfAxes(halfAxes))
-                    .premultiply(new Matrix4$2().extractRotation(rootTransformInverse));
+                    .premultiply(new Matrix4$1().extractRotation(rootTransformInverse));
                 const rotation = new Euler().setFromRotationMatrix(orientationMatrix);
                 if (!rotation.equals(new Euler())) {
                     orientationDetected = true;
-                    const pos = new Vector3$2(tileTrasnform.elements[12], tileTrasnform.elements[13], tileTrasnform.elements[14]);
+                    const pos = new Vector3$1(tileTrasnform.elements[12], tileTrasnform.elements[13], tileTrasnform.elements[14]);
                     tileTrasnform.extractRotation(orientationMatrix);
                     tileTrasnform.setPosition(pos);
                     updateResetTransform();
@@ -20936,8 +18841,8 @@ class Loader3DTiles {
                     // Reset the current model matrix and apply our own transformation
                     threeMat.copy(tileTrasnform).invert();
                     threeMat.premultiply(lastRootTransform);
-                    threeMat.copy(lastRootTransform).multiply(new Matrix4$2().copy(tileTrasnform).invert());
-                    tileset.modelMatrix = new Matrix4$1(threeMat.toArray());
+                    threeMat.copy(lastRootTransform).multiply(new Matrix4$1().copy(tileTrasnform).invert());
+                    tileset.modelMatrix = new Matrix4(threeMat.toArray());
                 }
             }
             function tilesetUpdate(tileset, renderMap, renderer, camera) {
@@ -21075,7 +18980,7 @@ class Loader3DTiles {
                         pointcloudUniforms.alpha.value = alpha;
                     },
                     getLatLongHeightFromPosition: (position) => {
-                        const cartographicPosition = tileset.ellipsoid.cartesianToCartographic(new Vector3$2().copy(position).applyMatrix4(new Matrix4$2().copy(threeMat).invert()).toArray());
+                        const cartographicPosition = tileset.ellipsoid.cartesianToCartographic(new Vector3$1().copy(position).applyMatrix4(new Matrix4$1().copy(threeMat).invert()).toArray());
                         return {
                             lat: cartographicPosition[1],
                             long: cartographicPosition[0],
@@ -21084,7 +18989,7 @@ class Loader3DTiles {
                     },
                     getPositionFromLatLongHeight: (coord) => {
                         const cartesianPosition = tileset.ellipsoid.cartographicToCartesian([coord.long, coord.lat, coord.height]);
-                        return new Vector3$2(...cartesianPosition).applyMatrix4(threeMat);
+                        return new Vector3$1(...cartesianPosition).applyMatrix4(threeMat);
                     },
                     getCameraFrustum: (camera) => {
                         const frustum = getCameraFrustum(camera);
@@ -21105,9 +19010,9 @@ class Loader3DTiles {
                                 timer = 0;
                                 lastRootTransform.copy(root.matrixWorld);
                                 updateResetTransform();
-                                const rootCenter = new Vector3$2().setFromMatrixPosition(lastRootTransform);
+                                const rootCenter = new Vector3$1().setFromMatrixPosition(lastRootTransform);
                                 pointcloudUniforms.rootCenter.value.copy(rootCenter);
-                                pointcloudUniforms.rootNormal.value.copy(new Vector3$2(0, 0, 1).applyMatrix4(lastRootTransform).normalize());
+                                pointcloudUniforms.rootNormal.value.copy(new Vector3$1(0, 0, 1).applyMatrix4(lastRootTransform).normalize());
                                 rootTransformInverse.copy(lastRootTransform).invert();
                                 if (options.debug) {
                                     boxMap[tileset.root.id].matrixWorld.copy(threeMat);
@@ -21115,7 +19020,7 @@ class Loader3DTiles {
                                 }
                             }
                             if (lastCameraTransform == null) {
-                                lastCameraTransform = new Matrix4$2().copy(camera.matrixWorld);
+                                lastCameraTransform = new Matrix4$1().copy(camera.matrixWorld);
                             }
                             else {
                                 const cameraChanged = !camera.matrixWorld.equals(lastCameraTransform) ||
@@ -21160,10 +19065,10 @@ function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTransform
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, reject) => {
             var _a;
-            const rotateX = new Matrix4$2().makeRotationAxis(new Vector3$2(1, 0, 0), Math.PI / 2);
+            const rotateX = new Matrix4$1().makeRotationAxis(new Vector3$1(1, 0, 0), Math.PI / 2);
             const shouldRotate = ((_a = tile.tileset.asset) === null || _a === void 0 ? void 0 : _a.gltfUpAxis) !== "Z";
             // The computed trasnform already contains the root's transform, so we have to invert it
-            const contentTransform = new Matrix4$2().fromArray(tile.computedTransform).premultiply(rootTransformInverse);
+            const contentTransform = new Matrix4$1().fromArray(tile.computedTransform).premultiply(rootTransformInverse);
             if (shouldRotate) {
                 contentTransform.multiply(rotateX); // convert from GLTF Y-up to Z-up
             }
@@ -21231,7 +19136,7 @@ function createPointNodes(tile, pointcloudMaterial, options, rootTransformInvers
     }
     const geometry = new BufferGeometry();
     geometry.setAttribute('position', new Float32BufferAttribute(d.points, 3));
-    const contentTransform = new Matrix4$2().fromArray(tile.computedTransform).premultiply(rootTransformInverse);
+    const contentTransform = new Matrix4$1().fromArray(tile.computedTransform).premultiply(rootTransformInverse);
     if (d.rgba) {
         geometry.setAttribute('color', new Float32BufferAttribute(d.rgba, 4));
     }
@@ -21249,7 +19154,7 @@ function createPointNodes(tile, pointcloudMaterial, options, rootTransformInvers
     const tileContent = new Points(geometry, options.material || pointcloudMaterial);
     if (d.rtc_center) {
         const c = d.rtc_center;
-        contentTransform.multiply(new Matrix4$2().makeTranslation(c[0], c[1], c[2]));
+        contentTransform.multiply(new Matrix4$1().makeTranslation(c[0], c[1], c[2]));
     }
     tileContent.applyMatrix4(contentTransform);
     return tileContent;

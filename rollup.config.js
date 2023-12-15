@@ -4,13 +4,14 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import alias from '@rollup/plugin-alias';
 import eslint from '@rollup/plugin-eslint';
 import terser from '@rollup/plugin-terser';
+import commonjs from '@rollup/plugin-commonjs';
 import { getOcularConfig } from 'ocular-dev-tools';
 
 const { NODE_ENV } = process.env;
 const input = 'src/index.ts';
 const name = 'ThreeLoader3DTiles';
 const sourcemap = true;
-
+  
 // If developing along with loaders.gl, use the source instead of the package from npm
 
 const commonPlugins = (env) => {
@@ -29,6 +30,7 @@ const commonPlugins = (env) => {
         )
       : []
     }),
+    commonjs(),
     addSyntheticNamedExportsToSkippedNodeImports(),
     nodeResolve({
       extensions: ['.js', '.ts'],

@@ -149,6 +149,8 @@ interface Runtime {
   getLatLongHeightFromPosition(Vector3): GeoCoord;
   /** When viewing a Geo-located tileset, world-space `Vector3` from a {@link GeoCoord}. */
   getPositionFromLatLongHeight(GeoCoord): Vector3;
+  /** Orient a WGS84 globe to lat/long*/
+  orientToGeocoord(coord: GeoCoord): void;
   /** Get the current camera frustum as mesh planes (for debugging purposes). */
   getCameraFrustum(Camera): Object3D;
   /** Update the tileset for rendering. */

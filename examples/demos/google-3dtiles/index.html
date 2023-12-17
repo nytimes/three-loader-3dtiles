@@ -63,7 +63,7 @@
   <div id="canvas-parent"></div>
   <div id="stats-widget"></div>
 
-  <div id="guide">
+  <!--div id="guide">
     <p>
     <span id="example-desc">
       Map overlay provided by <b>OpenStreetMap</b> using the <b>geo-three</b> library.
@@ -78,10 +78,11 @@
         <li><b>tilesetUrl</b>: Load another tileset json.</li>
       </ul>
     </p>
-  </div>
+  </div-->
 
   <script type='module'>
     import { 
+      Vector3,
       Scene, 
       PerspectiveCamera, 
       WebGLRenderer, 
@@ -139,11 +140,6 @@
     let tilesModel = undefined;
     let statsRuntime = undefined;
 
-    const provider = new OpenStreetMapsProvider();
-    const map = new MapView(MapView.PLANAR, provider);
-
-    scene.add(map)
-
     async function loadTileset() {
       const result = await Loader3DTiles.load(
         {
@@ -155,8 +151,9 @@
             dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.137.0/examples/js/libs/draco',
             basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.137.0/examples/js/libs/basis',
             pointCloudColoring: PointCloudColoring.RGB,
-            maximumScreenSpaceError: queryParams.get('sse') ?? 6,
-            geoTransform: GeoTransform.Mercator
+            maximumScreenSpaceError: queryParams.get('sse') ?? 16,
+            geoTransform: GeoTransform.WGS84,
+            debug: false
           }
         }
       );
@@ -165,41 +162,24 @@
 
       tilesRuntime = runtime;
       tilesModel = model;
+
       scene.add(model);
+      scene.add(runtime.getTileBoxes());
 
       statsRuntime = new StatsWidget(runtime.getStats(), {container: statsParent });
       statsParent.style.visibility = 'visible';
 
-      if (!queryParams.get('tilesetUrl')) {
-        // Scaling the scan to align with Maps, and bringing it up above the map
-        model.scale.set(1.27, 1.27, 1.27);
-        model.translateZ(230);
-      }
-      camera.position.copy(model.position);
-      camera.position.set(30000, 10000, 10000);
+      console.log("Model position", model.position);
+      // Tokyo tower
+      runtime.orientToGeocoord({lat: 35.6586, long: 139.7454, height: 80});
 
-      controls.target.copy(model.position);
+      camera.translateY(1000);
       controls.update();
+
+      console.log("Model is in", model.matrixWorld);
 
       //zoomIn();
     }
-
-    function zoomIn() {
-      controls.enabled = false
-      TweenMax.to( camera.position, {
-        duration: 5,
-        y: queryParams.get('tilesetUrl') ? 100 : 3000,
-        onUpdate: function() {
-          controls.update();
-        },
-        onComplete: function() {
-          controls.enabled = true;
-          camera.near = 1;
-          camera.updateProjectionMatrix();
-        }
-      } );
-    }
-
 
     function render(t) {
       const dt = clock.getDelta()

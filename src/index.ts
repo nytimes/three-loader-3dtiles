@@ -2,8 +2,9 @@ import { load } from '@loaders.gl/core';
 import { CesiumIonLoader, Tiles3DLoader } from '@loaders.gl/3d-tiles';
 import { Tileset3D, TILE_TYPE, TILE_CONTENT_STATE } from '@loaders.gl/tiles';
 import { CullingVolume, Plane } from '@math.gl/culling';
+import { Ellipsoid } from '@math.gl/geospatial';
 import  { _PerspectiveFrustum as PerspectiveFrustum}  from '@math.gl/culling';
-import { Matrix4 as MathGLMatrix4 } from '@math.gl/core';
+import { Matrix4 as MathGLMatrix4, toRadians } from '@math.gl/core';
 import * as Util from './util';
 import {
   Object3D,
@@ -11,6 +12,7 @@ import {
   Matrix4,
   Vector3,
   Vector2,
+  Quaternion,
   Mesh,
   BufferGeometry,
   MeshStandardMaterial,
@@ -209,7 +211,7 @@ class Loader3DTiles {
       },
       onTileLoad: async (tile) => {
         if (tileset) {
-          if (!orientationDetected && tile?.depth <= MAX_DEPTH_FOR_ORIENTATION) {
+          if (options.geoTransform == GeoTransform.Reset && !orientationDetected && tile?.depth <= MAX_DEPTH_FOR_ORIENTATION) {
             detectOrientation(tile);
           }
           tileset._frameNumber++;
@@ -243,6 +245,8 @@ class Loader3DTiles {
     const tileTrasnform = new Matrix4();
     const rootCenter = new Vector3();
     let orientationDetected = false;
+
+    console.log("Tileset root:", tileset.root);
 
     if (tileset.root.boundingVolume) {
       if (tileset.root.header.boundingVolume.region) {
@@ -291,8 +295,10 @@ class Loader3DTiles {
     const lastRootTransform:Matrix4 = new Matrix4().copy(root.matrixWorld)
     const rootTransformInverse = new Matrix4().copy(lastRootTransform).invert();
 
-    detectOrientation(tileset.root);
-    updateResetTransform();
+    if (options.geoTransform == GeoTransform.Reset) {
+      detectOrientation(tileset.root);
+      updateResetTransform();
+    }
 
     if (options.debug) {
       boxMap[tileset.root.id].applyMatrix4(threeMat);
@@ -311,7 +317,6 @@ class Loader3DTiles {
       );
 
       root.position.copy(rootCenter);
-      root.rotation.set(-Math.PI / 2, 0, 0);
 
       root.updateMatrixWorld(true);
 
@@ -346,15 +351,15 @@ class Loader3DTiles {
     }
 
     function updateResetTransform() {
-      if (options.geoTransform != GeoTransform.WGS84Cartesian) {
-        // Reset the current model matrix and apply our own transformation
-        threeMat.copy(tileTrasnform).invert();
-        threeMat.premultiply(lastRootTransform);
-      
-        threeMat.copy(lastRootTransform).multiply(new Matrix4().copy(tileTrasnform).invert());
+      // Reset the current model matrix and apply our own transformation
+      threeMat.copy(tileTrasnform).invert();
+      threeMat.premultiply(lastRootTransform);
+    
+      threeMat.copy(lastRootTransform).multiply(new Matrix4().copy(tileTrasnform).invert());
 
-        tileset.modelMatrix = new MathGLMatrix4(threeMat.toArray());
-      }
+      console.log("Tile transform", tileTrasnform, "Last root trasnform", lastRootTransform, "New model matrix", threeMat);
+
+      tileset.modelMatrix = new MathGLMatrix4(threeMat.toArray());
     }
 
     function tilesetUpdate(tileset, renderMap, renderer, camera) {
@@ -519,8 +524,31 @@ class Loader3DTiles {
           };
         },
         getPositionFromLatLongHeight: (coord) => {
-          const cartesianPosition = tileset.ellipsoid.cartographicToCartesian([coord.long, coord.lat, coord.height]);
+          const cartesianPosition = tileset.ellipsoid.cartographicToCartesian([
+            toRadians(coord.long),
+            toRadians(coord.lat),
+            coord.height
+          ]);
           return new Vector3(...cartesianPosition).applyMatrix4(threeMat);
+        },
+        orientToGeocoord: (coord:GeoCoord) => {
+          // Set the transofrmation matrix to the rotate the WGS84 globe to the given lat/long/Alt
+          const cartographicPosition = [coord.long, coord.lat, coord.height];
+
+          const cartesianPosition:number[] = tileset.ellipsoid.cartographicToCartesian(cartographicPosition);
+          const ellipsoidTransform = new Matrix4().fromArray(tileset.ellipsoid.eastNorthUpToFixedFrame(cartesianPosition));
+
+          console.log("Ellipsoid transform", ellipsoidTransform);
+
+          const geoTransform = new Matrix4().copy(ellipsoidTransform).setPosition(...cartesianPosition).invert()
+          
+          tileset.modelMatrix = new MathGLMatrix4(geoTransform.toArray());
+
+          console.log("Geo transform", geoTransform);
+          console.log("Model matrix", tileset.modelMatrix);
+
+          root.applyMatrix4(geoTransform);
+          root.updateMatrixWorld(true);
         },
         getCameraFrustum: (camera: Camera) => {
           const frustum = Util.getCameraFrustum(camera);
@@ -543,7 +571,9 @@ class Loader3DTiles {
             if (!lastRootTransform.equals(root.matrixWorld)) {
               timer = 0;
               lastRootTransform.copy(root.matrixWorld);
-              updateResetTransform();
+              if (options.geoTransform == GeoTransform.Reset) {
+                updateResetTransform();
+              }
 
               const rootCenter = new Vector3().setFromMatrixPosition(lastRootTransform);
               pointcloudUniforms.rootCenter.value.copy(rootCenter);

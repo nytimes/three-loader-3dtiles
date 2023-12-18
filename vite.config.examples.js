@@ -6,9 +6,7 @@ import terser from '@rollup/plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
 
 import { defineConfig } from 'vite';
-import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
-const input = 'src/index.ts';
 
 export default defineConfig({
     // Configuration options go here
@@ -22,16 +20,10 @@ export default defineConfig({
             input: {
                 'three-loader-3diles': 'src/index.ts',
                 'google-3d-tiles-example': 'examples/demos/google-3dtiles/index.html',
+                'realitycapture-example': 'examples/demos/realitycapture/index.html',
+                'map-overlay-example': 'examples/demos/map-overlay/index.html',
+                'cesium': 'examples/demos/cesium/index.html',
             },
-            output: {
-                entryFileNames: '[name].js',
-            },
-            external: [
-                'three',
-                'three/examples/jsm/loaders/GLTFLoader.js',
-                'three/examples/jsm/loaders/DRACOLoader.js',
-                'three/examples/jsm/loaders/KTX2Loader.js'
-            ],
         }
     }
 });

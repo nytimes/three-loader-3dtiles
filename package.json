@@ -20,8 +20,8 @@
   ],
   "type": "module",
   "scripts": {
-    "build": "vite build",
-    "dev": "vite",
+    "build": "vite --config vite.config.lib.js build && vite --config vite.config.examples.js build",
+    "dev": "vite --config vite.config.examples.js",
     "build:types": "tsc --declaration --emitDeclarationOnly --declarationMap --declarationDir lib/",
     "api:extract": "api-extractor run --local --verbose",
     "api:extract:production": "api-extractor run",

@@ -291,7 +291,7 @@ class Loader3DTiles {
     const lastRootTransform:Matrix4 = new Matrix4().copy(root.matrixWorld)
     const rootTransformInverse = new Matrix4().copy(lastRootTransform).invert();
 
-    if (options.geoTransform == GeoTransform.Reset) {
+    if (options.geoTransform == GeoTransform.Reset || options.geoTransform == GeoTransform.Mercator) {
       detectOrientation(tileset.root);
       updateResetTransform();
     }
@@ -352,8 +352,6 @@ class Loader3DTiles {
       threeMat.premultiply(lastRootTransform);
     
       threeMat.copy(lastRootTransform).multiply(new Matrix4().copy(tileTrasnform).invert());
-
-      console.log("Tile transform", tileTrasnform, "Last root trasnform", lastRootTransform, "New model matrix", threeMat);
 
       tileset.modelMatrix = new MathGLMatrix4(threeMat.toArray());
     }
@@ -567,7 +565,7 @@ class Loader3DTiles {
             if (!lastRootTransform.equals(root.matrixWorld)) {
               timer = 0;
               lastRootTransform.copy(root.matrixWorld);
-              if (options.geoTransform == GeoTransform.Reset) {
+              if (options.geoTransform == GeoTransform.Reset || options.geoTransform == GeoTransform.Mercator) {
                 updateResetTransform();
               }
 

@@ -3,4 +3,4 @@
 node_modules
 lib
 temp
-dist/three-loader-3dtiles.js*
+dist/*

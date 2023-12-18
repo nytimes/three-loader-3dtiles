@@ -169,14 +169,11 @@
       statsRuntime = new StatsWidget(runtime.getStats(), {container: statsParent });
       statsParent.style.visibility = 'visible';
 
-      console.log("Model position", model.position);
       // Tokyo tower
-      runtime.orientToGeocoord({lat: 35.6586, long: 139.7454, height: 80});
+      runtime.orientToGeocoord({lat: 35.6586, long: 139.7454, height: 500});
 
       camera.translateY(1000);
       controls.update();
-
-      console.log("Model is in", model.matrixWorld);
 
       //zoomIn();
     }

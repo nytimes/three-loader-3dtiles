@@ -2,7 +2,6 @@ import { load } from '@loaders.gl/core';
 import { CesiumIonLoader, Tiles3DLoader } from '@loaders.gl/3d-tiles';
 import { Tileset3D, TILE_TYPE, TILE_CONTENT_STATE } from '@loaders.gl/tiles';
 import { CullingVolume, Plane } from '@math.gl/culling';
-import { Ellipsoid } from '@math.gl/geospatial';
 import  { _PerspectiveFrustum as PerspectiveFrustum}  from '@math.gl/culling';
 import { Matrix4 as MathGLMatrix4, toRadians } from '@math.gl/core';
 import * as Util from './util';
@@ -12,7 +11,6 @@ import {
   Matrix4,
   Vector3,
   Vector2,
-  Quaternion,
   Mesh,
   BufferGeometry,
   MeshStandardMaterial,
@@ -245,8 +243,6 @@ class Loader3DTiles {
     const tileTrasnform = new Matrix4();
     const rootCenter = new Vector3();
     let orientationDetected = false;
-
-    console.log("Tileset root:", tileset.root);
 
     if (tileset.root.boundingVolume) {
       if (tileset.root.header.boundingVolume.region) {
@@ -538,14 +534,14 @@ class Loader3DTiles {
           const cartesianPosition:number[] = tileset.ellipsoid.cartographicToCartesian(cartographicPosition);
           const ellipsoidTransform = new Matrix4().fromArray(tileset.ellipsoid.eastNorthUpToFixedFrame(cartesianPosition));
 
-          console.log("Ellipsoid transform", ellipsoidTransform);
+          // Flip to Z is altitiude, Y is north, X is east
+          const alignRotation = new Matrix4().makeRotationFromEuler(
+            new Euler(Math.PI / 2, Math.PI / 2, 0)
+          );
 
-          const geoTransform = new Matrix4().copy(ellipsoidTransform).setPosition(...cartesianPosition).invert()
+          const geoTransform = new Matrix4().copy(ellipsoidTransform).multiply(alignRotation).invert()
           
           tileset.modelMatrix = new MathGLMatrix4(geoTransform.toArray());
-
-          console.log("Geo transform", geoTransform);
-          console.log("Model matrix", tileset.modelMatrix);
 
           root.applyMatrix4(geoTransform);
           root.updateMatrixWorld(true);
@@ -614,8 +610,8 @@ class Loader3DTiles {
           while (tileBoxes.children.length > 0) {
             const obj = tileBoxes.children[0] as LineSegments;
             tileBoxes.remove(obj);
-            obj.geometry.dispose();
-            (<Material>obj.material).dispose();
+            (obj as Mesh).geometry.dispose();
+            (obj as Mesh).material.dispose();
           }
           if (ktx2Loader) {
             ktx2Loader.dispose();

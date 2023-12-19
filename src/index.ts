@@ -626,13 +626,18 @@ class Loader3DTiles {
 async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTransformInverse): Promise<Object3D> {
   return new Promise((resolve, reject) => {
     const rotateX = new Matrix4().makeRotationAxis(new Vector3(1, 0, 0), Math.PI / 2);
-    const shouldRotate = tile.tileset.asset?.gltfUpAxis !== "Z";
+    const shouldRotate = tile.content.gltfUpAxis !== "Z";
 
     // The computed trasnform already contains the root's transform, so we have to invert it
     const contentTransform = new Matrix4().fromArray(tile.computedTransform).premultiply(rootTransformInverse);
 
     if (shouldRotate) {
       contentTransform.multiply(rotateX); // convert from GLTF Y-up to Z-up
+    }
+
+    if (!tile.content.byteLength) {
+      // In some cases (Google 3D Tiles) the byte length is not set in the header
+      tile.content.byteLength = tile.content.gltfArrayBuffer.byteLength;
     }
 
     gltfLoader.parse(

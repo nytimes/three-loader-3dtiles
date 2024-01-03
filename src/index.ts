@@ -176,6 +176,7 @@ class Loader3DTiles {
     const tileOptions = {
       maximumMemoryUsage: options.maximumMemoryUsage,
       maximumScreenSpaceError: options.maximumScreenSpaceError,
+      memoryAdjustedScreenSpaceError: true,
       viewDistanceScale: options.viewDistanceScale,
       skipLevelOfDetail: options.skipLevelOfDetail,
       updateTransforms: options.updateTransforms,
@@ -275,9 +276,6 @@ class Loader3DTiles {
 
     // Extra stats
     tileset.stats.get('Loader concurrency').count = options.maxConcurrency
-
-    tileset.stats.get('Maximum SSE').count = options.maximumScreenSpaceError;
-
     tileset.stats.get('Maximum mem usage').count = options.maximumMemoryUsage;
 
     let timer = 0;
@@ -636,7 +634,7 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTra
     }
 
     if (!tile.content.byteLength) {
-      // In some cases (Google 3D Tiles) the byte length is not set in the header
+      // In some cases (Google 3D Tiles) the byte length is not set in the content header
       tile.content.byteLength = tile.content.gltfArrayBuffer.byteLength;
     }
 

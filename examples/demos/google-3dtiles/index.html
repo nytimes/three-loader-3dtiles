@@ -94,6 +94,7 @@
     } from 'three';
 
     import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+    import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 
     import { Loader3DTiles, PointCloudColoring, GeoTransform } from '../../../src/index';
     import { MapView, OpenStreetMapsProvider } from 'geo-three'
@@ -135,6 +136,17 @@
     }
 
     loadTileset();
+    
+    const guiParams = {
+      'googleApiKey': queryParams.get('googleApiKey') ?? '',
+      'reload': setQueryParams,
+    };
+    
+    function setQueryParams() {
+      queryParams.set('googleApiKey', guiParams.googleApiKey);
+      window.history.replaceState({}, '', '?' + queryParams.toString());
+      window.location.reload();
+    }
 
     let tilesRuntime = undefined;
     let tilesModel = undefined;
@@ -153,7 +165,6 @@
             pointCloudColoring: PointCloudColoring.RGB,
             maximumScreenSpaceError: queryParams.get('sse') ?? 16,
             geoTransform: GeoTransform.WGS84,
-            debug: false
           }
         }
       );
@@ -170,7 +181,7 @@
       statsParent.style.visibility = 'visible';
 
       // Tokyo tower
-      runtime.orientToGeocoord({lat: 35.6586, long: 139.7454, height: 500});
+      runtime.orientToGeocoord({lat: 35.6586, long: 139.7454, height: 100});
 
       camera.translateY(1000);
       controls.update();
@@ -201,6 +212,17 @@
       camera.updateProjectionMatrix();
     }
     window.addEventListener('resize', onWindowResize)
+
+    // GUI
+    const gui = new GUI()
+    .title("Query params");
+    gui.width = 300;
+    gui.add( guiParams, 'googleApiKey' )
+    .onFinishChange((value) => {
+      setQueryParams();
+    });
+    gui.add( guiParams, 'reload' );
+    gui.open();
 
     render();
   </script>

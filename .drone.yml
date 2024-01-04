@@ -41,6 +41,17 @@ steps:
     when:
       branch:
       - main
+      - dev 
+
+  - name: publish
+    image: plugins/gh-pages
+    settings:
+      username: 
+        from_secret: github_username
+      ssh_key:
+        from_secret: github_ssh_key
+    when:
+      branch:
       - dev
 
   - name: npm

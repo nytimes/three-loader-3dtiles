@@ -6,7 +6,7 @@
 
 Set the current view distance scale. See [LoaderOptions](./three-loader-3dtiles.loaderoptions.md)
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 setViewDistanceScale(number: any): void;
@@ -18,7 +18,7 @@ setViewDistanceScale(number: any): void;
 |  --- | --- | --- |
 |  number | any |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

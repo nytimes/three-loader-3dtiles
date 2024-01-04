@@ -6,7 +6,7 @@
 
 Apply a custom material, supports both b3dm (mesh) tiles and Point Cloud tiles - Default: `undefined` \*
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 material?: Material;

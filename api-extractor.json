@@ -1,7 +1,7 @@
 
 {
   "$schema": "https://developer.microsoft.com/json-schemas/api-extractor/v7/api-extractor.schema.json",
-  "mainEntryPointFilePath": "<projectFolder>/lib/index.d.ts",
+  "mainEntryPointFilePath": "<projectFolder>/dist/lib/index.d.ts",
   "apiReport": {
     "enabled": true,
     "reportFileName": "three-loader-3dtiles.api.md"
@@ -12,7 +12,7 @@
   },
   "dtsRollup": {
     "enabled": true,
-    "untrimmedFilePath": "<projectFolder>/dist/three-loader-3dtiles.d.ts"
+    "untrimmedFilePath": "<projectFolder>/dist/lib/three-loader-3dtiles.d.ts"
   },
   "messages": {
     "compilerMessageReporting": {
@@ -22,6 +22,10 @@
     },
     "extractorMessageReporting": {
       "ae-missing-release-tag": {
+        "logLevel": "none",
+        "addToApiReportFile": false
+      },
+      "ae-wrong-input-file-type": {
         "logLevel": "none",
         "addToApiReportFile": false
       }

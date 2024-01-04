@@ -6,7 +6,7 @@
 
 \_EXPERIMENTAL\_: Skip traversal mechanism, not yet supported. Default: `false`
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 skipLevelOfDetail?: boolean;

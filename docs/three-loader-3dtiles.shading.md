@@ -6,7 +6,7 @@
 
 Types of shading used when viewing b3dm (mesh) tiles
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 declare enum Shading 

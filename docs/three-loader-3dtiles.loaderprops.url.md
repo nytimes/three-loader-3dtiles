@@ -6,7 +6,7 @@
 
 The URL of the tileset. For example if using Cesium ION, it would have the form: `https://assets.cesium.com/[ASSET_ID]/tileset.json`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 url: string;

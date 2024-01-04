@@ -6,7 +6,7 @@
 
 In point clouds wher the points are classified as `Ground`<!-- -->, hide the ground level points - Default: `false`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 setHideGround(boolean: any): void;
@@ -18,7 +18,7 @@ setHideGround(boolean: any): void;
 |  --- | --- | --- |
 |  boolean | any |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

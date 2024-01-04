@@ -6,7 +6,7 @@
 
 When using a three.js loading manager, do not call `onLoad` until this number of tiles were loaded - Default: `undefined`
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 preloadTilesCount?: number;

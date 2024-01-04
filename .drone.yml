@@ -4,29 +4,29 @@ name: default
    
 steps:
   - name: install
-    image: node:14
+    image: node:18
     commands:
       - npm install
 
   - name: build
-    image: node:14
+    image: node:18
     commands:
-      - npm run build:production
+      - npm run build
     when:
       branch:
       - main
       - dev
 
   - name: build-npm
-    image: node:14
+    image: node:18
     commands:
-      - npm run build:production
+      - npm run build
     when:
       event:
       - tag
 
   - name: test
-    image: node:14
+    image: node:18
     commands:
       - npm run test
     when:
@@ -35,7 +35,7 @@ steps:
       - dev
 
   - name: docs
-    image: node:14
+    image: node:18
     commands:
       - npm run docs:production
     when:

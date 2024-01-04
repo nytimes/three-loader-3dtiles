@@ -6,7 +6,7 @@
 
 Container object for interfacing with lat/long/height coordinates
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 interface GeoCoord 
@@ -14,9 +14,9 @@ interface GeoCoord
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [height](./three-loader-3dtiles.geocoord.height.md) | number |  |
-|  [lat](./three-loader-3dtiles.geocoord.lat.md) | number |  |
-|  [long](./three-loader-3dtiles.geocoord.long.md) | number |  |
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [height](./three-loader-3dtiles.geocoord.height.md) |  | number |  |
+|  [lat](./three-loader-3dtiles.geocoord.lat.md) |  | number |  |
+|  [long](./three-loader-3dtiles.geocoord.long.md) |  | number |  |
 

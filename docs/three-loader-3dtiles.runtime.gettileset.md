@@ -6,12 +6,12 @@
 
 Get a reference to the loaders.gl [Tileset3D](https://github.com/visgl/loaders.gl/blob/master/modules/tiles/docs/api-reference/tileset-3d.md) object.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getTileset(): Tileset3D;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Tileset3D
 

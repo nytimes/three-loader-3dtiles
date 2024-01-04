@@ -6,7 +6,7 @@
 
 Required when using compressed textures (basis universal) for GPU feature detection.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 renderer?: WebGLRenderer;

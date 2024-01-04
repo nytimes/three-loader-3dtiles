@@ -6,7 +6,7 @@
 
 When viewing Point Cloud tiles, how should the points be colored ([PointCloudColoring](./three-loader-3dtiles.pointcloudcoloring.md)<!-- -->) - Default: `PointCloudColoring.White`
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 pointCloudColoring?: PointCloudColoring;

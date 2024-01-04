@@ -6,7 +6,7 @@
 
 When viewing a Geo-located tileset, world-space `Vector3` from a [GeoCoord](./three-loader-3dtiles.geocoord.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getPositionFromLatLongHeight(GeoCoord: any): Vector3;
@@ -18,7 +18,7 @@ getPositionFromLatLongHeight(GeoCoord: any): Vector3;
 |  --- | --- | --- |
 |  GeoCoord | any |  |
 
-<b>Returns:</b>
+**Returns:**
 
 Vector3
 

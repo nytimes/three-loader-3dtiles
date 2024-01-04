@@ -6,7 +6,7 @@
 
 How to handle geo transformations: Reset any geo location and place the model at (0,0,0), Apply Mercator projection (for use with ccommon 2D mapping applications, or convert WGS84 long/lat to 3D cartesian coordinates)- Default: `Reset`
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 geoTransform?: GeoTransform;

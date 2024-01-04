@@ -6,7 +6,7 @@
 
 Whether to throttle network requests so that tiles got out of the frame before the request launched, would not be requested - Default: `true`
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 throttleRequests?: boolean;

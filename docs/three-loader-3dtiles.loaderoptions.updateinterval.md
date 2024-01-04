@@ -6,7 +6,7 @@
 
 Interval in seconds for the traverser to check in an update is needed - Default: `0.1`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 updateInterval?: number;

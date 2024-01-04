@@ -4,9 +4,9 @@
 
 ## LoaderOptions.maximumScreenSpaceError property
 
-determines the distance from tiles in which they are refined, depending on their geometrical size. increase the value to load lower lod tiles from the same view distance (increases performnace) - default: `16`<!-- -->.
+determines the distance from tiles in which they are refined, depending on their geometrical size. increase the value to load lower lod tiles from the same view distance (increases performnace) - Default: `16`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 maximumScreenSpaceError?: number;

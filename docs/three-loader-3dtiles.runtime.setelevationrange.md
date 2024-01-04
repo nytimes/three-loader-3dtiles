@@ -6,7 +6,7 @@
 
 In point clouds when coloring by `PointCloudColoring.Elevation`<!-- -->, set the min/max elevation values - Default: `[0, 400]`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 setElevationRange(range: ReadonlyArray<number>): void;
@@ -18,7 +18,7 @@ setElevationRange(range: ReadonlyArray<number>): void;
 |  --- | --- | --- |
 |  range | ReadonlyArray&lt;number&gt; |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

@@ -6,7 +6,7 @@
 
 Whether to use workers when processing DRACO-compressed tiles - Default: `true`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 worker?: boolean;

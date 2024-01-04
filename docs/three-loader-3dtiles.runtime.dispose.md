@@ -6,12 +6,12 @@
 
 Dispose of all of the tileset's assets in memory.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 dispose(): void;
 ```
-<b>Returns:</b>
+**Returns:**
 
 void
 

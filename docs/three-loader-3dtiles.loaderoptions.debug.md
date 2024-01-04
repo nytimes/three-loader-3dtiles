@@ -6,7 +6,7 @@
 
 Debug mode: Show tile bounding boxes. Make sure to add the boxes to the scene from [Runtime.getTileBoxes()](./three-loader-3dtiles.runtime.gettileboxes.md) - Default: `false`
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 debug?: boolean;

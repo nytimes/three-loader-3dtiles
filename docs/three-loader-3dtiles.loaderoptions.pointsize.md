@@ -6,7 +6,7 @@
 
 Point size for Point Cloud tiles - Default: `1.0`
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 pointSize?: number;

@@ -6,7 +6,7 @@
 
 Show or hide the tile bounding boxes.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 showTiles(boolean: any): void;
@@ -18,7 +18,7 @@ showTiles(boolean: any): void;
 |  --- | --- | --- |
 |  boolean | any |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

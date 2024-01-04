@@ -6,7 +6,7 @@
 
 In point clouds when, set the alpha value. Default: `1.0`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 setPointAlpha(number: any): void;
@@ -18,7 +18,7 @@ setPointAlpha(number: any): void;
 |  --- | --- | --- |
 |  number | any |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

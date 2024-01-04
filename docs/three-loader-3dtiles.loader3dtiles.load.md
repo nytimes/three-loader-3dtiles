@@ -6,7 +6,7 @@
 
 Loads a tileset of 3D Tiles according to the given [LoaderProps](./three-loader-3dtiles.loaderprops.md)
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 static load(props: LoaderProps): Promise<{
@@ -19,11 +19,11 @@ static load(props: LoaderProps): Promise<{
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  props | LoaderProps | Properties for this load call [LoaderProps](./three-loader-3dtiles.loaderprops.md)<!-- -->. |
+|  props | [LoaderProps](./three-loader-3dtiles.loaderprops.md) | Properties for this load call [LoaderProps](./three-loader-3dtiles.loaderprops.md)<!-- -->. |
 
-<b>Returns:</b>
+**Returns:**
 
-Promise&lt;{ model: Object3D; runtime: Runtime; }&gt;
+Promise&lt;{ model: Object3D; runtime: [Runtime](./three-loader-3dtiles.runtime.md)<!-- -->; }&gt;
 
 An object containing the 3D Model to be added to the scene and a runtime engine to be updated every frame.
 

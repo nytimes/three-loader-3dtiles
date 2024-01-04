@@ -4,7 +4,7 @@
 
 ## GeoCoord.lat property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 lat: number;

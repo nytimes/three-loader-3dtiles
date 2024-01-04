@@ -6,12 +6,12 @@
 
 Get a reference to the probe.gl [Stats](https://github.com/uber-web/probe.gl/blob/master/docs/api-reference/stats/stats.md) object.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getStats(): Stats;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Stats
 

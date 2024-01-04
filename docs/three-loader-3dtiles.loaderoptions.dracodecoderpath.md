@@ -6,7 +6,7 @@
 
 A path to that contains the draco library. e.g: `https://unpkg.com/three@0.129.0/examples/js/libs/draco` - Default: `undefined`
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 dracoDecoderPath?: string;

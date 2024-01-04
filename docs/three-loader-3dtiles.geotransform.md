@@ -4,7 +4,7 @@
 
 ## GeoTransform enum
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 declare enum GeoTransform 

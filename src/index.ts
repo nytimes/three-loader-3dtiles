@@ -52,7 +52,9 @@ const defaultOptions: LoaderOptions = {
   updateInterval: 0.1,
   maxConcurrency: 1,
   maximumScreenSpaceError: 16,
+  memoryAdjustedScreenSpaceError: true,
   maximumMemoryUsage: 32,
+  memoryCacheOverflow : 1,
   viewDistanceScale: 1.0,
   skipLevelOfDetail: false,
   updateTransforms: true,
@@ -176,7 +178,8 @@ class Loader3DTiles {
     const tileOptions = {
       maximumMemoryUsage: options.maximumMemoryUsage,
       maximumScreenSpaceError: options.maximumScreenSpaceError,
-      memoryAdjustedScreenSpaceError: true,
+      memoryAdjustedScreenSpaceError: options.memoryAdjustedScreenSpaceError,
+      memoryCacheOverflow: options.memoryCacheOverflow,
       viewDistanceScale: options.viewDistanceScale,
       skipLevelOfDetail: options.skipLevelOfDetail,
       updateTransforms: options.updateTransforms,
@@ -606,8 +609,8 @@ class Loader3DTiles {
           while (tileBoxes.children.length > 0) {
             const obj = tileBoxes.children[0] as LineSegments;
             tileBoxes.remove(obj);
-            (obj as Mesh).geometry.dispose();
-            (obj as Mesh).material.dispose();
+            obj.geometry.dispose();
+            (obj.material as Material).dispose();
           }
           if (ktx2Loader) {
             ktx2Loader.dispose();

@@ -106,7 +106,7 @@
       0.01,
       10000,
     );
-    camera.position.set(0, 2000, 0);
+    camera.position.set(0, 4000, 0);
 
     const renderer = new WebGLRenderer();
     const clock = new Clock()
@@ -138,7 +138,8 @@
             cesiumIONToken: queryParams.get('ionToken') ?? ION_TOKEN, 
             dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.137.0/examples/js/libs/draco',
             pointCloudColoring: PointCloudColoring.RGB,
-            maximumScreenSpaceError: 4
+            maximumScreenSpaceError: 6,
+            memoryAdjustedScreenSpaceError: false
           }
         }
       );

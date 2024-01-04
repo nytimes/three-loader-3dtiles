@@ -2,9 +2,9 @@
   "name": "three-loader-3dtiles",
   "version": "1.1.17",
   "description": "A 3D Tiles loader for Three.js",
-  "main": "dist/three-loader-3dtiles.esm.js",
-  "module": "dist/three-loader-3dtiles.esm.js",
-  "typings": "dist/three-loader-3dtiles.d.ts",
+  "main": "dist/lib/three-loader-3dtiles.umd.cjs",
+  "module": "dist/lib/three-loader-3dtiles.js",
+  "typings": "dist/lib/three-loader-3dtiles.d.ts",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -22,7 +22,7 @@
   "scripts": {
     "build": "vite --config vite.config.lib.js build && vite --config vite.config.examples.js build",
     "dev": "vite --config vite.config.examples.js",
-    "build:types": "tsc --declaration --emitDeclarationOnly --declarationMap --declarationDir lib/",
+    "build:types": "tsc --declaration --emitDeclarationOnly --declarationMap --declarationDir dist/lib/",
     "api:extract": "api-extractor run --local --verbose",
     "api:extract:production": "api-extractor run",
     "api:generate": "api-documenter markdown --input-folder temp --output-folder docs/",
@@ -41,10 +41,10 @@
     "@loaders.gl/core": "^4.0.4",
     "@loaders.gl/polyfills": "^4.1.0-alpha.5",
     "@loaders.gl/schema": "^4.1.0-alpha.5",
-    "@softrobot/loaders.gl-tiles": "^4.1.0-fork.5",
     "@math.gl/core": "^4.0.0",
     "@math.gl/culling": "^4.0.0",
     "@probe.gl/stats-widget": "^4.0.4",
+    "@softrobot/loaders.gl-tiles": "^4.1.0-fork.5",
     "geo-three": "^0.1.14",
     "jpeg-js": ">=0.4.0",
     "three-story-controls": "^1.0.6"

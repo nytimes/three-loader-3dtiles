@@ -53,14 +53,18 @@ interface LoaderOptions {
   cesiumIONToken?: string;
   /** Google API Key for loading Google Maps 3D Tiles*/
   googleApiKey?: string;
-  /** Whether to check if the tileset was transformed, set to `true` if the model is changes position in runtime. Default: `true` */
+  /** Whether to check if the tileset was transformed, set to `true` if the model is changes position in runtime - Default: `true`. */
   updateTransforms?: boolean;
   /** Interval in seconds for the traverser to check in an update is needed - Default: `0.1`. */
   updateInterval?: number;
   /** Maximum GPU memory (MB) to use for displaying tiles. May go over the limit if tiles within the camera viewport exceed that ammount - Default: `32`. */
   maximumMemoryUsage?: number;
-  /** determines the distance from tiles in which they are refined, depending on their geometrical size. increase the value to load lower lod tiles from the same view distance (increases performnace) - default: `16`.*/
+  /** determines the distance from tiles in which they are refined, depending on their geometrical size. increase the value to load lower lod tiles from the same view distance (increases performnace) - Default: `16`.*/
   maximumScreenSpaceError?: number;
+  /** Whether to adjust the screen space error to maintain the maximum memory limit - Default `true`.*/
+  memoryAdjustedScreenSpaceError?: boolean;
+  /* The maximum additional memory (in MB) to allow for cache headroom before adjusting the screen spacer error - Default: `1`. */
+  memoryCacheOverflow: number;
   /** 0-1 scale for the LOD quality. A lower value loads tiles from lower LODs (increases performance). */ 
   viewDistanceScale?: number;
   /** Maximum worker thread concurrency when processing DRACO-compressed tiles - Default: `1` worker. */

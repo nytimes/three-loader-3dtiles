@@ -6,6 +6,7 @@ export default defineConfig({
         '@loaders.gl/tiles': '@softrobot/loaders.gl-tiles'
       }
     },
+    base: './',
     optimizeDeps: {
       exclude: ['@loaders.gl/tiles', '@loaders.gl/3d-tiles']
     },

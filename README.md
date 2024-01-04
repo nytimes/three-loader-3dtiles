@@ -21,9 +21,10 @@ Development of this library started at The New York Times R&D as an effort to cr
 ---
 
 ## Demos
-* [Photogrammetry exported to 3D Tiles in RealityCapture](https://nytimes.github.io/three-loader-3dtiles/examples/demos/realitycapture)
-* [LiDAR Point Cloud hosted as 3D Tiles in Cesium ION](https://nytimes.github.io/three-loader-3dtiles/examples/demos/cesium)
-* [Map overlay with OpenStreetMap](https://nytimes.github.io/three-loader-3dtiles/examples/demos/map-overlay)
+* [Photogrammetry exported to 3D Tiles in RealityCapture](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/realitycapture)
+* [LiDAR Point Cloud hosted as 3D Tiles in Cesium ION](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/cesium)
+* [Map overlay with OpenStreetMap](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/map-overlay)
+* [Google 3D Tiles](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/google-3dtiles)
 
 ---
 

@@ -6,7 +6,7 @@
 
 Use a Three JS loading manager
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 loadingManager?: LoadingManager;

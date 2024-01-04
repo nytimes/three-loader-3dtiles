@@ -2,7 +2,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3D Tiles Loader: RealityCapture</title>
+  <title>3D Tiles Loader: Google Maps 3D Tiles</title>
   <style>
     * {
       margin: 0;
@@ -33,7 +33,6 @@
     #guide p {
       margin-top: 10px;
     }
-
     #stats-widget  {
       position: fixed;
       top: 70px;
@@ -61,80 +60,67 @@
   </style>
 </head>
 <body>
-  <div id='canvas-parent'></div>
+  <div id="canvas-parent"></div>
   <div id="stats-widget"></div>
 
-  <div id="guide">
+  <!--div id="guide">
+    <p>
     <span id="example-desc">
-      <b>Freeman Alley, New York.</b> Captured using iPhone 12 Pro Max and processed via RealityCapture.
+      Map overlay provided by <b>OpenStreetMap</b> using the <b>geo-three</b> library.
     </span>
-    <p>Use arrow/WASD keys or mouse wheel/trackpad to move around, and click and drag to turn/rotate the camera.</p>
+    </p>
+    <p>
+    Use arrow keys, mouse wheel/trackpad, or right click to move around, and left click and drag to turn/rotate the camera.
+    </p>
     <p>
       <u>Available URL parameters:</u>
       <ul>
         <li><b>tilesetUrl</b>: Load another tileset json.</li>
-        <li><b>sse</b>: Change the maximum screen space error.</li>
       </ul>
     </p>
-  </div>
+  </div-->
 
   <script type='module'>
     import { 
+      Vector3,
       Scene, 
       PerspectiveCamera, 
       WebGLRenderer, 
+      GridHelper, 
       Clock,
       Matrix4,
       Euler,
-      sRGBEncoding,
-      Math as ThreeMath
+      sRGBEncoding
     } from 'three';
 
     import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+    import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 
-    import { Loader3DTiles } from '../../../src/index.ts';
-
-    import { CameraRig, FreeMovementControls } from 'three-story-controls'
+    import { Loader3DTiles, PointCloudColoring, GeoTransform } from '../../../src/index';
+    import { MapView, OpenStreetMapsProvider } from 'geo-three'
+    import { TweenMax } from 'gsap'
 
     import Stats from 'three/examples/jsm/libs/stats.module.js';
     import StatsWidget from '@probe.gl/stats-widget';
-
-    const queryParams = new URLSearchParams(document.location.search);
 
     const canvasParent = document.querySelector('#canvas-parent');
     const statsParent = document.querySelector('#stats-widget')
 
     const scene = new Scene();
     const camera = new PerspectiveCamera(
-      35,
+      45,
       1,
-      0.01,
-      1000,
+      100,
+      1000000,
     );
 
     const renderer = new WebGLRenderer();
-    renderer.outputEncoding = sRGBEncoding;
+    renderer.preserveDrawingBuffer  = true;
 
     const clock = new Clock()
-    const rig = new CameraRig(camera, scene)
-    
-    let controls = undefined;
+    const controls = new OrbitControls( camera, canvasParent);
+    controls.listenToKeyEvents( window );
 
-    if (queryParams.get('orbit')) {
-      controls = new OrbitControls( camera, canvasParent);
-      controls.listenToKeyEvents( document.body );
-      camera.position.set(0,200,0);
-      controls.update();
-    } else {
-      controls = new FreeMovementControls(rig, {
-        panDegreeFactor: 2,
-        wheelScaleFactor: 0.01,
-        keyboardScaleFactor: 0.015,
-        keyboardDampFactor: 0
-      });
-      controls.enable();
-    }
-    
     canvasParent.appendChild(renderer.domElement);
 
     const threeJsStats = new Stats();
@@ -144,49 +130,68 @@
 
     canvasParent.appendChild( threeJsStats.domElement );
 
-
-    let tilesRuntime = undefined;
-    let statsRuntime = undefined;
-
+    const queryParams = new URLSearchParams(document.location.search);
     if (queryParams.get('tilesetUrl')) {
-      document.querySelector('#example-desc').style.display = 'none';
+      renderer.outputEncoding = sRGBEncoding;
     }
 
     loadTileset();
+    
+    const guiParams = {
+      'googleApiKey': queryParams.get('googleApiKey') ?? '',
+      'reload': setQueryParams,
+    };
+    
+    function setQueryParams() {
+      queryParams.set('googleApiKey', guiParams.googleApiKey);
+      window.history.replaceState({}, '', '?' + queryParams.toString());
+      window.location.reload();
+    }
 
+    let tilesRuntime = undefined;
+    let tilesModel = undefined;
+    let statsRuntime = undefined;
 
     async function loadTileset() {
       const result = await Loader3DTiles.load(
         {
           url:
-            queryParams.get('tilesetUrl') ??
-           'https://int.nyt.com/data/3dscenes/ONA360/TILESET/0731_FREEMAN_ALLEY_10M_A_36x8K__10K-PN_50P_DB/tileset_tileset.json',
+            "https://tile.googleapis.com/v1/3dtiles/root.json",
           renderer: renderer,
           options: {
+            googleApiKey: queryParams.get('googleApiKey') ?? '',
             dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.137.0/examples/js/libs/draco',
             basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.137.0/examples/js/libs/basis',
-            maximumScreenSpaceError: queryParams.get('sse') ?? 48,
+            pointCloudColoring: PointCloudColoring.RGB,
+            maximumScreenSpaceError: queryParams.get('sse') ?? 16,
+            geoTransform: GeoTransform.WGS84,
           }
         }
       );
 
       const {model, runtime} = result;
-      model.rotation.set(-Math.PI / 2, 0, Math.PI / 2);
-
-      if (!queryParams.get('tilesetUrl')) {
-        model.position.set(-1, 4, -16);
-      }
 
       tilesRuntime = runtime;
+      tilesModel = model;
+
       scene.add(model);
+      scene.add(runtime.getTileBoxes());
 
       statsRuntime = new StatsWidget(runtime.getStats(), {container: statsParent });
       statsParent.style.visibility = 'visible';
+
+      // Tokyo tower
+      runtime.orientToGeocoord({lat: 35.6586, long: 139.7454, height: 100});
+
+      camera.translateY(1000);
+      controls.update();
+
+      //zoomIn();
     }
 
     function render(t) {
       const dt = clock.getDelta()
-      controls.update(t);
+      controls.update();
       if (tilesRuntime) {
         tilesRuntime.update(dt, renderer, camera);
       }
@@ -208,8 +213,19 @@
     }
     window.addEventListener('resize', onWindowResize)
 
+    // GUI
+    const gui = new GUI()
+    .title("Query params");
+    gui.width = 300;
+    gui.add( guiParams, 'googleApiKey' )
+    .onFinishChange((value) => {
+      setQueryParams();
+    });
+    gui.add( guiParams, 'reload' );
+    gui.open();
+
     render();
   </script>
-  <a id="button" target="_blank" href="https://github.com/nytimes/three-loader-3dtiles/blob/master/examples/demos/realitycapture/index.html" title="View source code for demo" style=""><img src="../ic_code_black_24dp.svg"></a>
+  <a id="button" target="_blank" href="https://github.com/nytimes/three-loader-3dtiles/blob/master/examples/demos/map-overlay/index.html" title="View source code for demo" style=""><img src="../ic_code_black_24dp.svg"></a>
 </body>
 </html>

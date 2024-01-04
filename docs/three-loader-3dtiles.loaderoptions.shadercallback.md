@@ -6,7 +6,7 @@
 
 When viewing b3dm (mesh) tiles, a callback to update shader uniforms - Default: `undefined`
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 shaderCallback?: (shader: Shader, renderer: WebGLRenderer) => void;

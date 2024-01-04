@@ -6,7 +6,7 @@
 
 Whether to set the material as transparent - Default: `false`
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 transparent?: boolean;

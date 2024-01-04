@@ -6,12 +6,12 @@
 
 Get the tile bounding boxes group when `debug: true` is set.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getTileBoxes(): Object3D;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Object3D
 

@@ -6,7 +6,7 @@
 
 Types of coloring used when viewing point cloud tiles
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 declare enum PointCloudColoring 

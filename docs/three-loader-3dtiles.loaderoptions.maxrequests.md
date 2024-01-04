@@ -6,7 +6,7 @@
 
 When thorttling requests, how many requests can launch simultaneously - Default: `64`
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 maxRequests?: number;

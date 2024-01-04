@@ -6,7 +6,7 @@
 
 0-1 scale for the LOD quality. A lower value loads tiles from lower LODs (increases performance).
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 viewDistanceScale?: number;

@@ -6,7 +6,7 @@
 
 When viewing b3dm (mesh) tiles, compute the vertex normals - Default: `false`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 computeNormals?: boolean;

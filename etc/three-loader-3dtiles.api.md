@@ -49,11 +49,15 @@ export interface LoaderOptions {
     debug?: boolean;
     dracoDecoderPath?: string;
     geoTransform?: GeoTransform;
+    googleApiKey?: string;
     material?: Material;
     maxConcurrency?: number;
     maximumMemoryUsage?: number;
     maximumScreenSpaceError?: number;
     maxRequests?: number;
+    memoryAdjustedScreenSpaceError?: boolean;
+    // (undocumented)
+    memoryCacheOverflow: number;
     pointCloudColoring?: PointCloudColoring;
     pointSize?: number;
     preloadTilesCount?: number;
@@ -101,6 +105,7 @@ export interface Runtime {
     getStats(): Stats;
     getTileBoxes(): Object3D;
     getTileset(): Tileset3D;
+    orientToGeocoord(coord: GeoCoord): void;
     setDebug(boolean: any): void;
     setElevationRange(range: ReadonlyArray<number>): void;
     setHideGround(boolean: any): void;
@@ -124,7 +129,6 @@ export enum Shading {
     // (undocumented)
     ShadedTexture = 2
 }
-
 
 // (No @packageDocumentation comment for this package)
 

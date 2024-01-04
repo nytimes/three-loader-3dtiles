@@ -6,7 +6,7 @@
 
 a loading progress callback function
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 onProgress?(progress: number | ProgressEvent<EventTarget>, total?: number): void;
@@ -17,9 +17,9 @@ onProgress?(progress: number | ProgressEvent<EventTarget>, total?: number): void
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  progress | number \| ProgressEvent&lt;EventTarget&gt; |  |
-|  total | number |  |
+|  total | number | _(Optional)_ |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

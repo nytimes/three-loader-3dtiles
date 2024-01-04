@@ -6,7 +6,7 @@
 
 A Cesium ION access token when loading tilesets from Cesium ION.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 cesiumIONToken?: string;

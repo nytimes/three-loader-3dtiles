@@ -6,7 +6,7 @@
 
 Enable or disable deubg mode.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 setDebug(boolean: any): void;
@@ -18,7 +18,7 @@ setDebug(boolean: any): void;
 |  --- | --- | --- |
 |  boolean | any |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

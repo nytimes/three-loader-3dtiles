@@ -6,7 +6,7 @@
 
 When viewing b3dm (mesh) tiles, which type of [Shading](./three-loader-3dtiles.shading.md) is used - Default: `Shading.FlatTexture`
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 shading?: Shading;

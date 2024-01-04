@@ -6,7 +6,7 @@
 
 When viewing b3dm (mesh) tiles, show meshes as wireframe - Default: `false`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 wireframe?: boolean;

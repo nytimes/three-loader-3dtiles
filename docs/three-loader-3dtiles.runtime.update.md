@@ -6,7 +6,7 @@
 
 Update the tileset for rendering.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 update(number: any, WebGLRenderer: any, Camera: any): void;
@@ -20,7 +20,7 @@ update(number: any, WebGLRenderer: any, Camera: any): void;
 |  WebGLRenderer | any |  |
 |  Camera | any |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

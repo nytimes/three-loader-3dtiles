@@ -6,7 +6,7 @@
 
 3D Tiles Loader
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 declare class Loader3DTiles 

@@ -4,7 +4,7 @@
 
 ## GeoCoord.long property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 long: number;

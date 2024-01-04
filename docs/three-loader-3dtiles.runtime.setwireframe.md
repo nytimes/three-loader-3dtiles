@@ -6,7 +6,7 @@
 
 Enable or disable wireframe mode.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 setWireframe(boolean: any): void;
@@ -18,7 +18,7 @@ setWireframe(boolean: any): void;
 |  --- | --- | --- |
 |  boolean | any |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

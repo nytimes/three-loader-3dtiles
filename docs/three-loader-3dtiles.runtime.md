@@ -6,7 +6,7 @@
 
 Runtime methods that can be used once a tileset is loaded
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 interface Runtime 
@@ -23,6 +23,7 @@ interface Runtime
 |  [getStats()](./three-loader-3dtiles.runtime.getstats.md) | Get a reference to the probe.gl [Stats](https://github.com/uber-web/probe.gl/blob/master/docs/api-reference/stats/stats.md) object. |
 |  [getTileBoxes()](./three-loader-3dtiles.runtime.gettileboxes.md) | Get the tile bounding boxes group when <code>debug: true</code> is set. |
 |  [getTileset()](./three-loader-3dtiles.runtime.gettileset.md) | Get a reference to the loaders.gl [Tileset3D](https://github.com/visgl/loaders.gl/blob/master/modules/tiles/docs/api-reference/tileset-3d.md) object. |
+|  [orientToGeocoord(coord)](./three-loader-3dtiles.runtime.orienttogeocoord.md) | Orient a WGS84 globe to lat/long |
 |  [setDebug(boolean)](./three-loader-3dtiles.runtime.setdebug.md) | Enable or disable deubg mode. |
 |  [setElevationRange(range)](./three-loader-3dtiles.runtime.setelevationrange.md) | In point clouds when coloring by <code>PointCloudColoring.Elevation</code>, set the min/max elevation values - Default: <code>[0, 400]</code>. |
 |  [setHideGround(boolean)](./three-loader-3dtiles.runtime.sethideground.md) | In point clouds wher the points are classified as <code>Ground</code>, hide the ground level points - Default: <code>false</code>. |

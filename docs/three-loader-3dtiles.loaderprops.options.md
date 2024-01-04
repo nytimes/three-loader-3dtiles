@@ -6,7 +6,7 @@
 
 Advanced options for loading the tileset ([LoaderOptions](./three-loader-3dtiles.loaderoptions.md)<!-- -->)
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 options?: LoaderOptions;

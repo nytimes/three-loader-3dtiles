@@ -6,7 +6,7 @@
 
 Set the current shading mode for b3dm tiles. See [Shading](./three-loader-3dtiles.shading.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 setShading(Shading: any): void;
@@ -18,7 +18,7 @@ setShading(Shading: any): void;
 |  --- | --- | --- |
 |  Shading | any |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

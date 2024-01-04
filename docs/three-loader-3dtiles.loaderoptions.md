@@ -6,7 +6,7 @@
 
 Advanced loader options
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 interface LoaderOptions 
@@ -14,30 +14,33 @@ interface LoaderOptions
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [basisTranscoderPath?](./three-loader-3dtiles.loaderoptions.basistranscoderpath.md) | string | <i>(Optional)</i> A path to that contains the basis universal library. e.g: <code>https://unpkg.com/three@0.129.0/examples/js/libs/basis</code> - Default: <code>undefined</code> |
-|  [cesiumIONToken?](./three-loader-3dtiles.loaderoptions.cesiumiontoken.md) | string | <i>(Optional)</i> A Cesium ION access token when loading tilesets from Cesium ION. |
-|  [computeNormals?](./three-loader-3dtiles.loaderoptions.computenormals.md) | boolean | <i>(Optional)</i> When viewing b3dm (mesh) tiles, compute the vertex normals - Default: <code>false</code>. |
-|  [debug?](./three-loader-3dtiles.loaderoptions.debug.md) | boolean | <i>(Optional)</i> Debug mode: Show tile bounding boxes. Make sure to add the boxes to the scene from [Runtime.getTileBoxes()](./three-loader-3dtiles.runtime.gettileboxes.md) - Default: <code>false</code> |
-|  [dracoDecoderPath?](./three-loader-3dtiles.loaderoptions.dracodecoderpath.md) | string | <i>(Optional)</i> A path to that contains the draco library. e.g: <code>https://unpkg.com/three@0.129.0/examples/js/libs/draco</code> - Default: <code>undefined</code> |
-|  [geoTransform?](./three-loader-3dtiles.loaderoptions.geotransform.md) | GeoTransform | <i>(Optional)</i> How to handle geo transformations: Reset any geo location and place the model at (0,0,0), Apply Mercator projection (for use with ccommon 2D mapping applications, or convert WGS84 long/lat to 3D cartesian coordinates)- Default: <code>Reset</code> |
-|  [material?](./three-loader-3dtiles.loaderoptions.material.md) | Material | <i>(Optional)</i> Apply a custom material, supports both b3dm (mesh) tiles and Point Cloud tiles - Default: <code>undefined</code> \* |
-|  [maxConcurrency?](./three-loader-3dtiles.loaderoptions.maxconcurrency.md) | number | <i>(Optional)</i> Maximum worker thread concurrency when processing DRACO-compressed tiles - Default: <code>1</code> worker. |
-|  [maximumMemoryUsage?](./three-loader-3dtiles.loaderoptions.maximummemoryusage.md) | number | <i>(Optional)</i> Maximum GPU memory (MB) to use for displaying tiles. May go over the limit if tiles within the camera viewport exceed that ammount - Default: <code>32</code>. |
-|  [maximumScreenSpaceError?](./three-loader-3dtiles.loaderoptions.maximumscreenspaceerror.md) | number | <i>(Optional)</i> determines the distance from tiles in which they are refined, depending on their geometrical size. increase the value to load lower lod tiles from the same view distance (increases performnace) - default: <code>16</code>. |
-|  [maxRequests?](./three-loader-3dtiles.loaderoptions.maxrequests.md) | number | <i>(Optional)</i> When thorttling requests, how many requests can launch simultaneously - Default: <code>64</code> |
-|  [pointCloudColoring?](./three-loader-3dtiles.loaderoptions.pointcloudcoloring.md) | PointCloudColoring | <i>(Optional)</i> When viewing Point Cloud tiles, how should the points be colored ([PointCloudColoring](./three-loader-3dtiles.pointcloudcoloring.md)<!-- -->) - Default: <code>PointCloudColoring.White</code> |
-|  [pointSize?](./three-loader-3dtiles.loaderoptions.pointsize.md) | number | <i>(Optional)</i> Point size for Point Cloud tiles - Default: <code>1.0</code> |
-|  [preloadTilesCount?](./three-loader-3dtiles.loaderoptions.preloadtilescount.md) | number | <i>(Optional)</i> When using a three.js loading manager, do not call <code>onLoad</code> until this number of tiles were loaded - Default: <code>undefined</code> |
-|  [shaderCallback?](./three-loader-3dtiles.loaderoptions.shadercallback.md) | (shader: Shader, renderer: WebGLRenderer) =&gt; void | <i>(Optional)</i> When viewing b3dm (mesh) tiles, a callback to update shader uniforms - Default: <code>undefined</code> |
-|  [shading?](./three-loader-3dtiles.loaderoptions.shading.md) | Shading | <i>(Optional)</i> When viewing b3dm (mesh) tiles, which type of [Shading](./three-loader-3dtiles.shading.md) is used - Default: <code>Shading.FlatTexture</code> |
-|  [skipLevelOfDetail?](./three-loader-3dtiles.loaderoptions.skiplevelofdetail.md) | boolean | <i>(Optional)</i> \_EXPERIMENTAL\_: Skip traversal mechanism, not yet supported. Default: <code>false</code> |
-|  [throttleRequests?](./three-loader-3dtiles.loaderoptions.throttlerequests.md) | boolean | <i>(Optional)</i> Whether to throttle network requests so that tiles got out of the frame before the request launched, would not be requested - Default: <code>true</code> |
-|  [transparent?](./three-loader-3dtiles.loaderoptions.transparent.md) | boolean | <i>(Optional)</i> Whether to set the material as transparent - Default: <code>false</code> |
-|  [updateInterval?](./three-loader-3dtiles.loaderoptions.updateinterval.md) | number | <i>(Optional)</i> Interval in seconds for the traverser to check in an update is needed - Default: <code>0.1</code>. |
-|  [updateTransforms?](./three-loader-3dtiles.loaderoptions.updatetransforms.md) | boolean | <i>(Optional)</i> Whether to check if the tileset was transformed, set to <code>true</code> if the model is changes position in runtime. Default: <code>true</code> |
-|  [viewDistanceScale?](./three-loader-3dtiles.loaderoptions.viewdistancescale.md) | number | <i>(Optional)</i> 0-1 scale for the LOD quality. A lower value loads tiles from lower LODs (increases performance). |
-|  [wireframe?](./three-loader-3dtiles.loaderoptions.wireframe.md) | boolean | <i>(Optional)</i> When viewing b3dm (mesh) tiles, show meshes as wireframe - Default: <code>false</code>. |
-|  [worker?](./three-loader-3dtiles.loaderoptions.worker.md) | boolean | <i>(Optional)</i> Whether to use workers when processing DRACO-compressed tiles - Default: <code>true</code>. |
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [basisTranscoderPath?](./three-loader-3dtiles.loaderoptions.basistranscoderpath.md) |  | string | _(Optional)_ A path to that contains the basis universal library. e.g: <code>https://unpkg.com/three@0.129.0/examples/js/libs/basis</code> - Default: <code>undefined</code> |
+|  [cesiumIONToken?](./three-loader-3dtiles.loaderoptions.cesiumiontoken.md) |  | string | _(Optional)_ A Cesium ION access token when loading tilesets from Cesium ION. |
+|  [computeNormals?](./three-loader-3dtiles.loaderoptions.computenormals.md) |  | boolean | _(Optional)_ When viewing b3dm (mesh) tiles, compute the vertex normals - Default: <code>false</code>. |
+|  [debug?](./three-loader-3dtiles.loaderoptions.debug.md) |  | boolean | _(Optional)_ Debug mode: Show tile bounding boxes. Make sure to add the boxes to the scene from [Runtime.getTileBoxes()](./three-loader-3dtiles.runtime.gettileboxes.md) - Default: <code>false</code> |
+|  [dracoDecoderPath?](./three-loader-3dtiles.loaderoptions.dracodecoderpath.md) |  | string | _(Optional)_ A path to that contains the draco library. e.g: <code>https://unpkg.com/three@0.129.0/examples/js/libs/draco</code> - Default: <code>undefined</code> |
+|  [geoTransform?](./three-loader-3dtiles.loaderoptions.geotransform.md) |  | [GeoTransform](./three-loader-3dtiles.geotransform.md) | _(Optional)_ How to handle geo transformations: Reset any geo location and place the model at (0,0,0), Apply Mercator projection (for use with ccommon 2D mapping applications, or convert WGS84 long/lat to 3D cartesian coordinates)- Default: <code>Reset</code> |
+|  [googleApiKey?](./three-loader-3dtiles.loaderoptions.googleapikey.md) |  | string | _(Optional)_ Google API Key for loading Google Maps 3D Tiles |
+|  [material?](./three-loader-3dtiles.loaderoptions.material.md) |  | Material | _(Optional)_ Apply a custom material, supports both b3dm (mesh) tiles and Point Cloud tiles - Default: <code>undefined</code> \* |
+|  [maxConcurrency?](./three-loader-3dtiles.loaderoptions.maxconcurrency.md) |  | number | _(Optional)_ Maximum worker thread concurrency when processing DRACO-compressed tiles - Default: <code>1</code> worker. |
+|  [maximumMemoryUsage?](./three-loader-3dtiles.loaderoptions.maximummemoryusage.md) |  | number | _(Optional)_ Maximum GPU memory (MB) to use for displaying tiles. May go over the limit if tiles within the camera viewport exceed that ammount - Default: <code>32</code>. |
+|  [maximumScreenSpaceError?](./three-loader-3dtiles.loaderoptions.maximumscreenspaceerror.md) |  | number | _(Optional)_ determines the distance from tiles in which they are refined, depending on their geometrical size. increase the value to load lower lod tiles from the same view distance (increases performnace) - Default: <code>16</code>. |
+|  [maxRequests?](./three-loader-3dtiles.loaderoptions.maxrequests.md) |  | number | _(Optional)_ When thorttling requests, how many requests can launch simultaneously - Default: <code>64</code> |
+|  [memoryAdjustedScreenSpaceError?](./three-loader-3dtiles.loaderoptions.memoryadjustedscreenspaceerror.md) |  | boolean | _(Optional)_ Whether to adjust the screen space error to maintain the maximum memory limit - Default <code>true</code>. |
+|  [memoryCacheOverflow](./three-loader-3dtiles.loaderoptions.memorycacheoverflow.md) |  | number |  |
+|  [pointCloudColoring?](./three-loader-3dtiles.loaderoptions.pointcloudcoloring.md) |  | [PointCloudColoring](./three-loader-3dtiles.pointcloudcoloring.md) | _(Optional)_ When viewing Point Cloud tiles, how should the points be colored ([PointCloudColoring](./three-loader-3dtiles.pointcloudcoloring.md)<!-- -->) - Default: <code>PointCloudColoring.White</code> |
+|  [pointSize?](./three-loader-3dtiles.loaderoptions.pointsize.md) |  | number | _(Optional)_ Point size for Point Cloud tiles - Default: <code>1.0</code> |
+|  [preloadTilesCount?](./three-loader-3dtiles.loaderoptions.preloadtilescount.md) |  | number | _(Optional)_ When using a three.js loading manager, do not call <code>onLoad</code> until this number of tiles were loaded - Default: <code>undefined</code> |
+|  [shaderCallback?](./three-loader-3dtiles.loaderoptions.shadercallback.md) |  | (shader: Shader, renderer: WebGLRenderer) =&gt; void | _(Optional)_ When viewing b3dm (mesh) tiles, a callback to update shader uniforms - Default: <code>undefined</code> |
+|  [shading?](./three-loader-3dtiles.loaderoptions.shading.md) |  | [Shading](./three-loader-3dtiles.shading.md) | _(Optional)_ When viewing b3dm (mesh) tiles, which type of [Shading](./three-loader-3dtiles.shading.md) is used - Default: <code>Shading.FlatTexture</code> |
+|  [skipLevelOfDetail?](./three-loader-3dtiles.loaderoptions.skiplevelofdetail.md) |  | boolean | _(Optional)_ \_EXPERIMENTAL\_: Skip traversal mechanism, not yet supported. Default: <code>false</code> |
+|  [throttleRequests?](./three-loader-3dtiles.loaderoptions.throttlerequests.md) |  | boolean | _(Optional)_ Whether to throttle network requests so that tiles got out of the frame before the request launched, would not be requested - Default: <code>true</code> |
+|  [transparent?](./three-loader-3dtiles.loaderoptions.transparent.md) |  | boolean | _(Optional)_ Whether to set the material as transparent - Default: <code>false</code> |
+|  [updateInterval?](./three-loader-3dtiles.loaderoptions.updateinterval.md) |  | number | _(Optional)_ Interval in seconds for the traverser to check in an update is needed - Default: <code>0.1</code>. |
+|  [updateTransforms?](./three-loader-3dtiles.loaderoptions.updatetransforms.md) |  | boolean | _(Optional)_ Whether to check if the tileset was transformed, set to <code>true</code> if the model is changes position in runtime - Default: <code>true</code>. |
+|  [viewDistanceScale?](./three-loader-3dtiles.loaderoptions.viewdistancescale.md) |  | number | _(Optional)_ 0-1 scale for the LOD quality. A lower value loads tiles from lower LODs (increases performance). |
+|  [wireframe?](./three-loader-3dtiles.loaderoptions.wireframe.md) |  | boolean | _(Optional)_ When viewing b3dm (mesh) tiles, show meshes as wireframe - Default: <code>false</code>. |
+|  [worker?](./three-loader-3dtiles.loaderoptions.worker.md) |  | boolean | _(Optional)_ Whether to use workers when processing DRACO-compressed tiles - Default: <code>true</code>. |
 

@@ -6,7 +6,7 @@
 
 Maximum GPU memory (MB) to use for displaying tiles. May go over the limit if tiles within the camera viewport exceed that ammount - Default: `32`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 maximumMemoryUsage?: number;

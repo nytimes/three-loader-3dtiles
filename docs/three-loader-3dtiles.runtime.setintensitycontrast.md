@@ -6,7 +6,7 @@
 
 In point clouds when coloring by `PointCloudColoring.Intensity`<!-- -->, set the contrast factor. Default: `1.0`<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 setIntensityContrast(number: any): void;
@@ -18,7 +18,7 @@ setIntensityContrast(number: any): void;
 |  --- | --- | --- |
 |  number | any |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

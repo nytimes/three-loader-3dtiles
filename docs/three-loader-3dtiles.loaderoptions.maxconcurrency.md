@@ -6,7 +6,7 @@
 
 Maximum worker thread concurrency when processing DRACO-compressed tiles - Default: `1` worker.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 maxConcurrency?: number;

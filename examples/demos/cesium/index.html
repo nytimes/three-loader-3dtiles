@@ -76,22 +76,6 @@
     </p>
   </div>
 
-  <script async src="https://ga.jspm.io/npm:es-module-shims@1.4.4/dist/es-module-shims.js"></script>
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.skypack.dev/three@0.137.0",
-        "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/loaders/GLTFLoader",
-        "three/examples/jsm/loaders/DRACOLoader.js": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/loaders/DRACOLoader",
-        "three/examples/jsm/loaders/KTX2Loader.js": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/loaders/KTX2Loader",
-        "three/examples/jsm/controls/OrbitControls": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/controls/OrbitControls",
-        "three/examples/jsm/libs/stats.module.js": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/libs/stats.module",
-        "@probe.gl/stats" : "https://cdn.skypack.dev/@probe.gl/stats@3.3.1",
-        "@probe.gl/stats-widget" : "https://cdn.skypack.dev/@probe.gl/stats-widget@3.5.0",
-        "three-loader-3dtiles" : "../../../dist/three-loader-3dtiles.esm.js"
-      }
-    }
-  </script>
   <script type='module'>
     import { 
       Scene, 
@@ -105,12 +89,12 @@
 
     import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-    import { Loader3DTiles, PointCloudColoring } from 'three-loader-3dtiles';
+    import { Loader3DTiles, PointCloudColoring } from '../../../src/index.ts';
 
     import Stats from 'three/examples/jsm/libs/stats.module.js';
     import StatsWidget from '@probe.gl/stats-widget';
 
-    const ION_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlYWMxMzcyYy0zZjJkLTQwODctODNlNi01MDRkZmMzMjIxOWIiLCJpZCI6OTYyMCwic2NvcGVzIjpbImFzbCIsImFzciIsImdjIl0sImlhdCI6MTU2Mjg2NjI3M30.1FNiClUyk00YH_nWfSGpiQAjR5V2OvREDq1PJ5QMjWQ';
+    const ION_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3NjEwMjA4Ni00YmVkLTQyMjgtYjRmZS1lY2M3ZWFiMmFmNTYiLCJpZCI6MjYxMzMsImlhdCI6MTY3NTM2ODY4NX0.chGkGL6DkDNv5wYJQDMzWIvi9iDoVa27dgng_5ARDmo'
 
     const canvasParent = document.querySelector('#canvas-parent');
     const statsParent = document.querySelector('#stats-widget')
@@ -122,7 +106,7 @@
       0.01,
       10000,
     );
-    camera.position.set(0, 2000, 0);
+    camera.position.set(0, 4000, 0);
 
     const renderer = new WebGLRenderer();
     const clock = new Clock()
@@ -148,13 +132,14 @@
     async function loadTileset() {
       const result = await Loader3DTiles.load(
         {
-          url: `https://assets.cesium.com/${queryParams.get('assetId') ?? 43978}/tileset.json`,
+          url: `https://assets.ion.cesium.com/${queryParams.get('assetId') ?? 43978}/tileset.json`,
           renderer: renderer,
           options: {
             cesiumIONToken: queryParams.get('ionToken') ?? ION_TOKEN, 
             dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.137.0/examples/js/libs/draco',
             pointCloudColoring: PointCloudColoring.RGB,
-            maximumScreenSpaceError: 6
+            maximumScreenSpaceError: 6,
+            memoryAdjustedScreenSpaceError: false
           }
         }
       );

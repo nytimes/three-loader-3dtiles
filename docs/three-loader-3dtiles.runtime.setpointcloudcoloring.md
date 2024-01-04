@@ -6,7 +6,7 @@
 
 In point clouds set the type of coloring used. See [PointCloudColoring](./three-loader-3dtiles.pointcloudcoloring.md)
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 setPointCloudColoring(PointCloudColoring: any): void;
@@ -18,7 +18,7 @@ setPointCloudColoring(PointCloudColoring: any): void;
 |  --- | --- | --- |
 |  PointCloudColoring | any |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

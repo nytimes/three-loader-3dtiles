@@ -8,7 +8,6 @@
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
     "paths": {
       "@math.gl/culling": ["./node_modules/@math.gl/culling/src/index.js"]
     }

@@ -136,14 +136,25 @@
     }
 
     loadTileset();
+
+    // Default is Tokyo Tower
+    const demoLat = queryParams.get('lat') ?? 35.6586;
+    const demoLong = queryParams.get('long') ?? 139.7454;
+    const demoHeight = queryParams.get('height') ?? 100;
     
     const guiParams = {
+      'lat': demoLat,
+      'long': demoLong,
+      'height': demoHeight,
       'googleApiKey': queryParams.get('googleApiKey') ?? '',
       'reload': setQueryParams,
     };
     
     function setQueryParams() {
       queryParams.set('googleApiKey', guiParams.googleApiKey);
+      queryParams.set('lat', guiParams.lat);
+      queryParams.set('long', guiParams.long);
+      queryParams.set('height', guiParams.height);
       window.history.replaceState({}, '', '?' + queryParams.toString());
       window.location.reload();
     }
@@ -181,7 +192,11 @@
       statsParent.style.visibility = 'visible';
 
       // Tokyo tower
-      runtime.orientToGeocoord({lat: 35.6586, long: 139.7454, height: 100});
+      runtime.orientToGeocoord({
+        lat: Number(demoLat), 
+        long: Number(demoLong), 
+        height: Number(demoHeight)
+      });
 
       camera.translateY(1000);
       controls.update();
@@ -217,6 +232,9 @@
     const gui = new GUI()
     .title("Query params");
     gui.width = 300;
+    gui.add( guiParams, 'lat' )
+    gui.add( guiParams, 'long')
+    gui.add( guiParams, 'height')
     gui.add( guiParams, 'googleApiKey' )
     .onFinishChange((value) => {
       setQueryParams();

@@ -8,7 +8,9 @@ export default defineConfig({
     },
     base: './',
     optimizeDeps: {
-      exclude: ['@loaders.gl/tiles', '@loaders.gl/3d-tiles']
+      exclude: ['@loaders.gl/tiles', '@loaders.gl/3d-tiles'],
+      // These packages raise import errors unless specifically included in here
+      include: ['jszip', 'pako', 'snappyjs']
     },
     server: {
         port: 8000,

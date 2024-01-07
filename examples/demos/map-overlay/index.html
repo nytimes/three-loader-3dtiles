@@ -91,7 +91,7 @@
       Clock,
       Matrix4,
       Euler,
-      sRGBEncoding
+      SRGBColorSpace
     } from 'three';
 
     import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -134,7 +134,7 @@
 
     const queryParams = new URLSearchParams(document.location.search);
     if (queryParams.get('tilesetUrl')) {
-      renderer.outputEncoding = sRGBEncoding;
+      renderer.outputColorSpace = SRGBColorSpace;
     }
 
     loadTileset();
@@ -157,8 +157,8 @@
           renderer: renderer,
           options: {
             cesiumIONToken: queryParams.get('tilesetUrl') ? null : ION_TOKEN, 
-            dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.137.0/examples/js/libs/draco',
-            basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.137.0/examples/js/libs/basis',
+            dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco',
+            basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/basis',
             pointCloudColoring: PointCloudColoring.RGB,
             maximumScreenSpaceError: queryParams.get('sse') ?? 6,
             memoryAdjustedScreenSpaceError: false,

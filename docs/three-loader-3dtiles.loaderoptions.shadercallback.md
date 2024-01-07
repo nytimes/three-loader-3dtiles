@@ -9,5 +9,5 @@ When viewing b3dm (mesh) tiles, a callback to update shader uniforms - Default: 
 **Signature:**
 
 ```typescript
-shaderCallback?: (shader: Shader, renderer: WebGLRenderer) => void;
+shaderCallback?: (renderer: WebGLRenderer, material: Material) => void;
 ```

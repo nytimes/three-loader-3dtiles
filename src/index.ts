@@ -676,7 +676,9 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTra
             }
 
             if (options.shaderCallback) {
-              mesh.onBeforeRender = options.shaderCallback;
+              mesh.onBeforeRender = (renderer, scene, camera, geometry, material, group) => {
+                options.shaderCallback(renderer,material);
+              }
             }
             (mesh.material as MeshStandardMaterial | MeshBasicMaterial).wireframe = options.wireframe;
 

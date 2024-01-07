@@ -11,13 +11,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@react-three/drei": "^9.28.2",
-    "@react-three/fiber": "^8.7.2",
+    "@react-three/drei": "^9.93.0",
+    "@react-three/fiber": "^8.15.13",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^3.1.4",
-    "three": "^0.138.0",
-    "three-loader-3dtiles": "../../",
-    "three-stdlib": "^2.15.0"
+    "three": "^0.160.0",
+    "three-loader-3dtiles": "../../"
   },
   "devDependencies": {
     "@types/react": "^18.0.18",

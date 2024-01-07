@@ -7,7 +7,7 @@
 import { LoadingManager } from 'three';
 import { Material } from 'three';
 import { Object3D } from 'three';
-import { Stats as Stats_2 } from '@probe.gl/stats';
+import { Stats } from '@probe.gl/stats';
 import { Tileset3D } from '@loaders.gl/tiles';
 import { Vector3 } from 'three';
 import { WebGLRenderer } from 'three';
@@ -101,7 +101,7 @@ export interface Runtime {
     getCameraFrustum(Camera: any): Object3D;
     getLatLongHeightFromPosition(Vector3: any): GeoCoord;
     getPositionFromLatLongHeight(GeoCoord: any): Vector3;
-    getStats(): Stats_2;
+    getStats(): Stats;
     getTileBoxes(): Object3D;
     getTileset(): Tileset3D;
     orientToGeocoord(coord: GeoCoord): void;

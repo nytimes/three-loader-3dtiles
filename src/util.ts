@@ -173,6 +173,8 @@ function datumsToSpherical(latitude:number, longitude:number): Vector2 {
 }
 
 function getTextureVRAMByteLength(texture: Texture): number | undefined {
+  // TODO: Handle KTX2
+
   // Reference: https://github.com/donmccurdy/glTF-Transform/blob/main/packages/core/src/utils/image-utils.ts
   const { image } = texture;
   const channels = 4;

@@ -44,7 +44,7 @@
     "@math.gl/core": "^4.0.0",
     "@math.gl/culling": "^4.0.0",
     "@probe.gl/stats-widget": "^4.0.4",
-    "@softrobot/loaders.gl-tiles": "^4.1.0-fork.5",
+    "@loaders.gl/tiles": "file://../loaders.gl/modules/tiles",
     "geo-three": "^0.1.14",
     "jpeg-js": ">=0.4.0",
     "three-story-controls": "^1.0.6"

@@ -53,8 +53,8 @@ const defaultOptions: LoaderOptions = {
   maxConcurrency: 1,
   maximumScreenSpaceError: 16,
   memoryAdjustedScreenSpaceError: true,
-  maximumMemoryUsage: 32,
-  memoryCacheOverflow : 1,
+  maximumMemoryUsage: 400,
+  memoryCacheOverflow : 128,
   viewDistanceScale: 1.0,
   skipLevelOfDetail: false,
   updateTransforms: true,
@@ -648,11 +648,23 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTra
         const tileContent = gltf.scenes[0] as Group;
         tileContent.applyMatrix4(contentTransform); 
 
+      // Memory usage 
+      tile.content.texturesByteLength = 0;
+      tile.content.geometriesByteLength = 0;
+
         tileContent.traverse((object) => {
           if (object.type == "Mesh") {
             const mesh = object as Mesh;
+
+            tile.content.geometriesByteLength += Util.getGeometryVRAMByteLength(mesh.geometry);
+
             const originalMaterial = (mesh.material as MeshStandardMaterial);
             const originalMap = originalMaterial.map;
+
+            const textureByteLength = Util.getTextureVRAMByteLength(originalMap);
+            if (textureByteLength) {
+              tile.content.texturesByteLength += textureByteLength;
+            }
 
             if (options.material) {
               mesh.material = options.material.clone();
@@ -687,6 +699,7 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTra
             }
           }
         });
+        tile.content.gpuMemoryUsageInBytes = tile.content.texturesByteLength + tile.content.geometriesByteLength;
         resolve(tileContent);
       },
       (e) => {

@@ -173,14 +173,20 @@ function datumsToSpherical(latitude:number, longitude:number): Vector2 {
 }
 
 function getTextureVRAMByteLength(texture: Texture): number | undefined {
-  // TODO: Handle KTX2
-
   // Reference: https://github.com/donmccurdy/glTF-Transform/blob/main/packages/core/src/utils/image-utils.ts
-  const { image } = texture;
-  const channels = 4;
+
   let uncompressedBytes = 0;
 
-  if (image) {
+  if (texture.userData.mimeType == "image/ktx2" && texture.mipmaps)  {
+    for (let i = 0; i < texture.mipmaps.length; i++) {
+      uncompressedBytes += texture.mipmaps[i].data.byteLength;
+    }
+    return uncompressedBytes;    
+
+  } else if (texture.image) {
+    const { image } = texture;
+    const channels = 4;
+
     let resolution = [image.width, image.height];
     while (resolution[0] > 1 || resolution[1] > 1) {
 			uncompressedBytes += resolution[0] * resolution[1] * channels;
@@ -188,12 +194,12 @@ function getTextureVRAMByteLength(texture: Texture): number | undefined {
 			resolution[1] = Math.max(Math.floor(resolution[1] / 2), 1);
 		}
 		uncompressedBytes += 1 * 1 * channels;
+
     return uncompressedBytes
   } else {
     return undefined;
   }
 }
-
 function getGeometryVRAMByteLength(geometry: BufferGeometry) {
   return BufferGeometryUtils.estimateBytesUsed(geometry);
 }

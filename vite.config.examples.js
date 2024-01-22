@@ -3,7 +3,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
     resolve: {
       alias: {
-        '@loaders.gl/tiles': '@softrobot/loaders.gl-tiles'
+        //'@loaders.gl/tiles': '@softrobot/loaders.gl-tiles'
       }
     },
     base: './',

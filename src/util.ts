@@ -17,11 +17,14 @@ import {
   RepeatWrapping,
   Group,
   ArrowHelper,
-  Color
+  Color,
+  Texture,
+  BufferGeometry
 } from 'three';
 import { Tile3D } from '@loaders.gl/tiles';
 import { Plane as MathGLPlane } from '@math.gl/culling';
 import { Matrix3 as MathGLMatrix3 } from '@math.gl/core';
+import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 
 import { Gradient } from './gradients'
 
@@ -169,11 +172,45 @@ function datumsToSpherical(latitude:number, longitude:number): Vector2 {
     return new Vector2(x, y);
 }
 
+function getTextureVRAMByteLength(texture: Texture): number | undefined {
+  // Reference: https://github.com/donmccurdy/glTF-Transform/blob/main/packages/core/src/utils/image-utils.ts
+
+  let uncompressedBytes = 0;
+
+  if (texture.userData.mimeType == "image/ktx2" && texture.mipmaps)  {
+    for (let i = 0; i < texture.mipmaps.length; i++) {
+      uncompressedBytes += texture.mipmaps[i].data.byteLength;
+    }
+    return uncompressedBytes;    
+
+  } else if (texture.image) {
+    const { image } = texture;
+    const channels = 4;
+
+    let resolution = [image.width, image.height];
+    while (resolution[0] > 1 || resolution[1] > 1) {
+			uncompressedBytes += resolution[0] * resolution[1] * channels;
+			resolution[0] = Math.max(Math.floor(resolution[0] / 2), 1);
+			resolution[1] = Math.max(Math.floor(resolution[1] / 2), 1);
+		}
+		uncompressedBytes += 1 * 1 * channels;
+
+    return uncompressedBytes
+  } else {
+    return undefined;
+  }
+}
+function getGeometryVRAMByteLength(geometry: BufferGeometry) {
+  return BufferGeometryUtils.estimateBytesUsed(geometry);
+}
+
 export {
   getCameraFrustum,
   loadersPlaneToMesh,
   loadersBoundingBoxToMesh,
   generateGradientTexture,
   getMatrix4FromHalfAxes,
-  datumsToSpherical
+  datumsToSpherical,
+  getTextureVRAMByteLength,
+  getGeometryVRAMByteLength
 };

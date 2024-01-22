@@ -89,8 +89,7 @@
       GridHelper, 
       Clock,
       Matrix4,
-      Euler,
-      sRGBEncoding
+      Euler
     } from 'three';
 
     import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -110,8 +109,8 @@
     const camera = new PerspectiveCamera(
       45,
       1,
-      100,
-      1000000,
+      10,
+      100000,
     );
 
     const renderer = new WebGLRenderer();
@@ -131,9 +130,6 @@
     canvasParent.appendChild( threeJsStats.domElement );
 
     const queryParams = new URLSearchParams(document.location.search);
-    if (queryParams.get('tilesetUrl')) {
-      renderer.outputEncoding = sRGBEncoding;
-    }
 
     loadTileset();
 
@@ -171,8 +167,8 @@
           renderer: renderer,
           options: {
             googleApiKey: queryParams.get('googleApiKey') ?? '',
-            dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.137.0/examples/js/libs/draco',
-            basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.137.0/examples/js/libs/basis',
+            dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco',
+            basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/basis',
             pointCloudColoring: PointCloudColoring.RGB,
             maximumScreenSpaceError: queryParams.get('sse') ?? 16,
             geoTransform: GeoTransform.WGS84,

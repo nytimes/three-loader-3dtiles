@@ -44,13 +44,13 @@
     "@math.gl/core": "^4.0.0",
     "@math.gl/culling": "^4.0.0",
     "@probe.gl/stats-widget": "^4.0.4",
-    "@softrobot/loaders.gl-tiles": "^4.1.0-fork.5",
+    "@loaders.gl/tiles": "file://../loaders.gl/modules/tiles",
     "geo-three": "^0.1.14",
     "jpeg-js": ">=0.4.0",
     "three-story-controls": "^1.0.6"
   },
   "peerDependencies": {
-    "three": "^0.137.0"
+    "three": "^0.160.0"
   },
   "devDependencies": {
     "@microsoft/api-documenter": "^7.23.16",
@@ -65,7 +65,7 @@
     "@types/mocha": "^8.2.2",
     "@types/node": "^18.0.0",
     "@types/offscreencanvas": "^2019.6.4",
-    "@types/three": "^0.137.0",
+    "@types/three": "^0.160.0",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",
     "chai": "^4.3.4",
@@ -80,7 +80,7 @@
     "rollup-plugin-node-externals": "^2.2.0",
     "rollup-plugin-typescript2": "^0.36.0",
     "sinon": "^11.1.1",
-    "three": "^0.137.0",
+    "three": "^0.160.0",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.2",
     "vite": "^5.0.9",

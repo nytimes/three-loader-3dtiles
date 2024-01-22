@@ -4,7 +4,6 @@ import {
   Object3D,
   Vector3,
   Material,
-  Shader,
   WebGLRenderer,
   LoadingManager
 } from 'three';
@@ -84,7 +83,7 @@ interface LoaderOptions {
   /** Apply a custom material, supports both b3dm (mesh) tiles and Point Cloud tiles - Default: `undefined` **/
   material?: Material;
   /** When viewing b3dm (mesh) tiles, a callback to update shader uniforms - Default: `undefined` */
-  shaderCallback?: (shader: Shader, renderer: WebGLRenderer) => void;
+  shaderCallback?: (renderer: WebGLRenderer, material: Material) => void;
   /** When viewing b3dm (mesh) tiles, show meshes as wireframe - Default: `false`. */
   wireframe?: boolean;
   /** When viewing b3dm (mesh) tiles, compute the vertex normals - Default: `false`. */

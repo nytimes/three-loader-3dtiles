@@ -53,8 +53,8 @@ const defaultOptions: LoaderOptions = {
   maxConcurrency: 1,
   maximumScreenSpaceError: 16,
   memoryAdjustedScreenSpaceError: true,
-  maximumMemoryUsage: 32,
-  memoryCacheOverflow : 1,
+  maximumMemoryUsage: 400,
+  memoryCacheOverflow : 128,
   viewDistanceScale: 1.0,
   skipLevelOfDetail: false,
   updateTransforms: true,
@@ -648,11 +648,23 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTra
         const tileContent = gltf.scenes[0] as Group;
         tileContent.applyMatrix4(contentTransform); 
 
+      // Memory usage 
+      tile.content.texturesByteLength = 0;
+      tile.content.geometriesByteLength = 0;
+
         tileContent.traverse((object) => {
           if (object.type == "Mesh") {
             const mesh = object as Mesh;
+
+            tile.content.geometriesByteLength += Util.getGeometryVRAMByteLength(mesh.geometry);
+
             const originalMaterial = (mesh.material as MeshStandardMaterial);
             const originalMap = originalMaterial.map;
+
+            const textureByteLength = Util.getTextureVRAMByteLength(originalMap);
+            if (textureByteLength) {
+              tile.content.texturesByteLength += textureByteLength;
+            }
 
             if (options.material) {
               mesh.material = options.material.clone();
@@ -676,7 +688,9 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTra
             }
 
             if (options.shaderCallback) {
-              mesh.onBeforeRender = options.shaderCallback;
+              mesh.onBeforeRender = (renderer, scene, camera, geometry, material, group) => {
+                options.shaderCallback(renderer,material);
+              }
             }
             (mesh.material as MeshStandardMaterial | MeshBasicMaterial).wireframe = options.wireframe;
 
@@ -685,6 +699,7 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTra
             }
           }
         });
+        tile.content.gpuMemoryUsageInBytes = tile.content.texturesByteLength + tile.content.geometriesByteLength;
         resolve(tileContent);
       },
       (e) => {
@@ -730,6 +745,9 @@ function createPointNodes(tile, pointcloudMaterial, options, rootTransformInvers
   if (d.classifications) {
     geometry.setAttribute('classification', new Uint8BufferAttribute(d.classifications, 1, false));
   }
+
+  tile.content.geometriesByteLength = Util.getGeometryVRAMByteLength(geometry);
+  tile.content.gpuMemoryUsageInBytes = tile.content.geometriesByteLength;
 
   const tileContent = new Points(geometry, options.material || pointcloudMaterial);
 

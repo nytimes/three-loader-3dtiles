@@ -7,7 +7,6 @@
 import { LoadingManager } from 'three';
 import { Material } from 'three';
 import { Object3D } from 'three';
-import { Shader } from 'three';
 import { Stats } from '@probe.gl/stats';
 import { Tileset3D } from '@loaders.gl/tiles';
 import { Vector3 } from 'three';
@@ -61,7 +60,7 @@ export interface LoaderOptions {
     pointCloudColoring?: PointCloudColoring;
     pointSize?: number;
     preloadTilesCount?: number;
-    shaderCallback?: (shader: Shader, renderer: WebGLRenderer) => void;
+    shaderCallback?: (renderer: WebGLRenderer, material: Material) => void;
     shading?: Shading;
     skipLevelOfDetail?: boolean;
     throttleRequests?: boolean;

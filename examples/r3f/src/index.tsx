@@ -16,19 +16,19 @@ function App() {
         <PerspectiveCamera ref={camera}>
           <ErrorBoundary fallbackRender={() => (
             <mesh>
-              <sphereBufferGeometry />
+              <sphereGeometry />
               <meshBasicMaterial color="red" />
             </mesh>
           )}>
             <Suspense fallback={
               <mesh>
-                <sphereBufferGeometry />
+                <sphereGeometry />
                 <meshBasicMaterial color="yellow" />
               </mesh>
             }>
               <Loader3DTilesR3FAsset
-                 dracoDecoderPath={"https://unpkg.com/three@0.138.0/examples/js/libs/draco"}
-                 basisTranscoderPath={"https://unpkg.com/three@0.138.0/examples/js/libs/basis"}
+                 dracoDecoderPath={"https://unpkg.com/three@0.160.0/examples/jsm/libs/draco"}
+                 basisTranscoderPath={"https://unpkg.com/three@0.160.0/examples/jsm/libs/basis"}
                  rotation={new Euler(-Math.PI / 2, 0, 0)}
                  url="https://int.nyt.com/data/3dscenes/ONA360/TILESET/0731_FREEMAN_ALLEY_10M_A_36x8K__10K-PN_50P_DB/tileset_tileset.json"
                 maximumScreenSpaceError={48}

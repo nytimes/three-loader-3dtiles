@@ -746,6 +746,9 @@ function createPointNodes(tile, pointcloudMaterial, options, rootTransformInvers
     geometry.setAttribute('classification', new Uint8BufferAttribute(d.classifications, 1, false));
   }
 
+  tile.content.geometriesByteLength = Util.getGeometryVRAMByteLength(geometry);
+  tile.content.gpuMemoryUsageInBytes = tile.content.geometriesByteLength;
+
   const tileContent = new Points(geometry, options.material || pointcloudMaterial);
 
   if (d.rtc_center) {

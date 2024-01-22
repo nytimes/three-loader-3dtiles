@@ -91,7 +91,7 @@
 
     import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-    import { Loader3DTiles } from '../../../src/index.ts';
+    import { Loader3DTiles, GeoTransform} from '../../../src/index.ts';
 
     import { CameraRig, FreeMovementControls } from 'three-story-controls'
 
@@ -165,6 +165,7 @@
             dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco',
             basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/basis',
             maximumScreenSpaceError: queryParams.get('sse') ?? 48,
+            geoTransform: GeoTransform.Reset
           }
         }
       );
@@ -178,6 +179,16 @@
 
       tilesRuntime = runtime;
       scene.add(model);
+      /*
+
+      runtime.orientToGeocoord({
+        long: 118.19452600556868,
+        lat: 30.616051312109185,
+        height: 63.46716851282893
+      });
+
+      camera.translateY(10);
+      controls.update(); */
 
       statsRuntime = new StatsWidget(runtime.getStats(), {container: statsParent });
       statsParent.style.visibility = 'visible';

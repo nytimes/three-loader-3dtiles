@@ -318,6 +318,7 @@ class Loader3DTiles {
       root.updateMatrixWorld(true);
 
     } else if (options.geoTransform == GeoTransform.WGS84Cartesian) {
+      console.log("Tileset root", tileset.root, tileset.ellipsoid.cartesianToCartographic(tileset.root.boundingVolume.center));
       root.applyMatrix4(tileTrasnform);
       root.updateMatrixWorld(true);
       rootCenter.copy(root.position);
@@ -630,7 +631,8 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTra
     const shouldRotate = tile.content.gltfUpAxis !== "Z";
 
     // The computed trasnform already contains the root's transform, so we have to invert it
-    const contentTransform = new Matrix4().fromArray(tile.computedTransform).premultiply(rootTransformInverse);
+    console.log("Tile transform?", tile.boundingVolume.center);
+    const contentTransform = new Matrix4().fromArray(tile.computedTransform)/*.premultiply(rootTransformInverse)*/.setPosition(new Vector3().fromArray(tile.boundingVolume.center));
 
     if (shouldRotate) {
       contentTransform.multiply(rotateX); // convert from GLTF Y-up to Z-up

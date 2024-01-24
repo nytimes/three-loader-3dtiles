@@ -4,7 +4,7 @@
 
 ## LoaderOptions.basisTranscoderPath property
 
-A path to that contains the basis universal library. e.g: `https://unpkg.com/three@0.129.0/examples/js/libs/basis` - Default: `undefined`
+A path to that contains the basis universal library. e.g: `https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/basis` - Default: `undefined`
 
 **Signature:**
 

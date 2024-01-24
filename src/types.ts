@@ -8,6 +8,8 @@ import {
   LoadingManager
 } from 'three';
 
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+
 /** Types of coloring used when viewing point cloud tiles */
 enum PointCloudColoring {
   Intensity = 1,
@@ -94,9 +96,11 @@ interface LoaderOptions {
   pointSize?: number;
   /** Debug mode: Show tile bounding boxes. Make sure to add the boxes to the scene from {@link Runtime.getTileBoxes} - Default: `false` */
   debug?: boolean;
-  /** A path to that contains the basis universal library. e.g: `https://unpkg.com/three@0.129.0/examples/js/libs/basis` - Default: `undefined` */
+  /** Provide an existing three js GLTFLoader so that KTX2 and DRACO workers are reused across the application*/
+  gltfLoader?: GLTFLoader;
+  /** A path to that contains the basis universal library. e.g: `https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/basis` - Default: `undefined` */
   basisTranscoderPath?: string;
-  /** A path to that contains the draco library. e.g: `https://unpkg.com/three@0.129.0/examples/js/libs/draco` - Default: `undefined` */
+  /** A path to that contains the draco library. e.g: `https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco` - Default: `undefined` */
   dracoDecoderPath?: string;
   /** How to handle geo transformations: Reset any geo location and place the model at (0,0,0), Apply Mercator projection (for use with ccommon 2D mapping applications, or convert WGS84 long/lat to 3D cartesian coordinates)- Default: `Reset` */
   geoTransform?: GeoTransform;

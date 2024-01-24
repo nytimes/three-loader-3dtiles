@@ -65,6 +65,7 @@ const defaultOptions: LoaderOptions = {
   worker: true,
   wireframe: false,
   debug: false,
+  gltfLoader: null,
   basisTranscoderPath: null,
   dracoDecoderPath: null,
   material: null,
@@ -152,27 +153,33 @@ class Loader3DTiles {
     let cameraReference = null;
     let rendererReference = null;
 
-    const gltfLoader = new GLTFLoader();
-
+    let gltfLoader = undefined;
     let ktx2Loader = undefined;
     let dracoLoader = undefined;
 
-    if (options.basisTranscoderPath) {
-      ktx2Loader = new KTX2Loader();
-      ktx2Loader.detectSupport(props.renderer);
-      ktx2Loader.setTranscoderPath(options.basisTranscoderPath + '/');
-      ktx2Loader.setWorkerLimit(1);
-
-      gltfLoader.setKTX2Loader(ktx2Loader);
+    if (options.gltfLoader) {
+      gltfLoader = options.gltfLoader;
     }
+    else {
+      gltfLoader = new GLTFLoader();
 
-    if (options.dracoDecoderPath) {
-      dracoLoader = new DRACOLoader();
-      dracoLoader.setDecoderPath(options.dracoDecoderPath + '/');
-      dracoLoader.setWorkerLimit(options.maxConcurrency);
-      gltfLoader.setDRACOLoader(dracoLoader);
+      if (options.basisTranscoderPath) {
+        ktx2Loader = new KTX2Loader();
+        ktx2Loader.detectSupport(props.renderer);
+        ktx2Loader.setTranscoderPath(options.basisTranscoderPath + '/');
+        ktx2Loader.setWorkerLimit(1);
+
+        gltfLoader.setKTX2Loader(ktx2Loader);
+      }
+
+      if (options.dracoDecoderPath) {
+        dracoLoader = new DRACOLoader();
+        dracoLoader.setDecoderPath(options.dracoDecoderPath + '/');
+        dracoLoader.setWorkerLimit(options.maxConcurrency);
+        gltfLoader.setDRACOLoader(dracoLoader);
+      }
     }
-
+    
     const unlitMaterial = new MeshBasicMaterial({transparent: options.transparent});
 
     const tileOptions = {

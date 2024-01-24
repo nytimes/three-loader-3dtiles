@@ -16,12 +16,13 @@ interface LoaderOptions
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [basisTranscoderPath?](./three-loader-3dtiles.loaderoptions.basistranscoderpath.md) |  | string | _(Optional)_ A path to that contains the basis universal library. e.g: <code>https://unpkg.com/three@0.129.0/examples/js/libs/basis</code> - Default: <code>undefined</code> |
+|  [basisTranscoderPath?](./three-loader-3dtiles.loaderoptions.basistranscoderpath.md) |  | string | _(Optional)_ A path to that contains the basis universal library. e.g: <code>https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/basis</code> - Default: <code>undefined</code> |
 |  [cesiumIONToken?](./three-loader-3dtiles.loaderoptions.cesiumiontoken.md) |  | string | _(Optional)_ A Cesium ION access token when loading tilesets from Cesium ION. |
 |  [computeNormals?](./three-loader-3dtiles.loaderoptions.computenormals.md) |  | boolean | _(Optional)_ When viewing b3dm (mesh) tiles, compute the vertex normals - Default: <code>false</code>. |
 |  [debug?](./three-loader-3dtiles.loaderoptions.debug.md) |  | boolean | _(Optional)_ Debug mode: Show tile bounding boxes. Make sure to add the boxes to the scene from [Runtime.getTileBoxes()](./three-loader-3dtiles.runtime.gettileboxes.md) - Default: <code>false</code> |
-|  [dracoDecoderPath?](./three-loader-3dtiles.loaderoptions.dracodecoderpath.md) |  | string | _(Optional)_ A path to that contains the draco library. e.g: <code>https://unpkg.com/three@0.129.0/examples/js/libs/draco</code> - Default: <code>undefined</code> |
+|  [dracoDecoderPath?](./three-loader-3dtiles.loaderoptions.dracodecoderpath.md) |  | string | _(Optional)_ A path to that contains the draco library. e.g: <code>https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco</code> - Default: <code>undefined</code> |
 |  [geoTransform?](./three-loader-3dtiles.loaderoptions.geotransform.md) |  | [GeoTransform](./three-loader-3dtiles.geotransform.md) | _(Optional)_ How to handle geo transformations: Reset any geo location and place the model at (0,0,0), Apply Mercator projection (for use with ccommon 2D mapping applications, or convert WGS84 long/lat to 3D cartesian coordinates)- Default: <code>Reset</code> |
+|  [gltfLoader?](./three-loader-3dtiles.loaderoptions.gltfloader.md) |  | GLTFLoader | _(Optional)_ Provide an existing three js GLTFLoader so that KTX2 and DRACO workers are reused across the application |
 |  [googleApiKey?](./three-loader-3dtiles.loaderoptions.googleapikey.md) |  | string | _(Optional)_ Google API Key for loading Google Maps 3D Tiles |
 |  [material?](./three-loader-3dtiles.loaderoptions.material.md) |  | Material | _(Optional)_ Apply a custom material, supports both b3dm (mesh) tiles and Point Cloud tiles - Default: <code>undefined</code> \* |
 |  [maxConcurrency?](./three-loader-3dtiles.loaderoptions.maxconcurrency.md) |  | number | _(Optional)_ Maximum worker thread concurrency when processing DRACO-compressed tiles - Default: <code>1</code> worker. |

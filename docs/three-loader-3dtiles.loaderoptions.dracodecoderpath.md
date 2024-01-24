@@ -4,7 +4,7 @@
 
 ## LoaderOptions.dracoDecoderPath property
 
-A path to that contains the draco library. e.g: `https://unpkg.com/three@0.129.0/examples/js/libs/draco` - Default: `undefined`
+A path to that contains the draco library. e.g: `https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco` - Default: `undefined`
 
 **Signature:**
 

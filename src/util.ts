@@ -24,7 +24,7 @@ import {
 import { Tile3D } from '@loaders.gl/tiles';
 import { Plane as MathGLPlane } from '@math.gl/culling';
 import { Matrix3 as MathGLMatrix3 } from '@math.gl/core';
-import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
+import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils'
 
 import { Gradient } from './gradients'
 

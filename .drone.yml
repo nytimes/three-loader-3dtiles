@@ -53,6 +53,8 @@ steps:
     when:
       branch:
       - dev
+      event:
+      - push
 
   - name: npm
     image: plugins/npm

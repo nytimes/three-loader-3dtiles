@@ -42,14 +42,14 @@
     "three": "^0.160.0"
   },
   "devDependencies": {
-    "@loaders.gl/3d-tiles": "^4.1.0-alpha.5",
+    "@loaders.gl/3d-tiles": "^4.1.0-alpha.10",
     "@loaders.gl/core": "^4.0.4",
-    "@loaders.gl/polyfills": "^4.1.0-alpha.5",
-    "@loaders.gl/schema": "^4.1.0-alpha.5",
+    "@loaders.gl/polyfills": "^4.1.0-alpha.10",
+    "@loaders.gl/schema": "^4.1.0-alpha.10",
+    "@loaders.gl/tiles": "^4.1.0-alpha.10",
     "@math.gl/core": "^4.0.0",
     "@math.gl/culling": "^4.0.0",
     "@probe.gl/stats-widget": "^4.0.4",
-    "@loaders.gl/tiles": "file://../loaders.gl/modules/tiles",
     "geo-three": "^0.1.14",
     "jpeg-js": ">=0.4.0",
     "three-story-controls": "^1.0.6",

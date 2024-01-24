@@ -4,6 +4,7 @@ import {
   Object3D,
   Vector3,
   Material,
+  Camera,
   WebGLRenderer,
   LoadingManager
 } from 'three';
@@ -159,9 +160,9 @@ interface Runtime {
   /** Orient a WGS84 globe to lat/long*/
   orientToGeocoord(coord: GeoCoord): void;
   /** Get the current camera frustum as mesh planes (for debugging purposes). */
-  getCameraFrustum(Camera): Object3D;
+  getCameraFrustum(camera: Camera): Object3D;
   /** Update the tileset for rendering. */
-  update(number, WebGLRenderer, Camera): void;
+  update(dt:Number, viewportHeight:number, camera:Camera): void;
   /** Dispose of all of the tileset's assets in memory. */
   dispose(): void;
 }

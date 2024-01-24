@@ -151,7 +151,7 @@ class Loader3DTiles {
     });
     
     let cameraReference = null;
-    let rendererReference = null;
+    let lastViewportHeight = 0;
 
     let gltfLoader = undefined;
     let ktx2Loader = undefined;
@@ -224,7 +224,7 @@ class Loader3DTiles {
             detectOrientation(tile);
           }
           tileset._frameNumber++;
-          tilesetUpdate(tileset, renderMap, rendererReference, cameraReference);
+          tilesetUpdate(tileset, renderMap, lastViewportHeight, cameraReference);
         }
       },
       onTileUnload: (tile) => {
@@ -363,8 +363,7 @@ class Loader3DTiles {
 
       tileset.modelMatrix = new MathGLMatrix4(threeMat.toArray());
     }
-
-    function tilesetUpdate(tileset, renderMap, renderer, camera) {
+    function tilesetUpdate(tileset, renderMap, viewportHeight, camera) {
       if (disposeFlag) {
         return;
       }
@@ -390,15 +389,12 @@ class Loader3DTiles {
       const planes = frustum.planes.map((plane) => new Plane(plane.normal.toArray(), plane.constant));
       const cullingVolume = new CullingVolume(planes);
 
-      const rendererSize = new Vector2();
-      renderer.getSize(rendererSize);
-
       const frameState = {
         camera: {
           position: lastCameraPosition.toArray(),
         },
 
-        height: rendererSize.y,
+        height: viewportHeight,
         frameNumber: tileset._frameNumber,
         sseDenominator: sseDenominator,
         cullingVolume: cullingVolume,
@@ -495,7 +491,7 @@ class Loader3DTiles {
         setViewDistanceScale: (scale) => {
           tileset.options.viewDistanceScale = scale;
           tileset._frameNumber++;
-          tilesetUpdate(tileset, renderMap, rendererReference, cameraReference);
+          tilesetUpdate(tileset, renderMap, lastViewportHeight, cameraReference);
         },
         setHideGround: (enabled) => {
           pointcloudUniforms.hideGround.value = enabled;
@@ -563,9 +559,9 @@ class Loader3DTiles {
 
           return model;
         },
-        update: function (dt: number, renderer: WebGLRenderer, camera: Camera) {
+        update: function (dt: number, viewportHeight: number, camera: Camera) {
           cameraReference = camera;
-          rendererReference = renderer;
+          lastViewportHeight = viewportHeight;
 
           timer += dt;
 
@@ -600,7 +596,7 @@ class Loader3DTiles {
                 tileset._frameNumber++;
                 camera.getWorldPosition(lastCameraPosition);
                 lastCameraTransform.copy(camera.matrixWorld);
-                tilesetUpdate(tileset, renderMap, renderer, camera);
+                tilesetUpdate(tileset, renderMap, lastViewportHeight, camera);
               }
             }
           }

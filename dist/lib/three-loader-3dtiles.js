@@ -14106,6 +14106,7 @@ const Ob = Hu.RAINBOW, vb = typeof document < "u" ? Nu(Ob) : null, xb = Hu.GRAYS
   worker: !0,
   wireframe: !1,
   debug: !1,
+  gltfLoader: null,
   basisTranscoderPath: null,
   dracoDecoderPath: null,
   material: null,
@@ -14156,10 +14157,8 @@ class rw {
       transparent: n.transparent,
       vertexColors: !0
     });
-    let g = null, A = null;
-    const p = new sl();
-    let C, T;
-    n.basisTranscoderPath && (C = new il(), C.detectSupport(t.renderer), C.setTranscoderPath(n.basisTranscoderPath + "/"), C.setWorkerLimit(1), p.setKTX2Loader(C)), n.dracoDecoderPath && (T = new rl(), T.setDecoderPath(n.dracoDecoderPath + "/"), T.setWorkerLimit(n.maxConcurrency), p.setDRACOLoader(T));
+    let g = null, A = null, p, C, T;
+    n.gltfLoader ? p = n.gltfLoader : (p = new sl(), n.basisTranscoderPath && (C = new il(), C.detectSupport(t.renderer), C.setTranscoderPath(n.basisTranscoderPath + "/"), C.setWorkerLimit(1), p.setKTX2Loader(C)), n.dracoDecoderPath && (T = new rl(), T.setDecoderPath(n.dracoDecoderPath + "/"), T.setWorkerLimit(n.maxConcurrency), p.setDRACOLoader(T)));
     const E = new ua({ transparent: n.transparent }), b = {
       maximumMemoryUsage: n.maximumMemoryUsage,
       maximumScreenSpaceError: n.maximumScreenSpaceError,

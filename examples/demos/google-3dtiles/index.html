@@ -171,7 +171,7 @@
             basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/basis',
             pointCloudColoring: PointCloudColoring.RGB,
             maximumScreenSpaceError: queryParams.get('sse') ?? 16,
-            geoTransform: GeoTransform.WGS84Cartesian,
+            geoTransform: GeoTransform.WGS84Cartesian
           }
         }
       );
@@ -204,7 +204,7 @@
       const dt = clock.getDelta()
       controls.update();
       if (tilesRuntime) {
-        tilesRuntime.update(dt, renderer, camera);
+        tilesRuntime.update(dt, canvasParent.clientHeight, camera);
       }
       if (statsRuntime) {
         statsRuntime.update();

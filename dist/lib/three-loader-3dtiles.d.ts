@@ -1,3 +1,4 @@
+import { Camera } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { LoadingManager } from 'three';
 import { Material } from 'three';
@@ -164,9 +165,9 @@ export declare interface Runtime {
       /** Orient a WGS84 globe to lat/long*/
       orientToGeocoord(coord: GeoCoord): void;
       /** Get the current camera frustum as mesh planes (for debugging purposes). */
-      getCameraFrustum(Camera: any): Object3D;
+      getCameraFrustum(camera: Camera): Object3D;
       /** Update the tileset for rendering. */
-      update(number: any, WebGLRenderer: any, Camera: any): void;
+      update(dt: Number, viewportHeight: number, camera: Camera): void;
       /** Dispose of all of the tileset's assets in memory. */
       dispose(): void;
      }

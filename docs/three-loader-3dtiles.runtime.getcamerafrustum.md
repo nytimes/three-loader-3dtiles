@@ -9,14 +9,14 @@ Get the current camera frustum as mesh planes (for debugging purposes).
 **Signature:**
 
 ```typescript
-getCameraFrustum(Camera: any): Object3D;
+getCameraFrustum(camera: Camera): Object3D;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  Camera | any |  |
+|  camera | Camera |  |
 
 **Returns:**
 

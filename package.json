@@ -19,6 +19,19 @@
     "dist"
   ],
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/lib/three-loader-3dtiles.d.ts",
+      "node": {
+        "require": "./dist/lib/three-loader-3dtiles.umd.cjs",
+        "default": "./dist/lib/three-loader-3dtiles.js"
+      },
+      "default": {
+        "require": "./dist/lib/three-loader-3dtiles.umd.cjs",
+        "default": "./dist/lib/three-loader-3dtiles.js"
+      }
+    }
+  },
   "scripts": {
     "build": "vite --config vite.config.lib.js build && vite --config vite.config.examples.js build",
     "dev": "vite --config vite.config.examples.js",

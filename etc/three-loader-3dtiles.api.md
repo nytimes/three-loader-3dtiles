@@ -4,6 +4,7 @@
 
 ```ts
 
+import { Camera } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { LoadingManager } from 'three';
 import { Material } from 'three';
@@ -100,7 +101,7 @@ export enum PointCloudColoring {
 // @public
 export interface Runtime {
     dispose(): void;
-    getCameraFrustum(Camera: any): Object3D;
+    getCameraFrustum(camera: Camera): Object3D;
     getLatLongHeightFromPosition(Vector3: any): GeoCoord;
     getPositionFromLatLongHeight(GeoCoord: any): Vector3;
     getStats(): Stats_2;
@@ -118,7 +119,7 @@ export interface Runtime {
     setViewDistanceScale(number: any): void;
     setWireframe(boolean: any): void;
     showTiles(boolean: any): void;
-    update(number: any, WebGLRenderer: any, Camera: any): void;
+    update(dt: Number, viewportHeight: number, camera: Camera): void;
 }
 
 // @public

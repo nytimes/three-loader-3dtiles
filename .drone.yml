@@ -40,7 +40,7 @@ steps:
     settings:
       ssh_key:
         from_secret: github_ssh_key
-      pages_directory: ./src
+      pages_directory: /drone/src
     when:
       branch:
       - dev

@@ -36,7 +36,7 @@ steps:
       - dev 
 
   - name: publish
-    image: plugins/drone-git-push
+    image: appleboy/drone-git-push
     settings:
       branch: gh-pages
       remote: git@github.com:nytimes/three-loader-3dtiles.git

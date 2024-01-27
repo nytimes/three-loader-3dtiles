@@ -38,10 +38,13 @@ steps:
   - name: publish
     image: plugins/gh-pages
     settings:
-      username: drone_ci
-      ssh_key:
-        from_secret: github_ssh_key
-      pages_directory: ./
+      username:
+         from_secret: github-username
+      password:
+         from_secret: github-token
+      pages_directory: .
+      copy_contents: true
+      force_push: true
     when:
       branch:
       - dev

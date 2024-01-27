@@ -41,6 +41,7 @@ steps:
       username: drone_ci
       ssh_key:
         from_secret: github_ssh_key
+      pages_directory: ./
     when:
       branch:
       - dev

@@ -40,7 +40,8 @@ steps:
     settings:
       ssh_key:
         from_secret: github_ssh_key
-      pages_directory: /drone/src
+      pages_directory: .
+      remote_url: git@github.com:nytimes/three-loader-3dtiles.git
     when:
       branch:
       - dev

@@ -36,12 +36,14 @@ steps:
       - dev 
 
   - name: publish
-    image: plugins/gh-pages
+    image: plugins/drone-git-push
     settings:
+      branch: gh-pages
+      remote: git@github.com:nytimes/three-loader-3dtiles.git
       ssh_key:
         from_secret: github_ssh_key
-      pages_directory: .
-      remote_url: git@github.com:nytimes/three-loader-3dtiles.git
+      commit : true
+      force: true
     when:
       branch:
       - dev

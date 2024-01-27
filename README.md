@@ -24,7 +24,7 @@ Development of this library started at The New York Times R&D as an effort to cr
 * [Photogrammetry exported to 3D Tiles in RealityCapture](https://nytimes.github.io/three-loader-3dtiles/examples/demos/realitycapture)
 * [LiDAR Point Cloud hosted as 3D Tiles in Cesium ION](https://nytimes.github.io/three-loader-3dtiles/examples/demos/cesium)
 * [Map overlay with OpenStreetMap](https://nytimes.github.io/three-loader-3dtiles/examples/demos/map-overlay)
-* [Google Map 3D Tiles (requires API key)](https://nytimes.github.io/three-loader-3dtiles/examples/demos/google-3dtiles)
+* [Google Maps Photorealistic 3D Tiles (requires API key)](https://nytimes.github.io/three-loader-3dtiles/examples/demos/google-3dtiles)
 
 ---
 
@@ -55,8 +55,8 @@ async function loadTileset() {
       url: 'https://<TILESET URL>/tileset.json',
       renderer: renderer,
       options: {
-        dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.137.0/examples/js/libs/draco',
-        basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.137.0/examples/js/libs/basis',
+        dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/libs/draco',
+        basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/libs/basis',
       }
   )
   const {model, runtime} = result
@@ -81,7 +81,7 @@ render()
 
 ## Installation
 
-The library supports [three.js](https://threejs.org/) r137 and uses its GLTF, Draco, and KTX2/Basis loaders.
+The library supports [three.js](https://threejs.org/) r160 and uses its GLTF, Draco, and KTX2/Basis loaders.
 Refer to the `browserslist` field in [package.json](./package.json) for target browsers.
 
 ### 1. ES Module

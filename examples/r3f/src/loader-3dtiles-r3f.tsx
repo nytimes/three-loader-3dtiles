@@ -42,8 +42,8 @@ function Loader3DTilesR3FAsset(props) {
     loader.setProps(loaderProps);    
   })
 
-  useFrame(({ gl, camera }, dt) => {
-    runtime.update(dt, gl, camera);
+  useFrame(({ size, camera }, dt) => {
+    runtime.update(dt, size.height, camera);
   });
 
   return (

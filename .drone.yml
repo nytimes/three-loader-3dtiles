@@ -38,9 +38,16 @@ steps:
   - name: publish
     image: plugins/gh-pages
     settings:
+<<<<<<< HEAD
       ssh_key:
         from_secret: github_ssh_key
       pages_directory: ./src
+=======
+      username: drone_ci
+      ssh_key:
+        from_secret: github_ssh_key
+      pages_directory: ./
+>>>>>>> dev
     when:
       branch:
       - dev

@@ -60,7 +60,7 @@ function render() {
   const dt = clock.getDelta()
   controls.update();
   if (tilesRuntime) {
-    tilesRuntime.update(dt, renderer, camera)
+    tilesRuntime.update(dt, canvasParent.clientHeight, camera)
   }
   renderer.render(scene, camera)
   window.requestAnimationFrame(render)

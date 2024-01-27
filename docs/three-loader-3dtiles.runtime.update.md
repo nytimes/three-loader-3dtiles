@@ -9,16 +9,16 @@ Update the tileset for rendering.
 **Signature:**
 
 ```typescript
-update(number: any, WebGLRenderer: any, Camera: any): void;
+update(dt: Number, viewportHeight: number, camera: Camera): void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  number | any |  |
-|  WebGLRenderer | any |  |
-|  Camera | any |  |
+|  dt | Number |  |
+|  viewportHeight | number |  |
+|  camera | Camera |  |
 
 **Returns:**
 

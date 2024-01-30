@@ -41,7 +41,7 @@ steps:
       branch: gh-pages
       remote: git@github.com:nytimes/three-loader-3dtiles.git
       ssh_key:
-        from_secret: github_ssh_key
+        from_secret: github-token
       commit : true
       force: true
     when:

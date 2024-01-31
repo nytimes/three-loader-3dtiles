@@ -49,9 +49,9 @@ steps:
     image: plugins/gh-pages
     settings:
       username:
-         from_secret: github-username
+         from_secret: github_username
       password:
-         from_secret: github-token
+         from_secret: github_token
       pages_directory: .
       copy_contents: true
       force_push: true

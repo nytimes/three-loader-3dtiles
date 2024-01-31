@@ -16,6 +16,8 @@ steps:
       branch:
       - main
       - dev
+      event:
+      - tag
 
   - name: test
     image: node:18

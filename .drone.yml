@@ -36,14 +36,13 @@ steps:
       - dev 
 
   - name: publish
-    image: appleboy/drone-git-push
+    image: plugins/gh-pages
     settings:
-      branch: gh-pages
-      remote: git@github.com:nytimes/three-loader-3dtiles.git
-      ssh_key:
-        from_secret: github_ssh_key
-      commit : true
-      force: true
+      username:
+         from_secret: github-username
+      password:
+         from_secret: github-token
+      
     when:
       branch:
       - dev

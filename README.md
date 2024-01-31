@@ -182,4 +182,3 @@ To our knowledge, this is the only [loaders.gl](https://github.com/visgl/loaders
  ---
 
 > This repository is maintained by the Research & Development team at The New York Times and is provided as-is for your own use. For more information about R&D at the Times visit [rd.nytimes.com](https://rd.nytimes.com)
-

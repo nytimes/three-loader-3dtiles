@@ -1,6 +1,6 @@
 {
   "name": "three-loader-3dtiles",
-  "version": "1.1.20",
+  "version": "1.1.21",
   "description": "A 3D Tiles loader for Three.js",
   "main": "dist/lib/three-loader-3dtiles.umd.cjs",
   "module": "dist/lib/three-loader-3dtiles.js",
@@ -33,7 +33,9 @@
     }
   },
   "scripts": {
-    "build": "vite --config vite.config.lib.js build && vite --config vite.config.examples.js build",
+    "build": "npm run build:lib && npm run build:examples",
+    "build:lib": "vite --config vite.config.lib.js build",
+    "build:examples": "vite --config vite.config.examples.js build",
     "dev": "vite --config vite.config.examples.js",
     "build:types": "tsc --declaration --emitDeclarationOnly --declarationMap --declarationDir dist/lib/",
     "api:extract": "api-extractor run --local --verbose",

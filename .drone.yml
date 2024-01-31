@@ -13,9 +13,19 @@ steps:
     commands:
       - npm run build
     when:
+      branch:
+      - main
+      - dev
       event:
       - pull_request
       - push
+
+  - name: build-lib
+    image: node:18
+    commands:
+      - npm run build:lib
+    when:
+      event:
       - tag
 
   - name: test

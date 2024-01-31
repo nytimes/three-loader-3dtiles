@@ -1,0 +1,2552 @@
+{
+  "metadata": {
+    "toolPackage": "@microsoft/api-extractor",
+    "toolVersion": "7.39.1",
+    "schemaVersion": 1011,
+    "oldestForwardsCompatibleVersion": 1001,
+    "tsdocConfig": {
+      "$schema": "https://developer.microsoft.com/json-schemas/tsdoc/v0/tsdoc.schema.json",
+      "noStandardTags": true,
+      "tagDefinitions": [
+        {
+          "tagName": "@alpha",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@beta",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@defaultValue",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@decorator",
+          "syntaxKind": "block",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@deprecated",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@eventProperty",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@example",
+          "syntaxKind": "block",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@experimental",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@inheritDoc",
+          "syntaxKind": "inline"
+        },
+        {
+          "tagName": "@internal",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@label",
+          "syntaxKind": "inline"
+        },
+        {
+          "tagName": "@link",
+          "syntaxKind": "inline",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@override",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@packageDocumentation",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@param",
+          "syntaxKind": "block",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@privateRemarks",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@public",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@readonly",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@remarks",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@returns",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@sealed",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@see",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@throws",
+          "syntaxKind": "block",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@typeParam",
+          "syntaxKind": "block",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@virtual",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@betaDocumentation",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@internalRemarks",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@preapproved",
+          "syntaxKind": "modifier"
+        }
+      ],
+      "supportForTags": {
+        "@alpha": true,
+        "@beta": true,
+        "@defaultValue": true,
+        "@decorator": true,
+        "@deprecated": true,
+        "@eventProperty": true,
+        "@example": true,
+        "@experimental": true,
+        "@inheritDoc": true,
+        "@internal": true,
+        "@label": true,
+        "@link": true,
+        "@override": true,
+        "@packageDocumentation": true,
+        "@param": true,
+        "@privateRemarks": true,
+        "@public": true,
+        "@readonly": true,
+        "@remarks": true,
+        "@returns": true,
+        "@sealed": true,
+        "@see": true,
+        "@throws": true,
+        "@typeParam": true,
+        "@virtual": true,
+        "@betaDocumentation": true,
+        "@internalRemarks": true,
+        "@preapproved": true
+      },
+      "reportUnsupportedHtmlElements": false
+    }
+  },
+  "kind": "Package",
+  "canonicalReference": "three-loader-3dtiles!",
+  "docComment": "",
+  "name": "three-loader-3dtiles",
+  "preserveMemberOrder": false,
+  "members": [
+    {
+      "kind": "EntryPoint",
+      "canonicalReference": "three-loader-3dtiles!",
+      "name": "",
+      "preserveMemberOrder": false,
+      "members": [
+        {
+          "kind": "Interface",
+          "canonicalReference": "three-loader-3dtiles!GeoCoord:interface",
+          "docComment": "/**\n * Container object for interfacing with lat/long/height coordinates\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "interface GeoCoord "
+            }
+          ],
+          "fileUrlPath": "src/types.ts",
+          "releaseTag": "Public",
+          "name": "GeoCoord",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!GeoCoord#height:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "height: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "height",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!GeoCoord#lat:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "lat: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "lat",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!GeoCoord#long:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "long: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "long",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "extendsTokenRanges": []
+        },
+        {
+          "kind": "Enum",
+          "canonicalReference": "three-loader-3dtiles!GeoTransform:enum",
+          "docComment": "",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "declare enum GeoTransform "
+            }
+          ],
+          "fileUrlPath": "src/types.ts",
+          "releaseTag": "Public",
+          "name": "GeoTransform",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "three-loader-3dtiles!GeoTransform.Mercator:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "Mercator = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "2"
+                }
+              ],
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "name": "Mercator"
+            },
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "three-loader-3dtiles!GeoTransform.Reset:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "Reset = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "1"
+                }
+              ],
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "name": "Reset"
+            },
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "three-loader-3dtiles!GeoTransform.WGS84Cartesian:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "WGS84Cartesian = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "3"
+                }
+              ],
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "name": "WGS84Cartesian"
+            }
+          ]
+        },
+        {
+          "kind": "Class",
+          "canonicalReference": "three-loader-3dtiles!Loader3DTiles:class",
+          "docComment": "/**\n * 3D Tiles Loader\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "declare class Loader3DTiles "
+            }
+          ],
+          "fileUrlPath": "src/index.ts",
+          "releaseTag": "Public",
+          "isAbstract": false,
+          "name": "Loader3DTiles",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "Method",
+              "canonicalReference": "three-loader-3dtiles!Loader3DTiles.load:member(1)",
+              "docComment": "/**\n * Loads a tileset of 3D Tiles according to the given {@link LoaderProps}\n *\n * @param props - Properties for this load call {@link LoaderProps}.\n *\n * @returns An object containing the 3D Model to be added to the scene and a runtime engine to be updated every frame.\n *\n * @public\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "static load(props: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LoaderProps",
+                  "canonicalReference": "three-loader-3dtiles!LoaderProps:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Promise",
+                  "canonicalReference": "!Promise:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<{\n        model: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Object3D",
+                  "canonicalReference": "@types/three!Object3D:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n        runtime: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Runtime",
+                  "canonicalReference": "three-loader-3dtiles!Runtime:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";\n    }>"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": true,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 9
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "props",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "load"
+            }
+          ],
+          "implementsTokenRanges": []
+        },
+        {
+          "kind": "Interface",
+          "canonicalReference": "three-loader-3dtiles!LoaderOptions:interface",
+          "docComment": "/**\n * Advanced loader options\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "interface LoaderOptions "
+            }
+          ],
+          "fileUrlPath": "src/types.ts",
+          "releaseTag": "Public",
+          "name": "LoaderOptions",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#basisTranscoderPath:member",
+              "docComment": "/**\n * A path to that contains the basis universal library. e.g: `https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/basis` - Default: `undefined`\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "basisTranscoderPath?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "basisTranscoderPath",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#cesiumIONToken:member",
+              "docComment": "/**\n * A Cesium ION access token when loading tilesets from Cesium ION.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "cesiumIONToken?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "cesiumIONToken",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#computeNormals:member",
+              "docComment": "/**\n * When viewing b3dm (mesh) tiles, compute the vertex normals - Default: `false`.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "computeNormals?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "computeNormals",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#debug:member",
+              "docComment": "/**\n * Debug mode: Show tile bounding boxes. Make sure to add the boxes to the scene from {@link Runtime.getTileBoxes} - Default: `false`\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "debug?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "debug",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#dracoDecoderPath:member",
+              "docComment": "/**\n * A path to that contains the draco library. e.g: `https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco` - Default: `undefined`\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "dracoDecoderPath?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "dracoDecoderPath",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#geoTransform:member",
+              "docComment": "/**\n * How to handle geo transformations: Reset any geo location and place the model at (0,0,0), Apply Mercator projection (for use with ccommon 2D mapping applications, or convert WGS84 long/lat to 3D cartesian coordinates)- Default: `Reset`\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "geoTransform?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "GeoTransform",
+                  "canonicalReference": "three-loader-3dtiles!GeoTransform:enum"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "geoTransform",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#gltfLoader:member",
+              "docComment": "/**\n * Provide an existing three js GLTFLoader so that KTX2 and DRACO workers are reused across the application\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "gltfLoader?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "GLTFLoader",
+                  "canonicalReference": "@types/three!GLTFLoader:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "gltfLoader",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#googleApiKey:member",
+              "docComment": "/**\n * Google API Key for loading Google Maps 3D Tiles\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "googleApiKey?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "googleApiKey",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#material:member",
+              "docComment": "/**\n * Apply a custom material, supports both b3dm (mesh) tiles and Point Cloud tiles - Default: `undefined` *\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "material?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Material",
+                  "canonicalReference": "@types/three!Material:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "material",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#maxConcurrency:member",
+              "docComment": "/**\n * Maximum worker thread concurrency when processing DRACO-compressed tiles - Default: `1` worker.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "maxConcurrency?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "maxConcurrency",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#maximumMemoryUsage:member",
+              "docComment": "/**\n * Maximum GPU memory (MB) to use for displaying tiles. May go over the limit if tiles within the camera viewport exceed that ammount - Default: `32`.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "maximumMemoryUsage?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "maximumMemoryUsage",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#maximumScreenSpaceError:member",
+              "docComment": "/**\n * determines the distance from tiles in which they are refined, depending on their geometrical size. increase the value to load lower lod tiles from the same view distance (increases performnace) - Default: `16`.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "maximumScreenSpaceError?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "maximumScreenSpaceError",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#maxRequests:member",
+              "docComment": "/**\n * When thorttling requests, how many requests can launch simultaneously - Default: `64`\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "maxRequests?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "maxRequests",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#memoryAdjustedScreenSpaceError:member",
+              "docComment": "/**\n * Whether to adjust the screen space error to maintain the maximum memory limit - Default `true`.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "memoryAdjustedScreenSpaceError?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "memoryAdjustedScreenSpaceError",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#memoryCacheOverflow:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "memoryCacheOverflow: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "memoryCacheOverflow",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#pointCloudColoring:member",
+              "docComment": "/**\n * When viewing Point Cloud tiles, how should the points be colored ({@link PointCloudColoring}) - Default: `PointCloudColoring.White`\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "pointCloudColoring?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PointCloudColoring",
+                  "canonicalReference": "three-loader-3dtiles!PointCloudColoring:enum"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "pointCloudColoring",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#pointSize:member",
+              "docComment": "/**\n * Point size for Point Cloud tiles - Default: `1.0`\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "pointSize?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "pointSize",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#preloadTilesCount:member",
+              "docComment": "/**\n * When using a three.js loading manager, do not call `onLoad` until this number of tiles were loaded - Default: `undefined`\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "preloadTilesCount?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "preloadTilesCount",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#shaderCallback:member",
+              "docComment": "/**\n * When viewing b3dm (mesh) tiles, a callback to update shader uniforms - Default: `undefined`\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "shaderCallback?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "(renderer: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "WebGLRenderer",
+                  "canonicalReference": "@types/three!WebGLRenderer:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", material: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Material",
+                  "canonicalReference": "@types/three!Material:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ") => void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "shaderCallback",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 6
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#shading:member",
+              "docComment": "/**\n * When viewing b3dm (mesh) tiles, which type of {@link Shading} is used - Default: `Shading.FlatTexture`\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "shading?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Shading",
+                  "canonicalReference": "three-loader-3dtiles!Shading:enum"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "shading",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#skipLevelOfDetail:member",
+              "docComment": "/**\n * _EXPERIMENTAL_: Skip traversal mechanism, not yet supported. Default: `false`\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "skipLevelOfDetail?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "skipLevelOfDetail",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#throttleRequests:member",
+              "docComment": "/**\n * Whether to throttle network requests so that tiles got out of the frame before the request launched, would not be requested - Default: `true`\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "throttleRequests?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "throttleRequests",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#transparent:member",
+              "docComment": "/**\n * Whether to set the material as transparent - Default: `false`\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "transparent?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "transparent",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#updateInterval:member",
+              "docComment": "/**\n * Interval in seconds for the traverser to check in an update is needed - Default: `0.1`.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "updateInterval?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "updateInterval",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#updateTransforms:member",
+              "docComment": "/**\n * Whether to check if the tileset was transformed, set to `true` if the model is changes position in runtime - Default: `true`.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "updateTransforms?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "updateTransforms",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#viewDistanceScale:member",
+              "docComment": "/**\n * 0-1 scale for the LOD quality. A lower value loads tiles from lower LODs (increases performance).\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "viewDistanceScale?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "viewDistanceScale",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#wireframe:member",
+              "docComment": "/**\n * When viewing b3dm (mesh) tiles, show meshes as wireframe - Default: `false`.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "wireframe?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "wireframe",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#worker:member",
+              "docComment": "/**\n * Whether to use workers when processing DRACO-compressed tiles - Default: `true`.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "worker?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "worker",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "extendsTokenRanges": []
+        },
+        {
+          "kind": "Interface",
+          "canonicalReference": "three-loader-3dtiles!LoaderProps:interface",
+          "docComment": "/**\n * Properties for loading a tileset\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "interface LoaderProps "
+            }
+          ],
+          "fileUrlPath": "src/types.ts",
+          "releaseTag": "Public",
+          "name": "LoaderProps",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderProps#loadingManager:member",
+              "docComment": "/**\n * Use a Three JS loading manager\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "loadingManager?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LoadingManager",
+                  "canonicalReference": "@types/three!LoadingManager:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "loadingManager",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderProps#onProgress:member(1)",
+              "docComment": "/**\n * a loading progress callback function\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "onProgress?(progress: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number | "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ProgressEvent",
+                  "canonicalReference": "!ProgressEvent:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<"
+                },
+                {
+                  "kind": "Reference",
+                  "text": "EventTarget",
+                  "canonicalReference": "!EventTarget:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": ">"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", total?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": true,
+              "returnTypeTokenRange": {
+                "startIndex": 9,
+                "endIndex": 10
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "progress",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 6
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "total",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 7,
+                    "endIndex": 8
+                  },
+                  "isOptional": true
+                }
+              ],
+              "name": "onProgress"
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderProps#options:member",
+              "docComment": "/**\n * Advanced options for loading the tileset ({@link LoaderOptions})\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "options?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LoaderOptions",
+                  "canonicalReference": "three-loader-3dtiles!LoaderOptions:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "options",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderProps#renderer:member",
+              "docComment": "/**\n * Required when using compressed textures (basis universal) for GPU feature detection.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "renderer?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "WebGLRenderer",
+                  "canonicalReference": "@types/three!WebGLRenderer:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "renderer",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderProps#url:member",
+              "docComment": "/**\n * The URL of the tileset. For example if using Cesium ION, it would have the form: `https://assets.cesium.com/[ASSET_ID]/tileset.json`.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "url: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "url",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "extendsTokenRanges": []
+        },
+        {
+          "kind": "Enum",
+          "canonicalReference": "three-loader-3dtiles!PointCloudColoring:enum",
+          "docComment": "/**\n * Types of coloring used when viewing point cloud tiles\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "declare enum PointCloudColoring "
+            }
+          ],
+          "fileUrlPath": "src/types.ts",
+          "releaseTag": "Public",
+          "name": "PointCloudColoring",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "three-loader-3dtiles!PointCloudColoring.Classification:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "Classification = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "2"
+                }
+              ],
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "name": "Classification"
+            },
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "three-loader-3dtiles!PointCloudColoring.Elevation:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "Elevation = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "3"
+                }
+              ],
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "name": "Elevation"
+            },
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "three-loader-3dtiles!PointCloudColoring.Intensity:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "Intensity = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "1"
+                }
+              ],
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "name": "Intensity"
+            },
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "three-loader-3dtiles!PointCloudColoring.RGB:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "RGB = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "4"
+                }
+              ],
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "name": "RGB"
+            },
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "three-loader-3dtiles!PointCloudColoring.White:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "White = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "5"
+                }
+              ],
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "name": "White"
+            }
+          ]
+        },
+        {
+          "kind": "Interface",
+          "canonicalReference": "three-loader-3dtiles!Runtime:interface",
+          "docComment": "/**\n * Runtime methods that can be used once a tileset is loaded\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "interface Runtime "
+            }
+          ],
+          "fileUrlPath": "src/types.ts",
+          "releaseTag": "Public",
+          "name": "Runtime",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!Runtime#dispose:member(1)",
+              "docComment": "/**\n * Dispose of all of the tileset's assets in memory.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "dispose(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [],
+              "name": "dispose"
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!Runtime#getCameraFrustum:member(1)",
+              "docComment": "/**\n * Get the current camera frustum as mesh planes (for debugging purposes).\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "getCameraFrustum(camera: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Camera",
+                  "canonicalReference": "@types/three!Camera:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Object3D",
+                  "canonicalReference": "@types/three!Object3D:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "camera",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "getCameraFrustum"
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!Runtime#getLatLongHeightFromPosition:member(1)",
+              "docComment": "/**\n * When viewing a Geo-located tileset, get the {@link GeoCoord} value from a world-space `Vector3`.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "getLatLongHeightFromPosition(Vector3: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "any"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "GeoCoord",
+                  "canonicalReference": "three-loader-3dtiles!GeoCoord:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "Vector3",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "getLatLongHeightFromPosition"
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!Runtime#getPositionFromLatLongHeight:member(1)",
+              "docComment": "/**\n * When viewing a Geo-located tileset, world-space `Vector3` from a {@link GeoCoord}.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "getPositionFromLatLongHeight(GeoCoord: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "any"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Vector3",
+                  "canonicalReference": "@types/three!Vector3:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "GeoCoord",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "getPositionFromLatLongHeight"
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!Runtime#getStats:member(1)",
+              "docComment": "/**\n * Get a reference to the probe.gl {@link https://github.com/uber-web/probe.gl/blob/master/docs/api-reference/stats/stats.md | Stats} object.\n *\n * @returns {@link https://github.com/uber-web/probe.gl/blob/master/docs/api-reference/stats/stats.md | Stats}\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "getStats(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Stats",
+                  "canonicalReference": "@probe.gl/stats!default:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [],
+              "name": "getStats"
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!Runtime#getTileBoxes:member(1)",
+              "docComment": "/**\n * Get the tile bounding boxes group when `debug: true` is set.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "getTileBoxes(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Object3D",
+                  "canonicalReference": "@types/three!Object3D:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [],
+              "name": "getTileBoxes"
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!Runtime#getTileset:member(1)",
+              "docComment": "/**\n * Get a reference to the loaders.gl {@link https://github.com/visgl/loaders.gl/blob/master/modules/tiles/docs/api-reference/tileset-3d.md | Tileset3D} object.\n *\n * @returns {@link https://github.com/visgl/loaders.gl/blob/master/modules/tiles/docs/api-reference/tileset-3d.md | Tileset3D}\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "getTileset(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Tileset3D",
+                  "canonicalReference": "@loaders.gl/tiles!Tileset3D:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [],
+              "name": "getTileset"
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!Runtime#orientToGeocoord:member(1)",
+              "docComment": "/**\n * Orient a WGS84 globe to lat/long\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "orientToGeocoord(coord: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "GeoCoord",
+                  "canonicalReference": "three-loader-3dtiles!GeoCoord:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "coord",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "orientToGeocoord"
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!Runtime#setDebug:member(1)",
+              "docComment": "/**\n * Enable or disable deubg mode.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "setDebug(boolean: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "any"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "boolean",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "setDebug"
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!Runtime#setElevationRange:member(1)",
+              "docComment": "/**\n * In point clouds when coloring by `PointCloudColoring.Elevation`, set the min/max elevation values - Default: `[0, 400]`.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "setElevationRange(range: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyArray",
+                  "canonicalReference": "!ReadonlyArray:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<number>"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 4,
+                "endIndex": 5
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "range",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 3
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "setElevationRange"
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!Runtime#setHideGround:member(1)",
+              "docComment": "/**\n * In point clouds wher the points are classified as `Ground`, hide the ground level points - Default: `false`.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "setHideGround(boolean: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "any"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "boolean",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "setHideGround"
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!Runtime#setIntensityContrast:member(1)",
+              "docComment": "/**\n * In point clouds when coloring by `PointCloudColoring.Intensity`, set the contrast factor. Default: `1.0`.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "setIntensityContrast(number: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "any"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "number",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "setIntensityContrast"
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!Runtime#setMaxIntensity:member(1)",
+              "docComment": "/**\n * In point clouds when coloring by `PointCloudColoring.Intensity`, set the max intensity value - Default: `1.0`\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "setMaxIntensity(number: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "any"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "number",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "setMaxIntensity"
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!Runtime#setPointAlpha:member(1)",
+              "docComment": "/**\n * In point clouds when, set the alpha value. Default: `1.0`.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "setPointAlpha(number: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "any"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "number",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "setPointAlpha"
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!Runtime#setPointCloudColoring:member(1)",
+              "docComment": "/**\n * In point clouds set the type of coloring used. See {@link PointCloudColoring}\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "setPointCloudColoring(PointCloudColoring: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "any"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "PointCloudColoring",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "setPointCloudColoring"
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!Runtime#setShading:member(1)",
+              "docComment": "/**\n * Set the current shading mode for b3dm tiles. See {@link Shading}.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "setShading(Shading: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "any"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "Shading",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "setShading"
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!Runtime#setViewDistanceScale:member(1)",
+              "docComment": "/**\n * Set the current view distance scale. See {@link LoaderOptions}\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "setViewDistanceScale(number: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "any"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "number",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "setViewDistanceScale"
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!Runtime#setWireframe:member(1)",
+              "docComment": "/**\n * Enable or disable wireframe mode.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "setWireframe(boolean: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "any"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "boolean",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "setWireframe"
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!Runtime#showTiles:member(1)",
+              "docComment": "/**\n * Show or hide the tile bounding boxes.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "showTiles(boolean: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "any"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "boolean",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "showTiles"
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!Runtime#update:member(1)",
+              "docComment": "/**\n * Update the tileset for rendering.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "update(dt: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Number",
+                  "canonicalReference": "!Number:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", viewportHeight: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", camera: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Camera",
+                  "canonicalReference": "@types/three!Camera:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 7,
+                "endIndex": 8
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "dt",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "viewportHeight",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "camera",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 5,
+                    "endIndex": 6
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "update"
+            }
+          ],
+          "extendsTokenRanges": []
+        },
+        {
+          "kind": "Enum",
+          "canonicalReference": "three-loader-3dtiles!Shading:enum",
+          "docComment": "/**\n * Types of shading used when viewing b3dm (mesh) tiles\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "declare enum Shading "
+            }
+          ],
+          "fileUrlPath": "src/types.ts",
+          "releaseTag": "Public",
+          "name": "Shading",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "three-loader-3dtiles!Shading.FlatTexture:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "FlatTexture = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "1"
+                }
+              ],
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "name": "FlatTexture"
+            },
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "three-loader-3dtiles!Shading.ShadedNoTexture:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "ShadedNoTexture = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "3"
+                }
+              ],
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "name": "ShadedNoTexture"
+            },
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "three-loader-3dtiles!Shading.ShadedTexture:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "ShadedTexture = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "2"
+                }
+              ],
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "name": "ShadedTexture"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

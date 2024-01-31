@@ -33,7 +33,9 @@
     }
   },
   "scripts": {
-    "build": "vite --config vite.config.lib.js build && vite --config vite.config.examples.js build",
+    "build": "npm run build:lib && npm run build:examples",
+    "build:lib": "vite --config vite.config.lib.js build",
+    "build:examples": "vite --config vite.config.examples.js build",
     "dev": "vite --config vite.config.examples.js",
     "build:types": "tsc --declaration --emitDeclarationOnly --declarationMap --declarationDir dist/lib/",
     "api:extract": "api-extractor run --local --verbose",

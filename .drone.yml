@@ -42,11 +42,11 @@ steps:
       branch: gh-pages
       commit : true
       force: true
-      environment:
-        GITHUB_PASSWORD:
-          from_secret: github-token
-        GITHUB_USERNAME:
-          from_secret: github-username
+    environment:
+      GITHUB_PASSWORD:
+        from_secret: github-token
+      GITHUB_USERNAME:
+        from_secret: github-username
     when:
       branch:
       - dev

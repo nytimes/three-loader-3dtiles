@@ -38,6 +38,7 @@ steps:
   - name: publish
     image: plugins/gh-pages
     settings:
+      pages_directory: .
       username:
          from_secret: github-username
       password:

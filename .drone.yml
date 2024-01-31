@@ -42,10 +42,9 @@ steps:
       branch: gh-pages
       commit : true
       force: true
-    environment:
-      GITHUB_PASSWORD:
+      netrc.password:
         from_secret: github-token
-      GITHUB_USERNAME:
+      netrc.username:
         from_secret: github-username
     when:
       branch:

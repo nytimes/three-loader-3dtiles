@@ -38,10 +38,10 @@ steps:
   - name: overwrite_gitignore
     image: node:18
     commands:
-      - echo "node_modules" > .gitignore
+      - echo -e "node_modules\ntemp" > .gitignore
     when:
       branch:
-      - dev
+      - main
       event:
       - push
 
@@ -57,7 +57,7 @@ steps:
       force_push: true
     when:
       branch:
-      - dev
+      - main
       event:
       - push
 

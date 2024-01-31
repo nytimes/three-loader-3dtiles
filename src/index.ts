@@ -223,8 +223,7 @@ class Loader3DTiles {
           if (options.geoTransform == GeoTransform.Reset && !orientationDetected && tile?.depth <= MAX_DEPTH_FOR_ORIENTATION) {
             detectOrientation(tile);
           }
-          tileset._frameNumber++;
-          tilesetUpdate(tileset, renderMap, lastViewportHeight, cameraReference);
+          needsUpdate = true;
         }
       },
       onTileUnload: (tile) => {
@@ -292,6 +291,7 @@ class Loader3DTiles {
 
     let lastCameraTransform: Matrix4 = null;
     let lastCameraAspect = null;
+    let needsUpdate = false;
     const lastCameraPosition = new Vector3(Infinity, Infinity, Infinity);
     let sseDenominator = null;
 
@@ -587,12 +587,12 @@ class Loader3DTiles {
             if (lastCameraTransform == null) {
               lastCameraTransform = new Matrix4().copy(camera.matrixWorld);
             } else {
-              const cameraChanged: boolean =
-                !camera.matrixWorld.equals(lastCameraTransform) ||
-                !((<PerspectiveCamera>camera).aspect == lastCameraAspect);
-
-              if (cameraChanged) {
+              if (
+                needsUpdate || 
+                cameraChanged(camera, lastCameraTransform, lastCameraAspect)
+            ) {
                 timer = 0;
+                needsUpdate = false;
                 tileset._frameNumber++;
                 camera.getWorldPosition(lastCameraPosition);
                 lastCameraTransform.copy(camera.matrixWorld);
@@ -793,6 +793,11 @@ function disposeNode(node) {
     const obj = node.children[i];
     node.remove(obj);
   }
+}
+
+function cameraChanged(camera:Camera, lastCameraTransform:Matrix4, lastCameraAspect: number) {
+  return !camera.matrixWorld.equals(lastCameraTransform) ||
+  !((<PerspectiveCamera>camera).aspect == lastCameraAspect);
 }
 
 export { Loader3DTiles, PointCloudColoring, Shading, Runtime, GeoCoord, GeoTransform, LoaderOptions, LoaderProps };

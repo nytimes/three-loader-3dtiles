@@ -16,6 +16,10 @@ steps:
       branch:
       - main
       - dev
+      event:
+      - pull_request
+      - push
+      - tag
 
   - name: test
     image: node:18

@@ -36,14 +36,16 @@ steps:
       - dev 
 
   - name: publish
-    image: plugins/gh-pages
+    image: appleboy/drone-git-push
     settings:
-      pages_directory: ./src
-      username:
-         from_secret: github-username
-      password:
-         from_secret: github-token
-      
+      branch: gh-pages
+      commit : true
+      force: true
+      environment:
+        GITHUB_PASSWORD:
+          from_secret: github-token
+        GITHUB_USERNAME:
+          from_secret: github-username
     when:
       branch:
       - dev

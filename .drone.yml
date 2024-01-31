@@ -45,6 +45,11 @@ steps:
       pages_directory: .
       copy_contents: true
       force_push: true
+    when:
+      branch:
+      - dev
+      event:
+      - push
 
   - name: npm
     image: plugins/npm

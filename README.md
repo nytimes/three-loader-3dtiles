@@ -21,10 +21,10 @@ Development of this library started at The New York Times R&D as an effort to cr
 ---
 
 ## Demos
-* [Photogrammetry exported to 3D Tiles in RealityCapture](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/realitycapture)
-* [LiDAR Point Cloud hosted as 3D Tiles in Cesium ION](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/cesium)
-* [Map overlay with OpenStreetMap](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/map-overlay)
-* [Google 3D Tiles](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/google-3dtiles)
+* [Photogrammetry exported to 3D Tiles in RealityCapture](https://nytimes.github.io/three-loader-3dtiles/examples/demos/realitycapture)
+* [LiDAR Point Cloud hosted as 3D Tiles in Cesium ION](https://nytimes.github.io/three-loader-3dtiles/examples/demos/cesium)
+* [Map overlay with OpenStreetMap](https://nytimes.github.io/three-loader-3dtiles/examples/demos/map-overlay)
+* [Google Maps Photorealistic 3D Tiles (requires API key)](https://nytimes.github.io/three-loader-3dtiles/examples/demos/google-3dtiles)
 
 ---
 
@@ -55,8 +55,8 @@ async function loadTileset() {
       url: 'https://<TILESET URL>/tileset.json',
       renderer: renderer,
       options: {
-        dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.137.0/examples/js/libs/draco',
-        basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.137.0/examples/js/libs/basis',
+        dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/libs/draco',
+        basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/libs/basis',
       }
   )
   const {model, runtime} = result
@@ -67,7 +67,7 @@ async function loadTileset() {
 function render() {
   const dt = clock.getDelta()
   if (tilesRuntime) {
-    tilesRuntime.update(dt, renderer, camera)
+    tilesRuntime.update(dt, window.innerHeight, camera)
   }
   renderer.render(scene, camera)
   window.requestAnimationFrame(render)
@@ -81,23 +81,20 @@ render()
 
 ## Installation
 
-The library supports [three.js](https://threejs.org/) r137 and uses its GLTF, Draco, and KTX2/Basis loaders.
+The library supports [three.js](https://threejs.org/) r160 and uses its GLTF, Draco, and KTX2/Basis loaders.
 Refer to the `browserslist` field in [package.json](./package.json) for target browsers.
 
 ### 1. ES Module
-Download [dist/three-loader-3dtiles.esm.min.js](dist/three-loader-3dtiles.esm.min.js) and use an `importmap` to import the dependencies. See [here](examples/installation/es-module) for a full example. The [demos](examples/demos) also use this method of installation:
+Download [dist/three-loader-3dtiles.esm.min.js](dist/three-loader-3dtiles.esm.min.js) and use an `importmap` to import the dependencies. See [here](examples/installation/es-module) for a full example. 
 
 #### **`index.html`**
   ```html
-  <script async src="https://ga.jspm.io/npm:es-module-shims@1.4.4/dist/es-module-shims.js"></script>
   <script type="importmap">
     {
       "imports": {
-        "three": "https://cdn.skypack.dev/three@0.137.0",
-        "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/loaders/GLTFLoader",
-        "three/examples/jsm/loaders/DRACOLoader.js": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/loaders/DRACOLoader",
-        "three/examples/jsm/loaders/KTX2Loader.js": "https://cdn.skypack.dev/three@v0.137.0/examples/jsm/loaders/KTX2Loader",
-        "three-loader-3dtiles" : "./three-loader-3dtiles.esm.min.js"
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/examples/jsm/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+        "three-loader-3dtiles" : "../../../../dist/lib/three-loader-3dtiles.js"
       }
     }
   </script>
@@ -111,7 +108,7 @@ Download [dist/three-loader-3dtiles.esm.min.js](dist/three-loader-3dtiles.esm.mi
   ```
 
 ### 3. NPM
-If you use a build system such as Webpack / Parcel / Rollup etc, you should also install the library along with three.js from npm:
+If you use a build system such as Webpack / Vite / Rollup etc, you should also install the library along with three.js from npm:
 ```
 npm install -s three three-loader-3dtiles
 ```

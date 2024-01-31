@@ -17,14 +17,6 @@ steps:
       - main
       - dev
 
-  - name: build-npm
-    image: node:18
-    commands:
-      - npm run build
-    when:
-      event:
-      - tag
-
   - name: test
     image: node:18
     commands:
@@ -46,10 +38,13 @@ steps:
   - name: publish
     image: plugins/gh-pages
     settings:
-      username: 
-        from_secret: github_username
-      ssh_key:
-        from_secret: github_ssh_key
+      username:
+         from_secret: github-username
+      password:
+         from_secret: github-token
+      pages_directory: .
+      copy_contents: true
+      force_push: true
     when:
       branch:
       - dev

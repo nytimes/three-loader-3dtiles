@@ -19,6 +19,19 @@
     "dist"
   ],
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/lib/three-loader-3dtiles.d.ts",
+      "node": {
+        "require": "./dist/lib/three-loader-3dtiles.umd.cjs",
+        "default": "./dist/lib/three-loader-3dtiles.js"
+      },
+      "default": {
+        "require": "./dist/lib/three-loader-3dtiles.umd.cjs",
+        "default": "./dist/lib/three-loader-3dtiles.js"
+      }
+    }
+  },
   "scripts": {
     "build": "vite --config vite.config.lib.js build && vite --config vite.config.examples.js build",
     "dev": "vite --config vite.config.examples.js",
@@ -36,8 +49,6 @@
     "not ie <= 11",
     "not dead"
   ],
-  "dependencies": {
-  },
   "peerDependencies": {
     "three": "^0.160.0"
   },
@@ -49,12 +60,9 @@
     "@loaders.gl/tiles": "^4.1.0-alpha.10",
     "@math.gl/core": "^4.0.0",
     "@math.gl/culling": "^4.0.0",
-    "@probe.gl/stats-widget": "^4.0.4",
-    "geo-three": "^0.1.14",
-    "jpeg-js": ">=0.4.0",
-    "three-story-controls": "^1.0.6",
     "@microsoft/api-documenter": "^7.23.16",
     "@microsoft/api-extractor": "^7.39.1",
+    "@probe.gl/stats-widget": "^4.0.4",
     "@rollup/plugin-alias": "^5.1.0",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-eslint": "^9.0.5",
@@ -72,15 +80,18 @@
     "chai-as-promised": "^7.1.1",
     "concurrently": "^6.2.0",
     "ecstatic": ">=4.1.3",
+    "geo-three": "^0.1.14",
     "http-server": "^14.1.1",
+    "jpeg-js": ">=0.4.0",
     "mocha": "^9.0.1",
-    "ocular-dev-tools": "^2.0.0-alpha.19",
+    "ocular-dev-tools": "^2.0.0-alpha.15",
     "prettier": "2.3.0",
     "rollup": "^4.9.0",
     "rollup-plugin-node-externals": "^2.2.0",
     "rollup-plugin-typescript2": "^0.36.0",
     "sinon": "^11.1.1",
     "three": "^0.160.0",
+    "three-story-controls": "^1.0.6",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.2",
     "vite": "^5.0.9",

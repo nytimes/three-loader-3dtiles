@@ -46,6 +46,15 @@ steps:
       - main
       - dev 
 
+  - name: types
+    image: node:18
+    commands:
+      - npm run build:types
+      - npm run api:extract:production
+    when:
+      event:
+      - tag
+
   - name: overwrite_gitignore
     image: node:18
     commands:

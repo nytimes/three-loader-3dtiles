@@ -35,6 +35,16 @@ steps:
       - main
       - dev 
 
+  - name: overwrite_gitignore
+    image: node:18
+    commands:
+      - echo "node_modules" > .gitignore
+    when:
+      branch:
+      - dev
+      event:
+      - push
+
   - name: publish
     image: plugins/gh-pages
     settings:

@@ -36,21 +36,15 @@ steps:
       - dev 
 
   - name: publish
-    image: appleboy/drone-git-push
+    image: plugins/gh-pages
     settings:
-      remote: https://github.com/nytimes/three-loader-3dtiles.git
-      branch: gh-pages
-      commit : true
-      force: true
-      password:
-        from_secret: github-token
       username:
-        from_secret: github-username
-    when:
-      branch:
-      - dev
-      event:
-      - push
+         from_secret: github-username
+      password:
+         from_secret: github-token
+      pages_directory: .
+      copy_contents: true
+      force_push: true
 
   - name: npm
     image: plugins/npm

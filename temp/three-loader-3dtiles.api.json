@@ -841,11 +841,11 @@
             {
               "kind": "PropertySignature",
               "canonicalReference": "three-loader-3dtiles!LoaderOptions#memoryCacheOverflow:member",
-              "docComment": "",
+              "docComment": "/**\n * The maximum additional memory (in MB) to allow for cache headroom before adjusting the screen spacer error - Default: `1`.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "memoryCacheOverflow: "
+                  "text": "memoryCacheOverflow?: "
                 },
                 {
                   "kind": "Content",
@@ -857,7 +857,7 @@
                 }
               ],
               "isReadonly": false,
-              "isOptional": false,
+              "isOptional": true,
               "releaseTag": "Public",
               "name": "memoryCacheOverflow",
               "propertyTypeTokenRange": {

@@ -58,8 +58,7 @@ export interface LoaderOptions {
     maximumScreenSpaceError?: number;
     maxRequests?: number;
     memoryAdjustedScreenSpaceError?: boolean;
-    // (undocumented)
-    memoryCacheOverflow: number;
+    memoryCacheOverflow?: number;
     pointCloudColoring?: PointCloudColoring;
     pointSize?: number;
     preloadTilesCount?: number;

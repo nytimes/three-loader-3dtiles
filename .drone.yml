@@ -16,6 +16,17 @@ steps:
       branch:
       - main
       - dev
+      event:
+      - pull_request
+      - push
+
+  - name: build-lib
+    image: node:18
+    commands:
+      - npm run build:lib
+    when:
+      event:
+      - tag
 
   - name: test
     image: node:18
@@ -35,10 +46,19 @@ steps:
       - main
       - dev 
 
+  - name: types
+    image: node:18
+    commands:
+      - npm run build:types
+      - npm run api:extract:production
+    when:
+      event:
+      - tag
+
   - name: overwrite_gitignore
     image: node:18
     commands:
-      - echo "node_modules" > .gitignore
+      - echo "node_modules\ntemp" > .gitignore
     when:
       branch:
       - dev

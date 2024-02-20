@@ -1,37 +1,43 @@
-import { CanvasTexture as tc, LinearFilter as ec, RepeatWrapping as hr, Frustum as nc, Matrix4 as z, Group as sn, PlaneGeometry as sc, Vector3 as et, MeshBasicMaterial as so, DoubleSide as rc, Mesh as ro, ArrowHelper as ic, Color as T, BoxGeometry as oc, EdgesGeometry as ac, LineSegments as cc, LineBasicMaterial as uc, Vector2 as io, ShaderMaterial as lc, Euler as vn, BufferGeometry as hc, Float32BufferAttribute as fr, Uint8BufferAttribute as dr, BufferAttribute as fc, Points as dc } from "three";
-import { GLTFLoader as mc } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { DRACOLoader as Ac } from "three/examples/jsm/loaders/DRACOLoader.js";
-import { KTX2Loader as gc } from "three/examples/jsm/loaders/KTX2Loader.js";
-function mr(e, t) {
+import { CanvasTexture as Ha, LinearFilter as Ja, RepeatWrapping as ar, Frustum as Va, Matrix4 as X, Group as en, PlaneGeometry as ka, Vector3 as nt, MeshBasicMaterial as Qi, DoubleSide as ja, Mesh as qi, ArrowHelper as Ka, Color as T, BoxGeometry as za, EdgesGeometry as Wa, LineSegments as Xa, LineBasicMaterial as Qa, Vector2 as Yi, ShaderMaterial as qa, Euler as Fn, BufferGeometry as Ya, Float32BufferAttribute as cr, Uint8BufferAttribute as ur, BufferAttribute as $a, Points as Za } from "three";
+import { GLTFLoader as tc } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { DRACOLoader as ec } from "three/examples/jsm/loaders/DRACOLoader.js";
+import { KTX2Loader as nc } from "three/examples/jsm/loaders/KTX2Loader.js";
+async function Re(e, t, n, s) {
+  return s._parse(e, t, n, s);
+}
+function U(e, t) {
   if (!e)
     throw new Error(t || "loader assertion failed.");
 }
-const oo = !!(typeof process != "object" || String(process) !== "[object process]" || process.browser), Ar = typeof process < "u" && process.version && /v([0-9]*)/.exec(process.version);
-Ar && parseFloat(Ar[1]);
-function pc(e, t) {
-  return ao(e || {}, t);
+const Cn = !!(typeof process != "object" || String(process) !== "[object process]" || process.browser), lr = typeof process < "u" && process.version && /v([0-9]*)/.exec(process.version);
+lr && parseFloat(lr[1]);
+function sc(e, t) {
+  return $i(e || {}, t);
 }
-function ao(e, t) {
-  const n = {
+function $i(e, t) {
+  let n = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : 0;
+  if (n > 3)
+    return t;
+  const s = {
     ...e
   };
-  for (const [s, r] of Object.entries(t))
-    r && typeof r == "object" && !Array.isArray(r) ? n[s] = ao(n[s] || {}, t[s]) : n[s] = t[s];
-  return n;
+  for (const [r, i] of Object.entries(t))
+    i && typeof i == "object" && !Array.isArray(i) ? s[r] = $i(s[r] || {}, t[r], n + 1) : s[r] = t[r];
+  return s;
 }
-const co = "latest";
-function Bc() {
+const rc = "latest";
+function ic() {
   var e;
-  return (e = globalThis._loadersgl_) !== null && e !== void 0 && e.version || (globalThis._loadersgl_ = globalThis._loadersgl_ || {}, typeof __VERSION__ > "u" ? (console.warn("loaders.gl: The __VERSION__ variable is not injected using babel plugin. Latest unstable workers would be fetched from the CDN."), globalThis._loadersgl_.version = co) : globalThis._loadersgl_.version = __VERSION__), globalThis._loadersgl_.version;
+  return (e = globalThis._loadersgl_) !== null && e !== void 0 && e.version || (globalThis._loadersgl_ = globalThis._loadersgl_ || {}, globalThis._loadersgl_.version = "4.1.1"), globalThis._loadersgl_.version;
 }
-const yc = Bc();
-function Nt(e, t) {
+const Zi = ic();
+function Lt(e, t) {
   if (!e)
     throw new Error(t || "loaders.gl assertion failed.");
 }
-const Wt = typeof process != "object" || String(process) !== "[object process]" || process.browser, Cc = typeof window < "u" && typeof window.orientation < "u", gr = typeof process < "u" && process.version && /v([0-9]*)/.exec(process.version);
-gr && parseFloat(gr[1]);
-class Tc {
+const Bt = typeof process != "object" || String(process) !== "[object process]" || process.browser, Ds = typeof importScripts == "function", oc = typeof window < "u" && typeof window.orientation < "u", hr = typeof process < "u" && process.version && /v([0-9]*)/.exec(process.version);
+hr && parseFloat(hr[1]);
+class ac {
   constructor(t, n) {
     this.name = void 0, this.workerThread = void 0, this.isRunning = !0, this.result = void 0, this._resolve = () => {
     }, this._reject = () => {
@@ -47,35 +53,35 @@ class Tc {
     });
   }
   done(t) {
-    Nt(this.isRunning), this.isRunning = !1, this._resolve(t);
+    Lt(this.isRunning), this.isRunning = !1, this._resolve(t);
   }
   error(t) {
-    Nt(this.isRunning), this.isRunning = !1, this._reject(t);
+    Lt(this.isRunning), this.isRunning = !1, this._reject(t);
   }
 }
-class xn {
+class On {
   terminate() {
   }
 }
-const Ln = /* @__PURE__ */ new Map();
-function Ec(e) {
-  Nt(e.source && !e.url || !e.source && e.url);
-  let t = Ln.get(e.source || e.url);
-  return t || (e.url && (t = bc(e.url), Ln.set(e.url, t)), e.source && (t = uo(e.source), Ln.set(e.source, t))), Nt(t), t;
+const vn = /* @__PURE__ */ new Map();
+function cc(e) {
+  Lt(e.source && !e.url || !e.source && e.url);
+  let t = vn.get(e.source || e.url);
+  return t || (e.url && (t = uc(e.url), vn.set(e.url, t)), e.source && (t = to(e.source), vn.set(e.source, t))), Lt(t), t;
 }
-function bc(e) {
+function uc(e) {
   if (!e.startsWith("http"))
     return e;
-  const t = _c(e);
-  return uo(t);
+  const t = lc(e);
+  return to(t);
 }
-function uo(e) {
+function to(e) {
   const t = new Blob([e], {
     type: "application/javascript"
   });
   return URL.createObjectURL(t);
 }
-function _c(e) {
+function lc(e) {
   return `try {
   importScripts('${e}');
 } catch (error) {
@@ -83,30 +89,30 @@ function _c(e) {
   throw error;
 }`;
 }
-function lo(e) {
+function eo(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : !0, n = arguments.length > 2 ? arguments[2] : void 0;
   const s = n || /* @__PURE__ */ new Set();
   if (e) {
-    if (pr(e))
+    if (fr(e))
       s.add(e);
-    else if (pr(e.buffer))
+    else if (fr(e.buffer))
       s.add(e.buffer);
     else if (!ArrayBuffer.isView(e)) {
       if (t && typeof e == "object")
         for (const r in e)
-          lo(e[r], t, s);
+          eo(e[r], t, s);
     }
   }
   return n === void 0 ? Array.from(s) : [];
 }
-function pr(e) {
+function fr(e) {
   return e ? e instanceof ArrayBuffer || typeof MessagePort < "u" && e instanceof MessagePort || typeof ImageBitmap < "u" && e instanceof ImageBitmap || typeof OffscreenCanvas < "u" && e instanceof OffscreenCanvas : !1;
 }
-const Gn = () => {
+const xn = () => {
 };
-class As {
+class hs {
   static isSupported() {
-    return typeof Worker < "u" && Wt || typeof xn < "u" && !Wt;
+    return typeof Worker < "u" && Bt || typeof On < "u" && !Bt;
   }
   constructor(t) {
     this.name = void 0, this.source = void 0, this.url = void 0, this.terminated = !1, this.worker = void 0, this.onMessage = void 0, this.onError = void 0, this._loadableURL = "";
@@ -115,23 +121,23 @@ class As {
       source: s,
       url: r
     } = t;
-    Nt(s || r), this.name = n, this.source = s, this.url = r, this.onMessage = Gn, this.onError = (i) => console.log(i), this.worker = Wt ? this._createBrowserWorker() : this._createNodeWorker();
+    Lt(s || r), this.name = n, this.source = s, this.url = r, this.onMessage = xn, this.onError = (i) => console.log(i), this.worker = Bt ? this._createBrowserWorker() : this._createNodeWorker();
   }
   destroy() {
-    this.onMessage = Gn, this.onError = Gn, this.worker.terminate(), this.terminated = !0;
+    this.onMessage = xn, this.onError = xn, this.worker.terminate(), this.terminated = !0;
   }
   get isRunning() {
     return !!this.onMessage;
   }
   postMessage(t, n) {
-    n = n || lo(t), this.worker.postMessage(t, n);
+    n = n || eo(t), this.worker.postMessage(t, n);
   }
   _getErrorFromErrorEvent(t) {
     let n = "Failed to load ";
     return n += `worker ${this.name} from ${this.url}. `, t.message && (n += `${t.message} in `), t.lineno && (n += `:${t.lineno}:${t.colno}`), new Error(n);
   }
   _createBrowserWorker() {
-    this._loadableURL = Ec({
+    this._loadableURL = cc({
       source: this.source,
       url: this.url
     });
@@ -148,11 +154,11 @@ class As {
     let t;
     if (this.url) {
       const s = this.url.includes(":/") || this.url.startsWith("/") ? this.url : `./${this.url}`;
-      t = new xn(s, {
+      t = new On(s, {
         eval: !1
       });
     } else if (this.source)
-      t = new xn(this.source, {
+      t = new On(this.source, {
         eval: !0
       });
     else
@@ -165,9 +171,9 @@ class As {
     }), t;
   }
 }
-class wc {
+class hc {
   static isSupported() {
-    return As.isSupported();
+    return hs.isSupported();
   }
   constructor(t) {
     this.name = "unnamed", this.source = void 0, this.url = void 0, this.maxConcurrency = 1, this.maxMobileConcurrency = 1, this.onDebug = () => {
@@ -206,7 +212,7 @@ class wc {
         workerThread: t,
         backlog: this.jobQueue.length
       });
-      const s = new Tc(n.name, t);
+      const s = new ac(n.name, t);
       t.onMessage = (r) => n.onMessage(s, r.type, r.payload), t.onError = (r) => n.onError(s, r), n.onStart(s);
       try {
         await s.result;
@@ -218,7 +224,7 @@ class wc {
     }
   }
   returnWorkerToQueue(t) {
-    !Wt || this.isDestroyed || !this.reuseWorkers || this.count > this._getMaxConcurrency() ? (t.destroy(), this.count--) : this.idleQueue.push(t), this.isDestroyed || this._startQueuedJob();
+    !Bt || this.isDestroyed || !this.reuseWorkers || this.count > this._getMaxConcurrency() ? (t.destroy(), this.count--) : this.idleQueue.push(t), this.isDestroyed || this._startQueuedJob();
   }
   _getAvailableWorker() {
     if (this.idleQueue.length > 0)
@@ -226,7 +232,7 @@ class wc {
     if (this.count < this._getMaxConcurrency()) {
       this.count++;
       const t = `${this.name.toLowerCase()} (#${this.count} of ${this.maxConcurrency})`;
-      return new As({
+      return new hs({
         name: t,
         source: this.source,
         url: this.url
@@ -235,27 +241,27 @@ class wc {
     return null;
   }
   _getMaxConcurrency() {
-    return Cc ? this.maxMobileConcurrency : this.maxConcurrency;
+    return oc ? this.maxMobileConcurrency : this.maxConcurrency;
   }
 }
-const Mc = {
+const fc = {
   maxConcurrency: 3,
   maxMobileConcurrency: 1,
   reuseWorkers: !0,
   onDebug: () => {
   }
 };
-class Dt {
+class Ot {
   static isSupported() {
-    return As.isSupported();
+    return hs.isSupported();
   }
   static getWorkerFarm() {
     let t = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
-    return Dt._workerFarm = Dt._workerFarm || new Dt({}), Dt._workerFarm.setProps(t), Dt._workerFarm;
+    return Ot._workerFarm = Ot._workerFarm || new Ot({}), Ot._workerFarm.setProps(t), Ot._workerFarm;
   }
   constructor(t) {
     this.props = void 0, this.workerPools = /* @__PURE__ */ new Map(), this.props = {
-      ...Mc
+      ...fc
     }, this.setProps(t), this.workerPools = /* @__PURE__ */ new Map();
   }
   destroy() {
@@ -278,7 +284,7 @@ class Dt {
       url: r
     } = t;
     let i = this.workerPools.get(n);
-    return i || (i = new wc({
+    return i || (i = new hc({
       name: n,
       source: s,
       url: r
@@ -293,46 +299,92 @@ class Dt {
     };
   }
 }
-Dt._workerFarm = void 0;
-function Rc(e) {
+Ot._workerFarm = void 0;
+function dc(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
-  const n = t[e.id] || {}, s = Wt ? `${e.id}-worker.js` : `${e.id}-worker-node.js`;
+  const n = t[e.id] || {}, s = Bt ? `${e.id}-worker.js` : `${e.id}-worker-node.js`;
   let r = n.workerUrl;
-  if (!r && e.id === "compression" && (r = t.workerUrl), t._workerType === "test" && (Wt ? r = `modules/${e.module}/dist/${s}` : r = `modules/${e.module}/src/workers/${e.id}-worker-node.ts`), !r) {
+  if (!r && e.id === "compression" && (r = t.workerUrl), t._workerType === "test" && (Bt ? r = `modules/${e.module}/dist/${s}` : r = `modules/${e.module}/src/workers/${e.id}-worker-node.ts`), !r) {
     let i = e.version;
-    i === "latest" && (i = co);
+    i === "latest" && (i = rc);
     const o = i ? `@${i}` : "";
     r = `https://unpkg.com/@loaders.gl/${e.module}${o}/dist/${s}`;
   }
-  return Nt(r), r;
+  return Lt(r), r;
 }
-function Ic(e) {
-  let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : yc;
-  Nt(e, "no worker provided");
+function mc(e) {
+  let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : Zi;
+  Lt(e, "no worker provided");
   const n = e.version;
   return !(!t || !n);
 }
-const Sc = {}, ho = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const Ac = {}, gc = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  default: Sc
-}, Symbol.toStringTag, { value: "Module" }));
-function Fc(e, t) {
-  return !Dt.isSupported() || !Wt && !(t != null && t._nodeWorkers) ? !1 : e.worker && (t == null ? void 0 : t.worker);
+  default: Ac
+}, Symbol.toStringTag, { value: "Module" })), Ln = {};
+async function zt(e) {
+  let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : null, n = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {}, s = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : null;
+  return t && (e = pc(e, t, n, s)), Ln[e] = Ln[e] || Bc(e), await Ln[e];
 }
-async function Dc(e, t, n, s, r) {
-  const i = e.id, o = Rc(e, n), c = Dt.getWorkerFarm(n).getWorkerPool({
+function pc(e, t) {
+  let n = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {}, s = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : null;
+  if (!n.useLocalLibraries && e.startsWith("http"))
+    return e;
+  s = s || e;
+  const r = n.modules || {};
+  return r[s] ? r[s] : Bt ? n.CDN ? (Lt(n.CDN.startsWith("http")), `${n.CDN}/${t}@${Zi}/dist/libs/${s}`) : Ds ? `../src/libs/${s}` : `modules/${t}/src/libs/${s}` : `modules/${t}/dist/libs/${s}`;
+}
+async function Bc(e) {
+  if (e.endsWith("wasm"))
+    return await Cc(e);
+  if (!Bt)
+    try {
+      return gc && void 0;
+    } catch (n) {
+      return console.error(n), null;
+    }
+  if (Ds)
+    return importScripts(e);
+  const t = await Tc(e);
+  return yc(t, e);
+}
+function yc(e, t) {
+  if (!Bt)
+    return;
+  if (Ds)
+    return eval.call(globalThis, e), null;
+  const n = document.createElement("script");
+  n.id = t;
+  try {
+    n.appendChild(document.createTextNode(e));
+  } catch {
+    n.text = e;
+  }
+  return document.body.appendChild(n), null;
+}
+async function Cc(e) {
+  return await (await fetch(e)).arrayBuffer();
+}
+async function Tc(e) {
+  return await (await fetch(e)).text();
+}
+function Ec(e, t) {
+  return !Ot.isSupported() || !Bt && !(t != null && t._nodeWorkers) ? !1 : e.worker && (t == null ? void 0 : t.worker);
+}
+async function bc(e, t, n, s, r) {
+  const i = e.id, o = dc(e, n), c = Ot.getWorkerFarm(n).getWorkerPool({
     name: i,
     url: o
   });
   n = JSON.parse(JSON.stringify(n)), s = JSON.parse(JSON.stringify(s || {}));
-  const u = await c.startJob("process-on-worker", Oc.bind(null, r));
+  const u = await c.startJob("process-on-worker", _c.bind(null, r));
   return u.postMessage("process", {
     input: t,
     options: n,
     context: s
   }), await (await u.result).result;
 }
-async function Oc(e, t, n, s) {
+async function _c(e, t, n, s) {
   switch (n) {
     case "done":
       t.done(s);
@@ -364,7 +416,27 @@ async function Oc(e, t, n, s) {
       console.warn(`parse-with-worker unknown message ${n}`);
   }
 }
-function vc(e, t, n) {
+function wc(e) {
+  let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 5;
+  return typeof e == "string" ? e.slice(0, t) : ArrayBuffer.isView(e) ? dr(e.buffer, e.byteOffset, t) : e instanceof ArrayBuffer ? dr(e, 0, t) : "";
+}
+function dr(e, t, n) {
+  if (e.byteLength <= t + n)
+    return "";
+  const s = new DataView(e);
+  let r = "";
+  for (let i = 0; i < n; i++)
+    r += String.fromCharCode(s.getUint8(t + i));
+  return r;
+}
+function Mc(e) {
+  try {
+    return JSON.parse(e);
+  } catch {
+    throw new Error(`Failed to parse JSON from data starting with "${wc(e)}"`);
+  }
+}
+function Rc(e, t, n) {
   if (n = n || e.byteLength, e.byteLength < n || t.byteLength < n)
     return !1;
   const s = new Uint8Array(e), r = new Uint8Array(t);
@@ -373,22 +445,42 @@ function vc(e, t, n) {
       return !1;
   return !0;
 }
-function xc() {
+function Ic() {
   for (var e = arguments.length, t = new Array(e), n = 0; n < e; n++)
     t[n] = arguments[n];
-  const s = t.map((a) => a instanceof ArrayBuffer ? new Uint8Array(a) : a), r = s.reduce((a, c) => a + c.byteLength, 0), i = new Uint8Array(r);
-  let o = 0;
-  for (const a of s)
-    i.set(a, o), o += a.byteLength;
-  return i.buffer;
+  return Sc(t);
 }
-async function Lc(e) {
+function Sc(e) {
+  const t = e.map((i) => i instanceof ArrayBuffer ? new Uint8Array(i) : i), n = t.reduce((i, o) => i + o.byteLength, 0), s = new Uint8Array(n);
+  let r = 0;
+  for (const i of t)
+    s.set(i, r), r += i.byteLength;
+  return s.buffer;
+}
+function Fs(e, t, n) {
+  const s = n !== void 0 ? new Uint8Array(e).subarray(t, t + n) : new Uint8Array(e).subarray(t);
+  return new Uint8Array(s).buffer;
+}
+function Ie(e, t) {
+  return U(e >= 0), U(t > 0), e + (t - 1) & ~(t - 1);
+}
+function Dc(e, t, n) {
+  let s;
+  if (e instanceof ArrayBuffer)
+    s = new Uint8Array(e);
+  else {
+    const r = e.byteOffset, i = e.byteLength;
+    s = new Uint8Array(e.buffer || e.arrayBuffer, r, i);
+  }
+  return t.set(s, n), n + Ie(s.byteLength, 4);
+}
+async function Fc(e) {
   const t = [];
   for await (const n of e)
     t.push(n);
-  return xc(...t);
+  return Ic(...t);
 }
-function Br() {
+function mr() {
   let e;
   if (typeof window < "u" && window.performance)
     e = window.performance.now();
@@ -399,7 +491,7 @@ function Br() {
     e = Date.now();
   return e;
 }
-class yr {
+class Ar {
   constructor(t, n) {
     this.name = void 0, this.type = void 0, this.sampleSize = 1, this.time = 0, this.count = 0, this.samples = 0, this.lastTiming = 0, this.lastSampleTime = 0, this.lastSampleCount = 0, this._count = 0, this._time = 0, this._samples = 0, this._startTime = 0, this._timerPending = !1, this.name = t, this.type = n, this.reset();
   }
@@ -425,10 +517,10 @@ class yr {
     return this._time += t, this.lastTiming = t, this._samples++, this._checkSampling(), this;
   }
   timeStart() {
-    return this._startTime = Br(), this._timerPending = !0, this;
+    return this._startTime = mr(), this._timerPending = !0, this;
   }
   timeEnd() {
-    return this._timerPending ? (this.addTime(Br() - this._startTime), this._timerPending = !1, this._checkSampling(), this) : this;
+    return this._timerPending ? (this.addTime(mr() - this._startTime), this._timerPending = !1, this._checkSampling(), this) : this;
   }
   getSampleAverageCount() {
     return this.sampleSize > 0 ? this.lastSampleCount / this.sampleSize : 0;
@@ -452,7 +544,7 @@ class yr {
     this._samples === this.sampleSize && (this.lastSampleTime = this._time, this.lastSampleCount = this._count, this.count += this._count, this.time += this._time, this.samples += this._samples, this._time = 0, this._count = 0, this._samples = 0);
   }
 }
-class fo {
+class no {
   constructor(t) {
     this.id = void 0, this.stats = {}, this.id = t.id, this.stats = {}, this._initializeStats(t.stats), Object.seal(this);
   }
@@ -495,24 +587,96 @@ class fo {
       type: s
     } = t;
     let r = this.stats[n];
-    return r || (t instanceof yr ? r = t : r = new yr(n, s), this.stats[n] = r), r;
+    return r || (t instanceof Ar ? r = t : r = new Ar(n, s), this.stats[n] = r), r;
   }
 }
-let Gc = "";
-const Cr = {};
-function Uc(e) {
-  for (const t in Cr)
+const Oc = "Queued Requests", vc = "Active Requests", xc = "Cancelled Requests", Lc = "Queued Requests Ever", Gc = "Active Requests Ever", Uc = {
+  id: "request-scheduler",
+  throttleRequests: !0,
+  maxRequests: 6
+};
+class Pc {
+  constructor() {
+    let t = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
+    this.props = void 0, this.stats = void 0, this.activeRequestCount = 0, this.requestQueue = [], this.requestMap = /* @__PURE__ */ new Map(), this.deferredUpdate = null, this.props = {
+      ...Uc,
+      ...t
+    }, this.stats = new no({
+      id: this.props.id
+    }), this.stats.get(Oc), this.stats.get(vc), this.stats.get(xc), this.stats.get(Lc), this.stats.get(Gc);
+  }
+  scheduleRequest(t) {
+    let n = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : () => 0;
+    if (!this.props.throttleRequests)
+      return Promise.resolve({
+        done: () => {
+        }
+      });
+    if (this.requestMap.has(t))
+      return this.requestMap.get(t);
+    const s = {
+      handle: t,
+      priority: 0,
+      getPriority: n
+    }, r = new Promise((i) => (s.resolve = i, s));
+    return this.requestQueue.push(s), this.requestMap.set(t, r), this._issueNewRequests(), r;
+  }
+  _issueRequest(t) {
+    const {
+      handle: n,
+      resolve: s
+    } = t;
+    let r = !1;
+    const i = () => {
+      r || (r = !0, this.requestMap.delete(n), this.activeRequestCount--, this._issueNewRequests());
+    };
+    return this.activeRequestCount++, s ? s({
+      done: i
+    }) : Promise.resolve({
+      done: i
+    });
+  }
+  _issueNewRequests() {
+    this.deferredUpdate || (this.deferredUpdate = setTimeout(() => this._issueNewRequestsAsync(), 0));
+  }
+  _issueNewRequestsAsync() {
+    this.deferredUpdate = null;
+    const t = Math.max(this.props.maxRequests - this.activeRequestCount, 0);
+    if (t !== 0) {
+      this._updateAllRequests();
+      for (let n = 0; n < t; ++n) {
+        const s = this.requestQueue.shift();
+        s && this._issueRequest(s);
+      }
+    }
+  }
+  _updateAllRequests() {
+    const t = this.requestQueue;
+    for (let n = 0; n < t.length; ++n) {
+      const s = t[n];
+      this._updateRequest(s) || (t.splice(n, 1), this.requestMap.delete(s.handle), n--);
+    }
+    t.sort((n, s) => n.priority - s.priority);
+  }
+  _updateRequest(t) {
+    return t.priority = t.getPriority(t.handle), t.priority < 0 ? (t.resolve(null), !1) : !0;
+  }
+}
+let Nc = "";
+const gr = {};
+function Hc(e) {
+  for (const t in gr)
     if (e.startsWith(t)) {
-      const n = Cr[t];
+      const n = gr[t];
       e = e.replace(t, n);
     }
-  return !e.startsWith("http://") && !e.startsWith("https://") && (e = `${Gc}${e}`), e;
+  return !e.startsWith("http://") && !e.startsWith("https://") && (e = `${Nc}${e}`), e;
 }
-function Nc(e) {
+function Jc(e) {
   return e && typeof e == "object" && e.isBuffer;
 }
-function mo(e) {
-  if (Nc(e))
+function so(e) {
+  if (Jc(e))
     return e;
   if (e instanceof ArrayBuffer)
     return e;
@@ -526,52 +690,110 @@ function mo(e) {
     return e._toArrayBuffer();
   throw new Error("toArrayBuffer");
 }
-function Ao(e) {
+function Vc() {
+  var e;
+  if (typeof process < "u" && typeof process.cwd < "u")
+    return process.cwd();
+  const t = (e = window.location) === null || e === void 0 ? void 0 : e.pathname;
+  return (t == null ? void 0 : t.slice(0, t.lastIndexOf("/") + 1)) || "";
+}
+function ro(e) {
   const t = e ? e.lastIndexOf("/") : -1;
   return t >= 0 ? e.substr(t + 1) : "";
 }
-function Pc(e) {
+function Os(e) {
   const t = e ? e.lastIndexOf("/") : -1;
   return t >= 0 ? e.substr(0, t) : "";
 }
-const Hc = (e) => typeof e == "boolean", ye = (e) => typeof e == "function", Ie = (e) => e !== null && typeof e == "object", Tr = (e) => Ie(e) && e.constructor === {}.constructor, Jc = (e) => !!e && typeof e[Symbol.iterator] == "function", Vc = (e) => e && typeof e[Symbol.asyncIterator] == "function", Xt = (e) => typeof Response < "u" && e instanceof Response || e && e.arrayBuffer && e.text && e.json, Qt = (e) => typeof Blob < "u" && e instanceof Blob, kc = (e) => e && typeof e == "object" && e.isBuffer, jc = (e) => typeof ReadableStream < "u" && e instanceof ReadableStream || Ie(e) && ye(e.tee) && ye(e.cancel) && ye(e.getReader), Kc = (e) => Ie(e) && ye(e.read) && ye(e.pipe) && Hc(e.readable), go = (e) => jc(e) || Kc(e), Wc = /^data:([-\w.]+\/[-\w.+]+)(;|,)/, zc = /^([-\w.]+\/[-\w.+]+)/;
-function Xc(e) {
-  const t = zc.exec(e);
+function kc() {
+  const e = [];
+  for (let r = 0; r < arguments.length; r++)
+    e[r] = r < 0 || arguments.length <= r ? void 0 : arguments[r];
+  let t = "", n = !1, s;
+  for (let r = e.length - 1; r >= -1 && !n; r--) {
+    let i;
+    r >= 0 ? i = e[r] : (s === void 0 && (s = Vc()), i = s), i.length !== 0 && (t = `${i}/${t}`, n = i.charCodeAt(0) === pe);
+  }
+  return t = jc(t, !n), n ? `/${t}` : t.length > 0 ? t : ".";
+}
+const pe = 47, Gn = 46;
+function jc(e, t) {
+  let n = "", s = -1, r = 0, i, o = !1;
+  for (let a = 0; a <= e.length; ++a) {
+    if (a < e.length)
+      i = e.charCodeAt(a);
+    else {
+      if (i === pe)
+        break;
+      i = pe;
+    }
+    if (i === pe) {
+      if (!(s === a - 1 || r === 1))
+        if (s !== a - 1 && r === 2) {
+          if (n.length < 2 || !o || n.charCodeAt(n.length - 1) !== Gn || n.charCodeAt(n.length - 2) !== Gn) {
+            if (n.length > 2) {
+              const c = n.length - 1;
+              let u = c;
+              for (; u >= 0 && n.charCodeAt(u) !== pe; --u)
+                ;
+              if (u !== c) {
+                n = u === -1 ? "" : n.slice(0, u), s = a, r = 0, o = !1;
+                continue;
+              }
+            } else if (n.length === 2 || n.length === 1) {
+              n = "", s = a, r = 0, o = !1;
+              continue;
+            }
+          }
+          t && (n.length > 0 ? n += "/.." : n = "..", o = !0);
+        } else {
+          const c = e.slice(s + 1, a);
+          n.length > 0 ? n += `/${c}` : n = c, o = !1;
+        }
+      s = a, r = 0;
+    } else
+      i === Gn && r !== -1 ? ++r : r = -1;
+  }
+  return n;
+}
+const Kc = (e) => typeof e == "boolean", ye = (e) => typeof e == "function", Se = (e) => e !== null && typeof e == "object", pr = (e) => Se(e) && e.constructor === {}.constructor, zc = (e) => !!e && typeof e[Symbol.iterator] == "function", Wc = (e) => e && typeof e[Symbol.asyncIterator] == "function", Xt = (e) => typeof Response < "u" && e instanceof Response || e && e.arrayBuffer && e.text && e.json, Qt = (e) => typeof Blob < "u" && e instanceof Blob, Xc = (e) => e && typeof e == "object" && e.isBuffer, Qc = (e) => typeof ReadableStream < "u" && e instanceof ReadableStream || Se(e) && ye(e.tee) && ye(e.cancel) && ye(e.getReader), qc = (e) => Se(e) && ye(e.read) && ye(e.pipe) && Kc(e.readable), io = (e) => Qc(e) || qc(e), Yc = /^data:([-\w.]+\/[-\w.+]+)(;|,)/, $c = /^([-\w.]+\/[-\w.+]+)/;
+function Zc(e) {
+  const t = $c.exec(e);
   return t ? t[1] : e;
 }
-function Er(e) {
-  const t = Wc.exec(e);
+function Br(e) {
+  const t = Yc.exec(e);
   return t ? t[1] : "";
 }
-const po = /\?.*/;
-function Qc(e) {
-  const t = e.match(po);
+const oo = /\?.*/;
+function tu(e) {
+  const t = e.match(oo);
   return t && t[0];
 }
-function xs(e) {
-  return e.replace(po, "");
+function vs(e) {
+  return e.replace(oo, "");
 }
-function bn(e) {
+function Tn(e) {
   return Xt(e) ? e.url : Qt(e) ? e.name || "" : typeof e == "string" ? e : "";
 }
-function Ls(e) {
+function xs(e) {
   if (Xt(e)) {
-    const t = e, n = t.headers.get("content-type") || "", s = xs(t.url);
-    return Xc(n) || Er(s);
+    const t = e, n = t.headers.get("content-type") || "", s = vs(t.url);
+    return Zc(n) || Br(s);
   }
-  return Qt(e) ? e.type || "" : typeof e == "string" ? Er(e) : "";
+  return Qt(e) ? e.type || "" : typeof e == "string" ? Br(e) : "";
 }
-function qc(e) {
+function eu(e) {
   return Xt(e) ? e.headers["content-length"] || -1 : Qt(e) ? e.size : typeof e == "string" ? e.length : e instanceof ArrayBuffer || ArrayBuffer.isView(e) ? e.byteLength : -1;
 }
-async function Bo(e) {
+async function ao(e) {
   if (Xt(e))
     return e;
-  const t = {}, n = qc(e);
+  const t = {}, n = eu(e);
   n >= 0 && (t["content-length"] = String(n));
-  const s = bn(e), r = Ls(e);
+  const s = Tn(e), r = xs(e);
   r && (t["content-type"] = r);
-  const i = await Zc(e);
+  const i = await ru(e);
   i && (t["x-first-bytes"] = i), typeof e == "string" && (e = new TextEncoder().encode(e));
   const o = new Response(e, {
     headers: t
@@ -580,13 +802,13 @@ async function Bo(e) {
     value: s
   }), o;
 }
-async function Yc(e) {
+async function nu(e) {
   if (!e.ok) {
-    const t = await $c(e);
+    const t = await su(e);
     throw new Error(t);
   }
 }
-async function $c(e) {
+async function su(e) {
   let t = `Failed to fetch resource ${e.url} (${e.status}): `;
   try {
     const n = e.headers.get("Content-Type");
@@ -596,7 +818,7 @@ async function $c(e) {
   }
   return t;
 }
-async function Zc(e) {
+async function ru(e) {
   if (typeof e == "string")
     return `data:,${e.slice(0, 5)}`;
   if (e instanceof Blob) {
@@ -611,30 +833,30 @@ async function Zc(e) {
   }
   if (e instanceof ArrayBuffer) {
     const n = e.slice(0, 5);
-    return `data:base64,${tu(n)}`;
+    return `data:base64,${iu(n)}`;
   }
   return null;
 }
-function tu(e) {
+function iu(e) {
   let t = "";
   const n = new Uint8Array(e);
   for (let s = 0; s < n.byteLength; s++)
     t += String.fromCharCode(n[s]);
   return btoa(t);
 }
-function eu(e) {
-  return !nu(e) && !su(e);
+function ou(e) {
+  return !au(e) && !cu(e);
 }
-function nu(e) {
+function au(e) {
   return e.startsWith("http:") || e.startsWith("https:");
 }
-function su(e) {
+function cu(e) {
   return e.startsWith("data:");
 }
 async function _e(e, t) {
   if (typeof e == "string") {
-    const r = Uc(e);
-    if (eu(r)) {
+    const r = Hc(e);
+    if (ou(r)) {
       var n;
       if ((n = globalThis.loaders) !== null && n !== void 0 && n.fetchNode) {
         var s;
@@ -643,20 +865,20 @@ async function _e(e, t) {
     }
     return await fetch(r, t);
   }
-  return await Bo(e);
+  return await ao(e);
 }
-function ru(e) {
+function uu(e) {
   if (typeof window < "u" && typeof window.process == "object" && window.process.type === "renderer" || typeof process < "u" && typeof process.versions == "object" && process.versions.electron)
     return !0;
   const t = typeof navigator == "object" && typeof navigator.userAgent == "string" && navigator.userAgent, n = e || t;
   return !!(n && n.indexOf("Electron") >= 0);
 }
-function Se() {
-  return !(typeof process == "object" && String(process) === "[object process]" && !process.browser) || ru();
+function De() {
+  return !(typeof process == "object" && String(process) === "[object process]" && !process.browser) || uu();
 }
-const Pe = globalThis.window || globalThis.self || globalThis.global, le = globalThis.process || {}, yo = typeof __VERSION__ < "u" ? __VERSION__ : "untranspiled source";
-Se();
-function iu(e) {
+const Ue = globalThis.window || globalThis.self || globalThis.global, le = globalThis.process || {}, co = typeof __VERSION__ < "u" ? __VERSION__ : "untranspiled source";
+De();
+function lu(e) {
   try {
     const t = window[e], n = "__storage_test__";
     return t.setItem(n, n), t.removeItem(n), t;
@@ -664,10 +886,10 @@ function iu(e) {
     return null;
   }
 }
-class ou {
+class hu {
   constructor(t, n) {
     let s = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : "sessionStorage";
-    this.storage = void 0, this.id = void 0, this.config = void 0, this.storage = iu(s), this.id = t, this.config = n, this._loadConfiguration();
+    this.storage = void 0, this.id = void 0, this.config = void 0, this.storage = lu(s), this.id = t, this.config = n, this._loadConfiguration();
   }
   getConfiguration() {
     return this.config;
@@ -687,11 +909,11 @@ class ou {
     return Object.assign(this.config, t), this;
   }
 }
-function au(e) {
+function fu(e) {
   let t;
   return e < 10 ? t = "".concat(e.toFixed(2), "ms") : e < 100 ? t = "".concat(e.toFixed(1), "ms") : e < 1e3 ? t = "".concat(e.toFixed(0), "ms") : t = "".concat((e / 1e3).toFixed(2), "s"), t;
 }
-function cu(e) {
+function du(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 8;
   const n = Math.max(t - e.length, 0);
   return "".concat(" ".repeat(n)).concat(e);
@@ -703,28 +925,28 @@ function Un(e, t, n) {
   const i = e.width * n, o = e.height * n, a = ["font-size:1px;", "padding:".concat(Math.floor(o / 2), "px ").concat(Math.floor(i / 2), "px;"), "line-height:".concat(o, "px;"), "background:url(".concat(r, ");"), "background-size:".concat(i, "px ").concat(o, "px;"), "color:transparent;"].join("");
   return ["".concat(t, " %c+"), a];
 }
-let ln;
+let cn;
 (function(e) {
   e[e.BLACK = 30] = "BLACK", e[e.RED = 31] = "RED", e[e.GREEN = 32] = "GREEN", e[e.YELLOW = 33] = "YELLOW", e[e.BLUE = 34] = "BLUE", e[e.MAGENTA = 35] = "MAGENTA", e[e.CYAN = 36] = "CYAN", e[e.WHITE = 37] = "WHITE", e[e.BRIGHT_BLACK = 90] = "BRIGHT_BLACK", e[e.BRIGHT_RED = 91] = "BRIGHT_RED", e[e.BRIGHT_GREEN = 92] = "BRIGHT_GREEN", e[e.BRIGHT_YELLOW = 93] = "BRIGHT_YELLOW", e[e.BRIGHT_BLUE = 94] = "BRIGHT_BLUE", e[e.BRIGHT_MAGENTA = 95] = "BRIGHT_MAGENTA", e[e.BRIGHT_CYAN = 96] = "BRIGHT_CYAN", e[e.BRIGHT_WHITE = 97] = "BRIGHT_WHITE";
-})(ln || (ln = {}));
-const uu = 10;
-function br(e) {
-  return typeof e != "string" ? e : (e = e.toUpperCase(), ln[e] || ln.WHITE);
+})(cn || (cn = {}));
+const mu = 10;
+function yr(e) {
+  return typeof e != "string" ? e : (e = e.toUpperCase(), cn[e] || cn.WHITE);
 }
-function lu(e, t, n) {
-  if (!Se && typeof e == "string") {
+function Au(e, t, n) {
+  if (!De && typeof e == "string") {
     if (t) {
-      const s = br(t);
+      const s = yr(t);
       e = "\x1B[".concat(s, "m").concat(e, "\x1B[39m");
     }
     if (n) {
-      const s = br(n);
-      e = "\x1B[".concat(s + uu, "m").concat(e, "\x1B[49m");
+      const s = yr(n);
+      e = "\x1B[".concat(s + mu, "m").concat(e, "\x1B[49m");
     }
   }
   return e;
 }
-function hu(e) {
+function gu(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : ["constructor"];
   const n = Object.getPrototypeOf(e), s = Object.getOwnPropertyNames(n), r = e;
   for (const i of s) {
@@ -732,15 +954,15 @@ function hu(e) {
     typeof o == "function" && (t.find((a) => i === a) || (r[i] = o.bind(e)));
   }
 }
-function hn(e, t) {
+function un(e, t) {
   if (!e)
     throw new Error(t || "Assertion failed");
 }
 function Zt() {
   let e;
-  if (Se() && Pe.performance) {
+  if (De() && Ue.performance) {
     var t, n;
-    e = Pe == null || (t = Pe.performance) === null || t === void 0 || (n = t.now) === null || n === void 0 ? void 0 : n.call(t);
+    e = Ue == null || (t = Ue.performance) === null || t === void 0 || (n = t.now) === null || n === void 0 ? void 0 : n.call(t);
   } else if ("hrtime" in le) {
     var s;
     const r = le == null || (s = le.hrtime) === null || s === void 0 ? void 0 : s.call(le);
@@ -750,28 +972,28 @@ function Zt() {
   return e;
 }
 const te = {
-  debug: Se() && console.debug || console.log,
+  debug: De() && console.debug || console.log,
   log: console.log,
   info: console.info,
   warn: console.warn,
   error: console.error
-}, fu = {
+}, pu = {
   enabled: !0,
   level: 0
 };
 function At() {
 }
-const _r = {}, wr = {
+const Cr = {}, Tr = {
   once: !0
 };
-class _n {
+class En {
   constructor() {
     let {
       id: t
     } = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {
       id: ""
     };
-    this.id = void 0, this.VERSION = yo, this._startTs = Zt(), this._deltaTs = Zt(), this._storage = void 0, this.userData = {}, this.LOG_THROTTLE_TIMEOUT = 0, this.id = t, this.userData = {}, this._storage = new ou("__probe-".concat(this.id, "__"), fu), this.timeStamp("".concat(this.id, " started")), hu(this), Object.seal(this);
+    this.id = void 0, this.VERSION = co, this._startTs = Zt(), this._deltaTs = Zt(), this._storage = void 0, this.userData = {}, this.LOG_THROTTLE_TIMEOUT = 0, this.id = t, this.userData = {}, this._storage = new hu("__probe-".concat(this.id, "__"), pu), this.timeStamp("".concat(this.id, " started")), gu(this), Object.seal(this);
   }
   set level(t) {
     this.setLevel(t);
@@ -823,10 +1045,10 @@ class _n {
     console.table ? console.table(this._storage.config) : console.log(this._storage.config);
   }
   assert(t, n) {
-    hn(t, n);
+    un(t, n);
   }
   warn(t) {
-    return this._getLogFunction(0, t, te.warn, arguments, wr);
+    return this._getLogFunction(0, t, te.warn, arguments, Tr);
   }
   error(t) {
     return this._getLogFunction(0, t, te.error, arguments);
@@ -850,11 +1072,11 @@ class _n {
     return this._getLogFunction(t, n, console.info, arguments);
   }
   once(t, n) {
-    return this._getLogFunction(t, n, te.debug || te.info, arguments, wr);
+    return this._getLogFunction(t, n, te.debug || te.info, arguments, Tr);
   }
   table(t, n, s) {
     return n ? this._getLogFunction(t, n, console.table || At, s && [s], {
-      tag: gu(n)
+      tag: Tu(n)
     }) : At;
   }
   image(t) {
@@ -865,11 +1087,11 @@ class _n {
       message: i = "",
       scale: o = 1
     } = t;
-    return this._shouldLog(n || s) ? Se() ? Au({
+    return this._shouldLog(n || s) ? De() ? Cu({
       image: r,
       message: i,
       scale: o
-    }) : mu() : At;
+    }) : yu() : At;
   }
   time(t, n) {
     return this._getLogFunction(t, n, console.time ? console.time : console.info);
@@ -884,7 +1106,7 @@ class _n {
     let s = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {
       collapsed: !1
     };
-    const r = Mr({
+    const r = Er({
       logLevel: t,
       message: n,
       opts: s
@@ -914,29 +1136,29 @@ class _n {
     console.trace && console.trace();
   }
   _shouldLog(t) {
-    return this.isEnabled() && this.getLevel() >= Co(t);
+    return this.isEnabled() && this.getLevel() >= uo(t);
   }
   _getLogFunction(t, n, s, r, i) {
     if (this._shouldLog(t)) {
-      i = Mr({
+      i = Er({
         logLevel: t,
         message: n,
         args: r,
         opts: i
-      }), s = s || i.method, hn(s), i.total = this.getTotal(), i.delta = this.getDelta(), this._deltaTs = Zt();
+      }), s = s || i.method, un(s), i.total = this.getTotal(), i.delta = this.getDelta(), this._deltaTs = Zt();
       const o = i.tag || i.message;
       if (i.once && o)
-        if (!_r[o])
-          _r[o] = Zt();
+        if (!Cr[o])
+          Cr[o] = Zt();
         else
           return At;
-      return n = du(this.id, i.message, i), s.bind(console, n, ...i.args);
+      return n = Bu(this.id, i.message, i), s.bind(console, n, ...i.args);
     }
     return At;
   }
 }
-_n.VERSION = yo;
-function Co(e) {
+En.VERSION = co;
+function uo(e) {
   if (!e)
     return 0;
   let t;
@@ -950,14 +1172,14 @@ function Co(e) {
     default:
       return 0;
   }
-  return hn(Number.isFinite(t) && t >= 0), t;
+  return un(Number.isFinite(t) && t >= 0), t;
 }
-function Mr(e) {
+function Er(e) {
   const {
     logLevel: t,
     message: n
   } = e;
-  e.logLevel = Co(t);
+  e.logLevel = uo(t);
   const s = e.args ? Array.from(e.args) : [];
   for (; s.length && s.shift() !== n; )
     ;
@@ -972,21 +1194,21 @@ function Mr(e) {
   }
   typeof e.message == "function" && (e.message = e.message());
   const r = typeof e.message;
-  return hn(r === "string" || r === "object"), Object.assign(e, {
+  return un(r === "string" || r === "object"), Object.assign(e, {
     args: s
   }, e.opts);
 }
-function du(e, t, n) {
+function Bu(e, t, n) {
   if (typeof t == "string") {
-    const s = n.time ? cu(au(n.total)) : "";
-    t = n.time ? "".concat(e, ": ").concat(s, "  ").concat(t) : "".concat(e, ": ").concat(t), t = lu(t, n.color, n.background);
+    const s = n.time ? du(fu(n.total)) : "";
+    t = n.time ? "".concat(e, ": ").concat(s, "  ").concat(t) : "".concat(e, ": ").concat(t), t = Au(t, n.color, n.background);
   }
   return t;
 }
-function mu(e) {
+function yu(e) {
   return console.warn("removed"), At;
 }
-function Au(e) {
+function Cu(e) {
   let {
     image: t,
     message: n = "",
@@ -1008,18 +1230,18 @@ function Au(e) {
   }
   return At;
 }
-function gu(e) {
+function Tu(e) {
   for (const t in e)
     for (const n in e[t])
       return n || "untitled";
   return "empty";
 }
-const To = new _n({
+const lo = new En({
   id: "@probe.gl/log"
-}), Rr = new _n({
+}), br = new En({
   id: "loaders.gl"
 });
-class pu {
+class Eu {
   log() {
     return () => {
     };
@@ -1037,7 +1259,7 @@ class pu {
     };
   }
 }
-class Bu {
+class bu {
   constructor() {
     this.console = void 0, this.console = console;
   }
@@ -1062,17 +1284,17 @@ class Bu {
     return this.console.error.bind(this.console, ...n);
   }
 }
-const Eo = {
+const ho = {
   fetch: null,
   mimeType: void 0,
   nothrow: !1,
-  log: new Bu(),
+  log: new bu(),
   useLocalLibraries: !1,
   CDN: "https://unpkg.com/@loaders.gl",
   worker: !0,
   maxConcurrency: 3,
   maxMobileConcurrency: 1,
-  reuseWorkers: oo,
+  reuseWorkers: Cn,
   _nodeWorkers: !1,
   _workerType: "",
   limit: 0,
@@ -1081,7 +1303,7 @@ const Eo = {
   batchDebounceMs: 0,
   metadata: !1,
   transforms: []
-}, yu = {
+}, _u = {
   throws: "nothrow",
   dataType: "(no longer used)",
   uri: "baseUri",
@@ -1098,44 +1320,44 @@ const Eo = {
   keepalive: "fetch.keepalive",
   signal: "fetch.signal"
 };
-function bo() {
+function fo() {
   globalThis.loaders = globalThis.loaders || {};
   const {
     loaders: e
   } = globalThis;
   return e._state = e._state || {}, e._state;
 }
-function _o() {
-  const e = bo();
+function mo() {
+  const e = fo();
   return e.globalOptions = e.globalOptions || {
-    ...Eo
+    ...ho
   }, e.globalOptions;
 }
-function Cu(e, t, n, s) {
-  return n = n || [], n = Array.isArray(n) ? n : [n], Tu(e, n), bu(t, e, s);
+function wu(e, t, n, s) {
+  return n = n || [], n = Array.isArray(n) ? n : [n], Mu(e, n), Iu(t, e, s);
 }
-function Tu(e, t) {
-  Ir(e, null, Eo, yu, t);
+function Mu(e, t) {
+  _r(e, null, ho, _u, t);
   for (const n of t) {
     const s = e && e[n.id] || {}, r = n.options && n.options[n.id] || {}, i = n.deprecatedOptions && n.deprecatedOptions[n.id] || {};
-    Ir(s, n.id, r, i, t);
+    _r(s, n.id, r, i, t);
   }
 }
-function Ir(e, t, n, s, r) {
+function _r(e, t, n, s, r) {
   const i = t || "Top level", o = t ? `${t}.` : "";
   for (const a in e) {
-    const c = !t && Ie(e[a]), u = a === "baseUri" && !t, l = a === "workerUrl" && t;
+    const c = !t && Se(e[a]), u = a === "baseUri" && !t, l = a === "workerUrl" && t;
     if (!(a in n) && !u && !l) {
       if (a in s)
-        Rr.warn(`${i} loader option '${o}${a}' no longer supported, use '${s[a]}'`)();
+        br.warn(`${i} loader option '${o}${a}' no longer supported, use '${s[a]}'`)();
       else if (!c) {
-        const h = Eu(a, r);
-        Rr.warn(`${i} loader option '${o}${a}' not recognized. ${h}`)();
+        const h = Ru(a, r);
+        br.warn(`${i} loader option '${o}${a}' not recognized. ${h}`)();
       }
     }
   }
 }
-function Eu(e, t) {
+function Ru(e, t) {
   const n = e.toLowerCase();
   let s = "";
   for (const r of t)
@@ -1147,32 +1369,32 @@ function Eu(e, t) {
     }
   return s;
 }
-function bu(e, t, n) {
+function Iu(e, t, n) {
   const r = {
     ...e.options || {}
   };
-  return _u(r, n), r.log === null && (r.log = new pu()), Sr(r, _o()), Sr(r, t), r;
+  return Su(r, n), r.log === null && (r.log = new Eu()), wr(r, mo()), wr(r, t), r;
 }
-function Sr(e, t) {
+function wr(e, t) {
   for (const n in t)
     if (n in t) {
       const s = t[n];
-      Tr(s) && Tr(e[n]) ? e[n] = {
+      pr(s) && pr(e[n]) ? e[n] = {
         ...e[n],
         ...t[n]
       } : e[n] = t[n];
     }
 }
-function _u(e, t) {
+function Su(e, t) {
   t && !("baseUri" in e) && (e.baseUri = t);
 }
-function Gs(e) {
+function Ls(e) {
   var t;
   return e ? (Array.isArray(e) && (e = e[0]), Array.isArray((t = e) === null || t === void 0 ? void 0 : t.extensions)) : !1;
 }
-function wo(e) {
+function Ao(e) {
   var t, n;
-  mr(e, "null loader"), mr(Gs(e), "invalid loader");
+  U(e, "null loader"), U(Ls(e), "invalid loader");
   let s;
   return Array.isArray(e) && (s = e[1], e = e[0], e = {
     ...e,
@@ -1182,71 +1404,71 @@ function wo(e) {
     }
   }), ((t = e) !== null && t !== void 0 && t.parseTextSync || (n = e) !== null && n !== void 0 && n.parseText) && (e.text = !0), e.text || (e.binary = !0), e;
 }
-const wu = () => {
-  const e = bo();
+const Du = () => {
+  const e = fo();
   return e.loaderRegistry = e.loaderRegistry || [], e.loaderRegistry;
 };
-function Mu() {
-  return wu();
+function Fu() {
+  return Du();
 }
-const Ru = new _n({
+const Ou = new En({
   id: "loaders.gl"
-}), Iu = /\.([^.]+)$/;
-async function Su(e) {
+}), vu = /\.([^.]+)$/;
+async function xu(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : [], n = arguments.length > 2 ? arguments[2] : void 0, s = arguments.length > 3 ? arguments[3] : void 0;
-  if (!Mo(e))
+  if (!go(e))
     return null;
-  let r = Fr(e, t, {
+  let r = Mr(e, t, {
     ...n,
     nothrow: !0
   }, s);
   if (r)
     return r;
-  if (Qt(e) && (e = await e.slice(0, 10).arrayBuffer(), r = Fr(e, t, n, s)), !r && !(n != null && n.nothrow))
-    throw new Error(Ro(e));
+  if (Qt(e) && (e = await e.slice(0, 10).arrayBuffer(), r = Mr(e, t, n, s)), !r && !(n != null && n.nothrow))
+    throw new Error(po(e));
   return r;
 }
-function Fr(e) {
+function Mr(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : [], n = arguments.length > 2 ? arguments[2] : void 0, s = arguments.length > 3 ? arguments[3] : void 0;
-  if (!Mo(e))
+  if (!go(e))
     return null;
   if (t && !Array.isArray(t))
-    return wo(t);
+    return Ao(t);
   let r = [];
-  t && (r = r.concat(t)), n != null && n.ignoreRegisteredLoaders || r.push(...Mu()), Du(r);
-  const i = Fu(e, r, n, s);
+  t && (r = r.concat(t)), n != null && n.ignoreRegisteredLoaders || r.push(...Fu()), Gu(r);
+  const i = Lu(e, r, n, s);
   if (!i && !(n != null && n.nothrow))
-    throw new Error(Ro(e));
+    throw new Error(po(e));
   return i;
 }
-function Fu(e, t, n, s) {
-  const r = bn(e), i = Ls(e), o = xs(r) || (s == null ? void 0 : s.url);
+function Lu(e, t, n, s) {
+  const r = Tn(e), i = xs(e), o = vs(r) || (s == null ? void 0 : s.url);
   let a = null, c = "";
-  if (n != null && n.mimeType && (a = Nn(t, n == null ? void 0 : n.mimeType), c = `match forced by supplied MIME type ${n == null ? void 0 : n.mimeType}`), a = a || Ou(t, o), c = c || (a ? `matched url ${o}` : ""), a = a || Nn(t, i), c = c || (a ? `matched MIME type ${i}` : ""), a = a || xu(t, e), c = c || (a ? `matched initial data ${Io(e)}` : ""), n != null && n.fallbackMimeType && (a = a || Nn(t, n == null ? void 0 : n.fallbackMimeType), c = c || (a ? `matched fallback MIME type ${i}` : "")), c) {
+  if (n != null && n.mimeType && (a = Pn(t, n == null ? void 0 : n.mimeType), c = `match forced by supplied MIME type ${n == null ? void 0 : n.mimeType}`), a = a || Uu(t, o), c = c || (a ? `matched url ${o}` : ""), a = a || Pn(t, i), c = c || (a ? `matched MIME type ${i}` : ""), a = a || Nu(t, e), c = c || (a ? `matched initial data ${Bo(e)}` : ""), n != null && n.fallbackMimeType && (a = a || Pn(t, n == null ? void 0 : n.fallbackMimeType), c = c || (a ? `matched fallback MIME type ${i}` : "")), c) {
     var u;
-    Ru.log(1, `selectLoader selected ${(u = a) === null || u === void 0 ? void 0 : u.name}: ${c}.`);
+    Ou.log(1, `selectLoader selected ${(u = a) === null || u === void 0 ? void 0 : u.name}: ${c}.`);
   }
   return a;
 }
-function Mo(e) {
+function go(e) {
   return !(e instanceof Response && e.status === 204);
 }
-function Ro(e) {
-  const t = bn(e), n = Ls(e);
+function po(e) {
+  const t = Tn(e), n = xs(e);
   let s = "No valid loader found (";
-  s += t ? `${Ao(t)}, ` : "no url provided, ", s += `MIME type: ${n ? `"${n}"` : "not provided"}, `;
-  const r = e ? Io(e) : "";
+  s += t ? `${ro(t)}, ` : "no url provided, ", s += `MIME type: ${n ? `"${n}"` : "not provided"}, `;
+  const r = e ? Bo(e) : "";
   return s += r ? ` first bytes: "${r}"` : "first bytes: not available", s += ")", s;
 }
-function Du(e) {
+function Gu(e) {
   for (const t of e)
-    wo(t);
+    Ao(t);
 }
-function Ou(e, t) {
-  const n = t && Iu.exec(t), s = n && n[1];
-  return s ? vu(e, s) : null;
+function Uu(e, t) {
+  const n = t && vu.exec(t), s = n && n[1];
+  return s ? Pu(e, s) : null;
 }
-function vu(e, t) {
+function Pu(e, t) {
   t = t.toLowerCase();
   for (const n of e)
     for (const s of n.extensions)
@@ -1254,50 +1476,50 @@ function vu(e, t) {
         return n;
   return null;
 }
-function Nn(e, t) {
+function Pn(e, t) {
   for (const n of e)
     if (n.mimeTypes && n.mimeTypes.includes(t) || t === `application/x.${n.id}`)
       return n;
   return null;
 }
-function xu(e, t) {
+function Nu(e, t) {
   if (!t)
     return null;
   for (const n of e)
     if (typeof t == "string") {
-      if (Lu(t, n))
+      if (Hu(t, n))
         return n;
     } else if (ArrayBuffer.isView(t)) {
-      if (Dr(t.buffer, t.byteOffset, n))
+      if (Rr(t.buffer, t.byteOffset, n))
         return n;
-    } else if (t instanceof ArrayBuffer && Dr(t, 0, n))
+    } else if (t instanceof ArrayBuffer && Rr(t, 0, n))
       return n;
   return null;
 }
-function Lu(e, t) {
+function Hu(e, t) {
   return t.testText ? t.testText(e) : (Array.isArray(t.tests) ? t.tests : [t.tests]).some((s) => e.startsWith(s));
 }
-function Dr(e, t, n) {
-  return (Array.isArray(n.tests) ? n.tests : [n.tests]).some((r) => Gu(e, t, n, r));
+function Rr(e, t, n) {
+  return (Array.isArray(n.tests) ? n.tests : [n.tests]).some((r) => Ju(e, t, n, r));
 }
-function Gu(e, t, n, s) {
+function Ju(e, t, n, s) {
   if (s instanceof ArrayBuffer)
-    return vc(s, e, s.byteLength);
+    return Rc(s, e, s.byteLength);
   switch (typeof s) {
     case "function":
       return s(e);
     case "string":
-      const r = gs(e, t, s.length);
+      const r = fs(e, t, s.length);
       return s === r;
     default:
       return !1;
   }
 }
-function Io(e) {
+function Bo(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 5;
-  return typeof e == "string" ? e.slice(0, t) : ArrayBuffer.isView(e) ? gs(e.buffer, e.byteOffset, t) : e instanceof ArrayBuffer ? gs(e, 0, t) : "";
+  return typeof e == "string" ? e.slice(0, t) : ArrayBuffer.isView(e) ? fs(e.buffer, e.byteOffset, t) : e instanceof ArrayBuffer ? fs(e, 0, t) : "";
 }
-function gs(e, t, n) {
+function fs(e, t, n) {
   if (e.byteLength < t + n)
     return "";
   const s = new DataView(e);
@@ -1306,9 +1528,9 @@ function gs(e, t, n) {
     r += String.fromCharCode(s.getUint8(t + i));
   return r;
 }
-const Uu = 256 * 1024;
-function* Nu(e, t) {
-  const n = (t == null ? void 0 : t.chunkSize) || Uu;
+const Vu = 256 * 1024;
+function* ku(e, t) {
+  const n = (t == null ? void 0 : t.chunkSize) || Vu;
   let s = 0;
   const r = new TextEncoder();
   for (; s < e.length; ) {
@@ -1316,12 +1538,12 @@ function* Nu(e, t) {
     s += i, yield r.encode(o);
   }
 }
-const Pu = 256 * 1024;
-function Hu(e) {
+const ju = 256 * 1024;
+function Ku(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
   return function* () {
     const {
-      chunkSize: n = Pu
+      chunkSize: n = ju
     } = t;
     let s = 0;
     for (; s < e.byteLength; ) {
@@ -1330,19 +1552,19 @@ function Hu(e) {
     }
   }();
 }
-const Ju = 1024 * 1024;
-async function* Vu(e, t) {
-  const n = (t == null ? void 0 : t.chunkSize) || Ju;
+const zu = 1024 * 1024;
+async function* Wu(e, t) {
+  const n = (t == null ? void 0 : t.chunkSize) || zu;
   let s = 0;
   for (; s < e.size; ) {
     const r = s + n, i = await e.slice(s, r).arrayBuffer();
     s = r, yield i;
   }
 }
-function Or(e, t) {
-  return oo ? ku(e, t) : ju(e);
+function Ir(e, t) {
+  return Cn ? Xu(e, t) : Qu(e);
 }
-async function* ku(e, t) {
+async function* Xu(e, t) {
   const n = e.getReader();
   let s;
   try {
@@ -1355,34 +1577,34 @@ async function* ku(e, t) {
       } = await r;
       if (i)
         return;
-      yield mo(o);
+      yield so(o);
     }
   } catch {
     n.releaseLock();
   }
 }
-async function* ju(e, t) {
+async function* Qu(e, t) {
   for await (const n of e)
-    yield mo(n);
+    yield so(n);
 }
-function Ku(e, t) {
+function qu(e, t) {
   if (typeof e == "string")
-    return Nu(e, t);
+    return ku(e, t);
   if (e instanceof ArrayBuffer)
-    return Hu(e, t);
+    return Ku(e, t);
   if (Qt(e))
-    return Vu(e, t);
-  if (go(e))
-    return Or(e, t);
+    return Wu(e, t);
+  if (io(e))
+    return Ir(e, t);
   if (Xt(e))
-    return Or(e.body, t);
+    return Ir(e.body, t);
   throw new Error("makeIterator");
 }
-const So = "Cannot convert supplied data type";
-function Wu(e, t, n) {
+const yo = "Cannot convert supplied data type";
+function Yu(e, t, n) {
   if (t.text && typeof e == "string")
     return e;
-  if (kc(e) && (e = e.buffer), e instanceof ArrayBuffer) {
+  if (Xc(e) && (e = e.buffer), e instanceof ArrayBuffer) {
     const s = e;
     return t.text && !t.binary ? new TextDecoder("utf8").decode(s) : s;
   }
@@ -1393,38 +1615,38 @@ function Wu(e, t, n) {
     const r = e.byteLength || e.length;
     return (e.byteOffset !== 0 || r !== s.byteLength) && (s = s.slice(e.byteOffset, e.byteOffset + r)), s;
   }
-  throw new Error(So);
+  throw new Error(yo);
 }
-async function zu(e, t, n) {
+async function $u(e, t, n) {
   const s = e instanceof ArrayBuffer || ArrayBuffer.isView(e);
   if (typeof e == "string" || s)
-    return Wu(e, t);
-  if (Qt(e) && (e = await Bo(e)), Xt(e)) {
+    return Yu(e, t);
+  if (Qt(e) && (e = await ao(e)), Xt(e)) {
     const r = e;
-    return await Yc(r), t.binary ? await r.arrayBuffer() : await r.text();
+    return await nu(r), t.binary ? await r.arrayBuffer() : await r.text();
   }
-  if (go(e) && (e = Ku(e, n)), Jc(e) || Vc(e))
-    return Lc(e);
-  throw new Error(So);
+  if (io(e) && (e = qu(e, n)), zc(e) || Wc(e))
+    return Fc(e);
+  throw new Error(yo);
 }
-function Fo(e, t) {
-  const n = _o(), s = e || n;
-  return typeof s.fetch == "function" ? s.fetch : Ie(s.fetch) ? (r) => _e(r, s.fetch) : t != null && t.fetch ? t == null ? void 0 : t.fetch : _e;
+function Co(e, t) {
+  const n = mo(), s = e || n;
+  return typeof s.fetch == "function" ? s.fetch : Se(s.fetch) ? (r) => _e(r, s.fetch) : t != null && t.fetch ? t == null ? void 0 : t.fetch : _e;
 }
-function Xu(e, t, n) {
+function Zu(e, t, n) {
   if (n)
     return n;
   const s = {
-    fetch: Fo(t, e),
+    fetch: Co(t, e),
     ...e
   };
   if (s.url) {
-    const r = xs(s.url);
-    s.baseUrl = r, s.queryString = Qc(s.url), s.filename = Ao(r), s.baseUrl = Pc(r);
+    const r = vs(s.url);
+    s.baseUrl = r, s.queryString = tu(s.url), s.filename = ro(r), s.baseUrl = Os(r);
   }
   return Array.isArray(s.loaders) || (s.loaders = null), s;
 }
-function Qu(e, t) {
+function tl(e, t) {
   if (e && !Array.isArray(e))
     return e;
   let n;
@@ -1434,17 +1656,17 @@ function Qu(e, t) {
   }
   return n && n.length ? n : void 0;
 }
-async function fn(e, t, n, s) {
-  t && !Array.isArray(t) && !Gs(t) && (s = void 0, n = t, t = void 0), e = await e, n = n || {};
-  const r = bn(e), o = Qu(t, s), a = await Su(e, o, n);
-  return a ? (n = Cu(n, a, o, r), s = Xu({
+async function ln(e, t, n, s) {
+  t && !Array.isArray(t) && !Ls(t) && (s = void 0, n = t, t = void 0), e = await e, n = n || {};
+  const r = Tn(e), o = tl(t, s), a = await xu(e, o, n);
+  return a ? (n = wu(n, a, o, r), s = Zu({
     url: r,
-    _parse: fn,
+    _parse: ln,
     loaders: o
-  }, n, s || null), await qu(a, e, n, s)) : null;
+  }, n, s || null), await el(a, e, n, s)) : null;
 }
-async function qu(e, t, n, s) {
-  if (Ic(e), n = pc(e.options, n), Xt(t)) {
+async function el(e, t, n, s) {
+  if (mc(e), n = sc(e.options, n), Xt(t)) {
     const i = t, {
       ok: o,
       redirected: a,
@@ -1463,19 +1685,19 @@ async function qu(e, t, n, s) {
       url: h
     };
   }
-  t = await zu(t, e, n);
+  t = await $u(t, e, n);
   const r = e;
   if (r.parseTextSync && typeof t == "string")
     return r.parseTextSync(t, n, s);
-  if (Fc(e, n))
-    return await Dc(e, t, n, s, fn);
+  if (Ec(e, n))
+    return await bc(e, t, n, s, ln);
   if (r.parseText && typeof t == "string")
     return await r.parseText(t, n, s);
   if (r.parse)
     return await r.parse(t, n, s);
-  throw Nt(!r.parseSync), new Error(`${e.id} loader - no parser found and worker is disabled`);
+  throw Lt(!r.parseSync), new Error(`${e.id} loader - no parser found and worker is disabled`);
 }
-function Yu(e) {
+function nl(e) {
   switch (e.constructor) {
     case Int8Array:
       return "int8";
@@ -1498,7 +1720,7 @@ function Yu(e) {
       return "null";
   }
 }
-function $u(e) {
+function sl(e) {
   let t = 1 / 0, n = 1 / 0, s = 1 / 0, r = -1 / 0, i = -1 / 0, o = -1 / 0;
   const a = e.POSITION ? e.POSITION.value : [], c = a && a.length;
   for (let u = 0; u < c; u += 3) {
@@ -1507,8 +1729,8 @@ function $u(e) {
   }
   return [[t, n, s], [r, i, o]];
 }
-function Zu(e, t, n) {
-  const s = Yu(t.value), r = n || tl(t);
+function rl(e, t, n) {
+  const s = nl(t.value), r = n || il(t);
   return {
     name: e,
     type: {
@@ -1523,89 +1745,16 @@ function Zu(e, t, n) {
     metadata: r
   };
 }
-function tl(e) {
+function il(e) {
   const t = {};
   return "byteOffset" in e && (t.byteOffset = e.byteOffset.toString(10)), "byteStride" in e && (t.byteStride = e.byteStride.toString(10)), "normalized" in e && (t.normalized = e.normalized.toString()), t;
 }
 async function Fe(e, t, n, s) {
   let r, i;
-  !Array.isArray(t) && !Gs(t) ? (r = [], i = t) : (r = t, i = n);
-  const o = Fo(i);
+  !Array.isArray(t) && !Ls(t) ? (r = [], i = t) : (r = t, i = n);
+  const o = Co(i);
   let a = e;
-  return typeof e == "string" && (a = await o(e)), Qt(e) && (a = await o(e)), Array.isArray(r) ? await fn(a, r, i) : await fn(a, r, i);
-}
-async function Us(e, t, n, s) {
-  return s._parse(e, t, n, s);
-}
-function it(e, t) {
-  if (!e)
-    throw new Error(t || "loader assertion failed.");
-}
-function el(e, t, n) {
-  const s = n !== void 0 ? new Uint8Array(e).subarray(t, t + n) : new Uint8Array(e).subarray(t);
-  return new Uint8Array(s).buffer;
-}
-function nl() {
-  var e;
-  if (typeof process < "u" && typeof process.cwd < "u")
-    return process.cwd();
-  const t = (e = window.location) === null || e === void 0 ? void 0 : e.pathname;
-  return (t == null ? void 0 : t.slice(0, t.lastIndexOf("/") + 1)) || "";
-}
-function sl(e) {
-  const t = e ? e.lastIndexOf("/") : -1;
-  return t >= 0 ? e.substr(0, t) : "";
-}
-function rl() {
-  const e = [];
-  for (let r = 0; r < arguments.length; r++)
-    e[r] = r < 0 || arguments.length <= r ? void 0 : arguments[r];
-  let t = "", n = !1, s;
-  for (let r = e.length - 1; r >= -1 && !n; r--) {
-    let i;
-    r >= 0 ? i = e[r] : (s === void 0 && (s = nl()), i = s), i.length !== 0 && (t = `${i}/${t}`, n = i.charCodeAt(0) === pe);
-  }
-  return t = il(t, !n), n ? `/${t}` : t.length > 0 ? t : ".";
-}
-const pe = 47, Pn = 46;
-function il(e, t) {
-  let n = "", s = -1, r = 0, i, o = !1;
-  for (let a = 0; a <= e.length; ++a) {
-    if (a < e.length)
-      i = e.charCodeAt(a);
-    else {
-      if (i === pe)
-        break;
-      i = pe;
-    }
-    if (i === pe) {
-      if (!(s === a - 1 || r === 1))
-        if (s !== a - 1 && r === 2) {
-          if (n.length < 2 || !o || n.charCodeAt(n.length - 1) !== Pn || n.charCodeAt(n.length - 2) !== Pn) {
-            if (n.length > 2) {
-              const c = n.length - 1;
-              let u = c;
-              for (; u >= 0 && n.charCodeAt(u) !== pe; --u)
-                ;
-              if (u !== c) {
-                n = u === -1 ? "" : n.slice(0, u), s = a, r = 0, o = !1;
-                continue;
-              }
-            } else if (n.length === 2 || n.length === 1) {
-              n = "", s = a, r = 0, o = !1;
-              continue;
-            }
-          }
-          t && (n.length > 0 ? n += "/.." : n = "..", o = !0);
-        } else {
-          const c = e.slice(s + 1, a);
-          n.length > 0 ? n += `/${c}` : n = c, o = !1;
-        }
-      s = a, r = 0;
-    } else
-      i === Pn && r !== -1 ? ++r : r = -1;
-  }
-  return n;
+  return typeof e == "string" && (a = await o(e)), Qt(e) && (a = await o(e)), Array.isArray(r) ? await ln(a, r, i) : await ln(a, r, i);
 }
 const ol = 1 / Math.PI * 180, al = 1 / 180 * Math.PI, cl = {
   EPSILON: 1e-12,
@@ -1621,57 +1770,57 @@ globalThis.mathgl = globalThis.mathgl || {
     ...cl
   }
 };
-const X = globalThis.mathgl.config;
+const Q = globalThis.mathgl.config;
 function ul(e, {
-  precision: t = X.precision
+  precision: t = Q.precision
 } = {}) {
   return e = dl(e), "".concat(parseFloat(e.toPrecision(t)));
 }
-function zt(e) {
+function Wt(e) {
   return Array.isArray(e) || ArrayBuffer.isView(e) && !(e instanceof DataView);
 }
-function ps(e) {
+function ds(e) {
   return hl(e);
 }
 function ll(e) {
-  return Tt(e);
+  return Et(e);
 }
 function hl(e, t) {
-  return Ns(e, (n) => n * al, t);
+  return Gs(e, (n) => n * al, t);
 }
-function Tt(e, t) {
-  return Ns(e, (n) => n * ol, t);
+function Et(e, t) {
+  return Gs(e, (n) => n * ol, t);
 }
 function fl(e, t, n) {
-  return Ns(e, (s) => Math.max(t, Math.min(n, s)));
+  return Gs(e, (s) => Math.max(t, Math.min(n, s)));
 }
-function Ut(e, t, n) {
-  const s = X.EPSILON;
-  n && (X.EPSILON = n);
+function Nt(e, t, n) {
+  const s = Q.EPSILON;
+  n && (Q.EPSILON = n);
   try {
     if (e === t)
       return !0;
-    if (zt(e) && zt(t)) {
+    if (Wt(e) && Wt(t)) {
       if (e.length !== t.length)
         return !1;
       for (let r = 0; r < e.length; ++r)
-        if (!Ut(e[r], t[r]))
+        if (!Nt(e[r], t[r]))
           return !1;
       return !0;
     }
-    return e && e.equals ? e.equals(t) : t && t.equals ? t.equals(e) : typeof e == "number" && typeof t == "number" ? Math.abs(e - t) <= X.EPSILON * Math.max(1, Math.abs(e), Math.abs(t)) : !1;
+    return e && e.equals ? e.equals(t) : t && t.equals ? t.equals(e) : typeof e == "number" && typeof t == "number" ? Math.abs(e - t) <= Q.EPSILON * Math.max(1, Math.abs(e), Math.abs(t)) : !1;
   } finally {
-    X.EPSILON = s;
+    Q.EPSILON = s;
   }
 }
 function dl(e) {
-  return Math.round(e / X.EPSILON) * X.EPSILON;
+  return Math.round(e / Q.EPSILON) * Q.EPSILON;
 }
 function ml(e) {
   return e.clone ? e.clone() : new Array(e.length);
 }
-function Ns(e, t, n) {
-  if (zt(e)) {
+function Gs(e, t, n) {
+  if (Wt(e)) {
     const s = e;
     n = n || ml(s);
     for (let r = 0; r < n.length && r < s.length; ++r) {
@@ -1696,7 +1845,7 @@ function Al(e) {
     }
   }), Object.setPrototypeOf ? Object.setPrototypeOf(t, e) : t.__proto__ = e, t;
 }
-class Ps extends Al(Array) {
+class Us extends Al(Array) {
   clone() {
     return new this.constructor().copy(this);
   }
@@ -1717,7 +1866,7 @@ class Ps extends Al(Array) {
     return Array.isArray(t) ? this.copy(t) : this.fromObject(t);
   }
   to(t) {
-    return t === this ? this : zt(t) ? this.toArray(t) : this.toObject(t);
+    return t === this ? this : Wt(t) ? this.toArray(t) : this.toObject(t);
   }
   toTarget(t) {
     return t ? this.to(t) : this;
@@ -1726,7 +1875,7 @@ class Ps extends Al(Array) {
     return new Float32Array(this);
   }
   toString() {
-    return this.formatString(X);
+    return this.formatString(Q);
   }
   formatString(t) {
     let n = "";
@@ -1738,7 +1887,7 @@ class Ps extends Al(Array) {
     if (!t || this.length !== t.length)
       return !1;
     for (let n = 0; n < this.ELEMENTS; ++n)
-      if (!Ut(this[n], t[n]))
+      if (!Nt(this[n], t[n]))
         return !1;
     return !0;
   }
@@ -1806,7 +1955,7 @@ class Ps extends Al(Array) {
     return this.check();
   }
   check() {
-    if (X.debug && !this.validate())
+    if (Q.debug && !this.validate())
       throw new Error("math.gl: ".concat(this.constructor.name, " some fields set to invalid numbers'"));
     return this;
   }
@@ -1863,15 +2012,15 @@ function G(e) {
   return e;
 }
 function Ce(e, t, n = "") {
-  if (X.debug && !gl(e, t))
+  if (Q.debug && !gl(e, t))
     throw new Error("math.gl: ".concat(n, " some fields set to invalid numbers'"));
   return e;
 }
-function H(e, t) {
+function J(e, t) {
   if (!e)
     throw new Error("math.gl assertion ".concat(t));
 }
-class Hs extends Ps {
+class Ps extends Us {
   get x() {
     return this[0];
   }
@@ -1945,10 +2094,10 @@ class Hs extends Ps {
     return this.distanceSquared(t);
   }
   getComponent(t) {
-    return H(t >= 0 && t < this.ELEMENTS, "index is out of range"), G(this[t]);
+    return J(t >= 0 && t < this.ELEMENTS, "index is out of range"), G(this[t]);
   }
   setComponent(t, n) {
-    return H(t >= 0 && t < this.ELEMENTS, "index is out of range"), this[t] = n, this.check();
+    return J(t >= 0 && t < this.ELEMENTS, "index is out of range"), this[t] = n, this.check();
   }
   addVectors(t, n) {
     return this.copy(t).add(n);
@@ -1964,10 +2113,10 @@ class Hs extends Ps {
   }
 }
 const Te = 1e-6;
-let bt = typeof Float32Array < "u" ? Float32Array : Array;
+let _t = typeof Float32Array < "u" ? Float32Array : Array;
 function pl() {
-  const e = new bt(2);
-  return bt != Float32Array && (e[0] = 0, e[1] = 0), e;
+  const e = new _t(2);
+  return _t != Float32Array && (e[0] = 0, e[1] = 0), e;
 }
 function Bl(e, t, n) {
   const s = t[0], r = t[1];
@@ -1977,11 +2126,11 @@ function yl(e, t, n) {
   const s = t[0], r = t[1];
   return e[0] = n[0] * s + n[2] * r + n[4], e[1] = n[1] * s + n[3] * r + n[5], e;
 }
-function Do(e, t, n) {
+function To(e, t, n) {
   const s = t[0], r = t[1];
   return e[0] = n[0] * s + n[3] * r + n[6], e[1] = n[1] * s + n[4] * r + n[7], e;
 }
-function Oo(e, t, n) {
+function Eo(e, t, n) {
   const s = t[0], r = t[1];
   return e[0] = n[0] * s + n[4] * r + n[12], e[1] = n[1] * s + n[5] * r + n[13], e;
 }
@@ -1994,11 +2143,11 @@ function Oo(e, t, n) {
     return t;
   };
 })();
-function vo(e, t, n) {
+function bo(e, t, n) {
   const s = t[0], r = t[1], i = n[3] * s + n[7] * r || 1;
   return e[0] = (n[0] * s + n[4] * r) / i, e[1] = (n[1] * s + n[5] * r) / i, e;
 }
-function xo(e, t, n) {
+function _o(e, t, n) {
   const s = t[0], r = t[1], i = t[2], o = n[3] * s + n[7] * r + n[11] * i || 1;
   return e[0] = (n[0] * s + n[4] * r + n[8] * i) / o, e[1] = (n[1] * s + n[5] * r + n[9] * i) / o, e[2] = (n[2] * s + n[6] * r + n[10] * i) / o, e;
 }
@@ -2010,13 +2159,13 @@ function Tl(e, t, n) {
   const s = t[0], r = t[1];
   return e[0] = n[0] * s + n[2] * r, e[1] = n[1] * s + n[3] * r, e[2] = t[2], e[3] = t[3], e;
 }
-function Lo(e, t, n) {
+function wo(e, t, n) {
   const s = t[0], r = t[1], i = t[2];
   return e[0] = n[0] * s + n[3] * r + n[6] * i, e[1] = n[1] * s + n[4] * r + n[7] * i, e[2] = n[2] * s + n[5] * r + n[8] * i, e[3] = t[3], e;
 }
-class wn extends Hs {
+class bn extends Ps {
   constructor(t = 0, n = 0) {
-    super(2), zt(t) && arguments.length === 1 ? this.copy(t) : (X.debug && (G(t), G(n)), this[0] = t, this[1] = n);
+    super(2), Wt(t) && arguments.length === 1 ? this.copy(t) : (Q.debug && (G(t), G(n)), this[0] = t, this[1] = n);
   }
   set(t, n) {
     return this[0] = t, this[1] = n, this.check();
@@ -2025,7 +2174,7 @@ class wn extends Hs {
     return this[0] = t[0], this[1] = t[1], this.check();
   }
   fromObject(t) {
-    return X.debug && (G(t.x), G(t.y)), this[0] = t.x, this[1] = t.y, this.check();
+    return Q.debug && (G(t.x), G(t.y)), this[0] = t.x, this[1] = t.y, this.check();
   }
   toObject(t) {
     return t.x = this[0], t.y = this[1], t;
@@ -2043,13 +2192,13 @@ class wn extends Hs {
     return this.transformAsPoint(t);
   }
   transformAsPoint(t) {
-    return Oo(this, this, t), this.check();
+    return Eo(this, this, t), this.check();
   }
   transformAsVector(t) {
-    return vo(this, this, t), this.check();
+    return bo(this, this, t), this.check();
   }
   transformByMatrix3(t) {
-    return Do(this, this, t), this.check();
+    return To(this, this, t), this.check();
   }
   transformByMatrix2x3(t) {
     return yl(this, this, t), this.check();
@@ -2058,16 +2207,16 @@ class wn extends Hs {
     return Bl(this, this, t), this.check();
   }
 }
-function Go() {
-  const e = new bt(3);
-  return bt != Float32Array && (e[0] = 0, e[1] = 0, e[2] = 0), e;
+function Mo() {
+  const e = new _t(3);
+  return _t != Float32Array && (e[0] = 0, e[1] = 0, e[2] = 0), e;
 }
-function Uo(e) {
+function Ro(e) {
   const t = e[0], n = e[1], s = e[2];
   return Math.sqrt(t * t + n * n + s * s);
 }
-function vr(e, t, n) {
-  const s = new bt(3);
+function Sr(e, t, n) {
+  const s = new _t(3);
   return s[0] = e, s[1] = t, s[2] = n, s;
 }
 function El(e, t) {
@@ -2075,23 +2224,23 @@ function El(e, t) {
   let i = n * n + s * s + r * r;
   return i > 0 && (i = 1 / Math.sqrt(i)), e[0] = t[0] * i, e[1] = t[1] * i, e[2] = t[2] * i, e;
 }
-function Js(e, t) {
+function Ns(e, t) {
   return e[0] * t[0] + e[1] * t[1] + e[2] * t[2];
 }
-function rn(e, t, n) {
+function nn(e, t, n) {
   const s = t[0], r = t[1], i = t[2], o = n[0], a = n[1], c = n[2];
   return e[0] = r * c - i * a, e[1] = i * o - s * c, e[2] = s * a - r * o, e;
 }
-function Vs(e, t, n) {
+function Hs(e, t, n) {
   const s = t[0], r = t[1], i = t[2];
   let o = n[3] * s + n[7] * r + n[11] * i + n[15];
   return o = o || 1, e[0] = (n[0] * s + n[4] * r + n[8] * i + n[12]) / o, e[1] = (n[1] * s + n[5] * r + n[9] * i + n[13]) / o, e[2] = (n[2] * s + n[6] * r + n[10] * i + n[14]) / o, e;
 }
-function No(e, t, n) {
+function Io(e, t, n) {
   const s = t[0], r = t[1], i = t[2];
   return e[0] = s * n[0] + r * n[3] + i * n[6], e[1] = s * n[1] + r * n[4] + i * n[7], e[2] = s * n[2] + r * n[5] + i * n[8], e;
 }
-function Po(e, t, n) {
+function So(e, t, n) {
   const s = n[0], r = n[1], i = n[2], o = n[3], a = t[0], c = t[1], u = t[2];
   let l = r * u - i * c, h = i * a - s * u, f = s * c - r * a, d = r * f - i * h, A = i * l - s * f, g = s * h - r * l;
   const p = o * 2;
@@ -2110,12 +2259,12 @@ function wl(e, t, n, s) {
   return r[0] = t[0] - n[0], r[1] = t[1] - n[1], r[2] = t[2] - n[2], i[0] = r[0] * Math.cos(s) - r[1] * Math.sin(s), i[1] = r[0] * Math.sin(s) + r[1] * Math.cos(s), i[2] = r[2], e[0] = i[0] + n[0], e[1] = i[1] + n[1], e[2] = i[2] + n[2], e;
 }
 function Ml(e, t) {
-  const n = e[0], s = e[1], r = e[2], i = t[0], o = t[1], a = t[2], c = Math.sqrt((n * n + s * s + r * r) * (i * i + o * o + a * a)), u = c && Js(e, t) / c;
+  const n = e[0], s = e[1], r = e[2], i = t[0], o = t[1], a = t[2], c = Math.sqrt((n * n + s * s + r * r) * (i * i + o * o + a * a)), u = c && Ns(e, t) / c;
   return Math.acos(Math.min(Math.max(u, -1), 1));
 }
-const Rl = Uo;
+const Rl = Ro;
 (function() {
-  const e = Go();
+  const e = Mo();
   return function(t, n, s, r, i, o) {
     let a, c;
     for (n || (n = 3), s || (s = 0), r ? c = Math.min(r * n + s, t.length) : c = t.length, a = s; a < c; a += n)
@@ -2123,14 +2272,14 @@ const Rl = Uo;
     return t;
   };
 })();
-const Hn = [0, 0, 0];
-let He;
-class m extends Hs {
+const Nn = [0, 0, 0];
+let Pe;
+class m extends Ps {
   static get ZERO() {
-    return He || (He = new m(0, 0, 0), Object.freeze(He)), He;
+    return Pe || (Pe = new m(0, 0, 0), Object.freeze(Pe)), Pe;
   }
   constructor(t = 0, n = 0, s = 0) {
-    super(-0, -0, -0), arguments.length === 1 && zt(t) ? this.copy(t) : (X.debug && (G(t), G(n), G(s)), this[0] = t, this[1] = n, this[2] = s);
+    super(-0, -0, -0), arguments.length === 1 && Wt(t) ? this.copy(t) : (Q.debug && (G(t), G(n), G(s)), this[0] = t, this[1] = n, this[2] = s);
   }
   set(t, n, s) {
     return this[0] = t, this[1] = n, this[2] = s, this.check();
@@ -2139,7 +2288,7 @@ class m extends Hs {
     return this[0] = t[0], this[1] = t[1], this[2] = t[2], this.check();
   }
   fromObject(t) {
-    return X.debug && (G(t.x), G(t.y), G(t.z)), this[0] = t.x, this[1] = t.y, this[2] = t.z, this.check();
+    return Q.debug && (G(t.x), G(t.y), G(t.z)), this[0] = t.x, this[1] = t.y, this[2] = t.z, this.check();
   }
   toObject(t) {
     return t.x = this[0], t.y = this[1], t.z = this[2], t;
@@ -2157,23 +2306,23 @@ class m extends Hs {
     return Ml(this, t);
   }
   cross(t) {
-    return rn(this, this, t), this.check();
+    return nn(this, this, t), this.check();
   }
   rotateX({
     radians: t,
-    origin: n = Hn
+    origin: n = Nn
   }) {
     return bl(this, this, n, t), this.check();
   }
   rotateY({
     radians: t,
-    origin: n = Hn
+    origin: n = Nn
   }) {
     return _l(this, this, n, t), this.check();
   }
   rotateZ({
     radians: t,
-    origin: n = Hn
+    origin: n = Nn
   }) {
     return wl(this, this, n, t), this.check();
   }
@@ -2181,28 +2330,28 @@ class m extends Hs {
     return this.transformAsPoint(t);
   }
   transformAsPoint(t) {
-    return Vs(this, this, t), this.check();
+    return Hs(this, this, t), this.check();
   }
   transformAsVector(t) {
-    return xo(this, this, t), this.check();
+    return _o(this, this, t), this.check();
   }
   transformByMatrix3(t) {
-    return No(this, this, t), this.check();
+    return Io(this, this, t), this.check();
   }
   transformByMatrix2(t) {
     return Cl(this, this, t), this.check();
   }
   transformByQuaternion(t) {
-    return Po(this, this, t), this.check();
+    return So(this, this, t), this.check();
   }
 }
-let Je;
-class ks extends Hs {
+let Ne;
+class Js extends Ps {
   static get ZERO() {
-    return Je || (Je = new ks(0, 0, 0, 0), Object.freeze(Je)), Je;
+    return Ne || (Ne = new Js(0, 0, 0, 0), Object.freeze(Ne)), Ne;
   }
   constructor(t = 0, n = 0, s = 0, r = 0) {
-    super(-0, -0, -0, -0), zt(t) && arguments.length === 1 ? this.copy(t) : (X.debug && (G(t), G(n), G(s), G(r)), this[0] = t, this[1] = n, this[2] = s, this[3] = r);
+    super(-0, -0, -0, -0), Wt(t) && arguments.length === 1 ? this.copy(t) : (Q.debug && (G(t), G(n), G(s), G(r)), this[0] = t, this[1] = n, this[2] = s, this[3] = r);
   }
   set(t, n, s, r) {
     return this[0] = t, this[1] = n, this[2] = s, this[3] = r, this.check();
@@ -2211,7 +2360,7 @@ class ks extends Hs {
     return this[0] = t[0], this[1] = t[1], this[2] = t[2], this[3] = t[3], this.check();
   }
   fromObject(t) {
-    return X.debug && (G(t.x), G(t.y), G(t.z), G(t.w)), this[0] = t.x, this[1] = t.y, this[2] = t.z, this[3] = t.w, this;
+    return Q.debug && (G(t.x), G(t.y), G(t.z), G(t.w)), this[0] = t.x, this[1] = t.y, this[2] = t.z, this[3] = t.w, this;
   }
   toObject(t) {
     return t.x = this[0], t.y = this[1], t.z = this[2], t.w = this[3], t;
@@ -2232,25 +2381,25 @@ class ks extends Hs {
     this[3] = G(t);
   }
   transform(t) {
-    return Vs(this, this, t), this.check();
+    return Hs(this, this, t), this.check();
   }
   transformByMatrix3(t) {
-    return Lo(this, this, t), this.check();
+    return wo(this, this, t), this.check();
   }
   transformByMatrix2(t) {
     return Tl(this, this, t), this.check();
   }
   transformByQuaternion(t) {
-    return Po(this, this, t), this.check();
+    return So(this, this, t), this.check();
   }
   applyMatrix4(t) {
     return t.transform(this, this), this;
   }
 }
-class Ho extends Ps {
+class Do extends Us {
   toString() {
     let t = "[";
-    if (X.printRowMajor) {
+    if (Q.printRowMajor) {
       t += "row-major:";
       for (let n = 0; n < this.RANK; ++n)
         for (let s = 0; s < this.RANK; ++s)
@@ -2285,8 +2434,8 @@ class Ho extends Ps {
   }
 }
 function Il() {
-  const e = new bt(9);
-  return bt != Float32Array && (e[1] = 0, e[2] = 0, e[3] = 0, e[5] = 0, e[6] = 0, e[7] = 0), e[0] = 1, e[4] = 1, e[8] = 1, e;
+  const e = new _t(9);
+  return _t != Float32Array && (e[1] = 0, e[2] = 0, e[3] = 0, e[5] = 0, e[6] = 0, e[7] = 0), e[0] = 1, e[4] = 1, e[8] = 1, e;
 }
 function Sl(e, t) {
   if (e === t) {
@@ -2296,16 +2445,16 @@ function Sl(e, t) {
     e[0] = t[0], e[1] = t[3], e[2] = t[6], e[3] = t[1], e[4] = t[4], e[5] = t[7], e[6] = t[2], e[7] = t[5], e[8] = t[8];
   return e;
 }
-function Fl(e, t) {
+function Dl(e, t) {
   const n = t[0], s = t[1], r = t[2], i = t[3], o = t[4], a = t[5], c = t[6], u = t[7], l = t[8], h = l * o - a * u, f = -l * i + a * c, d = u * i - o * c;
   let A = n * h + s * f + r * d;
   return A ? (A = 1 / A, e[0] = h * A, e[1] = (-l * s + r * u) * A, e[2] = (a * s - r * o) * A, e[3] = f * A, e[4] = (l * n - r * c) * A, e[5] = (-a * n + r * i) * A, e[6] = d * A, e[7] = (-u * n + s * c) * A, e[8] = (o * n - s * i) * A, e) : null;
 }
-function Dl(e) {
+function Fl(e) {
   const t = e[0], n = e[1], s = e[2], r = e[3], i = e[4], o = e[5], a = e[6], c = e[7], u = e[8];
   return t * (u * i - o * c) + n * (-u * r + o * a) + s * (c * r - i * a);
 }
-function xr(e, t, n) {
+function Dr(e, t, n) {
   const s = t[0], r = t[1], i = t[2], o = t[3], a = t[4], c = t[5], u = t[6], l = t[7], h = t[8], f = n[0], d = n[1], A = n[2], g = n[3], p = n[4], y = n[5], _ = n[6], b = n[7], w = n[8];
   return e[0] = f * s + d * o + A * u, e[1] = f * r + d * a + A * l, e[2] = f * i + d * c + A * h, e[3] = g * s + p * o + y * u, e[4] = g * r + p * a + y * l, e[5] = g * i + p * c + y * h, e[6] = _ * s + b * o + w * u, e[7] = _ * r + b * a + w * l, e[8] = _ * i + b * c + w * h, e;
 }
@@ -2317,7 +2466,7 @@ function vl(e, t, n) {
   const s = t[0], r = t[1], i = t[2], o = t[3], a = t[4], c = t[5], u = t[6], l = t[7], h = t[8], f = Math.sin(n), d = Math.cos(n);
   return e[0] = d * s + f * o, e[1] = d * r + f * a, e[2] = d * i + f * c, e[3] = d * o - f * s, e[4] = d * a - f * r, e[5] = d * c - f * i, e[6] = u, e[7] = l, e[8] = h, e;
 }
-function Lr(e, t, n) {
+function Fr(e, t, n) {
   const s = n[0], r = n[1];
   return e[0] = s * t[0], e[1] = s * t[1], e[2] = s * t[2], e[3] = r * t[3], e[4] = r * t[4], e[5] = r * t[5], e[6] = t[6], e[7] = t[7], e[8] = t[8], e;
 }
@@ -2325,12 +2474,12 @@ function xl(e, t) {
   const n = t[0], s = t[1], r = t[2], i = t[3], o = n + n, a = s + s, c = r + r, u = n * o, l = s * o, h = s * a, f = r * o, d = r * a, A = r * c, g = i * o, p = i * a, y = i * c;
   return e[0] = 1 - h - A, e[3] = l - y, e[6] = f + p, e[1] = l + y, e[4] = 1 - u - A, e[7] = d - g, e[2] = f - p, e[5] = d + g, e[8] = 1 - u - h, e;
 }
-var Bs;
+var ms;
 (function(e) {
   e[e.COL0ROW0 = 0] = "COL0ROW0", e[e.COL0ROW1 = 1] = "COL0ROW1", e[e.COL0ROW2 = 2] = "COL0ROW2", e[e.COL1ROW0 = 3] = "COL1ROW0", e[e.COL1ROW1 = 4] = "COL1ROW1", e[e.COL1ROW2 = 5] = "COL1ROW2", e[e.COL2ROW0 = 6] = "COL2ROW0", e[e.COL2ROW1 = 7] = "COL2ROW1", e[e.COL2ROW2 = 8] = "COL2ROW2";
-})(Bs || (Bs = {}));
+})(ms || (ms = {}));
 const Ll = Object.freeze([1, 0, 0, 0, 1, 0, 0, 0, 1]);
-class k extends Ho {
+class j extends Do {
   static get IDENTITY() {
     return Ul();
   }
@@ -2344,7 +2493,7 @@ class k extends Ho {
     return 3;
   }
   get INDICES() {
-    return Bs;
+    return ms;
   }
   constructor(t, ...n) {
     super(-0, -0, -0, -0, -0, -0, -0, -0, -0), arguments.length === 1 && Array.isArray(t) ? this.copy(t) : n.length > 0 ? this.copy([t, ...n]) : this.identity();
@@ -2368,25 +2517,25 @@ class k extends Ho {
     return this[0] = t, this[1] = r, this[2] = a, this[3] = n, this[4] = i, this[5] = c, this[6] = s, this[7] = o, this[8] = u, this.check();
   }
   determinant() {
-    return Dl(this);
+    return Fl(this);
   }
   transpose() {
     return Sl(this, this), this.check();
   }
   invert() {
-    return Fl(this, this), this.check();
+    return Dl(this, this), this.check();
   }
   multiplyLeft(t) {
-    return xr(this, t, this), this.check();
+    return Dr(this, t, this), this.check();
   }
   multiplyRight(t) {
-    return xr(this, this, t), this.check();
+    return Dr(this, this, t), this.check();
   }
   rotate(t) {
     return vl(this, this, t), this.check();
   }
   scale(t) {
-    return Array.isArray(t) ? Lr(this, this, t) : Lr(this, this, [t, t]), this.check();
+    return Array.isArray(t) ? Fr(this, this, t) : Fr(this, this, [t, t]), this.check();
   }
   translate(t) {
     return Ol(this, this, t), this.check();
@@ -2395,13 +2544,13 @@ class k extends Ho {
     let s;
     switch (t.length) {
       case 2:
-        s = Do(n || [-0, -0], t, this);
+        s = To(n || [-0, -0], t, this);
         break;
       case 3:
-        s = No(n || [-0, -0, -0], t, this);
+        s = Io(n || [-0, -0, -0], t, this);
         break;
       case 4:
-        s = Lo(n || [-0, -0, -0, -0], t, this);
+        s = wo(n || [-0, -0, -0, -0], t, this);
         break;
       default:
         throw new Error("Illegal vector");
@@ -2418,17 +2567,17 @@ class k extends Ho {
     return this.transform(t, n);
   }
 }
-let Ve, ke = null;
+let He, Je = null;
 function Gl() {
-  return Ve || (Ve = new k([0, 0, 0, 0, 0, 0, 0, 0, 0]), Object.freeze(Ve)), Ve;
+  return He || (He = new j([0, 0, 0, 0, 0, 0, 0, 0, 0]), Object.freeze(He)), He;
 }
 function Ul() {
-  return ke || (ke = new k(), Object.freeze(ke)), ke;
+  return Je || (Je = new j(), Object.freeze(Je)), Je;
 }
-function Nl(e) {
+function Pl(e) {
   return e[0] = 1, e[1] = 0, e[2] = 0, e[3] = 0, e[4] = 0, e[5] = 1, e[6] = 0, e[7] = 0, e[8] = 0, e[9] = 0, e[10] = 1, e[11] = 0, e[12] = 0, e[13] = 0, e[14] = 0, e[15] = 1, e;
 }
-function Pl(e, t) {
+function Nl(e, t) {
   if (e === t) {
     const n = t[1], s = t[2], r = t[3], i = t[6], o = t[7], a = t[11];
     e[1] = t[4], e[2] = t[8], e[3] = t[12], e[4] = n, e[6] = t[9], e[7] = t[13], e[8] = s, e[9] = i, e[11] = t[14], e[12] = r, e[13] = o, e[14] = a;
@@ -2437,15 +2586,15 @@ function Pl(e, t) {
   return e;
 }
 function Hl(e, t) {
-  const n = t[0], s = t[1], r = t[2], i = t[3], o = t[4], a = t[5], c = t[6], u = t[7], l = t[8], h = t[9], f = t[10], d = t[11], A = t[12], g = t[13], p = t[14], y = t[15], _ = n * a - s * o, b = n * c - r * o, w = n * u - i * o, M = s * c - r * a, C = s * u - i * a, F = r * u - i * c, D = l * g - h * A, I = l * p - f * A, S = l * y - d * A, J = h * p - f * g, j = h * y - d * g, V = f * y - d * p;
-  let O = _ * V - b * j + w * J + M * S - C * I + F * D;
-  return O ? (O = 1 / O, e[0] = (a * V - c * j + u * J) * O, e[1] = (r * j - s * V - i * J) * O, e[2] = (g * F - p * C + y * M) * O, e[3] = (f * C - h * F - d * M) * O, e[4] = (c * S - o * V - u * I) * O, e[5] = (n * V - r * S + i * I) * O, e[6] = (p * w - A * F - y * b) * O, e[7] = (l * F - f * w + d * b) * O, e[8] = (o * j - a * S + u * D) * O, e[9] = (s * S - n * j - i * D) * O, e[10] = (A * C - g * w + y * _) * O, e[11] = (h * w - l * C - d * _) * O, e[12] = (a * I - o * J - c * D) * O, e[13] = (n * J - s * I + r * D) * O, e[14] = (g * b - A * M - p * _) * O, e[15] = (l * M - h * b + f * _) * O, e) : null;
+  const n = t[0], s = t[1], r = t[2], i = t[3], o = t[4], a = t[5], c = t[6], u = t[7], l = t[8], h = t[9], f = t[10], d = t[11], A = t[12], g = t[13], p = t[14], y = t[15], _ = n * a - s * o, b = n * c - r * o, w = n * u - i * o, M = s * c - r * a, C = s * u - i * a, D = r * u - i * c, F = l * g - h * A, I = l * p - f * A, S = l * y - d * A, V = h * p - f * g, K = h * y - d * g, k = f * y - d * p;
+  let O = _ * k - b * K + w * V + M * S - C * I + D * F;
+  return O ? (O = 1 / O, e[0] = (a * k - c * K + u * V) * O, e[1] = (r * K - s * k - i * V) * O, e[2] = (g * D - p * C + y * M) * O, e[3] = (f * C - h * D - d * M) * O, e[4] = (c * S - o * k - u * I) * O, e[5] = (n * k - r * S + i * I) * O, e[6] = (p * w - A * D - y * b) * O, e[7] = (l * D - f * w + d * b) * O, e[8] = (o * K - a * S + u * F) * O, e[9] = (s * S - n * K - i * F) * O, e[10] = (A * C - g * w + y * _) * O, e[11] = (h * w - l * C - d * _) * O, e[12] = (a * I - o * V - c * F) * O, e[13] = (n * V - s * I + r * F) * O, e[14] = (g * b - A * M - p * _) * O, e[15] = (l * M - h * b + f * _) * O, e) : null;
 }
 function Jl(e) {
-  const t = e[0], n = e[1], s = e[2], r = e[3], i = e[4], o = e[5], a = e[6], c = e[7], u = e[8], l = e[9], h = e[10], f = e[11], d = e[12], A = e[13], g = e[14], p = e[15], y = t * o - n * i, _ = t * a - s * i, b = n * a - s * o, w = u * A - l * d, M = u * g - h * d, C = l * g - h * A, F = t * C - n * M + s * w, D = i * C - o * M + a * w, I = u * b - l * _ + h * y, S = d * b - A * _ + g * y;
-  return c * F - r * D + p * I - f * S;
+  const t = e[0], n = e[1], s = e[2], r = e[3], i = e[4], o = e[5], a = e[6], c = e[7], u = e[8], l = e[9], h = e[10], f = e[11], d = e[12], A = e[13], g = e[14], p = e[15], y = t * o - n * i, _ = t * a - s * i, b = n * a - s * o, w = u * A - l * d, M = u * g - h * d, C = l * g - h * A, D = t * C - n * M + s * w, F = i * C - o * M + a * w, I = u * b - l * _ + h * y, S = d * b - A * _ + g * y;
+  return c * D - r * F + p * I - f * S;
 }
-function Gr(e, t, n) {
+function Or(e, t, n) {
   const s = t[0], r = t[1], i = t[2], o = t[3], a = t[4], c = t[5], u = t[6], l = t[7], h = t[8], f = t[9], d = t[10], A = t[11], g = t[12], p = t[13], y = t[14], _ = t[15];
   let b = n[0], w = n[1], M = n[2], C = n[3];
   return e[0] = b * s + w * a + M * h + C * g, e[1] = b * r + w * c + M * f + C * p, e[2] = b * i + w * u + M * d + C * y, e[3] = b * o + w * l + M * A + C * _, b = n[4], w = n[5], M = n[6], C = n[7], e[4] = b * s + w * a + M * h + C * g, e[5] = b * r + w * c + M * f + C * p, e[6] = b * i + w * u + M * d + C * y, e[7] = b * o + w * l + M * A + C * _, b = n[8], w = n[9], M = n[10], C = n[11], e[8] = b * s + w * a + M * h + C * g, e[9] = b * r + w * c + M * f + C * p, e[10] = b * i + w * u + M * d + C * y, e[11] = b * o + w * l + M * A + C * _, b = n[12], w = n[13], M = n[14], C = n[15], e[12] = b * s + w * a + M * h + C * g, e[13] = b * r + w * c + M * f + C * p, e[14] = b * i + w * u + M * d + C * y, e[15] = b * o + w * l + M * A + C * _, e;
@@ -2460,18 +2609,18 @@ function kl(e, t, n) {
   return e[0] = t[0] * s, e[1] = t[1] * s, e[2] = t[2] * s, e[3] = t[3] * s, e[4] = t[4] * r, e[5] = t[5] * r, e[6] = t[6] * r, e[7] = t[7] * r, e[8] = t[8] * i, e[9] = t[9] * i, e[10] = t[10] * i, e[11] = t[11] * i, e[12] = t[12], e[13] = t[13], e[14] = t[14], e[15] = t[15], e;
 }
 function jl(e, t, n, s) {
-  let r = s[0], i = s[1], o = s[2], a = Math.sqrt(r * r + i * i + o * o), c, u, l, h, f, d, A, g, p, y, _, b, w, M, C, F, D, I, S, J, j, V, O, nt;
-  return a < Te ? null : (a = 1 / a, r *= a, i *= a, o *= a, u = Math.sin(n), c = Math.cos(n), l = 1 - c, h = t[0], f = t[1], d = t[2], A = t[3], g = t[4], p = t[5], y = t[6], _ = t[7], b = t[8], w = t[9], M = t[10], C = t[11], F = r * r * l + c, D = i * r * l + o * u, I = o * r * l - i * u, S = r * i * l - o * u, J = i * i * l + c, j = o * i * l + r * u, V = r * o * l + i * u, O = i * o * l - r * u, nt = o * o * l + c, e[0] = h * F + g * D + b * I, e[1] = f * F + p * D + w * I, e[2] = d * F + y * D + M * I, e[3] = A * F + _ * D + C * I, e[4] = h * S + g * J + b * j, e[5] = f * S + p * J + w * j, e[6] = d * S + y * J + M * j, e[7] = A * S + _ * J + C * j, e[8] = h * V + g * O + b * nt, e[9] = f * V + p * O + w * nt, e[10] = d * V + y * O + M * nt, e[11] = A * V + _ * O + C * nt, t !== e && (e[12] = t[12], e[13] = t[13], e[14] = t[14], e[15] = t[15]), e);
+  let r = s[0], i = s[1], o = s[2], a = Math.sqrt(r * r + i * i + o * o), c, u, l, h, f, d, A, g, p, y, _, b, w, M, C, D, F, I, S, V, K, k, O, st;
+  return a < Te ? null : (a = 1 / a, r *= a, i *= a, o *= a, u = Math.sin(n), c = Math.cos(n), l = 1 - c, h = t[0], f = t[1], d = t[2], A = t[3], g = t[4], p = t[5], y = t[6], _ = t[7], b = t[8], w = t[9], M = t[10], C = t[11], D = r * r * l + c, F = i * r * l + o * u, I = o * r * l - i * u, S = r * i * l - o * u, V = i * i * l + c, K = o * i * l + r * u, k = r * o * l + i * u, O = i * o * l - r * u, st = o * o * l + c, e[0] = h * D + g * F + b * I, e[1] = f * D + p * F + w * I, e[2] = d * D + y * F + M * I, e[3] = A * D + _ * F + C * I, e[4] = h * S + g * V + b * K, e[5] = f * S + p * V + w * K, e[6] = d * S + y * V + M * K, e[7] = A * S + _ * V + C * K, e[8] = h * k + g * O + b * st, e[9] = f * k + p * O + w * st, e[10] = d * k + y * O + M * st, e[11] = A * k + _ * O + C * st, t !== e && (e[12] = t[12], e[13] = t[13], e[14] = t[14], e[15] = t[15]), e);
 }
 function Kl(e, t, n) {
   const s = Math.sin(n), r = Math.cos(n), i = t[4], o = t[5], a = t[6], c = t[7], u = t[8], l = t[9], h = t[10], f = t[11];
   return t !== e && (e[0] = t[0], e[1] = t[1], e[2] = t[2], e[3] = t[3], e[12] = t[12], e[13] = t[13], e[14] = t[14], e[15] = t[15]), e[4] = i * r + u * s, e[5] = o * r + l * s, e[6] = a * r + h * s, e[7] = c * r + f * s, e[8] = u * r - i * s, e[9] = l * r - o * s, e[10] = h * r - a * s, e[11] = f * r - c * s, e;
 }
-function Wl(e, t, n) {
+function zl(e, t, n) {
   const s = Math.sin(n), r = Math.cos(n), i = t[0], o = t[1], a = t[2], c = t[3], u = t[8], l = t[9], h = t[10], f = t[11];
   return t !== e && (e[4] = t[4], e[5] = t[5], e[6] = t[6], e[7] = t[7], e[12] = t[12], e[13] = t[13], e[14] = t[14], e[15] = t[15]), e[0] = i * r - u * s, e[1] = o * r - l * s, e[2] = a * r - h * s, e[3] = c * r - f * s, e[8] = i * s + u * r, e[9] = o * s + l * r, e[10] = a * s + h * r, e[11] = c * s + f * r, e;
 }
-function zl(e, t, n) {
+function Wl(e, t, n) {
   const s = Math.sin(n), r = Math.cos(n), i = t[0], o = t[1], a = t[2], c = t[3], u = t[4], l = t[5], h = t[6], f = t[7];
   return t !== e && (e[8] = t[8], e[9] = t[9], e[10] = t[10], e[11] = t[11], e[12] = t[12], e[13] = t[13], e[14] = t[14], e[15] = t[15]), e[0] = i * r + u * s, e[1] = o * r + l * s, e[2] = a * r + h * s, e[3] = c * r + f * s, e[4] = u * r - i * s, e[5] = l * r - o * s, e[6] = h * r - a * s, e[7] = f * r - c * s, e;
 }
@@ -2505,11 +2654,11 @@ const th = Zl;
 function eh(e, t, n, s) {
   let r, i, o, a, c, u, l, h, f, d;
   const A = t[0], g = t[1], p = t[2], y = s[0], _ = s[1], b = s[2], w = n[0], M = n[1], C = n[2];
-  return Math.abs(A - w) < Te && Math.abs(g - M) < Te && Math.abs(p - C) < Te ? Nl(e) : (h = A - w, f = g - M, d = p - C, r = 1 / Math.sqrt(h * h + f * f + d * d), h *= r, f *= r, d *= r, i = _ * d - b * f, o = b * h - y * d, a = y * f - _ * h, r = Math.sqrt(i * i + o * o + a * a), r ? (r = 1 / r, i *= r, o *= r, a *= r) : (i = 0, o = 0, a = 0), c = f * a - d * o, u = d * i - h * a, l = h * o - f * i, r = Math.sqrt(c * c + u * u + l * l), r ? (r = 1 / r, c *= r, u *= r, l *= r) : (c = 0, u = 0, l = 0), e[0] = i, e[1] = c, e[2] = h, e[3] = 0, e[4] = o, e[5] = u, e[6] = f, e[7] = 0, e[8] = a, e[9] = l, e[10] = d, e[11] = 0, e[12] = -(i * A + o * g + a * p), e[13] = -(c * A + u * g + l * p), e[14] = -(h * A + f * g + d * p), e[15] = 1, e);
+  return Math.abs(A - w) < Te && Math.abs(g - M) < Te && Math.abs(p - C) < Te ? Pl(e) : (h = A - w, f = g - M, d = p - C, r = 1 / Math.sqrt(h * h + f * f + d * d), h *= r, f *= r, d *= r, i = _ * d - b * f, o = b * h - y * d, a = y * f - _ * h, r = Math.sqrt(i * i + o * o + a * a), r ? (r = 1 / r, i *= r, o *= r, a *= r) : (i = 0, o = 0, a = 0), c = f * a - d * o, u = d * i - h * a, l = h * o - f * i, r = Math.sqrt(c * c + u * u + l * l), r ? (r = 1 / r, c *= r, u *= r, l *= r) : (c = 0, u = 0, l = 0), e[0] = i, e[1] = c, e[2] = h, e[3] = 0, e[4] = o, e[5] = u, e[6] = f, e[7] = 0, e[8] = a, e[9] = l, e[10] = d, e[11] = 0, e[12] = -(i * A + o * g + a * p), e[13] = -(c * A + u * g + l * p), e[14] = -(h * A + f * g + d * p), e[15] = 1, e);
 }
 function nh() {
-  const e = new bt(4);
-  return bt != Float32Array && (e[0] = 0, e[1] = 0, e[2] = 0, e[3] = 0), e;
+  const e = new _t(4);
+  return _t != Float32Array && (e[0] = 0, e[1] = 0, e[2] = 0, e[3] = 0), e;
 }
 function sh(e, t, n) {
   return e[0] = t[0] + n[0], e[1] = t[1] + n[1], e[2] = t[2] + n[2], e[3] = t[3] + n[3], e;
@@ -2554,12 +2703,12 @@ function hh(e, t, n) {
     return t;
   };
 })();
-var ys;
+var As;
 (function(e) {
   e[e.COL0ROW0 = 0] = "COL0ROW0", e[e.COL0ROW1 = 1] = "COL0ROW1", e[e.COL0ROW2 = 2] = "COL0ROW2", e[e.COL0ROW3 = 3] = "COL0ROW3", e[e.COL1ROW0 = 4] = "COL1ROW0", e[e.COL1ROW1 = 5] = "COL1ROW1", e[e.COL1ROW2 = 6] = "COL1ROW2", e[e.COL1ROW3 = 7] = "COL1ROW3", e[e.COL2ROW0 = 8] = "COL2ROW0", e[e.COL2ROW1 = 9] = "COL2ROW1", e[e.COL2ROW2 = 10] = "COL2ROW2", e[e.COL2ROW3 = 11] = "COL2ROW3", e[e.COL3ROW0 = 12] = "COL3ROW0", e[e.COL3ROW1 = 13] = "COL3ROW1", e[e.COL3ROW2 = 14] = "COL3ROW2", e[e.COL3ROW3 = 15] = "COL3ROW3";
-})(ys || (ys = {}));
-const fh = 45 * Math.PI / 180, dh = 1, Jn = 0.1, Vn = 500, mh = Object.freeze([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
-class N extends Ho {
+})(As || (As = {}));
+const fh = 45 * Math.PI / 180, dh = 1, Hn = 0.1, Jn = 500, mh = Object.freeze([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+class N extends Do {
   static get IDENTITY() {
     return gh();
   }
@@ -2573,7 +2722,7 @@ class N extends Ho {
     return 4;
   }
   get INDICES() {
-    return ys;
+    return As;
   }
   constructor(t) {
     super(-0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0, -0), arguments.length === 1 && Array.isArray(t) ? this.copy(t) : this.identity();
@@ -2605,8 +2754,8 @@ class N extends Ho {
       right: s,
       bottom: r,
       top: i,
-      near: o = Jn,
-      far: a = Vn
+      near: o = Hn,
+      far: a = Jn
     } = t;
     return a === 1 / 0 ? ph(this, n, s, r, i, o) : ql(this, n, s, r, i, o, a), this.check();
   }
@@ -2624,8 +2773,8 @@ class N extends Ho {
       right: s,
       bottom: r,
       top: i,
-      near: o = Jn,
-      far: a = Vn
+      near: o = Hn,
+      far: a = Jn
     } = t;
     return th(this, n, s, r, i, o, a), this.check();
   }
@@ -2634,10 +2783,10 @@ class N extends Ho {
       fovy: n = fh,
       aspect: s = dh,
       focalDistance: r = 1,
-      near: i = Jn,
-      far: o = Vn
+      near: i = Hn,
+      far: o = Jn
     } = t;
-    Ur(n);
+    vr(n);
     const a = n / 2, c = r * Math.tan(a), u = c * s;
     return this.ortho({
       left: -u,
@@ -2655,7 +2804,7 @@ class N extends Ho {
       near: r = 0.1,
       far: i = 500
     } = t;
-    return Ur(n), $l(this, n, s, r, i), this.check();
+    return vr(n), $l(this, n, s, r, i), this.check();
   }
   determinant() {
     return Jl(this);
@@ -2677,25 +2826,25 @@ class N extends Ho {
     return t[0] = this[0] * r, t[1] = this[1] * i, t[2] = this[2] * o, t[3] = this[4] * r, t[4] = this[5] * i, t[5] = this[6] * o, t[6] = this[8] * r, t[7] = this[9] * i, t[8] = this[10] * o, t;
   }
   transpose() {
-    return Pl(this, this), this.check();
+    return Nl(this, this), this.check();
   }
   invert() {
     return Hl(this, this), this.check();
   }
   multiplyLeft(t) {
-    return Gr(this, t, this), this.check();
+    return Or(this, t, this), this.check();
   }
   multiplyRight(t) {
-    return Gr(this, this, t), this.check();
+    return Or(this, this, t), this.check();
   }
   rotateX(t) {
     return Kl(this, this, t), this.check();
   }
   rotateY(t) {
-    return Wl(this, this, t), this.check();
+    return zl(this, this, t), this.check();
   }
   rotateZ(t) {
-    return zl(this, this, t), this.check();
+    return Wl(this, this, t), this.check();
   }
   rotateXYZ(t) {
     return this.rotateX(t[0]).rotateY(t[1]).rotateZ(t[2]);
@@ -2719,10 +2868,10 @@ class N extends Ho {
     let r;
     switch (s) {
       case 2:
-        r = Oo(n || [-0, -0], t, this);
+        r = Eo(n || [-0, -0], t, this);
         break;
       case 3:
-        r = Vs(n || [-0, -0, -0], t, this);
+        r = Hs(n || [-0, -0, -0], t, this);
         break;
       default:
         throw new Error("Illegal vector");
@@ -2733,10 +2882,10 @@ class N extends Ho {
     let s;
     switch (t.length) {
       case 2:
-        s = vo(n || [-0, -0], t, this);
+        s = bo(n || [-0, -0], t, this);
         break;
       case 3:
-        s = xo(n || [-0, -0, -0], t, this);
+        s = _o(n || [-0, -0, -0], t, this);
         break;
       default:
         throw new Error("Illegal vector");
@@ -2759,14 +2908,14 @@ class N extends Ho {
     return this.identity().translate([t, n, s]);
   }
 }
-let je, Ke;
+let Ve, ke;
 function Ah() {
-  return je || (je = new N([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), Object.freeze(je)), je;
+  return Ve || (Ve = new N([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), Object.freeze(Ve)), Ve;
 }
 function gh() {
-  return Ke || (Ke = new N(), Object.freeze(Ke)), Ke;
+  return ke || (ke = new N(), Object.freeze(ke)), ke;
 }
-function Ur(e) {
+function vr(e) {
   if (e > Math.PI * 2)
     throw Error("expected radians");
 }
@@ -2774,19 +2923,19 @@ function ph(e, t, n, s, r, i) {
   const o = 2 * i / (n - t), a = 2 * i / (r - s), c = (n + t) / (n - t), u = (r + s) / (r - s), l = -1, h = -1, f = -2 * i;
   return e[0] = o, e[1] = 0, e[2] = 0, e[3] = 0, e[4] = 0, e[5] = a, e[6] = 0, e[7] = 0, e[8] = c, e[9] = u, e[10] = l, e[11] = h, e[12] = 0, e[13] = 0, e[14] = f, e[15] = 0, e;
 }
-function Nr() {
-  const e = new bt(4);
-  return bt != Float32Array && (e[0] = 0, e[1] = 0, e[2] = 0), e[3] = 1, e;
+function xr() {
+  const e = new _t(4);
+  return _t != Float32Array && (e[0] = 0, e[1] = 0, e[2] = 0), e[3] = 1, e;
 }
 function Bh(e) {
   return e[0] = 0, e[1] = 0, e[2] = 0, e[3] = 1, e;
 }
-function Jo(e, t, n) {
+function Fo(e, t, n) {
   n = n * 0.5;
   const s = Math.sin(n);
   return e[0] = s * t[0], e[1] = s * t[1], e[2] = s * t[2], e[3] = Math.cos(n), e;
 }
-function Pr(e, t, n) {
+function Lr(e, t, n) {
   const s = t[0], r = t[1], i = t[2], o = t[3], a = n[0], c = n[1], u = n[2], l = n[3];
   return e[0] = s * l + o * a + r * u - i * c, e[1] = r * l + o * c + i * a - s * u, e[2] = i * l + o * u + s * c - r * a, e[3] = o * l - s * a - r * c - i * u, e;
 }
@@ -2809,7 +2958,7 @@ function Eh(e, t) {
   const n = t[0], s = t[1], r = t[2];
   return e[0] = n, e[1] = s, e[2] = r, e[3] = Math.sqrt(Math.abs(1 - n * n - s * s - r * r)), e;
 }
-function on(e, t, n, s) {
+function sn(e, t, n, s) {
   const r = t[0], i = t[1], o = t[2], a = t[3];
   let c = n[0], u = n[1], l = n[2], h = n[3], f, d, A, g, p;
   return f = r * c + i * u + o * l + a * h, f < 0 && (f = -f, c = -c, u = -u, l = -l, h = -h), 1 - f > Te ? (d = Math.acos(f), p = Math.sin(d), A = Math.sin((1 - s) * d) / p, g = Math.sin(s * d) / p) : (A = 1 - s, g = s), e[0] = A * r + g * c, e[1] = A * i + g * u, e[2] = A * o + g * l, e[3] = A * a + g * h, e;
@@ -2821,7 +2970,7 @@ function bh(e, t) {
 function _h(e, t) {
   return e[0] = -t[0], e[1] = -t[1], e[2] = -t[2], e[3] = t[3], e;
 }
-function Vo(e, t) {
+function Oo(e, t) {
   const n = t[0] + t[4] + t[8];
   let s;
   if (n > 0)
@@ -2834,27 +2983,27 @@ function Vo(e, t) {
   }
   return e;
 }
-const wh = sh, Mh = rh, Rh = ch, Ih = uh, Sh = ih, Fh = oh, ko = ah, Dh = function() {
-  const e = Go(), t = vr(1, 0, 0), n = vr(0, 1, 0);
+const wh = sh, Mh = rh, Rh = ch, Ih = uh, Sh = ih, Dh = oh, vo = ah, Fh = function() {
+  const e = Mo(), t = Sr(1, 0, 0), n = Sr(0, 1, 0);
   return function(s, r, i) {
-    const o = Js(r, i);
-    return o < -0.999999 ? (rn(e, t, r), Rl(e) < 1e-6 && rn(e, n, r), El(e, e), Jo(s, e, Math.PI), s) : o > 0.999999 ? (s[0] = 0, s[1] = 0, s[2] = 0, s[3] = 1, s) : (rn(e, r, i), s[0] = e[0], s[1] = e[1], s[2] = e[2], s[3] = 1 + o, ko(s, s));
+    const o = Ns(r, i);
+    return o < -0.999999 ? (nn(e, t, r), Rl(e) < 1e-6 && nn(e, n, r), El(e, e), Fo(s, e, Math.PI), s) : o > 0.999999 ? (s[0] = 0, s[1] = 0, s[2] = 0, s[3] = 1, s) : (nn(e, r, i), s[0] = e[0], s[1] = e[1], s[2] = e[2], s[3] = 1 + o, vo(s, s));
   };
 }();
 (function() {
-  const e = Nr(), t = Nr();
+  const e = xr(), t = xr();
   return function(n, s, r, i, o, a) {
-    return on(e, s, o, a), on(t, r, i, a), on(n, e, t, 2 * a * (1 - a)), n;
+    return sn(e, s, o, a), sn(t, r, i, a), sn(n, e, t, 2 * a * (1 - a)), n;
   };
 })();
 (function() {
   const e = Il();
   return function(t, n, s, r) {
-    return e[0] = s[0], e[3] = s[1], e[6] = s[2], e[1] = r[0], e[4] = r[1], e[7] = r[2], e[2] = -n[0], e[5] = -n[1], e[8] = -n[2], ko(t, Vo(t, e));
+    return e[0] = s[0], e[3] = s[1], e[6] = s[2], e[1] = r[0], e[4] = r[1], e[7] = r[2], e[2] = -n[0], e[5] = -n[1], e[8] = -n[2], vo(t, Oo(t, e));
   };
 })();
 const Oh = [0, 0, 0, 1];
-class dn extends Ps {
+class hn extends Us {
   constructor(t = 0, n = 0, s = 0, r = 1) {
     super(-0, -0, -0, -0), Array.isArray(t) && arguments.length === 1 ? this.copy(t) : this.set(t, n, s, r);
   }
@@ -2868,10 +3017,10 @@ class dn extends Ps {
     return this[0] = t.x, this[1] = t.y, this[2] = t.z, this[3] = t.w, this.check();
   }
   fromMatrix3(t) {
-    return Vo(this, t), this.check();
+    return Oo(this, t), this.check();
   }
   fromAxisRotation(t, n) {
-    return Jo(this, t, n), this.check();
+    return Fo(this, t, n), this.check();
   }
   identity() {
     return Bh(this), this.check();
@@ -2910,13 +3059,13 @@ class dn extends Ps {
     return Sh(this);
   }
   lengthSquared() {
-    return Fh(this);
+    return Dh(this);
   }
   dot(t) {
     return Rh(this, t);
   }
   rotationTo(t, n) {
-    return Dh(this, t, n), this.check();
+    return Fh(this, t, n), this.check();
   }
   add(t) {
     return wh(this, this, t), this.check();
@@ -2934,10 +3083,10 @@ class dn extends Ps {
     return s === void 0 ? this.lerp(this, t, n) : (Ih(this, t, n, s), this.check());
   }
   multiplyRight(t) {
-    return Pr(this, this, t), this.check();
+    return Lr(this, this, t), this.check();
   }
   multiplyLeft(t) {
-    return Pr(this, t, this), this.check();
+    return Lr(this, t, this), this.check();
   }
   normalize() {
     const t = this.len(), n = t > 0 ? 1 / t : 0;
@@ -2971,9 +3120,9 @@ class dn extends Ps {
       default:
         r = t, i = n, o = s;
     }
-    return on(this, r, i, o), this.check();
+    return sn(this, r, i, o), this.check();
   }
-  transformVector4(t, n = new ks()) {
+  transformVector4(t, n = new Js()) {
     return hh(n, t, this), Ce(n, 4);
   }
   lengthSq() {
@@ -3021,24 +3170,24 @@ function R(e, t, n) {
     writable: !0
   }) : e[t] = n, e;
 }
-const Lh = 0.1, Gh = 1e-12, jo = 1e-15, Uh = 1e-20, Nh = 6378137, Ph = 6378137, Hh = 6356752314245179e-9;
-function Mn(e) {
+const Lh = 0.1, Gh = 1e-12, xo = 1e-15, Uh = 1e-20, Ph = 6378137, Nh = 6378137, Hh = 6356752314245179e-9;
+function _n(e) {
   return e;
 }
 new m();
-function Jh(e, t = [], n = Mn) {
+function Jh(e, t = [], n = _n) {
   return "longitude" in e ? (t[0] = n(e.longitude), t[1] = n(e.latitude), t[2] = e.height) : "x" in e ? (t[0] = n(e.x), t[1] = n(e.y), t[2] = e.z) : (t[0] = n(e[0]), t[1] = n(e[1]), t[2] = e[2]), t;
 }
 function Vh(e, t = []) {
-  return Jh(e, t, X._cartographicRadians ? Mn : ps);
+  return Jh(e, t, Q._cartographicRadians ? _n : ds);
 }
-function kh(e, t, n = Mn) {
+function kh(e, t, n = _n) {
   return "longitude" in t ? (t.longitude = n(e[0]), t.latitude = n(e[1]), t.height = e[2]) : "x" in t ? (t.x = n(e[0]), t.y = n(e[1]), t.z = e[2]) : (t[0] = n(e[0]), t[1] = n(e[1]), t[2] = e[2]), t;
 }
 function jh(e, t) {
-  return kh(e, t, X._cartographicRadians ? Mn : ll);
+  return kh(e, t, Q._cartographicRadians ? _n : ll);
 }
-const Hr = 1e-14, Kh = new m(), Jr = {
+const Gr = 1e-14, Kh = new m(), Ur = {
   up: {
     south: "east",
     north: "west",
@@ -3075,7 +3224,7 @@ const Hr = 1e-14, Kh = new m(), Jr = {
     north: "up",
     south: "down"
   }
-}, kn = {
+}, Vn = {
   north: [-1, 0, 0],
   east: [0, 1, 0],
   up: [0, 0, 1],
@@ -3089,15 +3238,15 @@ const Hr = 1e-14, Kh = new m(), Jr = {
   west: new m(),
   south: new m(),
   down: new m()
-}, Wh = new m(), zh = new m(), Xh = new m();
-function Vr(e, t, n, s, r, i) {
-  const o = Jr[t] && Jr[t][n];
-  H(o && (!s || s === o));
+}, zh = new m(), Wh = new m(), Xh = new m();
+function Pr(e, t, n, s, r, i) {
+  const o = Ur[t] && Ur[t][n];
+  J(o && (!s || s === o));
   let a, c, u;
   const l = Kh.copy(r);
-  if (Ut(l.x, 0, Hr) && Ut(l.y, 0, Hr)) {
+  if (Nt(l.x, 0, Gr) && Nt(l.y, 0, Gr)) {
     const f = Math.sign(l.z);
-    a = Wh.fromArray(kn[t]), t !== "east" && t !== "west" && a.scale(f), c = zh.fromArray(kn[n]), n !== "east" && n !== "west" && c.scale(f), u = Xh.fromArray(kn[s]), s !== "east" && s !== "west" && u.scale(f);
+    a = zh.fromArray(Vn[t]), t !== "east" && t !== "west" && a.scale(f), c = Wh.fromArray(Vn[n]), n !== "east" && n !== "west" && c.scale(f), u = Xh.fromArray(Vn[s]), s !== "east" && s !== "west" && u.scale(f);
   } else {
     const {
       up: f,
@@ -3130,20 +3279,20 @@ function Yh(e, t, n = []) {
     return y.to(n);
   const _ = r.x, b = r.y, w = r.z, M = qh;
   M.set(y.x * _ * 2, y.y * b * 2, y.z * w * 2);
-  let C = (1 - p) * ee.len() / (0.5 * M.len()), F = 0, D, I, S, J;
+  let C = (1 - p) * ee.len() / (0.5 * M.len()), D = 0, F, I, S, V;
   do {
-    C -= F, D = 1 / (1 + C * _), I = 1 / (1 + C * b), S = 1 / (1 + C * w);
-    const j = D * D, V = I * I, O = S * S, nt = j * D, Yt = V * I, ue = O * S;
-    J = f * j + d * V + A * O - 1;
-    const ut = -2 * (f * nt * _ + d * Yt * b + A * ue * w);
-    F = J / ut;
-  } while (Math.abs(J) > Gh);
-  return ee.scale([D, I, S]).to(n);
+    C -= D, F = 1 / (1 + C * _), I = 1 / (1 + C * b), S = 1 / (1 + C * w);
+    const K = F * F, k = I * I, O = S * S, st = K * F, Yt = k * I, ue = O * S;
+    V = f * K + d * k + A * O - 1;
+    const ut = -2 * (f * st * _ + d * Yt * b + A * ue * w);
+    D = V / ut;
+  } while (Math.abs(V) > Gh);
+  return ee.scale([F, I, S]).to(n);
 }
-const We = new m(), kr = new m(), $h = new m(), Ct = new m(), Zh = new m(), ze = new m();
-class P {
+const je = new m(), Nr = new m(), $h = new m(), Tt = new m(), Zh = new m(), Ke = new m();
+class H {
   constructor(t = 0, n = 0, s = 0) {
-    R(this, "radii", void 0), R(this, "radiiSquared", void 0), R(this, "radiiToTheFourth", void 0), R(this, "oneOverRadii", void 0), R(this, "oneOverRadiiSquared", void 0), R(this, "minimumRadius", void 0), R(this, "maximumRadius", void 0), R(this, "centerToleranceSquared", Lh), R(this, "squaredXOverSquaredZ", void 0), H(t >= 0), H(n >= 0), H(s >= 0), this.radii = new m(t, n, s), this.radiiSquared = new m(t * t, n * n, s * s), this.radiiToTheFourth = new m(t * t * t * t, n * n * n * n, s * s * s * s), this.oneOverRadii = new m(t === 0 ? 0 : 1 / t, n === 0 ? 0 : 1 / n, s === 0 ? 0 : 1 / s), this.oneOverRadiiSquared = new m(t === 0 ? 0 : 1 / (t * t), n === 0 ? 0 : 1 / (n * n), s === 0 ? 0 : 1 / (s * s)), this.minimumRadius = Math.min(t, n, s), this.maximumRadius = Math.max(t, n, s), this.radiiSquared.z !== 0 && (this.squaredXOverSquaredZ = this.radiiSquared.x / this.radiiSquared.z), Object.freeze(this);
+    R(this, "radii", void 0), R(this, "radiiSquared", void 0), R(this, "radiiToTheFourth", void 0), R(this, "oneOverRadii", void 0), R(this, "oneOverRadiiSquared", void 0), R(this, "minimumRadius", void 0), R(this, "maximumRadius", void 0), R(this, "centerToleranceSquared", Lh), R(this, "squaredXOverSquaredZ", void 0), J(t >= 0), J(n >= 0), J(s >= 0), this.radii = new m(t, n, s), this.radiiSquared = new m(t * t, n * n, s * s), this.radiiToTheFourth = new m(t * t * t * t, n * n * n * n, s * s * s * s), this.oneOverRadii = new m(t === 0 ? 0 : 1 / t, n === 0 ? 0 : 1 / n, s === 0 ? 0 : 1 / s), this.oneOverRadiiSquared = new m(t === 0 ? 0 : 1 / (t * t), n === 0 ? 0 : 1 / (n * n), s === 0 ? 0 : 1 / (s * s)), this.minimumRadius = Math.min(t, n, s), this.maximumRadius = Math.max(t, n, s), this.radiiSquared.z !== 0 && (this.squaredXOverSquaredZ = this.radiiSquared.x / this.radiiSquared.z), Object.freeze(this);
   }
   equals(t) {
     return this === t || !!(t && this.radii.equals(t.radii));
@@ -3152,145 +3301,65 @@ class P {
     return this.radii.toString();
   }
   cartographicToCartesian(t, n = [0, 0, 0]) {
-    const s = kr, r = $h, [, , i] = t;
+    const s = Nr, r = $h, [, , i] = t;
     this.geodeticSurfaceNormalCartographic(t, s), r.copy(this.radiiSquared).scale(s);
     const o = Math.sqrt(s.dot(r));
     return r.scale(1 / o), s.scale(i), r.add(s), r.to(n);
   }
   cartesianToCartographic(t, n = [0, 0, 0]) {
-    ze.from(t);
-    const s = this.scaleToGeodeticSurface(ze, Ct);
+    Ke.from(t);
+    const s = this.scaleToGeodeticSurface(Ke, Tt);
     if (!s)
       return;
-    const r = this.geodeticSurfaceNormal(s, kr), i = Zh;
-    i.copy(ze).subtract(s);
-    const o = Math.atan2(r.y, r.x), a = Math.asin(r.z), c = Math.sign(Js(i, ze)) * Uo(i);
+    const r = this.geodeticSurfaceNormal(s, Nr), i = Zh;
+    i.copy(Ke).subtract(s);
+    const o = Math.atan2(r.y, r.x), a = Math.asin(r.z), c = Math.sign(Ns(i, Ke)) * Ro(i);
     return jh([o, a, c], n);
   }
   eastNorthUpToFixedFrame(t, n = new N()) {
-    return Vr(this, "east", "north", "up", t, n);
+    return Pr(this, "east", "north", "up", t, n);
   }
   localFrameToFixedFrame(t, n, s, r, i = new N()) {
-    return Vr(this, t, n, s, r, i);
+    return Pr(this, t, n, s, r, i);
   }
   geocentricSurfaceNormal(t, n = [0, 0, 0]) {
-    return We.from(t).normalize().to(n);
+    return je.from(t).normalize().to(n);
   }
   geodeticSurfaceNormalCartographic(t, n = [0, 0, 0]) {
     const s = Vh(t), r = s[0], i = s[1], o = Math.cos(i);
-    return We.set(o * Math.cos(r), o * Math.sin(r), Math.sin(i)).normalize(), We.to(n);
+    return je.set(o * Math.cos(r), o * Math.sin(r), Math.sin(i)).normalize(), je.to(n);
   }
   geodeticSurfaceNormal(t, n = [0, 0, 0]) {
-    return We.from(t).scale(this.oneOverRadiiSquared).normalize().to(n);
+    return je.from(t).scale(this.oneOverRadiiSquared).normalize().to(n);
   }
   scaleToGeodeticSurface(t, n) {
     return Yh(t, this, n);
   }
   scaleToGeocentricSurface(t, n = [0, 0, 0]) {
-    Ct.from(t);
-    const s = Ct.x, r = Ct.y, i = Ct.z, o = this.oneOverRadiiSquared, a = 1 / Math.sqrt(s * s * o.x + r * r * o.y + i * i * o.z);
-    return Ct.multiplyScalar(a).to(n);
+    Tt.from(t);
+    const s = Tt.x, r = Tt.y, i = Tt.z, o = this.oneOverRadiiSquared, a = 1 / Math.sqrt(s * s * o.x + r * r * o.y + i * i * o.z);
+    return Tt.multiplyScalar(a).to(n);
   }
   transformPositionToScaledSpace(t, n = [0, 0, 0]) {
-    return Ct.from(t).scale(this.oneOverRadii).to(n);
+    return Tt.from(t).scale(this.oneOverRadii).to(n);
   }
   transformPositionFromScaledSpace(t, n = [0, 0, 0]) {
-    return Ct.from(t).scale(this.radii).to(n);
+    return Tt.from(t).scale(this.radii).to(n);
   }
   getSurfaceNormalIntersectionWithZAxis(t, n = 0, s = [0, 0, 0]) {
-    H(Ut(this.radii.x, this.radii.y, jo)), H(this.radii.z > 0), Ct.from(t);
-    const r = Ct.z * (1 - this.squaredXOverSquaredZ);
+    J(Nt(this.radii.x, this.radii.y, xo)), J(this.radii.z > 0), Tt.from(t);
+    const r = Tt.z * (1 - this.squaredXOverSquaredZ);
     if (!(Math.abs(r) >= this.radii.z - n))
-      return Ct.set(0, 0, r).to(s);
+      return Tt.set(0, 0, r).to(s);
   }
 }
-R(P, "WGS84", new P(Nh, Ph, Hh));
-function kt(e, t) {
-  if (!e)
-    throw new Error(t || "loader assertion failed.");
-}
-const tf = "Queued Requests", ef = "Active Requests", nf = "Cancelled Requests", sf = "Queued Requests Ever", rf = "Active Requests Ever", of = {
-  id: "request-scheduler",
-  throttleRequests: !0,
-  maxRequests: 6
-};
-class af {
-  constructor() {
-    let t = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
-    this.props = void 0, this.stats = void 0, this.activeRequestCount = 0, this.requestQueue = [], this.requestMap = /* @__PURE__ */ new Map(), this.deferredUpdate = null, this.props = {
-      ...of,
-      ...t
-    }, this.stats = new fo({
-      id: this.props.id
-    }), this.stats.get(tf), this.stats.get(ef), this.stats.get(nf), this.stats.get(sf), this.stats.get(rf);
-  }
-  scheduleRequest(t) {
-    let n = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : () => 0;
-    if (!this.props.throttleRequests)
-      return Promise.resolve({
-        done: () => {
-        }
-      });
-    if (this.requestMap.has(t))
-      return this.requestMap.get(t);
-    const s = {
-      handle: t,
-      priority: 0,
-      getPriority: n
-    }, r = new Promise((i) => (s.resolve = i, s));
-    return this.requestQueue.push(s), this.requestMap.set(t, r), this._issueNewRequests(), r;
-  }
-  _issueRequest(t) {
-    const {
-      handle: n,
-      resolve: s
-    } = t;
-    let r = !1;
-    const i = () => {
-      r || (r = !0, this.requestMap.delete(n), this.activeRequestCount--, this._issueNewRequests());
-    };
-    return this.activeRequestCount++, s ? s({
-      done: i
-    }) : Promise.resolve({
-      done: i
-    });
-  }
-  _issueNewRequests() {
-    this.deferredUpdate || (this.deferredUpdate = setTimeout(() => this._issueNewRequestsAsync(), 0));
-  }
-  _issueNewRequestsAsync() {
-    this.deferredUpdate = null;
-    const t = Math.max(this.props.maxRequests - this.activeRequestCount, 0);
-    if (t !== 0) {
-      this._updateAllRequests();
-      for (let n = 0; n < t; ++n) {
-        const s = this.requestQueue.shift();
-        s && this._issueRequest(s);
-      }
-    }
-  }
-  _updateAllRequests() {
-    const t = this.requestQueue;
-    for (let n = 0; n < t.length; ++n) {
-      const s = t[n];
-      this._updateRequest(s) || (t.splice(n, 1), this.requestMap.delete(s.handle), n--);
-    }
-    t.sort((n, s) => n.priority - s.priority);
-  }
-  _updateRequest(t) {
-    return t.priority = t.getPriority(t.handle), t.priority < 0 ? (t.resolve(null), !1) : !0;
-  }
-}
-function cf(e) {
-  const t = e ? e.lastIndexOf("/") : -1;
-  return t >= 0 ? e.substr(0, t) : "";
-}
-class uf {
+R(H, "WGS84", new H(Ph, Nh, Hh));
+class tf {
   constructor(t, n, s) {
     this.item = void 0, this.previous = void 0, this.next = void 0, this.item = t, this.previous = n, this.next = s;
   }
 }
-class lf {
+class ef {
   constructor() {
     this.head = null, this.tail = null, this._length = 0;
   }
@@ -3298,7 +3367,7 @@ class lf {
     return this._length;
   }
   add(t) {
-    const n = new uf(t, this.tail, null);
+    const n = new tf(t, this.tail, null);
     return this.tail ? (this.tail.next = n, this.tail = n) : (this.head = n, this.tail = n), ++this._length, n;
   }
   remove(t) {
@@ -3312,9 +3381,9 @@ class lf {
     t.next = n, this.tail === t ? this.tail = n : s.previous = n, n.next = s, n.previous = t, ++this._length;
   }
 }
-class hf {
+class nf {
   constructor() {
-    this._list = void 0, this._sentinel = void 0, this._trimTiles = void 0, this._list = new lf(), this._sentinel = this._list.add("sentinel"), this._trimTiles = !1;
+    this._list = void 0, this._sentinel = void 0, this._trimTiles = void 0, this._list = new ef(), this._sentinel = this._list.add("sentinel"), this._trimTiles = !1;
   }
   reset() {
     this._list.splice(this._list.tail, this._sentinel);
@@ -3344,8 +3413,8 @@ class hf {
     this._trimTiles = !0;
   }
 }
-function ff(e, t) {
-  kt(e), kt(t);
+function sf(e, t) {
+  U(e), U(t);
   const {
     rtcCenter: n,
     gltfUpAxis: s
@@ -3371,7 +3440,7 @@ function ff(e, t) {
   t.isQuantized && o.translate(t.quantizedVolumeOffset).scale(t.quantizedVolumeScale);
   const a = new m(i);
   t.cartesianModelMatrix = o, t.cartesianOrigin = a;
-  const c = P.WGS84.cartesianToCartographic(a, new m()), l = P.WGS84.eastNorthUpToFixedFrame(a).invert();
+  const c = H.WGS84.cartesianToCartographic(a, new m()), l = H.WGS84.eastNorthUpToFixedFrame(a).invert();
   t.cartographicModelMatrix = l.multiplyRight(o), t.cartographicOrigin = c, t.coordinateSystem || (t.modelMatrix = t.cartographicModelMatrix);
 }
 const ht = {
@@ -3381,8 +3450,8 @@ const ht = {
 };
 new m();
 new m();
-const fe = new m(), jr = new m();
-class De {
+const fe = new m(), Hr = new m();
+class Oe {
   constructor(t = [0, 0, 0], n = 0) {
     R(this, "center", void 0), R(this, "radius", void 0), this.radius = -0, this.center = new m(), this.fromCenterRadius(t, n);
   }
@@ -3396,7 +3465,7 @@ class De {
     return this === t || !!t && this.center.equals(t.center) && this.radius === t.radius;
   }
   clone() {
-    return new De(this.center, this.radius);
+    return new Oe(this.center, this.radius);
   }
   union(t) {
     const n = this.center, s = this.radius, r = t.center, i = t.radius, o = fe.copy(r).subtract(n), a = o.magnitude();
@@ -3405,7 +3474,7 @@ class De {
     if (i >= a + s)
       return t.clone();
     const c = (s + a + i) * 0.5;
-    return jr.copy(o).scale((-s + c) / a).add(n), this.center.copy(jr), this.radius = c, this;
+    return Hr.copy(o).scale((-s + c) / a).add(n), this.center.copy(Hr), this.radius = c, this;
   }
   expand(t) {
     const s = fe.from(t).subtract(this.center).magnitude();
@@ -3429,7 +3498,7 @@ class De {
     return i < -s ? ht.OUTSIDE : i < s ? ht.INTERSECTING : ht.INSIDE;
   }
 }
-const df = new m(), mf = new m(), Xe = new m(), Qe = new m(), qe = new m(), Af = new m(), gf = new m(), Ft = {
+const rf = new m(), of = new m(), ze = new m(), We = new m(), Xe = new m(), af = new m(), cf = new m(), Ft = {
   COLUMN0ROW0: 0,
   COLUMN0ROW1: 1,
   COLUMN0ROW2: 2,
@@ -3440,9 +3509,9 @@ const df = new m(), mf = new m(), Xe = new m(), Qe = new m(), qe = new m(), Af =
   COLUMN2ROW1: 7,
   COLUMN2ROW2: 8
 };
-class Oe {
+class ve {
   constructor(t = [0, 0, 0], n = [0, 0, 0, 0, 0, 0, 0, 0, 0]) {
-    R(this, "center", void 0), R(this, "halfAxes", void 0), this.center = new m().from(t), this.halfAxes = new k(n);
+    R(this, "center", void 0), R(this, "halfAxes", void 0), this.center = new m().from(t), this.halfAxes = new j(n);
   }
   get halfSize() {
     const t = this.halfAxes.getColumn(0), n = this.halfAxes.getColumn(1), s = this.halfAxes.getColumn(2);
@@ -3450,20 +3519,20 @@ class Oe {
   }
   get quaternion() {
     const t = this.halfAxes.getColumn(0), n = this.halfAxes.getColumn(1), s = this.halfAxes.getColumn(2), r = new m(t).normalize(), i = new m(n).normalize(), o = new m(s).normalize();
-    return new dn().fromMatrix3(new k([...r, ...i, ...o]));
+    return new hn().fromMatrix3(new j([...r, ...i, ...o]));
   }
   fromCenterHalfSizeQuaternion(t, n, s) {
-    const r = new dn(s), i = new k().fromQuaternion(r);
+    const r = new hn(s), i = new j().fromQuaternion(r);
     return i[0] = i[0] * n[0], i[1] = i[1] * n[0], i[2] = i[2] * n[0], i[3] = i[3] * n[1], i[4] = i[4] * n[1], i[5] = i[5] * n[1], i[6] = i[6] * n[2], i[7] = i[7] * n[2], i[8] = i[8] * n[2], this.center = new m().from(t), this.halfAxes = i, this;
   }
   clone() {
-    return new Oe(this.center, this.halfAxes);
+    return new ve(this.center, this.halfAxes);
   }
   equals(t) {
     return this === t || !!t && this.center.equals(t.center) && this.halfAxes.equals(t.halfAxes);
   }
-  getBoundingSphere(t = new De()) {
-    const n = this.halfAxes, s = n.getColumn(0, Xe), r = n.getColumn(1, Qe), i = n.getColumn(2, qe), o = df.copy(s).add(r).add(i);
+  getBoundingSphere(t = new Oe()) {
+    const n = this.halfAxes, s = n.getColumn(0, ze), r = n.getColumn(1, We), i = n.getColumn(2, Xe), o = rf.copy(s).add(r).add(i);
     return t.center.copy(this.center), t.radius = o.magnitude(), t;
   }
   intersectPlane(t) {
@@ -3474,79 +3543,79 @@ class Oe {
     return Math.sqrt(this.distanceSquaredTo(t));
   }
   distanceSquaredTo(t) {
-    const n = mf.from(t).subtract(this.center), s = this.halfAxes, r = s.getColumn(0, Xe), i = s.getColumn(1, Qe), o = s.getColumn(2, qe), a = r.magnitude(), c = i.magnitude(), u = o.magnitude();
+    const n = of.from(t).subtract(this.center), s = this.halfAxes, r = s.getColumn(0, ze), i = s.getColumn(1, We), o = s.getColumn(2, Xe), a = r.magnitude(), c = i.magnitude(), u = o.magnitude();
     r.normalize(), i.normalize(), o.normalize();
     let l = 0, h;
     return h = Math.abs(n.dot(r)) - a, h > 0 && (l += h * h), h = Math.abs(n.dot(i)) - c, h > 0 && (l += h * h), h = Math.abs(n.dot(o)) - u, h > 0 && (l += h * h), l;
   }
   computePlaneDistances(t, n, s = [-0, -0]) {
     let r = Number.POSITIVE_INFINITY, i = Number.NEGATIVE_INFINITY;
-    const o = this.center, a = this.halfAxes, c = a.getColumn(0, Xe), u = a.getColumn(1, Qe), l = a.getColumn(2, qe), h = Af.copy(c).add(u).add(l).add(o), f = gf.copy(h).subtract(t);
+    const o = this.center, a = this.halfAxes, c = a.getColumn(0, ze), u = a.getColumn(1, We), l = a.getColumn(2, Xe), h = af.copy(c).add(u).add(l).add(o), f = cf.copy(h).subtract(t);
     let d = n.dot(f);
     return r = Math.min(d, r), i = Math.max(d, i), h.copy(o).add(c).add(u).subtract(l), f.copy(h).subtract(t), d = n.dot(f), r = Math.min(d, r), i = Math.max(d, i), h.copy(o).add(c).subtract(u).add(l), f.copy(h).subtract(t), d = n.dot(f), r = Math.min(d, r), i = Math.max(d, i), h.copy(o).add(c).subtract(u).subtract(l), f.copy(h).subtract(t), d = n.dot(f), r = Math.min(d, r), i = Math.max(d, i), o.copy(h).subtract(c).add(u).add(l), f.copy(h).subtract(t), d = n.dot(f), r = Math.min(d, r), i = Math.max(d, i), o.copy(h).subtract(c).add(u).subtract(l), f.copy(h).subtract(t), d = n.dot(f), r = Math.min(d, r), i = Math.max(d, i), o.copy(h).subtract(c).subtract(u).add(l), f.copy(h).subtract(t), d = n.dot(f), r = Math.min(d, r), i = Math.max(d, i), o.copy(h).subtract(c).subtract(u).subtract(l), f.copy(h).subtract(t), d = n.dot(f), r = Math.min(d, r), i = Math.max(d, i), s[0] = r, s[1] = i, s;
   }
   transform(t) {
     this.center.transformAsPoint(t);
-    const n = this.halfAxes.getColumn(0, Xe);
+    const n = this.halfAxes.getColumn(0, ze);
     n.transformAsPoint(t);
-    const s = this.halfAxes.getColumn(1, Qe);
+    const s = this.halfAxes.getColumn(1, We);
     s.transformAsPoint(t);
-    const r = this.halfAxes.getColumn(2, qe);
-    return r.transformAsPoint(t), this.halfAxes = new k([...n, ...s, ...r]), this;
+    const r = this.halfAxes.getColumn(2, Xe);
+    return r.transformAsPoint(t), this.halfAxes = new j([...n, ...s, ...r]), this;
   }
   getTransform() {
     throw new Error("not implemented");
   }
 }
-const Kr = new m(), Wr = new m();
-class q {
+const Jr = new m(), Vr = new m();
+class Y {
   constructor(t = [0, 0, 1], n = 0) {
     R(this, "normal", void 0), R(this, "distance", void 0), this.normal = new m(), this.distance = -0, this.fromNormalDistance(t, n);
   }
   fromNormalDistance(t, n) {
-    return H(Number.isFinite(n)), this.normal.from(t).normalize(), this.distance = n, this;
+    return J(Number.isFinite(n)), this.normal.from(t).normalize(), this.distance = n, this;
   }
   fromPointNormal(t, n) {
-    t = Kr.from(t), this.normal.from(n).normalize();
+    t = Jr.from(t), this.normal.from(n).normalize();
     const s = -this.normal.dot(t);
     return this.distance = s, this;
   }
   fromCoefficients(t, n, s, r) {
-    return this.normal.set(t, n, s), H(Ut(this.normal.len(), 1)), this.distance = r, this;
+    return this.normal.set(t, n, s), J(Nt(this.normal.len(), 1)), this.distance = r, this;
   }
   clone() {
-    return new q(this.normal, this.distance);
+    return new Y(this.normal, this.distance);
   }
   equals(t) {
-    return Ut(this.distance, t.distance) && Ut(this.normal, t.normal);
+    return Nt(this.distance, t.distance) && Nt(this.normal, t.normal);
   }
   getPointDistance(t) {
     return this.normal.dot(t) + this.distance;
   }
   transform(t) {
-    const n = Wr.copy(this.normal).transformAsVector(t).normalize(), s = this.normal.scale(-this.distance).transform(t);
+    const n = Vr.copy(this.normal).transformAsVector(t).normalize(), s = this.normal.scale(-this.distance).transform(t);
     return this.fromPointNormal(s, n);
   }
   projectPointOntoPlane(t, n = [0, 0, 0]) {
-    const s = Kr.from(t), r = this.getPointDistance(s), i = Wr.copy(this.normal).scale(r);
+    const s = Jr.from(t), r = this.getPointDistance(s), i = Vr.copy(this.normal).scale(r);
     return s.subtract(i).to(n);
   }
 }
-const zr = [new m([1, 0, 0]), new m([0, 1, 0]), new m([0, 0, 1])], Xr = new m(), pf = new m();
+const kr = [new m([1, 0, 0]), new m([0, 1, 0]), new m([0, 0, 1])], jr = new m(), uf = new m();
 class at {
   constructor(t = []) {
     R(this, "planes", void 0), this.planes = t;
   }
   fromBoundingSphere(t) {
-    this.planes.length = 2 * zr.length;
+    this.planes.length = 2 * kr.length;
     const n = t.center, s = t.radius;
     let r = 0;
-    for (const i of zr) {
+    for (const i of kr) {
       let o = this.planes[r], a = this.planes[r + 1];
-      o || (o = this.planes[r] = new q()), a || (a = this.planes[r + 1] = new q());
-      const c = Xr.copy(i).scale(-s).add(n);
+      o || (o = this.planes[r] = new Y()), a || (a = this.planes[r + 1] = new Y());
+      const c = jr.copy(i).scale(-s).add(n);
       o.fromPointNormal(c, i);
-      const u = Xr.copy(i).scale(s).add(n), l = pf.copy(i).negate();
+      const u = jr.copy(i).scale(s).add(n), l = uf.copy(i).negate();
       a.fromPointNormal(u, l), r += 2;
     }
     return this;
@@ -3564,7 +3633,7 @@ class at {
     return n;
   }
   computeVisibilityWithPlaneMask(t, n) {
-    if (H(Number.isFinite(n), "parentPlaneMask is required."), n === at.MASK_OUTSIDE || n === at.MASK_INSIDE)
+    if (J(Number.isFinite(n), "parentPlaneMask is required."), n === at.MASK_OUTSIDE || n === at.MASK_INSIDE)
       return n;
     let s = at.MASK_INSIDE;
     const r = this.planes;
@@ -3583,10 +3652,10 @@ class at {
 R(at, "MASK_OUTSIDE", 4294967295);
 R(at, "MASK_INSIDE", 0);
 R(at, "MASK_INDETERMINATE", 2147483647);
-const Bf = new m(), yf = new m(), Cf = new m(), Tf = new m(), Ef = new m();
-class mn {
+const lf = new m(), hf = new m(), ff = new m(), df = new m(), mf = new m();
+class fn {
   constructor(t = {}) {
-    R(this, "left", void 0), R(this, "_left", void 0), R(this, "right", void 0), R(this, "_right", void 0), R(this, "top", void 0), R(this, "_top", void 0), R(this, "bottom", void 0), R(this, "_bottom", void 0), R(this, "near", void 0), R(this, "_near", void 0), R(this, "far", void 0), R(this, "_far", void 0), R(this, "_cullingVolume", new at([new q(), new q(), new q(), new q(), new q(), new q()])), R(this, "_perspectiveMatrix", new N()), R(this, "_infinitePerspective", new N());
+    R(this, "left", void 0), R(this, "_left", void 0), R(this, "right", void 0), R(this, "_right", void 0), R(this, "top", void 0), R(this, "_top", void 0), R(this, "bottom", void 0), R(this, "_bottom", void 0), R(this, "near", void 0), R(this, "_near", void 0), R(this, "far", void 0), R(this, "_far", void 0), R(this, "_cullingVolume", new at([new Y(), new Y(), new Y(), new Y(), new Y(), new Y()])), R(this, "_perspectiveMatrix", new N()), R(this, "_infinitePerspective", new N());
     const {
       near: n = 1,
       far: s = 5e8
@@ -3594,7 +3663,7 @@ class mn {
     this.left = t.left, this._left = void 0, this.right = t.right, this._right = void 0, this.top = t.top, this._top = void 0, this.bottom = t.bottom, this._bottom = void 0, this.near = n, this._near = n, this.far = s, this._far = s;
   }
   clone() {
-    return new mn({
+    return new fn({
       right: this.right,
       left: this.left,
       top: this.top,
@@ -3604,7 +3673,7 @@ class mn {
     });
   }
   equals(t) {
-    return t && t instanceof mn && this.right === t.right && this.left === t.left && this.top === t.top && this.bottom === t.bottom && this.near === t.near && this.far === t.far;
+    return t && t instanceof fn && this.right === t.right && this.left === t.left && this.top === t.top && this.bottom === t.bottom && this.near === t.near && this.far === t.far;
   }
   get projectionMatrix() {
     return this._update(), this._perspectiveMatrix;
@@ -3613,15 +3682,15 @@ class mn {
     return this._update(), this._infinitePerspective;
   }
   computeCullingVolume(t, n, s) {
-    H(t, "position is required."), H(n, "direction is required."), H(s, "up is required.");
+    J(t, "position is required."), J(n, "direction is required."), J(s, "up is required.");
     const r = this._cullingVolume.planes;
-    s = Bf.copy(s).normalize();
-    const i = yf.copy(n).cross(s).normalize(), o = Cf.copy(n).multiplyByScalar(this.near).add(t), a = Tf.copy(n).multiplyByScalar(this.far).add(t);
-    let c = Ef;
+    s = lf.copy(s).normalize();
+    const i = hf.copy(n).cross(s).normalize(), o = ff.copy(n).multiplyByScalar(this.near).add(t), a = df.copy(n).multiplyByScalar(this.far).add(t);
+    let c = mf;
     return c.copy(i).multiplyByScalar(this.left).add(o).subtract(t).cross(s), r[0].fromPointNormal(t, c), c.copy(i).multiplyByScalar(this.right).add(o).subtract(t).cross(s).negate(), r[1].fromPointNormal(t, c), c.copy(s).multiplyByScalar(this.bottom).add(o).subtract(t).cross(i).negate(), r[2].fromPointNormal(t, c), c.copy(s).multiplyByScalar(this.top).add(o).subtract(t).cross(i), r[3].fromPointNormal(t, c), c = new m().copy(n), r[4].fromPointNormal(o, c), c.negate(), r[5].fromPointNormal(a, c), this._cullingVolume;
   }
   getPixelDimensions(t, n, s, r) {
-    this._update(), H(Number.isFinite(t) && Number.isFinite(n)), H(t > 0), H(n > 0), H(s > 0), H(r);
+    this._update(), J(Number.isFinite(t) && Number.isFinite(n)), J(t > 0), J(n > 0), J(s > 0), J(r);
     const i = 1 / this.near;
     let o = this.top * i;
     const a = 2 * s * o / n;
@@ -3630,7 +3699,7 @@ class mn {
     return r.x = c, r.y = a, r;
   }
   _update() {
-    H(Number.isFinite(this.right) && Number.isFinite(this.left) && Number.isFinite(this.top) && Number.isFinite(this.bottom) && Number.isFinite(this.near) && Number.isFinite(this.far));
+    J(Number.isFinite(this.right) && Number.isFinite(this.left) && Number.isFinite(this.top) && Number.isFinite(this.bottom) && Number.isFinite(this.near) && Number.isFinite(this.far));
     const {
       top: t,
       bottom: n,
@@ -3639,7 +3708,7 @@ class mn {
       near: i,
       far: o
     } = this;
-    (t !== this._top || n !== this._bottom || r !== this._left || s !== this._right || i !== this._near || o !== this._far) && (H(this.near > 0 && this.near < this.far, "near must be greater than zero and less than far."), this._left = r, this._right = s, this._top = t, this._bottom = n, this._near = i, this._far = o, this._perspectiveMatrix = new N().frustum({
+    (t !== this._top || n !== this._bottom || r !== this._left || s !== this._right || i !== this._near || o !== this._far) && (J(this.near > 0 && this.near < this.far, "near must be greater than zero and less than far."), this._left = r, this._right = s, this._top = t, this._bottom = n, this._near = i, this._far = o, this._perspectiveMatrix = new N().frustum({
       left: r,
       right: s,
       bottom: n,
@@ -3656,10 +3725,10 @@ class mn {
     }));
   }
 }
-const bf = (e) => e !== null && typeof e < "u";
-class An {
+const Af = (e) => e !== null && typeof e < "u";
+class dn {
   constructor(t = {}) {
-    R(this, "_offCenterFrustum", new mn()), R(this, "fov", void 0), R(this, "_fov", void 0), R(this, "_fovy", void 0), R(this, "_sseDenominator", void 0), R(this, "aspectRatio", void 0), R(this, "_aspectRatio", void 0), R(this, "near", void 0), R(this, "_near", void 0), R(this, "far", void 0), R(this, "_far", void 0), R(this, "xOffset", void 0), R(this, "_xOffset", void 0), R(this, "yOffset", void 0), R(this, "_yOffset", void 0);
+    R(this, "_offCenterFrustum", new fn()), R(this, "fov", void 0), R(this, "_fov", void 0), R(this, "_fovy", void 0), R(this, "_sseDenominator", void 0), R(this, "aspectRatio", void 0), R(this, "_aspectRatio", void 0), R(this, "near", void 0), R(this, "_near", void 0), R(this, "far", void 0), R(this, "_far", void 0), R(this, "xOffset", void 0), R(this, "_xOffset", void 0), R(this, "yOffset", void 0), R(this, "_yOffset", void 0);
     const {
       fov: n,
       aspectRatio: s,
@@ -3671,7 +3740,7 @@ class An {
     this.fov = n, this.aspectRatio = s, this.near = r, this.far = i, this.xOffset = o, this.yOffset = a;
   }
   clone() {
-    return new An({
+    return new dn({
       aspectRatio: this.aspectRatio,
       fov: this.fov,
       near: this.near,
@@ -3679,7 +3748,7 @@ class An {
     });
   }
   equals(t) {
-    return !bf(t) || !(t instanceof An) ? !1 : (this._update(), t._update(), this.fov === t.fov && this.aspectRatio === t.aspectRatio && this.near === t.near && this.far === t.far && this._offCenterFrustum.equals(t._offCenterFrustum));
+    return !Af(t) || !(t instanceof dn) ? !1 : (this._update(), t._update(), this.fov === t.fov && this.aspectRatio === t.aspectRatio && this.near === t.near && this.far === t.far && this._offCenterFrustum.equals(t._offCenterFrustum));
   }
   get projectionMatrix() {
     return this._update(), this._offCenterFrustum.projectionMatrix;
@@ -3697,12 +3766,12 @@ class An {
     return this._update(), this._offCenterFrustum.computeCullingVolume(t, n, s);
   }
   getPixelDimensions(t, n, s, r) {
-    return this._update(), this._offCenterFrustum.getPixelDimensions(t, n, s, r || new wn());
+    return this._update(), this._offCenterFrustum.getPixelDimensions(t, n, s, r || new bn());
   }
   _update() {
-    H(Number.isFinite(this.fov) && Number.isFinite(this.aspectRatio) && Number.isFinite(this.near) && Number.isFinite(this.far));
+    J(Number.isFinite(this.fov) && Number.isFinite(this.aspectRatio) && Number.isFinite(this.near) && Number.isFinite(this.far));
     const t = this._offCenterFrustum;
-    (this.fov !== this._fov || this.aspectRatio !== this._aspectRatio || this.near !== this._near || this.far !== this._far || this.xOffset !== this._xOffset || this.yOffset !== this._yOffset) && (H(this.fov >= 0 && this.fov < Math.PI), H(this.aspectRatio > 0), H(this.near >= 0 && this.near < this.far), this._aspectRatio = this.aspectRatio, this._fov = this.fov, this._fovy = this.aspectRatio <= 1 ? this.fov : Math.atan(Math.tan(this.fov * 0.5) / this.aspectRatio) * 2, this._near = this.near, this._far = this.far, this._sseDenominator = 2 * Math.tan(0.5 * this._fovy), this._xOffset = this.xOffset, this._yOffset = this.yOffset, t.top = this.near * Math.tan(0.5 * this._fovy), t.bottom = -t.top, t.right = this.aspectRatio * t.top, t.left = -t.right, t.near = this.near, t.far = this.far, t.right += this.xOffset, t.left += this.xOffset, t.top += this.yOffset, t.bottom += this.yOffset);
+    (this.fov !== this._fov || this.aspectRatio !== this._aspectRatio || this.near !== this._near || this.far !== this._far || this.xOffset !== this._xOffset || this.yOffset !== this._yOffset) && (J(this.fov >= 0 && this.fov < Math.PI), J(this.aspectRatio > 0), J(this.near >= 0 && this.near < this.far), this._aspectRatio = this.aspectRatio, this._fov = this.fov, this._fovy = this.aspectRatio <= 1 ? this.fov : Math.atan(Math.tan(this.fov * 0.5) / this.aspectRatio) * 2, this._near = this.near, this._far = this.far, this._sseDenominator = 2 * Math.tan(0.5 * this._fovy), this._xOffset = this.xOffset, this._yOffset = this.yOffset, t.top = this.near * Math.tan(0.5 * this._fovy), t.bottom = -t.top, t.right = this.aspectRatio * t.top, t.left = -t.right, t.near = this.near, t.far = this.far, t.right += this.xOffset, t.left += this.xOffset, t.top += this.yOffset, t.bottom += this.yOffset);
   }
 }
 new m();
@@ -3717,18 +3786,18 @@ new m();
 new m();
 new m();
 new m();
-const wt = new k(), _f = new k(), wf = new k(), Ye = new k(), Qr = new k();
-function Mf(e, t = {}) {
+const Mt = new j(), gf = new j(), pf = new j(), Qe = new j(), Kr = new j();
+function Bf(e, t = {}) {
   const n = Uh, s = 10;
   let r = 0, i = 0;
-  const o = _f, a = wf;
+  const o = gf, a = pf;
   o.identity(), a.copy(e);
-  const c = n * Rf(a);
-  for (; i < s && If(a) > c; )
-    Sf(a, Ye), Qr.copy(Ye).transpose(), a.multiplyRight(Ye), a.multiplyLeft(Qr), o.multiplyRight(Ye), ++r > 2 && (++i, r = 0);
+  const c = n * yf(a);
+  for (; i < s && Cf(a) > c; )
+    Tf(a, Qe), Kr.copy(Qe).transpose(), a.multiplyRight(Qe), a.multiplyLeft(Kr), o.multiplyRight(Qe), ++r > 2 && (++i, r = 0);
   return t.unitary = o.toTarget(t.unitary), t.diagonal = a.toTarget(t.diagonal), t;
 }
-function Rf(e) {
+function yf(e) {
   let t = 0;
   for (let n = 0; n < 9; ++n) {
     const s = e[n];
@@ -3736,38 +3805,38 @@ function Rf(e) {
   }
   return Math.sqrt(t);
 }
-const Cs = [1, 0, 0], Ts = [2, 2, 1];
-function If(e) {
+const gs = [1, 0, 0], ps = [2, 2, 1];
+function Cf(e) {
   let t = 0;
   for (let n = 0; n < 3; ++n) {
-    const s = e[wt.getElementIndex(Ts[n], Cs[n])];
+    const s = e[Mt.getElementIndex(ps[n], gs[n])];
     t += 2 * s * s;
   }
   return Math.sqrt(t);
 }
-function Sf(e, t) {
-  const n = jo;
+function Tf(e, t) {
+  const n = xo;
   let s = 0, r = 1;
   for (let u = 0; u < 3; ++u) {
-    const l = Math.abs(e[wt.getElementIndex(Ts[u], Cs[u])]);
+    const l = Math.abs(e[Mt.getElementIndex(ps[u], gs[u])]);
     l > s && (r = u, s = l);
   }
-  const i = Cs[r], o = Ts[r];
+  const i = gs[r], o = ps[r];
   let a = 1, c = 0;
-  if (Math.abs(e[wt.getElementIndex(o, i)]) > n) {
-    const u = e[wt.getElementIndex(o, o)], l = e[wt.getElementIndex(i, i)], h = e[wt.getElementIndex(o, i)], f = (u - l) / 2 / h;
+  if (Math.abs(e[Mt.getElementIndex(o, i)]) > n) {
+    const u = e[Mt.getElementIndex(o, o)], l = e[Mt.getElementIndex(i, i)], h = e[Mt.getElementIndex(o, i)], f = (u - l) / 2 / h;
     let d;
     f < 0 ? d = -1 / (-f + Math.sqrt(1 + f * f)) : d = 1 / (f + Math.sqrt(1 + f * f)), a = 1 / Math.sqrt(1 + d * d), c = d * a;
   }
-  return k.IDENTITY.to(t), t[wt.getElementIndex(i, i)] = t[wt.getElementIndex(o, o)] = a, t[wt.getElementIndex(o, i)] = c, t[wt.getElementIndex(i, o)] = -c, t;
+  return j.IDENTITY.to(t), t[Mt.getElementIndex(i, i)] = t[Mt.getElementIndex(o, o)] = a, t[Mt.getElementIndex(o, i)] = c, t[Mt.getElementIndex(i, o)] = -c, t;
 }
-const Lt = new m(), Ff = new m(), Df = new m(), Of = new m(), vf = new m(), xf = new k(), Lf = {
-  diagonal: new k(),
-  unitary: new k()
+const Ut = new m(), Ef = new m(), bf = new m(), _f = new m(), wf = new m(), Mf = new j(), Rf = {
+  diagonal: new j(),
+  unitary: new j()
 };
-function Gf(e, t = new Oe()) {
+function If(e, t = new ve()) {
   if (!e || e.length === 0)
-    return t.halfAxes = new k([0, 0, 0, 0, 0, 0, 0, 0, 0]), t.center = new m(), t;
+    return t.halfAxes = new j([0, 0, 0, 0, 0, 0, 0, 0, 0]), t.center = new m(), t;
   const n = e.length, s = new m(0, 0, 0);
   for (const I of e)
     s.add(I);
@@ -3775,32 +3844,32 @@ function Gf(e, t = new Oe()) {
   s.multiplyByScalar(r);
   let i = 0, o = 0, a = 0, c = 0, u = 0, l = 0;
   for (const I of e) {
-    const S = Lt.copy(I).subtract(s);
+    const S = Ut.copy(I).subtract(s);
     i += S.x * S.x, o += S.x * S.y, a += S.x * S.z, c += S.y * S.y, u += S.y * S.z, l += S.z * S.z;
   }
   i *= r, o *= r, a *= r, c *= r, u *= r, l *= r;
-  const h = xf;
+  const h = Mf;
   h[0] = i, h[1] = o, h[2] = a, h[3] = o, h[4] = c, h[5] = u, h[6] = a, h[7] = u, h[8] = l;
   const {
     unitary: f
-  } = Mf(h, Lf), d = t.halfAxes.copy(f);
-  let A = d.getColumn(0, Df), g = d.getColumn(1, Of), p = d.getColumn(2, vf), y = -Number.MAX_VALUE, _ = -Number.MAX_VALUE, b = -Number.MAX_VALUE, w = Number.MAX_VALUE, M = Number.MAX_VALUE, C = Number.MAX_VALUE;
+  } = Bf(h, Rf), d = t.halfAxes.copy(f);
+  let A = d.getColumn(0, bf), g = d.getColumn(1, _f), p = d.getColumn(2, wf), y = -Number.MAX_VALUE, _ = -Number.MAX_VALUE, b = -Number.MAX_VALUE, w = Number.MAX_VALUE, M = Number.MAX_VALUE, C = Number.MAX_VALUE;
   for (const I of e)
-    Lt.copy(I), y = Math.max(Lt.dot(A), y), _ = Math.max(Lt.dot(g), _), b = Math.max(Lt.dot(p), b), w = Math.min(Lt.dot(A), w), M = Math.min(Lt.dot(g), M), C = Math.min(Lt.dot(p), C);
+    Ut.copy(I), y = Math.max(Ut.dot(A), y), _ = Math.max(Ut.dot(g), _), b = Math.max(Ut.dot(p), b), w = Math.min(Ut.dot(A), w), M = Math.min(Ut.dot(g), M), C = Math.min(Ut.dot(p), C);
   A = A.multiplyByScalar(0.5 * (w + y)), g = g.multiplyByScalar(0.5 * (M + _)), p = p.multiplyByScalar(0.5 * (C + b)), t.center.copy(A).add(g).add(p);
-  const F = Ff.set(y - w, _ - M, b - C).multiplyByScalar(0.5), D = new k([F[0], 0, 0, 0, F[1], 0, 0, 0, F[2]]);
-  return t.halfAxes.multiplyRight(D), t;
+  const D = Ef.set(y - w, _ - M, b - C).multiplyByScalar(0.5), F = new j([D[0], 0, 0, 0, D[1], 0, 0, 0, D[2]]);
+  return t.halfAxes.multiplyRight(F), t;
 }
-const qr = new m(), jn = new m(), Es = new at([new q(), new q(), new q(), new q(), new q(), new q()]);
-function Uf(e, t) {
+const zr = new m(), kn = new m(), Bs = new at([new Y(), new Y(), new Y(), new Y(), new Y(), new Y()]);
+function Sf(e, t) {
   const {
     cameraDirection: n,
     cameraUp: s,
     height: r
   } = e, {
     metersPerUnit: i
-  } = e.distanceScales, o = an(e, e.center), a = P.WGS84.eastNorthUpToFixedFrame(o), c = e.unprojectPosition(e.cameraPosition), u = P.WGS84.cartographicToCartesian(c, new m()), l = new m(a.transformAsVector(new m(n).scale(i))).normalize(), h = new m(a.transformAsVector(new m(s).scale(i))).normalize();
-  Pf(e);
+  } = e.distanceScales, o = rn(e, e.center), a = H.WGS84.eastNorthUpToFixedFrame(o), c = e.unprojectPosition(e.cameraPosition), u = H.WGS84.cartographicToCartesian(c, new m()), l = new m(a.transformAsVector(new m(n).scale(i))).normalize(), h = new m(a.transformAsVector(new m(s).scale(i))).normalize();
+  Ff(e);
   const f = e.constructor, {
     longitude: d,
     latitude: A,
@@ -3825,12 +3894,12 @@ function Uf(e, t) {
     viewport: e,
     topDownViewport: _,
     height: r,
-    cullingVolume: Es,
+    cullingVolume: Bs,
     frameNumber: t,
     sseDenominator: 1.15
   };
 }
-function Nf(e, t, n) {
+function Df(e, t, n) {
   if (n === 0 || e.length <= n)
     return [e, []];
   const s = [], {
@@ -3849,56 +3918,56 @@ function Nf(e, t, n) {
     c.push(e[o[u][0]]);
   return [a, c];
 }
-function Pf(e) {
-  const t = e.getFrustumPlanes(), n = Yr(t.near, e.cameraPosition), s = an(e, n), r = an(e, e.cameraPosition, jn);
+function Ff(e) {
+  const t = e.getFrustumPlanes(), n = Wr(t.near, e.cameraPosition), s = rn(e, n), r = rn(e, e.cameraPosition, kn);
   let i = 0;
-  Es.planes[i++].fromPointNormal(s, qr.copy(s).subtract(r));
+  Bs.planes[i++].fromPointNormal(s, zr.copy(s).subtract(r));
   for (const o in t) {
     if (o === "near")
       continue;
-    const a = t[o], c = Yr(a, n, jn), u = an(e, c, jn);
-    Es.planes[i++].fromPointNormal(u, qr.copy(s).subtract(u));
+    const a = t[o], c = Wr(a, n, kn), u = rn(e, c, kn);
+    Bs.planes[i++].fromPointNormal(u, zr.copy(s).subtract(u));
   }
 }
-function Yr(e, t) {
+function Wr(e, t) {
   let n = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : new m();
   const s = e.normal.dot(t);
   return n.copy(e.normal).scale(e.distance - s).add(t), n;
 }
-function an(e, t) {
+function rn(e, t) {
   let n = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : new m();
   const s = e.unprojectPosition(t);
-  return P.WGS84.cartographicToCartesian(s, n);
+  return H.WGS84.cartographicToCartesian(s, n);
 }
-const Hf = 6378137, Jf = 6378137, bs = 6356752314245179e-9, ie = new m();
-function Vf(e, t) {
-  if (e instanceof Oe) {
+const Of = 6378137, vf = 6378137, ys = 6356752314245179e-9, ie = new m();
+function xf(e, t) {
+  if (e instanceof ve) {
     const {
       halfAxes: n
-    } = e, s = jf(n);
-    return Math.log2(bs / (s + t[2]));
-  } else if (e instanceof De) {
+    } = e, s = Gf(n);
+    return Math.log2(ys / (s + t[2]));
+  } else if (e instanceof Oe) {
     const {
       radius: n
     } = e;
-    return Math.log2(bs / (n + t[2]));
+    return Math.log2(ys / (n + t[2]));
   } else if (e.width && e.height) {
     const {
       width: n,
       height: s
-    } = e, r = Math.log2(Hf / n), i = Math.log2(Jf / s);
+    } = e, r = Math.log2(Of / n), i = Math.log2(vf / s);
     return (r + i) / 2;
   }
   return 1;
 }
-function Ko(e, t, n) {
-  P.WGS84.cartographicToCartesian([e.xmax, e.ymax, e.zmax], ie);
+function Lo(e, t, n) {
+  H.WGS84.cartographicToCartesian([e.xmax, e.ymax, e.zmax], ie);
   const s = Math.sqrt(Math.pow(ie[0] - n[0], 2) + Math.pow(ie[1] - n[1], 2) + Math.pow(ie[2] - n[2], 2));
-  return Math.log2(bs / (s + t[2]));
+  return Math.log2(ys / (s + t[2]));
 }
-function kf(e, t, n) {
+function Lf(e, t, n) {
   const [s, r, i, o] = e;
-  return Ko({
+  return Lo({
     xmin: s,
     xmax: i,
     ymin: r,
@@ -3907,12 +3976,12 @@ function kf(e, t, n) {
     zmax: 0
   }, t, n);
 }
-function jf(e) {
+function Gf(e) {
   e.getColumn(0, ie);
   const t = e.getColumn(1), n = e.getColumn(2);
   return ie.add(t).add(n).len();
 }
-const rt = {
+const it = {
   UNLOADED: 0,
   LOADING: 1,
   PROCESSING: 2,
@@ -3920,104 +3989,104 @@ const rt = {
   EXPIRED: 4,
   FAILED: 5
 };
-let vt = function(e) {
+let xt = function(e) {
   return e[e.ADD = 1] = "ADD", e[e.REPLACE = 2] = "REPLACE", e;
 }({}), jt = function(e) {
   return e.EMPTY = "empty", e.SCENEGRAPH = "scenegraph", e.POINTCLOUD = "pointcloud", e.MESH = "mesh", e;
 }({}), dt = function(e) {
   return e.I3S = "I3S", e.TILES3D = "TILES3D", e;
-}({}), Rn = function(e) {
+}({}), wn = function(e) {
   return e.GEOMETRIC_ERROR = "geometricError", e.MAX_SCREEN_THRESHOLD = "maxScreenThreshold", e;
 }({});
-const Kf = {
+const Uf = {
   NOT_COMPUTED: -1,
   USE_OPTIMIZATION: 1,
   SKIP_OPTIMIZATION: 0
 };
-function Wo(e) {
+function Go(e) {
   return e != null;
 }
-const Y = new m(), cn = new m(), Wf = new m(), zf = new m(), Jt = new m(), $r = new m(), Zr = new m(), ti = new m();
-function Kn(e, t, n) {
-  if (kt(e, "3D Tile: boundingVolume must be defined"), e.box)
-    return zo(e.box, t, n);
+const $ = new m(), on = new m(), Pf = new m(), Nf = new m(), Vt = new m(), Xr = new m(), Qr = new m(), qr = new m();
+function jn(e, t, n) {
+  if (U(e, "3D Tile: boundingVolume must be defined"), e.box)
+    return Uo(e.box, t, n);
   if (e.region)
-    return qf(e.region);
+    return Vf(e.region);
   if (e.sphere)
-    return Qf(e.sphere, t, n);
+    return Jf(e.sphere, t, n);
   throw new Error("3D Tile: boundingVolume must contain a sphere, region, or box");
 }
-function Xf(e, t) {
+function Hf(e, t) {
   if (e.box)
-    return Yf(t);
+    return kf(t);
   if (e.region) {
     const [n, s, r, i, o, a] = e.region;
-    return [[Tt(n), Tt(s), o], [Tt(r), Tt(i), a]];
+    return [[Et(n), Et(s), o], [Et(r), Et(i), a]];
   }
   if (e.sphere)
-    return $f(t);
+    return jf(t);
   throw new Error("Unkown boundingVolume type");
 }
-function zo(e, t, n) {
+function Uo(e, t, n) {
   const s = new m(e[0], e[1], e[2]);
   t.transform(s, s);
   let r = [];
   if (e.length === 10) {
-    const u = e.slice(3, 6), l = new dn();
+    const u = e.slice(3, 6), l = new hn();
     l.fromArray(e, 6);
     const h = new m([1, 0, 0]), f = new m([0, 1, 0]), d = new m([0, 0, 1]);
     h.transformByQuaternion(l), h.scale(u[0]), f.transformByQuaternion(l), f.scale(u[1]), d.transformByQuaternion(l), d.scale(u[2]), r = [...h.toArray(), ...f.toArray(), ...d.toArray()];
   } else
     r = [...e.slice(3, 6), ...e.slice(6, 9), ...e.slice(9, 12)];
-  const i = t.transformAsVector(r.slice(0, 3)), o = t.transformAsVector(r.slice(3, 6)), a = t.transformAsVector(r.slice(6, 9)), c = new k([i[0], i[1], i[2], o[0], o[1], o[2], a[0], a[1], a[2]]);
-  return Wo(n) ? (n.center = s, n.halfAxes = c, n) : new Oe(s, c);
+  const i = t.transformAsVector(r.slice(0, 3)), o = t.transformAsVector(r.slice(3, 6)), a = t.transformAsVector(r.slice(6, 9)), c = new j([i[0], i[1], i[2], o[0], o[1], o[2], a[0], a[1], a[2]]);
+  return Go(n) ? (n.center = s, n.halfAxes = c, n) : new ve(s, c);
 }
-function Qf(e, t, n) {
+function Jf(e, t, n) {
   const s = new m(e[0], e[1], e[2]);
   t.transform(s, s);
-  const r = t.getScale(cn), i = Math.max(Math.max(r[0], r[1]), r[2]), o = e[3] * i;
-  return Wo(n) ? (n.center = s, n.radius = o, n) : new De(s, o);
+  const r = t.getScale(on), i = Math.max(Math.max(r[0], r[1]), r[2]), o = e[3] * i;
+  return Go(n) ? (n.center = s, n.radius = o, n) : new Oe(s, o);
 }
-function qf(e) {
-  const [t, n, s, r, i, o] = e, a = P.WGS84.cartographicToCartesian([Tt(t), Tt(r), i], Wf), c = P.WGS84.cartographicToCartesian([Tt(s), Tt(n), o], zf), u = new m().addVectors(a, c).multiplyByScalar(0.5);
-  return P.WGS84.cartesianToCartographic(u, Jt), P.WGS84.cartographicToCartesian([Tt(s), Jt[1], Jt[2]], $r), P.WGS84.cartographicToCartesian([Jt[0], Tt(r), Jt[2]], Zr), P.WGS84.cartographicToCartesian([Jt[0], Jt[1], o], ti), zo([...u, ...$r.subtract(u), ...Zr.subtract(u), ...ti.subtract(u)], new N());
+function Vf(e) {
+  const [t, n, s, r, i, o] = e, a = H.WGS84.cartographicToCartesian([Et(t), Et(r), i], Pf), c = H.WGS84.cartographicToCartesian([Et(s), Et(n), o], Nf), u = new m().addVectors(a, c).multiplyByScalar(0.5);
+  return H.WGS84.cartesianToCartographic(u, Vt), H.WGS84.cartographicToCartesian([Et(s), Vt[1], Vt[2]], Xr), H.WGS84.cartographicToCartesian([Vt[0], Et(r), Vt[2]], Qr), H.WGS84.cartographicToCartesian([Vt[0], Vt[1], o], qr), Uo([...u, ...Xr.subtract(u), ...Qr.subtract(u), ...qr.subtract(u)], new N());
 }
-function Yf(e) {
-  const t = Xo(), {
+function kf(e) {
+  const t = Po(), {
     halfAxes: n
   } = e, s = new m(n.getColumn(0)), r = new m(n.getColumn(1)), i = new m(n.getColumn(2));
   for (let o = 0; o < 2; o++) {
     for (let a = 0; a < 2; a++) {
       for (let c = 0; c < 2; c++)
-        Y.copy(e.center), Y.add(s), Y.add(r), Y.add(i), Qo(t, Y), i.negate();
+        $.copy(e.center), $.add(s), $.add(r), $.add(i), No(t, $), i.negate();
       r.negate();
     }
     s.negate();
   }
   return t;
 }
-function $f(e) {
-  const t = Xo(), {
+function jf(e) {
+  const t = Po(), {
     center: n,
     radius: s
-  } = e, r = P.WGS84.scaleToGeodeticSurface(n, Y);
+  } = e, r = H.WGS84.scaleToGeodeticSurface(n, $);
   let i;
-  r ? i = P.WGS84.geodeticSurfaceNormal(r) : i = new m(0, 0, 1);
+  r ? i = H.WGS84.geodeticSurfaceNormal(r) : i = new m(0, 0, 1);
   let o = new m(i[2], -i[1], 0);
   o.len() > 0 ? o.normalize() : o = new m(0, 1, 0);
   const a = o.clone().cross(i);
   for (const c of [o, a, i]) {
-    cn.copy(c).scale(s);
+    on.copy(c).scale(s);
     for (let u = 0; u < 2; u++)
-      Y.copy(n), Y.add(cn), Qo(t, Y), cn.negate();
+      $.copy(n), $.add(on), No(t, $), on.negate();
   }
   return t;
 }
-function Xo() {
+function Po() {
   return [[1 / 0, 1 / 0, 1 / 0], [-1 / 0, -1 / 0, -1 / 0]];
 }
-function Qo(e, t) {
-  P.WGS84.cartesianToCartographic(t, Y), e[0][0] = Math.min(e[0][0], Y[0]), e[0][1] = Math.min(e[0][1], Y[1]), e[0][2] = Math.min(e[0][2], Y[2]), e[1][0] = Math.max(e[1][0], Y[0]), e[1][1] = Math.max(e[1][1], Y[1]), e[1][2] = Math.max(e[1][2], Y[2]);
+function No(e, t) {
+  H.WGS84.cartesianToCartographic(t, $), e[0][0] = Math.min(e[0][0], $[0]), e[0][1] = Math.min(e[0][1], $[1]), e[0][2] = Math.min(e[0][2], $[2]), e[1][0] = Math.max(e[1][0], $[0]), e[1][1] = Math.max(e[1][1], $[1]), e[1][2] = Math.max(e[1][2], $[2]);
 }
 new m();
 new m();
@@ -4025,18 +4094,18 @@ new N();
 new m();
 new m();
 new m();
-function Zf(e, t) {
+function Kf(e, t) {
   const n = e * t;
   return 1 - Math.exp(-(n * n));
 }
-function td(e, t) {
+function zf(e, t) {
   if (e.dynamicScreenSpaceError && e.dynamicScreenSpaceErrorComputedDensity) {
     const n = e.dynamicScreenSpaceErrorComputedDensity, s = e.dynamicScreenSpaceErrorFactor;
-    return Zf(t, n) * s;
+    return Kf(t, n) * s;
   }
   return 0;
 }
-function ed(e, t, n) {
+function Wf(e, t, n) {
   const s = e.tileset, r = e.parent && e.parent.lodMetricValue || e.lodMetricValue, i = n ? r : e.lodMetricValue;
   if (i === 0)
     return 0;
@@ -4047,31 +4116,31 @@ function ed(e, t, n) {
     viewDistanceScale: u
   } = s.options;
   let l = i * a * (u || 1) / (o * c);
-  return l -= td(s, o), l;
+  return l -= zf(s, o), l;
 }
-const Wn = new m(), ei = new m(), Gt = new m(), ni = new m(), nd = new m(), zn = new N(), si = new N();
-function sd(e, t) {
+const Kn = new m(), Yr = new m(), Pt = new m(), $r = new m(), Xf = new m(), zn = new N(), Zr = new N();
+function Qf(e, t) {
   if (e.lodMetricValue === 0 || isNaN(e.lodMetricValue))
     return "DIG";
-  const n = 2 * qo(e, t);
+  const n = 2 * Ho(e, t);
   return n < 2 ? "OUT" : !e.header.children || n <= e.lodMetricValue ? "DRAW" : e.header.children ? "DIG" : "OUT";
 }
-function qo(e, t) {
+function Ho(e, t) {
   const {
     topDownViewport: n
   } = t, s = e.header.mbs[1], r = e.header.mbs[0], i = e.header.mbs[2], o = e.header.mbs[3], a = [...e.boundingVolume.center], c = n.unprojectPosition(n.cameraPosition);
-  P.WGS84.cartographicToCartesian(c, Wn), ei.copy(Wn).subtract(a).normalize(), P.WGS84.eastNorthUpToFixedFrame(a, zn), si.copy(zn).invert(), Gt.copy(Wn).transform(si);
-  const u = Math.sqrt(Gt[0] * Gt[0] + Gt[1] * Gt[1]), l = u * u / Gt[2];
-  ni.copy([Gt[0], Gt[1], l]);
-  const f = ni.transform(zn).subtract(a).normalize(), A = ei.cross(f).normalize().scale(o).add(a), g = P.WGS84.cartesianToCartographic(A), p = n.project([r, s, i]), y = n.project(g);
-  return nd.copy(p).subtract(y).magnitude();
+  H.WGS84.cartographicToCartesian(c, Kn), Yr.copy(Kn).subtract(a).normalize(), H.WGS84.eastNorthUpToFixedFrame(a, zn), Zr.copy(zn).invert(), Pt.copy(Kn).transform(Zr);
+  const u = Math.sqrt(Pt[0] * Pt[0] + Pt[1] * Pt[1]), l = u * u / Pt[2];
+  $r.copy([Pt[0], Pt[1], l]);
+  const f = $r.transform(zn).subtract(a).normalize(), A = Yr.cross(f).normalize().scale(o).add(a), g = H.WGS84.cartesianToCartographic(A), p = n.project([r, s, i]), y = n.project(g);
+  return Xf.copy(p).subtract(y).magnitude();
 }
-function rd(e) {
+function qf(e) {
   return {
     assetGltfUpAxis: e.asset && e.asset.gltfUpAxis || "Y"
   };
 }
-class ri {
+class ti {
   constructor() {
     let t = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : 0;
     this._map = /* @__PURE__ */ new Map(), this._array = void 0, this._length = void 0, this._array = new Array(t), this._length = t;
@@ -4086,10 +4155,10 @@ class ri {
     return this._array;
   }
   get(t) {
-    return kt(t < this._array.length), this._array[t];
+    return U(t < this._array.length), this._array[t];
   }
   set(t, n) {
-    kt(t >= 0), t >= this.length && (this.length = t + 1), this._map.has(this._array[t]) && this._map.delete(this._array[t]), this._array[t] = n, this._map.set(n, t);
+    U(t >= 0), t >= this.length && (this.length = t + 1), this._map.has(this._array[t]) && this._map.delete(this._array[t]), this._array[t] = n, this._map.set(n, t);
   }
   delete(t) {
     const n = this._map.get(t);
@@ -4109,10 +4178,10 @@ class ri {
     return this._map.delete(t), t;
   }
   reserve(t) {
-    kt(t >= 0), t > this._array.length && (this._array.length = t);
+    U(t >= 0), t > this._array.length && (this._array.length = t);
   }
   resize(t) {
-    kt(t >= 0), this.length = t;
+    U(t >= 0), this.length = t;
   }
   trim(t) {
     t == null && (t = this.length), this._array.length = t;
@@ -4124,7 +4193,7 @@ class ri {
     return this._map.has(t);
   }
 }
-const id = {
+const Yf = {
   loadSiblings: !1,
   skipLevelOfDetail: !1,
   updateTransforms: !0,
@@ -4133,13 +4202,13 @@ const id = {
   viewportTraversersMap: {},
   basePath: ""
 };
-class In {
+class Mn {
   traversalFinished(t) {
     return !0;
   }
   constructor(t) {
-    this.options = void 0, this.root = null, this.selectedTiles = {}, this.requestedTiles = {}, this.emptyTiles = {}, this.lastUpdate = (/* @__PURE__ */ new Date()).getTime(), this.updateDebounceTime = 1e3, this._traversalStack = new ri(), this._emptyTraversalStack = new ri(), this._frameNumber = null, this.options = {
-      ...id,
+    this.options = void 0, this.root = null, this.selectedTiles = {}, this.requestedTiles = {}, this.emptyTiles = {}, this.lastUpdate = (/* @__PURE__ */ new Date()).getTime(), this.updateDebounceTime = 1e3, this._traversalStack = new ti(), this._emptyTraversalStack = new ti(), this._frameNumber = null, this.options = {
+      ...Yf,
       ...t
     };
   }
@@ -4159,7 +4228,7 @@ class In {
       let o = !1;
       this.canTraverse(i, n) && (this.updateChildTiles(i, n), o = this.updateAndPushChildren(i, n, s, i.hasRenderContent ? i._selectionDepth + 1 : i._selectionDepth));
       const a = i.parent, c = !!(!a || a._shouldRefine), u = !o;
-      i.hasRenderContent ? i.refine === vt.ADD ? (this.loadTile(i, n), this.selectTile(i, n)) : i.refine === vt.REPLACE && (this.loadTile(i, n), u && this.selectTile(i, n)) : (this.emptyTiles[i.id] = i, this.loadTile(i, n), u && this.selectTile(i, n)), this.touchTile(i, n), i._shouldRefine = o && c;
+      i.hasRenderContent ? i.refine === xt.ADD ? (this.loadTile(i, n), this.selectTile(i, n)) : i.refine === xt.REPLACE && (this.loadTile(i, n), u && this.selectTile(i, n)) : (this.emptyTiles[i.id] = i, this.loadTile(i, n), u && this.selectTile(i, n)), this.touchTile(i, n), i._shouldRefine = o && c;
     }
     const r = (/* @__PURE__ */ new Date()).getTime();
     (this.traversalFinished(n) || r - this.lastUpdate > this.updateDebounceTime) && (this.lastUpdate = r, this.options.onTraversalEnd(n));
@@ -4175,7 +4244,7 @@ class In {
       skipLevelOfDetail: o
     } = this.options, a = t.children;
     a.sort(this.compareDistanceToCamera.bind(this));
-    const c = t.refine === vt.REPLACE && t.hasRenderContent && !o;
+    const c = t.refine === xt.REPLACE && t.hasRenderContent && !o;
     let u = !1, l = !0;
     for (const h of a)
       if (h._selectionDepth = r, h.isVisibleAndInRequestVolume ? (s.find(h) && s.delete(h), s.push(h), u = !0) : (c || i) && (this.loadTile(h, n), this.touchTile(h, n)), c) {
@@ -4243,14 +4312,14 @@ class In {
     return s;
   }
 }
-const ii = new m();
-function od(e) {
+const ei = new m();
+function $f(e) {
   return e != null;
 }
-class _s {
+class Cs {
   constructor(t, n, s) {
     let r = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : "";
-    this.tileset = void 0, this.header = void 0, this.id = void 0, this.url = void 0, this.parent = void 0, this.refine = void 0, this.type = void 0, this.contentUrl = void 0, this.lodMetricType = "geometricError", this.lodMetricValue = 0, this.boundingVolume = null, this.content = null, this.contentState = rt.UNLOADED, this.gpuMemoryUsageInBytes = 0, this.children = [], this.depth = 0, this.viewportIds = [], this.transform = new N(), this.extensions = null, this.implicitTiling = null, this.userData = {}, this.computedTransform = void 0, this.hasEmptyContent = !1, this.hasTilesetContent = !1, this.traverser = new In({}), this._cacheNode = null, this._frameNumber = null, this._expireDate = null, this._expiredContent = null, this._boundingBox = void 0, this._distanceToCamera = 0, this._screenSpaceError = 0, this._visibilityPlaneMask = void 0, this._visible = void 0, this._contentBoundingVolume = void 0, this._viewerRequestVolume = void 0, this._initialTransform = new N(), this._priority = 0, this._selectedFrame = 0, this._requestedFrame = 0, this._selectionDepth = 0, this._touchedFrame = 0, this._centerZDepth = 0, this._shouldRefine = !1, this._stackLength = 0, this._visitedFrame = 0, this._inRequestVolume = !1, this._lodJudge = null, this.header = n, this.tileset = t, this.id = r || n.id, this.url = n.url, this.parent = s, this.refine = this._getRefine(n.refine), this.type = n.type, this.contentUrl = n.contentUrl, this._initializeLodMetric(n), this._initializeTransforms(n), this._initializeBoundingVolumes(n), this._initializeContent(n), this._initializeRenderingState(n), Object.seal(this);
+    this.tileset = void 0, this.header = void 0, this.id = void 0, this.url = void 0, this.parent = void 0, this.refine = void 0, this.type = void 0, this.contentUrl = void 0, this.lodMetricType = "geometricError", this.lodMetricValue = 0, this.boundingVolume = null, this.content = null, this.contentState = it.UNLOADED, this.gpuMemoryUsageInBytes = 0, this.children = [], this.depth = 0, this.viewportIds = [], this.transform = new N(), this.extensions = null, this.implicitTiling = null, this.userData = {}, this.computedTransform = void 0, this.hasEmptyContent = !1, this.hasTilesetContent = !1, this.traverser = new Mn({}), this._cacheNode = null, this._frameNumber = null, this._expireDate = null, this._expiredContent = null, this._boundingBox = void 0, this._distanceToCamera = 0, this._screenSpaceError = 0, this._visibilityPlaneMask = void 0, this._visible = void 0, this._contentBoundingVolume = void 0, this._viewerRequestVolume = void 0, this._initialTransform = new N(), this._priority = 0, this._selectedFrame = 0, this._requestedFrame = 0, this._selectionDepth = 0, this._touchedFrame = 0, this._centerZDepth = 0, this._shouldRefine = !1, this._stackLength = 0, this._visitedFrame = 0, this._inRequestVolume = !1, this._lodJudge = null, this.header = n, this.tileset = t, this.id = r || n.id, this.url = n.url, this.parent = s, this.refine = this._getRefine(n.refine), this.type = n.type, this.contentUrl = n.contentUrl, this._initializeLodMetric(n), this._initializeTransforms(n), this._initializeBoundingVolumes(n), this._initializeContent(n), this._initializeRenderingState(n), Object.seal(this);
   }
   destroy() {
     this.header = null;
@@ -4274,7 +4343,7 @@ class _s {
     return this.children.length > 0 || this.header.children && this.header.children.length > 0;
   }
   get contentReady() {
-    return this.contentState === rt.READY || this.hasEmptyContent;
+    return this.contentState === it.READY || this.hasEmptyContent;
   }
   get contentAvailable() {
     return !!(this.contentReady && this.hasRenderContent || this._expiredContent && !this.contentFailed);
@@ -4283,13 +4352,13 @@ class _s {
     return this.hasRenderContent && this.contentUnloaded;
   }
   get contentUnloaded() {
-    return this.contentState === rt.UNLOADED;
+    return this.contentState === it.UNLOADED;
   }
   get contentExpired() {
-    return this.contentState === rt.EXPIRED;
+    return this.contentState === it.EXPIRED;
   }
   get contentFailed() {
-    return this.contentState === rt.FAILED;
+    return this.contentState === it.FAILED;
   }
   get distanceToCamera() {
     return this._distanceToCamera;
@@ -4298,14 +4367,14 @@ class _s {
     return this._screenSpaceError;
   }
   get boundingBox() {
-    return this._boundingBox || (this._boundingBox = Xf(this.header.boundingVolume, this.boundingVolume)), this._boundingBox;
+    return this._boundingBox || (this._boundingBox = Hf(this.header.boundingVolume, this.boundingVolume)), this._boundingBox;
   }
   getScreenSpaceError(t, n) {
     switch (this.tileset.type) {
       case dt.I3S:
-        return qo(this, t);
+        return Ho(this, t);
       case dt.TILES3D:
-        return ed(this, t, n);
+        return Wf(this, t, n);
       default:
         throw new Error("Unsupported tileset type");
     }
@@ -4319,8 +4388,8 @@ class _s {
   _getPriority() {
     const t = this.tileset._traverser, {
       skipLevelOfDetail: n
-    } = t.options, s = this.refine === vt.ADD || n;
-    if (s && !this.isVisible && this._visible !== void 0 || this.tileset._frameNumber - this._touchedFrame >= 1 || this.contentState === rt.UNLOADED)
+    } = t.options, s = this.refine === xt.ADD || n;
+    if (s && !this.isVisible && this._visible !== void 0 || this.tileset._frameNumber - this._touchedFrame >= 1 || this.contentState === it.UNLOADED)
       return -1;
     const r = this.parent, o = r && (!s || this._screenSpaceError === 0 || r.hasTilesetContent) ? r._screenSpaceError : this._screenSpaceError, a = t.root ? t.root._screenSpaceError : 0;
     return Math.max(a - o, 0);
@@ -4330,10 +4399,10 @@ class _s {
       return !1;
     if (this.content)
       return !0;
-    this.contentExpired && (this._expireDate = null), this.contentState = rt.LOADING;
+    this.contentExpired && (this._expireDate = null), this.contentState = it.LOADING;
     const n = await this.tileset._requestScheduler.scheduleRequest(this.id, this._getPriority.bind(this));
     if (!n)
-      return this.contentState = rt.UNLOADED, !1;
+      return this.contentState = it.UNLOADED, !1;
     try {
       const s = this.tileset.getTileUrl(this.contentUrl), r = this.tileset.loader, i = {
         ...this.tileset.loadOptions,
@@ -4343,15 +4412,15 @@ class _s {
           ...this._getLoaderSpecificOptions(r.id)
         }
       };
-      return this.content = await Fe(s, r, i), this.tileset.options.contentLoader && await this.tileset.options.contentLoader(this), this._isTileset() && this.tileset._initializeTileHeaders(this.content, this), this.contentState = rt.READY, this._onContentLoaded(), !0;
+      return this.content = await Fe(s, r, i), this.tileset.options.contentLoader && await this.tileset.options.contentLoader(this), this._isTileset() && this.tileset._initializeTileHeaders(this.content, this), this.contentState = it.READY, this._onContentLoaded(), !0;
     } catch (s) {
-      throw this.contentState = rt.FAILED, s;
+      throw this.contentState = it.FAILED, s;
     } finally {
       n.done();
     }
   }
   unloadContent() {
-    return this.content && this.content.destroy && this.content.destroy(), this.content = null, this.header.content && this.header.content.destroy && this.header.content.destroy(), this.header.content = null, this.contentState = rt.UNLOADED, !0;
+    return this.content && this.content.destroy && this.content.destroy(), this.content = null, this.header.content && this.header.content.destroy && this.header.content.destroy(), this.header.content = null, this.contentState = it.UNLOADED, !0;
   }
   updateVisibility(t, n) {
     if (this._frameNumber === t.frameNumber)
@@ -4383,16 +4452,16 @@ class _s {
       camera: n
     } = t;
     const s = this.boundingVolume;
-    return ii.subVectors(s.center, n.position), n.direction.dot(ii);
+    return ei.subVectors(s.center, n.position), n.direction.dot(ei);
   }
   insideViewerRequestVolume(t) {
     const n = this._viewerRequestVolume;
     return !n || n.distanceSquaredTo(t.camera.position) <= 0;
   }
   updateExpiration() {
-    if (od(this._expireDate) && this.contentReady && !this.hasEmptyContent) {
+    if ($f(this._expireDate) && this.contentReady && !this.hasEmptyContent) {
       const t = Date.now();
-      Date.lessThan(this._expireDate, t) && (this.contentState = rt.EXPIRED, this._expiredContent = this.content);
+      Date.lessThan(this._expireDate, t) && (this.contentState = it.EXPIRED, this._expiredContent = this.content);
     }
   }
   get extras() {
@@ -4415,13 +4484,13 @@ class _s {
     this.content = {
       _tileset: this.tileset,
       _tile: this
-    }, this.hasEmptyContent = !0, this.contentState = rt.UNLOADED, this.hasTilesetContent = !1, t.contentUrl && (this.content = null, this.hasEmptyContent = !1);
+    }, this.hasEmptyContent = !0, this.contentState = it.UNLOADED, this.hasTilesetContent = !1, t.contentUrl && (this.content = null, this.hasEmptyContent = !1);
   }
   _initializeRenderingState(t) {
     this.depth = t.level || (this.parent ? this.parent.depth + 1 : 0), this._shouldRefine = !1, this._distanceToCamera = 0, this._centerZDepth = 0, this._screenSpaceError = 0, this._visibilityPlaneMask = at.MASK_INDETERMINATE, this._visible = void 0, this._inRequestVolume = !1, this._stackLength = 0, this._selectionDepth = 0, this._frameNumber = 0, this._touchedFrame = 0, this._visitedFrame = 0, this._selectedFrame = 0, this._requestedFrame = 0, this._priority = 0;
   }
   _getRefine(t) {
-    return t || this.parent && this.parent.refine || vt.REPLACE;
+    return t || this.parent && this.parent.refine || xt.REPLACE;
   }
   _isTileset() {
     return this.contentUrl.indexOf(".json") !== -1;
@@ -4436,9 +4505,9 @@ class _s {
     this._isTileset() ? this.hasTilesetContent = !0 : this.gpuMemoryUsageInBytes = this._getGpuMemoryUsageInBytes();
   }
   _updateBoundingVolume(t) {
-    this.boundingVolume = Kn(t.boundingVolume, this.computedTransform, this.boundingVolume);
+    this.boundingVolume = jn(t.boundingVolume, this.computedTransform, this.boundingVolume);
     const n = t.content;
-    n && (n.boundingVolume && (this._contentBoundingVolume = Kn(n.boundingVolume, this.computedTransform, this._contentBoundingVolume)), t.viewerRequestVolume && (this._viewerRequestVolume = Kn(t.viewerRequestVolume, this.computedTransform, this._viewerRequestVolume)));
+    n && (n.boundingVolume && (this._contentBoundingVolume = jn(n.boundingVolume, this.computedTransform, this._contentBoundingVolume)), t.viewerRequestVolume && (this._viewerRequestVolume = jn(t.viewerRequestVolume, this.computedTransform, this._viewerRequestVolume)));
   }
   _updateTransform() {
     const n = (arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : new N()).clone().multiplyRight(this.transform);
@@ -4468,11 +4537,11 @@ class _s {
       case "3d-tiles":
       case "cesium-ion":
       default:
-        return rd(this.tileset.tileset);
+        return qf(this.tileset.tileset);
     }
   }
 }
-class ad extends In {
+class Zf extends Mn {
   compareDistanceToCamera(t, n) {
     return n._distanceToCamera === 0 && t._distanceToCamera === 0 ? n._centerZDepth - t._centerZDepth : n._distanceToCamera - t._distanceToCamera;
   }
@@ -4489,7 +4558,7 @@ class ad extends In {
       t._visible = !1;
       return;
     }
-    const r = t.refine === vt.REPLACE, i = t._optimChildrenWithinParent === Kf.USE_OPTIMIZATION;
+    const r = t.refine === xt.REPLACE, i = t._optimChildrenWithinParent === Uf.USE_OPTIMIZATION;
     if (r && i && s && !this.anyChildrenVisible(t, n)) {
       t._visible = !1;
       return;
@@ -4499,10 +4568,10 @@ class ad extends In {
     const {
       parent: s
     } = t;
-    return !s || s.hasTilesetContent || s.refine !== vt.ADD ? !1 : !this.shouldRefine(t, n, !0);
+    return !s || s.hasTilesetContent || s.refine !== xt.ADD ? !1 : !this.shouldRefine(t, n, !0);
   }
 }
-class cd {
+class td {
   constructor() {
     this.frameNumberMap = /* @__PURE__ */ new Map();
   }
@@ -4522,14 +4591,14 @@ class cd {
     return (((s = this.frameNumberMap.get(t)) === null || s === void 0 ? void 0 : s.get(n)) || 0) === 0;
   }
 }
-const Xn = {
+const Wn = {
   REQUESTED: "REQUESTED",
   COMPLETED: "COMPLETED",
   ERROR: "ERROR"
 };
-class ud {
+class ed {
   constructor() {
-    this._statusMap = void 0, this.pendingTilesRegister = new cd(), this._statusMap = {};
+    this._statusMap = void 0, this.pendingTilesRegister = new td(), this._statusMap = {};
   }
   add(t, n, s, r) {
     if (!this._statusMap[n]) {
@@ -4544,9 +4613,9 @@ class ud {
         callback: s,
         key: n,
         frameState: r,
-        status: Xn.REQUESTED
+        status: Wn.REQUESTED
       }, this.pendingTilesRegister.register(o, i), t().then((a) => {
-        this._statusMap[n].status = Xn.COMPLETED;
+        this._statusMap[n].status = Wn.COMPLETED;
         const {
           frameNumber: c,
           viewport: {
@@ -4555,7 +4624,7 @@ class ud {
         } = this._statusMap[n].frameState;
         this.pendingTilesRegister.deregister(u, c), this._statusMap[n].callback(a, r);
       }).catch((a) => {
-        this._statusMap[n].status = Xn.ERROR;
+        this._statusMap[n].status = Wn.ERROR;
         const {
           frameNumber: c,
           viewport: {
@@ -4591,15 +4660,15 @@ class ud {
     return !this.pendingTilesRegister.isZero(t, n);
   }
 }
-class ld extends In {
+class nd extends Mn {
   constructor(t) {
-    super(t), this._tileManager = void 0, this._tileManager = new ud();
+    super(t), this._tileManager = void 0, this._tileManager = new ed();
   }
   traversalFinished(t) {
     return !this._tileManager.hasPendingTiles(t.viewport.id, this._frameNumber || 0);
   }
   shouldRefine(t, n) {
-    return t._lodJudge = sd(t, n), t._lodJudge === "DIG";
+    return t._lodJudge = Qf(t, n), t._lodJudge === "DIG";
   }
   updateChildTiles(t, n) {
     const s = t.header.children || [], r = t.children, i = t.tileset;
@@ -4627,15 +4696,15 @@ class ld extends In {
     return await Fe(r, s, i);
   }
   _onTileLoad(t, n, s) {
-    const r = new _s(n.tileset, t, n, s);
+    const r = new Cs(n.tileset, t, n, s);
     n.children.push(r);
     const i = this._tileManager.find(r.id).frameState;
     this.updateTile(r, i), this._frameNumber === i.frameNumber && (this.traversalFinished(i) || (/* @__PURE__ */ new Date()).getTime() - this.lastUpdate > this.updateDebounceTime) && this.executeTraversal(r, i);
   }
 }
-const hd = {
+const sd = {
   description: "",
-  ellipsoid: P.WGS84,
+  ellipsoid: H.WGS84,
   modelMatrix: new N(),
   throttleRequests: !0,
   maxRequests: 64,
@@ -4663,21 +4732,21 @@ const hd = {
   attributions: [],
   basePath: "",
   i3s: {}
-}, $e = "Tiles In Tileset(s)", Qn = "Tiles In Memory", oi = "Tiles In View", ai = "Tiles To Render", ci = "Tiles Loaded", qn = "Tiles Loading", ui = "Tiles Unloaded", li = "Failed Tile Loads", hi = "Points/Vertices", Yn = "Tile Memory Use", fi = "Maximum Screen Space Error";
-class fd {
+}, qe = "Tiles In Tileset(s)", Xn = "Tiles In Memory", ni = "Tiles In View", si = "Tiles To Render", ri = "Tiles Loaded", Qn = "Tiles Loading", ii = "Tiles Unloaded", oi = "Failed Tile Loads", ai = "Points/Vertices", qn = "Tile Memory Use", ci = "Maximum Screen Space Error";
+class rd {
   constructor(t, n) {
     this.options = void 0, this.loadOptions = void 0, this.type = void 0, this.tileset = void 0, this.loader = void 0, this.url = void 0, this.basePath = void 0, this.modelMatrix = void 0, this.ellipsoid = void 0, this.lodMetricType = void 0, this.lodMetricValue = void 0, this.refine = void 0, this.root = null, this.roots = {}, this.asset = {}, this.description = "", this.properties = void 0, this.extras = null, this.attributions = {}, this.credits = {}, this.stats = void 0, this.contentFormats = {
       draco: !1,
       meshopt: !1,
       dds: !1,
       ktx2: !1
-    }, this.cartographicCenter = null, this.cartesianCenter = null, this.zoom = 1, this.boundingVolume = null, this.dynamicScreenSpaceErrorComputedDensity = 0, this.maximumMemoryUsage = 32, this.gpuMemoryUsageInBytes = 0, this.memoryAdjustedScreenSpaceError = 0, this._cacheBytes = 0, this._cacheOverflowBytes = 0, this._frameNumber = 0, this._queryParams = {}, this._extensionsUsed = [], this._tiles = {}, this._pendingCount = 0, this.selectedTiles = [], this.traverseCounter = 0, this.geometricError = 0, this.lastUpdatedVieports = null, this._requestedTiles = [], this._emptyTiles = [], this.frameStateData = {}, this._traverser = void 0, this._cache = new hf(), this._requestScheduler = void 0, this.updatePromise = null, this.tilesetInitializationPromise = void 0, this.options = {
-      ...hd,
+    }, this.cartographicCenter = null, this.cartesianCenter = null, this.zoom = 1, this.boundingVolume = null, this.dynamicScreenSpaceErrorComputedDensity = 0, this.maximumMemoryUsage = 32, this.gpuMemoryUsageInBytes = 0, this.memoryAdjustedScreenSpaceError = 0, this._cacheBytes = 0, this._cacheOverflowBytes = 0, this._frameNumber = 0, this._queryParams = {}, this._extensionsUsed = [], this._tiles = {}, this._pendingCount = 0, this.selectedTiles = [], this.traverseCounter = 0, this.geometricError = 0, this.lastUpdatedVieports = null, this._requestedTiles = [], this._emptyTiles = [], this.frameStateData = {}, this._traverser = void 0, this._cache = new nf(), this._requestScheduler = void 0, this.updatePromise = null, this.tilesetInitializationPromise = void 0, this.options = {
+      ...sd,
       ...n
-    }, this.tileset = t, this.loader = t.loader, this.type = t.type, this.url = t.url, this.basePath = t.basePath || cf(this.url), this.modelMatrix = this.options.modelMatrix, this.ellipsoid = this.options.ellipsoid, this.lodMetricType = t.lodMetricType, this.lodMetricValue = t.lodMetricValue, this.refine = t.root.refine, this.loadOptions = this.options.loadOptions || {}, this._traverser = this._initializeTraverser(), this._requestScheduler = new af({
+    }, this.tileset = t, this.loader = t.loader, this.type = t.type, this.url = t.url, this.basePath = t.basePath || Os(this.url), this.modelMatrix = this.options.modelMatrix, this.ellipsoid = this.options.ellipsoid, this.lodMetricType = t.lodMetricType, this.lodMetricValue = t.lodMetricValue, this.refine = t.root.refine, this.loadOptions = this.options.loadOptions || {}, this._traverser = this._initializeTraverser(), this._requestScheduler = new Pc({
       throttleRequests: this.options.throttleRequests,
       maxRequests: this.options.maxRequests
-    }), this.memoryAdjustedScreenSpaceError = this.options.maximumScreenSpaceError, this._cacheBytes = this.options.maximumMemoryUsage * 1024 * 1024, this._cacheOverflowBytes = this.options.memoryCacheOverflow * 1024 * 1024, this.stats = new fo({
+    }), this.memoryAdjustedScreenSpaceError = this.options.maximumScreenSpaceError, this._cacheBytes = this.options.maximumMemoryUsage * 1024 * 1024, this._cacheOverflowBytes = this.options.memoryCacheOverflow * 1024 * 1024, this.stats = new no({
       id: this.url
     }), this._initializeStats(), this.tilesetInitializationPromise = this._initializeTileSet(t);
   }
@@ -4742,7 +4811,7 @@ class fd {
       const i = r.id;
       if (this.roots[i] || (this.roots[i] = this._initializeTileHeaders(this.tileset, null)), !s.includes(i))
         continue;
-      const o = Uf(r, this._frameNumber);
+      const o = Sf(r, this._frameNumber);
       this._traverser.traverse(this.roots[i], o, this.options);
     }
   }
@@ -4757,7 +4826,7 @@ class fd {
       _requestedTiles: [],
       _emptyTiles: []
     });
-    const s = this.frameStateData[n], r = Object.values(this._traverser.selectedTiles), [i, o] = Nf(r, t, this.options.maximumTilesSelected);
+    const s = this.frameStateData[n], r = Object.values(this._traverser.selectedTiles), [i, o] = Df(r, t, this.options.maximumTilesSelected);
     s.selectedTiles = i;
     for (const a of o)
       a.unselect();
@@ -4792,7 +4861,7 @@ class fd {
     let t = 0, n = 0;
     for (const s of this.selectedTiles)
       s.contentAvailable && s.content && (t++, s.content.pointCount ? n += s.content.pointCount : n += s.content.vertexCount);
-    this.stats.get(oi).count = this.selectedTiles.length, this.stats.get(ai).count = t, this.stats.get(hi).count = n, this.stats.get(fi).count = this.memoryAdjustedScreenSpaceError;
+    this.stats.get(ni).count = this.selectedTiles.length, this.stats.get(si).count = t, this.stats.get(ai).count = n, this.stats.get(ci).count = this.memoryAdjustedScreenSpaceError;
   }
   async _initializeTileSet(t) {
     this.type === dt.I3S && (this.calculateViewPropsI3S(), t.root = await t.root), this.root = this._initializeTileHeaders(t, null), this.type === dt.TILES3D && (this._initializeTiles3DTileset(t), this.calculateViewPropsTiles3D()), this.type === dt.I3S && this._initializeI3STileset();
@@ -4809,13 +4878,13 @@ class fd {
         zmin: c,
         zmax: u
       } = n;
-      this.cartographicCenter = new m(r + (i - r) / 2, o + (a - o) / 2, c + (u - c) / 2), this.cartesianCenter = new m(), P.WGS84.cartographicToCartesian(this.cartographicCenter, this.cartesianCenter), this.zoom = Ko(n, this.cartographicCenter, this.cartesianCenter);
+      this.cartographicCenter = new m(r + (i - r) / 2, o + (a - o) / 2, c + (u - c) / 2), this.cartesianCenter = new m(), H.WGS84.cartographicToCartesian(this.cartographicCenter, this.cartesianCenter), this.zoom = Lo(n, this.cartographicCenter, this.cartesianCenter);
       return;
     }
     const s = (t = this.tileset.store) === null || t === void 0 ? void 0 : t.extent;
     if (s) {
       const [r, i, o, a] = s;
-      this.cartographicCenter = new m(r + (o - r) / 2, i + (a - i) / 2, 0), this.cartesianCenter = new m(), P.WGS84.cartographicToCartesian(this.cartographicCenter, this.cartesianCenter), this.zoom = kf(s, this.cartographicCenter, this.cartesianCenter);
+      this.cartographicCenter = new m(r + (o - r) / 2, i + (a - i) / 2, 0), this.cartesianCenter = new m(), H.WGS84.cartographicToCartesian(this.cartographicCenter, this.cartesianCenter), this.zoom = Lf(s, this.cartographicCenter, this.cartesianCenter);
       return;
     }
     console.warn("Extent is not defined in the tileset header"), this.cartographicCenter = new m(), this.zoom = 1;
@@ -4828,22 +4897,22 @@ class fd {
       console.warn("center was not pre-calculated for the root tile"), this.cartographicCenter = new m(), this.zoom = 1;
       return;
     }
-    n[0] !== 0 || n[1] !== 0 || n[2] !== 0 ? (this.cartographicCenter = new m(), P.WGS84.cartesianToCartographic(n, this.cartographicCenter)) : this.cartographicCenter = new m(0, 0, -P.WGS84.radii[0]), this.cartesianCenter = n, this.zoom = Vf(t.boundingVolume, this.cartographicCenter);
+    n[0] !== 0 || n[1] !== 0 || n[2] !== 0 ? (this.cartographicCenter = new m(), H.WGS84.cartesianToCartographic(n, this.cartographicCenter)) : this.cartographicCenter = new m(0, 0, -H.WGS84.radii[0]), this.cartesianCenter = n, this.zoom = xf(t.boundingVolume, this.cartographicCenter);
   }
   _initializeStats() {
-    this.stats.get($e), this.stats.get(qn), this.stats.get(Qn), this.stats.get(oi), this.stats.get(ai), this.stats.get(ci), this.stats.get(ui), this.stats.get(li), this.stats.get(hi), this.stats.get(Yn, "memory"), this.stats.get(fi);
+    this.stats.get(qe), this.stats.get(Qn), this.stats.get(Xn), this.stats.get(ni), this.stats.get(si), this.stats.get(ri), this.stats.get(ii), this.stats.get(oi), this.stats.get(ai), this.stats.get(qn, "memory"), this.stats.get(ci);
   }
   _initializeTileHeaders(t, n) {
-    const s = new _s(this, t.root, n);
+    const s = new Cs(this, t.root, n);
     if (n && (n.children.push(s), s.depth = n.depth + 1), this.type === dt.TILES3D) {
       const i = [];
       for (i.push(s); i.length > 0; ) {
         const o = i.pop();
-        this.stats.get($e).incrementCount();
+        this.stats.get(qe).incrementCount();
         const a = o.header.children || [];
         for (const c of a) {
           var r;
-          const u = new _s(this, c, o);
+          const u = new Cs(this, c, o);
           if ((r = u.contentUrl) !== null && r !== void 0 && r.includes("?session=")) {
             const h = new URL(u.contentUrl).searchParams.get("session");
             h && (this._queryParams.session = h);
@@ -4858,13 +4927,13 @@ class fd {
     let t;
     switch (this.type) {
       case dt.TILES3D:
-        t = ad;
+        t = Zf;
         break;
       case dt.I3S:
-        t = ld;
+        t = nd;
         break;
       default:
-        t = In;
+        t = Mn;
     }
     return new t({
       basePath: this.basePath,
@@ -4885,7 +4954,7 @@ class fd {
     }
   }
   _onTileLoadError(t, n) {
-    this.stats.get(li).incrementCount();
+    this.stats.get(oi).incrementCount();
     const s = n.message || n.toString(), r = t.url;
     console.error(`A 3D tile failed to load: ${t.url} ${s}`), this.options.onTileError(t, s, r);
   }
@@ -4894,9 +4963,9 @@ class fd {
       if (this.type === dt.I3S) {
         var s, r;
         const i = ((s = this.tileset) === null || s === void 0 || (r = s.nodePagesTile) === null || r === void 0 ? void 0 : r.nodesInNodePages) || 0;
-        this.stats.get($e).reset(), this.stats.get($e).addCount(i);
+        this.stats.get(qe).reset(), this.stats.get(qe).addCount(i);
       }
-      t && t.content && ff(t, t.content), this.updateContentTypes(t), this._addTileToCache(t), this.options.onTileLoad(t);
+      t && t.content && sf(t, t.content), this.updateContentTypes(t), this._addTileToCache(t), this.options.onTileLoad(t);
     }
   }
   updateContentTypes(t) {
@@ -4918,19 +4987,19 @@ class fd {
     }
   }
   _onStartTileLoading() {
-    this._pendingCount++, this.stats.get(qn).incrementCount();
+    this._pendingCount++, this.stats.get(Qn).incrementCount();
   }
   _onEndTileLoading() {
-    this._pendingCount--, this.stats.get(qn).decrementCount();
+    this._pendingCount--, this.stats.get(Qn).decrementCount();
   }
   _addTileToCache(t) {
     this._cache.add(this, t, (n) => n._updateCacheStats(t));
   }
   _updateCacheStats(t) {
-    this.stats.get(ci).incrementCount(), this.stats.get(Qn).incrementCount(), this.gpuMemoryUsageInBytes += t.gpuMemoryUsageInBytes || 0, this.stats.get(Yn).count = this.gpuMemoryUsageInBytes, this.options.memoryAdjustedScreenSpaceError && this.adjustScreenSpaceError();
+    this.stats.get(ri).incrementCount(), this.stats.get(Xn).incrementCount(), this.gpuMemoryUsageInBytes += t.gpuMemoryUsageInBytes || 0, this.stats.get(qn).count = this.gpuMemoryUsageInBytes, this.options.memoryAdjustedScreenSpaceError && this.adjustScreenSpaceError();
   }
   _unloadTile(t) {
-    this.gpuMemoryUsageInBytes -= t.gpuMemoryUsageInBytes || 0, this.stats.get(Qn).decrementCount(), this.stats.get(ui).incrementCount(), this.stats.get(Yn).count = this.gpuMemoryUsageInBytes, this.options.onTileUnload(t), t.unloadContent();
+    this.gpuMemoryUsageInBytes -= t.gpuMemoryUsageInBytes || 0, this.stats.get(Xn).decrementCount(), this.stats.get(ii).incrementCount(), this.stats.get(qn).count = this.gpuMemoryUsageInBytes, this.options.onTileUnload(t), t.unloadContent();
   }
   _destroy() {
     const t = [];
@@ -4975,7 +5044,7 @@ class fd {
     this.loadOptions.i3s && "token" in this.loadOptions.i3s && (this._queryParams.token = this.loadOptions.i3s.token);
   }
 }
-const Yo = "4.1.0-alpha.10", de = {
+const Jo = "4.1.1", de = {
   COMPOSITE: "cmpt",
   POINT_CLOUD: "pnts",
   BATCHED_3D_MODEL: "b3dm",
@@ -4984,21 +5053,21 @@ const Yo = "4.1.0-alpha.10", de = {
   VECTOR: "vect",
   GLTF: "glTF"
 };
-function $o(e, t, n) {
-  it(e instanceof ArrayBuffer);
+function Vo(e, t, n) {
+  U(e instanceof ArrayBuffer);
   const s = new TextDecoder("utf8"), r = new Uint8Array(e, t, n);
   return s.decode(r);
 }
-function dd(e) {
+function id(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 0;
   const n = new DataView(e);
   return `${String.fromCharCode(n.getUint8(t + 0))}${String.fromCharCode(n.getUint8(t + 1))}${String.fromCharCode(n.getUint8(t + 2))}${String.fromCharCode(n.getUint8(t + 3))}`;
 }
-const md = "4.1.0-alpha.10", Ad = {
+const od = "4.1.1", ad = {
   name: "Draco",
   id: "draco",
   module: "draco",
-  version: md,
+  version: od,
   worker: !0,
   extensions: ["drc"],
   mimeTypes: ["application/octet-stream"],
@@ -5013,14 +5082,14 @@ const md = "4.1.0-alpha.10", Ad = {
     }
   }
 };
-function gd(e, t, n) {
-  const s = Zo(t.metadata), r = [], i = pd(t.attributes);
+function cd(e, t, n) {
+  const s = ko(t.metadata), r = [], i = ud(t.attributes);
   for (const o in e) {
-    const a = e[o], c = di(o, a, i[o]);
+    const a = e[o], c = ui(o, a, i[o]);
     r.push(c);
   }
   if (n) {
-    const o = di("indices", n);
+    const o = ui("indices", n);
     r.push(o);
   }
   return {
@@ -5028,7 +5097,7 @@ function gd(e, t, n) {
     metadata: s
   };
 }
-function pd(e) {
+function ud(e) {
   const t = {};
   for (const n in e) {
     const s = e[n];
@@ -5036,23 +5105,23 @@ function pd(e) {
   }
   return t;
 }
-function di(e, t, n) {
-  const s = n ? Zo(n.metadata) : void 0;
-  return Zu(e, t, s);
+function ui(e, t, n) {
+  const s = n ? ko(n.metadata) : void 0;
+  return rl(e, t, s);
 }
-function Zo(e) {
+function ko(e) {
   Object.entries(e);
   const t = {};
   for (const n in e)
     t[`${n}.string`] = JSON.stringify(e[n]);
   return t;
 }
-const mi = {
+const li = {
   POSITION: "POSITION",
   NORMAL: "NORMAL",
   COLOR: "COLOR_0",
   TEX_COORD: "TEXCOORD_0"
-}, Bd = {
+}, ld = {
   1: Int8Array,
   2: Uint8Array,
   3: Int16Array,
@@ -5060,8 +5129,8 @@ const mi = {
   5: Int32Array,
   6: Uint32Array,
   9: Float32Array
-}, yd = 4;
-class Cd {
+}, hd = 4;
+class fd {
   constructor(t) {
     this.draco = void 0, this.decoder = void 0, this.metadataQuerier = void 0, this.draco = t, this.decoder = new this.draco.Decoder(), this.metadataQuerier = new this.draco.MetadataQuerier();
   }
@@ -5089,7 +5158,7 @@ class Cd {
         const f = `DRACO decompression failed: ${o.error_msg()}`;
         throw new Error(f);
       }
-      const a = this._getDracoLoaderData(i, r, n), c = this._getMeshData(i, a, n), u = $u(c.attributes), l = gd(c.attributes, a, c.indices);
+      const a = this._getDracoLoaderData(i, r, n), c = this._getMeshData(i, a, n), u = sl(c.attributes), l = cd(c.attributes, a, c.indices);
       return {
         loader: "draco",
         loaderData: a,
@@ -5191,7 +5260,7 @@ class Cd {
     return r;
   }
   _getTriangleListIndices(t) {
-    const s = t.num_faces() * 3, r = s * yd, i = this.draco._malloc(r);
+    const s = t.num_faces() * 3, r = s * hd, i = this.draco._malloc(r);
     try {
       return this.decoder.GetTrianglesUInt32Array(t, r, i), new Uint32Array(this.draco.HEAPF32.buffer, i, s).slice();
     } finally {
@@ -5201,13 +5270,13 @@ class Cd {
   _getTriangleStripIndices(t) {
     const n = new this.draco.DracoInt32Array();
     try {
-      return this.decoder.GetTriangleStripsFromMesh(t, n), bd(n);
+      return this.decoder.GetTriangleStripsFromMesh(t, n), Ad(n);
     } finally {
       this.draco.destroy(n);
     }
   }
   _getAttributeValues(t, n) {
-    const s = Bd[n.data_type], r = n.num_components, o = t.num_points() * r, a = o * s.BYTES_PER_ELEMENT, c = Td(this.draco, s);
+    const s = ld[n.data_type], r = n.num_components, o = t.num_points() * r, a = o * s.BYTES_PER_ELEMENT, c = dd(this.draco, s);
     let u;
     const l = this.draco._malloc(a);
     try {
@@ -5227,9 +5296,9 @@ class Cd {
       if (a === s)
         return o;
     const r = t.attribute_type;
-    for (const o in mi)
+    for (const o in li)
       if (this.draco[o] === r)
-        return mi[o];
+        return li[o];
     const i = n.attributeNameEntry || "name";
     return t.metadata[i] ? t.metadata[i].string : `CUSTOM_ATTRIBUTE_${s}`;
   }
@@ -5255,7 +5324,7 @@ class Cd {
     const s = new this.draco.DracoInt32Array();
     try {
       this.metadataQuerier.GetIntEntryArray(t, n, s);
-      const r = Ed(s);
+      const r = md(s);
       return {
         int: this.metadataQuerier.GetIntEntry(t, n),
         string: this.metadataQuerier.GetStringEntry(t, n),
@@ -5311,7 +5380,7 @@ class Cd {
     return null;
   }
 }
-function Td(e, t) {
+function dd(e, t) {
   switch (t) {
     case Float32Array:
       return e.DT_FLOAT32;
@@ -5331,107 +5400,49 @@ function Td(e, t) {
       return e.DT_INVALID;
   }
 }
-function Ed(e) {
+function md(e) {
   const t = e.size(), n = new Int32Array(t);
   for (let s = 0; s < t; s++)
     n[s] = e.GetValue(s);
   return n;
 }
-function bd(e) {
+function Ad(e) {
   const t = e.size(), n = new Int32Array(t);
   for (let s = 0; s < t; s++)
     n[s] = e.GetValue(s);
   return n;
 }
-function _d() {
-  var e;
-  return (e = globalThis._loadersgl_) !== null && e !== void 0 && e.version || (globalThis._loadersgl_ = globalThis._loadersgl_ || {}, globalThis._loadersgl_.version = "4.1.0-alpha.10"), globalThis._loadersgl_.version;
-}
-const wd = _d();
-function Md(e, t) {
-  if (!e)
-    throw new Error(t || "loaders.gl assertion failed.");
-}
-const ve = typeof process != "object" || String(process) !== "[object process]" || process.browser, js = typeof importScripts == "function", Ai = typeof process < "u" && process.version && /v([0-9]*)/.exec(process.version);
-Ai && parseFloat(Ai[1]);
-const $n = {};
-async function Zn(e) {
-  let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : null, n = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {}, s = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : null;
-  return t && (e = Rd(e, t, n, s)), $n[e] = $n[e] || Id(e), await $n[e];
-}
-function Rd(e, t) {
-  let n = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {}, s = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : null;
-  if (!n.useLocalLibraries && e.startsWith("http"))
-    return e;
-  s = s || e;
-  const r = n.modules || {};
-  return r[s] ? r[s] : ve ? n.CDN ? (Md(n.CDN.startsWith("http")), `${n.CDN}/${t}@${wd}/dist/libs/${s}`) : js ? `../src/libs/${s}` : `modules/${t}/src/libs/${s}` : `modules/${t}/dist/libs/${s}`;
-}
-async function Id(e) {
-  if (e.endsWith("wasm"))
-    return await Fd(e);
-  if (!ve)
-    try {
-      return ho && void 0;
-    } catch (n) {
-      return console.error(n), null;
-    }
-  if (js)
-    return importScripts(e);
-  const t = await Dd(e);
-  return Sd(t, e);
-}
-function Sd(e, t) {
-  if (!ve)
-    return;
-  if (js)
-    return eval.call(globalThis, e), null;
-  const n = document.createElement("script");
-  n.id = t;
-  try {
-    n.appendChild(document.createTextNode(e));
-  } catch {
-    n.text = e;
-  }
-  return document.body.appendChild(n), null;
-}
-async function Fd(e) {
-  return await (await fetch(e)).arrayBuffer();
-}
-async function Dd(e) {
-  return await (await fetch(e)).text();
-}
-const Od = "1.5.6", vd = "1.4.1", ts = `https://www.gstatic.com/draco/versioned/decoders/${Od}`, ot = {
+const gd = "1.5.6", pd = "1.4.1", Yn = `https://www.gstatic.com/draco/versioned/decoders/${gd}`, ot = {
   DECODER: "draco_wasm_wrapper.js",
   DECODER_WASM: "draco_decoder.wasm",
   FALLBACK_DECODER: "draco_decoder.js",
   ENCODER: "draco_encoder.js"
-}, es = {
-  [ot.DECODER]: `${ts}/${ot.DECODER}`,
-  [ot.DECODER_WASM]: `${ts}/${ot.DECODER_WASM}`,
-  [ot.FALLBACK_DECODER]: `${ts}/${ot.FALLBACK_DECODER}`,
-  [ot.ENCODER]: `https://raw.githubusercontent.com/google/draco/${vd}/javascript/${ot.ENCODER}`
+}, $n = {
+  [ot.DECODER]: `${Yn}/${ot.DECODER}`,
+  [ot.DECODER_WASM]: `${Yn}/${ot.DECODER_WASM}`,
+  [ot.FALLBACK_DECODER]: `${Yn}/${ot.FALLBACK_DECODER}`,
+  [ot.ENCODER]: `https://raw.githubusercontent.com/google/draco/${pd}/javascript/${ot.ENCODER}`
 };
 let me;
-async function xd(e) {
+async function Bd(e) {
   const t = e.modules || {};
   return t.draco3d ? me = me || t.draco3d.createDecoderModule({}).then((n) => ({
     draco: n
-  })) : me = me || Ld(e), await me;
+  })) : me = me || yd(e), await me;
 }
-async function Ld(e) {
+async function yd(e) {
   let t, n;
   switch (e.draco && e.draco.decoderType) {
     case "js":
-      t = await Zn(es[ot.FALLBACK_DECODER], "draco", e, ot.FALLBACK_DECODER);
+      t = await zt($n[ot.FALLBACK_DECODER], "draco", e, ot.FALLBACK_DECODER);
       break;
     case "wasm":
     default:
-      [t, n] = await Promise.all([await Zn(es[ot.DECODER], "draco", e, ot.DECODER), await Zn(es[ot.DECODER_WASM], "draco", e, ot.DECODER_WASM)]);
+      [t, n] = await Promise.all([await zt($n[ot.DECODER], "draco", e, ot.DECODER), await zt($n[ot.DECODER_WASM], "draco", e, ot.DECODER_WASM)]);
   }
-  return t = t || globalThis.DracoDecoderModule, await Gd(t, n);
+  return t = t || globalThis.DracoDecoderModule, await Cd(t, n);
 }
-function Gd(e, t) {
+function Cd(e, t) {
   const n = {};
   return t && (n.wasmBinary = t), new Promise((s) => {
     e({
@@ -5442,21 +5453,21 @@ function Gd(e, t) {
     });
   });
 }
-const ta = {
-  ...Ad,
-  parse: Ud
+const jo = {
+  ...ad,
+  parse: Td
 };
-async function Ud(e, t) {
+async function Td(e, t) {
   const {
     draco: n
-  } = await xd(t), s = new Cd(n);
+  } = await Bd(t), s = new fd(n);
   try {
     return s.parseSync(e, t == null ? void 0 : t.draco);
   } finally {
     s.destroy();
   }
 }
-const Nd = {
+const Ed = {
   POINTS: 0,
   LINES: 1,
   LINE_LOOP: 2,
@@ -5474,9 +5485,9 @@ const Nd = {
   FLOAT: 5126,
   DOUBLE: 5130
 }, x = {
-  ...Nd,
+  ...Ed,
   ...W
-}, ns = {
+}, Zn = {
   [W.DOUBLE]: Float64Array,
   [W.FLOAT]: Float32Array,
   [W.UNSIGNED_SHORT]: Uint16Array,
@@ -5485,7 +5496,7 @@ const Nd = {
   [W.BYTE]: Int8Array,
   [W.SHORT]: Int16Array,
   [W.INT]: Int32Array
-}, Pd = {
+}, bd = {
   DOUBLE: W.DOUBLE,
   FLOAT: W.FLOAT,
   UNSIGNED_SHORT: W.UNSIGNED_SHORT,
@@ -5494,19 +5505,19 @@ const Nd = {
   BYTE: W.BYTE,
   SHORT: W.SHORT,
   INT: W.INT
-}, ss = "Failed to convert GL type";
-class St {
+}, ts = "Failed to convert GL type";
+class Dt {
   static fromTypedArray(t) {
     t = ArrayBuffer.isView(t) ? t.constructor : t;
-    for (const n in ns)
-      if (ns[n] === t)
+    for (const n in Zn)
+      if (Zn[n] === t)
         return n;
-    throw new Error(ss);
+    throw new Error(ts);
   }
   static fromName(t) {
-    const n = Pd[t];
+    const n = bd[t];
     if (!n)
-      throw new Error(ss);
+      throw new Error(ts);
     return n;
   }
   static getArrayType(t) {
@@ -5516,58 +5527,58 @@ class St {
       case W.UNSIGNED_SHORT_5_5_5_1:
         return Uint16Array;
       default:
-        const n = ns[t];
+        const n = Zn[t];
         if (!n)
-          throw new Error(ss);
+          throw new Error(ts);
         return n;
     }
   }
   static getByteSize(t) {
-    return St.getArrayType(t).BYTES_PER_ELEMENT;
+    return Dt.getArrayType(t).BYTES_PER_ELEMENT;
   }
   static validate(t) {
-    return !!St.getArrayType(t);
+    return !!Dt.getArrayType(t);
   }
   static createTypedArray(t, n) {
     let s = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : 0, r = arguments.length > 3 ? arguments[3] : void 0;
-    r === void 0 && (r = (n.byteLength - s) / St.getByteSize(t));
-    const i = St.getArrayType(t);
+    r === void 0 && (r = (n.byteLength - s) / Dt.getByteSize(t));
+    const i = Dt.getArrayType(t);
     return new i(n, s, r);
   }
 }
-function Hd(e, t) {
+function _d(e, t) {
   if (!e)
     throw new Error(`math.gl assertion failed. ${t}`);
 }
-function Jd(e) {
+function wd(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : [0, 0, 0];
   const n = e >> 11 & 31, s = e >> 5 & 63, r = e & 31;
   return t[0] = n << 3, t[1] = s << 2, t[2] = r << 3, t;
 }
-new wn();
+new bn();
 new m();
-new wn();
-new wn();
-function gi(e) {
+new bn();
+new bn();
+function hi(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 255;
   return fl(e, 0, t) / t * 2 - 1;
 }
-function pi(e) {
+function fi(e) {
   return e < 0 ? -1 : 1;
 }
-function Vd(e, t, n, s) {
-  if (Hd(s), e < 0 || e > n || t < 0 || t > n)
+function Md(e, t, n, s) {
+  if (_d(s), e < 0 || e > n || t < 0 || t > n)
     throw new Error(`x and y must be unsigned normalized integers between 0 and ${n}`);
-  if (s.x = gi(e, n), s.y = gi(t, n), s.z = 1 - (Math.abs(s.x) + Math.abs(s.y)), s.z < 0) {
+  if (s.x = hi(e, n), s.y = hi(t, n), s.z = 1 - (Math.abs(s.x) + Math.abs(s.y)), s.z < 0) {
     const r = s.x;
-    s.x = (1 - Math.abs(s.y)) * pi(r), s.y = (1 - Math.abs(r)) * pi(s.y);
+    s.x = (1 - Math.abs(s.y)) * fi(r), s.y = (1 - Math.abs(r)) * fi(s.y);
   }
   return s.normalize();
 }
-function kd(e, t, n) {
-  return Vd(e, t, 255, n);
+function Rd(e, t, n) {
+  return Md(e, t, 255, n);
 }
-class Ks {
+class Vs {
   constructor(t, n) {
     this.json = void 0, this.buffer = void 0, this.featuresLength = 0, this._cachedTypedArrays = {}, this.json = t, this.buffer = n;
   }
@@ -5584,7 +5595,7 @@ class Ks {
   }
   getPropertyArray(t, n, s) {
     const r = this.json[t];
-    return r && Number.isFinite(r.byteOffset) ? ("componentType" in r && (n = St.fromName(r.componentType)), this._getTypedArrayFromBinary(t, n, s, this.featuresLength, r.byteOffset)) : this._getTypedArrayFromArray(t, n, r);
+    return r && Number.isFinite(r.byteOffset) ? ("componentType" in r && (n = Dt.fromName(r.componentType)), this._getTypedArrayFromBinary(t, n, s, this.featuresLength, r.byteOffset)) : this._getTypedArrayFromArray(t, n, r);
   }
   getProperty(t, n, s, r, i) {
     const o = this.json[t];
@@ -5600,15 +5611,15 @@ class Ks {
   _getTypedArrayFromBinary(t, n, s, r, i) {
     const o = this._cachedTypedArrays;
     let a = o[t];
-    return a || (a = St.createTypedArray(n, this.buffer.buffer, this.buffer.byteOffset + i, r * s), o[t] = a), a;
+    return a || (a = Dt.createTypedArray(n, this.buffer.buffer, this.buffer.byteOffset + i, r * s), o[t] = a), a;
   }
   _getTypedArrayFromArray(t, n, s) {
     const r = this._cachedTypedArrays;
     let i = r[t];
-    return i || (i = St.createTypedArray(n, s), r[t] = i), i;
+    return i || (i = Dt.createTypedArray(n, s), r[t] = i), i;
   }
 }
-const jd = {
+const Id = {
   SCALAR: 1,
   VEC2: 2,
   VEC3: 3,
@@ -5616,7 +5627,7 @@ const jd = {
   MAT2: 4,
   MAT3: 9,
   MAT4: 16
-}, Kd = {
+}, Sd = {
   SCALAR: (e, t) => e[t],
   VEC2: (e, t) => [e[2 * t + 0], e[2 * t + 1]],
   VEC3: (e, t) => [e[3 * t + 0], e[3 * t + 1], e[3 * t + 2]],
@@ -5624,7 +5635,7 @@ const jd = {
   MAT2: (e, t) => [e[4 * t + 0], e[4 * t + 1], e[4 * t + 2], e[4 * t + 3]],
   MAT3: (e, t) => [e[9 * t + 0], e[9 * t + 1], e[9 * t + 2], e[9 * t + 3], e[9 * t + 4], e[9 * t + 5], e[9 * t + 6], e[9 * t + 7], e[9 * t + 8]],
   MAT4: (e, t) => [e[16 * t + 0], e[16 * t + 1], e[16 * t + 2], e[16 * t + 3], e[16 * t + 4], e[16 * t + 5], e[16 * t + 6], e[16 * t + 7], e[16 * t + 8], e[16 * t + 9], e[16 * t + 10], e[16 * t + 11], e[16 * t + 12], e[16 * t + 13], e[16 * t + 14], e[16 * t + 15]]
-}, Wd = {
+}, Dd = {
   SCALAR: (e, t, n) => {
     t[n] = e;
   },
@@ -5647,38 +5658,38 @@ const jd = {
     t[16 * n + 0] = e[0], t[16 * n + 1] = e[1], t[16 * n + 2] = e[2], t[16 * n + 3] = e[3], t[16 * n + 4] = e[4], t[16 * n + 5] = e[5], t[16 * n + 6] = e[6], t[16 * n + 7] = e[7], t[16 * n + 8] = e[8], t[16 * n + 9] = e[9], t[16 * n + 10] = e[10], t[16 * n + 11] = e[11], t[16 * n + 12] = e[12], t[16 * n + 13] = e[13], t[16 * n + 14] = e[14], t[16 * n + 15] = e[15];
   }
 };
-function zd(e, t, n, s) {
+function Fd(e, t, n, s) {
   const {
     componentType: r
   } = e;
-  it(e.componentType);
-  const i = typeof r == "string" ? St.fromName(r) : r, o = jd[e.type], a = Kd[e.type], c = Wd[e.type];
+  U(e.componentType);
+  const i = typeof r == "string" ? Dt.fromName(r) : r, o = Id[e.type], a = Sd[e.type], c = Dd[e.type];
   return n += e.byteOffset, {
-    values: St.createTypedArray(i, t, n, o * s),
+    values: Dt.createTypedArray(i, t, n, o * s),
     type: i,
     size: o,
     unpacker: a,
     packer: c
   };
 }
-const Rt = (e) => e !== void 0;
-function Xd(e, t, n) {
+const It = (e) => e !== void 0;
+function Od(e, t, n) {
   if (!t)
     return null;
   let s = e.getExtension("3DTILES_batch_table_hierarchy");
   const r = t.HIERARCHY;
-  return r && (console.warn("3D Tile Parser: HIERARCHY is deprecated. Use 3DTILES_batch_table_hierarchy."), t.extensions = t.extensions || {}, t.extensions["3DTILES_batch_table_hierarchy"] = r, s = r), s ? Qd(s, n) : null;
+  return r && (console.warn("3D Tile Parser: HIERARCHY is deprecated. Use 3DTILES_batch_table_hierarchy."), t.extensions = t.extensions || {}, t.extensions["3DTILES_batch_table_hierarchy"] = r, s = r), s ? vd(s, n) : null;
 }
-function Qd(e, t) {
+function vd(e, t) {
   let n, s, r;
   const i = e.instancesLength, o = e.classes;
   let a = e.classIds, c = e.parentCounts, u = e.parentIds, l = i;
-  Rt(a.byteOffset) && (a.componentType = defaultValue(a.componentType, GL.UNSIGNED_SHORT), a.type = AttributeType.SCALAR, r = getBinaryAccessor(a), a = r.createArrayBufferView(t.buffer, t.byteOffset + a.byteOffset, i));
+  It(a.byteOffset) && (a.componentType = defaultValue(a.componentType, GL.UNSIGNED_SHORT), a.type = AttributeType.SCALAR, r = getBinaryAccessor(a), a = r.createArrayBufferView(t.buffer, t.byteOffset + a.byteOffset, i));
   let h;
-  if (Rt(c))
-    for (Rt(c.byteOffset) && (c.componentType = defaultValue(c.componentType, GL.UNSIGNED_SHORT), c.type = AttributeType.SCALAR, r = getBinaryAccessor(c), c = r.createArrayBufferView(t.buffer, t.byteOffset + c.byteOffset, i)), h = new Uint16Array(i), l = 0, n = 0; n < i; ++n)
+  if (It(c))
+    for (It(c.byteOffset) && (c.componentType = defaultValue(c.componentType, GL.UNSIGNED_SHORT), c.type = AttributeType.SCALAR, r = getBinaryAccessor(c), c = r.createArrayBufferView(t.buffer, t.byteOffset + c.byteOffset, i)), h = new Uint16Array(i), l = 0, n = 0; n < i; ++n)
       h[n] = l, l += c[n];
-  Rt(u) && Rt(u.byteOffset) && (u.componentType = defaultValue(u.componentType, GL.UNSIGNED_SHORT), u.type = AttributeType.SCALAR, r = getBinaryAccessor(u), u = r.createArrayBufferView(t.buffer, t.byteOffset + u.byteOffset, l));
+  It(u) && It(u.byteOffset) && (u.componentType = defaultValue(u.componentType, GL.UNSIGNED_SHORT), u.type = AttributeType.SCALAR, r = getBinaryAccessor(u), u = r.createArrayBufferView(t.buffer, t.byteOffset + u.byteOffset, l));
   const f = o.length;
   for (n = 0; n < f; ++n) {
     const p = o[n].length, y = o[n].instances, _ = getBinaryProperties(p, y, t);
@@ -5695,15 +5706,15 @@ function Qd(e, t) {
     parentIndexes: h,
     parentIds: u
   };
-  return $d(g), g;
+  return Gd(g), g;
 }
 function Ae(e, t, n) {
   if (!e)
     return;
   const s = e.parentCounts;
-  return e.parentIds ? n(e, t) : s > 0 ? qd(e, t, n) : Yd(e, t, n);
+  return e.parentIds ? n(e, t) : s > 0 ? xd(e, t, n) : Ld(e, t, n);
 }
-function qd(e, t, n) {
+function xd(e, t, n) {
   const s = e.classIds, r = e.parentCounts, i = e.parentIds, o = e.parentIndexes, a = s.length, c = scratchVisited;
   c.length = Math.max(c.length, a);
   const u = ++marker, l = scratchStack;
@@ -5712,7 +5723,7 @@ function qd(e, t, n) {
       continue;
     c[t] = u;
     const h = n(e, t);
-    if (Rt(h))
+    if (It(h))
       return h;
     const f = r[t], d = o[t];
     for (let A = 0; A < f; ++A) {
@@ -5722,50 +5733,50 @@ function qd(e, t, n) {
   }
   return null;
 }
-function Yd(e, t, n) {
+function Ld(e, t, n) {
   let s = !0;
   for (; s; ) {
     const r = n(e, t);
-    if (Rt(r))
+    if (It(r))
       return r;
     const i = e.parentIds[t];
     s = i !== t, t = i;
   }
   throw new Error("traverseHierarchySingleParent");
 }
-function $d(e) {
+function Gd(e) {
   const n = e.classIds.length;
   for (let s = 0; s < n; ++s)
-    ea(e, s, stack);
+    Ko(e, s, stack);
 }
-function ea(e, t, n) {
+function Ko(e, t, n) {
   const s = e.parentCounts, r = e.parentIds, i = e.parentIndexes, a = e.classIds.length;
-  if (!Rt(r))
+  if (!It(r))
     return;
   assert(t < a, `Parent index ${t} exceeds the total number of instances: ${a}`), assert(n.indexOf(t) === -1, "Circular dependency detected in the batch table hierarchy."), n.push(t);
-  const c = Rt(s) ? s[t] : 1, u = Rt(s) ? i[t] : t;
+  const c = It(s) ? s[t] : 1, u = It(s) ? i[t] : t;
   for (let l = 0; l < c; ++l) {
     const h = r[u + l];
-    h !== t && ea(e, h, n);
+    h !== t && Ko(e, h, n);
   }
   n.pop(t);
 }
-function st(e) {
+function rt(e) {
   return e != null;
 }
-const Ze = (e, t) => e, Zd = {
+const Ye = (e, t) => e, Ud = {
   HIERARCHY: !0,
   extensions: !0,
   extras: !0
 };
-class na {
+class zo {
   constructor(t, n, s) {
     var r;
     let i = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : {};
-    this.json = void 0, this.binary = void 0, this.featureCount = void 0, this._extensions = void 0, this._properties = void 0, this._binaryProperties = void 0, this._hierarchy = void 0, it(s >= 0), this.json = t || {}, this.binary = n, this.featureCount = s, this._extensions = ((r = this.json) === null || r === void 0 ? void 0 : r.extensions) || {}, this._properties = {};
+    this.json = void 0, this.binary = void 0, this.featureCount = void 0, this._extensions = void 0, this._properties = void 0, this._binaryProperties = void 0, this._hierarchy = void 0, U(s >= 0), this.json = t || {}, this.binary = n, this.featureCount = s, this._extensions = ((r = this.json) === null || r === void 0 ? void 0 : r.extensions) || {}, this._properties = {};
     for (const o in this.json)
-      Zd[o] || (this._properties[o] = this.json[o]);
-    this._binaryProperties = this._initializeBinaryProperties(), i["3DTILES_batch_table_hierarchy"] && (this._hierarchy = Xd(this, this.json, this.binary));
+      Ud[o] || (this._properties[o] = this.json[o]);
+    this._binaryProperties = this._initializeBinaryProperties(), i["3DTILES_batch_table_hierarchy"] && (this._hierarchy = Od(this, this.json, this.binary));
   }
   getExtension(t) {
     return this.json && this.json.extensions && this.json.extensions[t];
@@ -5774,17 +5785,17 @@ class na {
     return 0;
   }
   isClass(t, n) {
-    if (this._checkBatchId(t), it(typeof n == "string", n), this._hierarchy) {
+    if (this._checkBatchId(t), U(typeof n == "string", n), this._hierarchy) {
       const s = Ae(this._hierarchy, t, (r, i) => {
         const o = r.classIds[i];
         return r.classes[o].name === n;
       });
-      return st(s);
+      return rt(s);
     }
     return !1;
   }
   isExactClass(t, n) {
-    return it(typeof n == "string", n), this.getExactClassName(t) === n;
+    return U(typeof n == "string", n), this.getExactClassName(t) === n;
   }
   getExactClassName(t) {
     if (this._checkBatchId(t), this._hierarchy) {
@@ -5793,31 +5804,31 @@ class na {
     }
   }
   hasProperty(t, n) {
-    return this._checkBatchId(t), it(typeof n == "string", n), st(this._properties[n]) || this._hasPropertyInHierarchy(t, n);
+    return this._checkBatchId(t), U(typeof n == "string", n), rt(this._properties[n]) || this._hasPropertyInHierarchy(t, n);
   }
   getPropertyNames(t, n) {
-    this._checkBatchId(t), n = st(n) ? n : [], n.length = 0;
+    this._checkBatchId(t), n = rt(n) ? n : [], n.length = 0;
     const s = Object.keys(this._properties);
     return n.push(...s), this._hierarchy && this._getPropertyNamesInHierarchy(t, n), n;
   }
   getProperty(t, n) {
-    if (this._checkBatchId(t), it(typeof n == "string", n), this._binaryProperties) {
+    if (this._checkBatchId(t), U(typeof n == "string", n), this._binaryProperties) {
       const r = this._binaryProperties[n];
-      if (st(r))
+      if (rt(r))
         return this._getBinaryProperty(r, t);
     }
     const s = this._properties[n];
-    if (st(s))
-      return Ze(s[t]);
+    if (rt(s))
+      return Ye(s[t]);
     if (this._hierarchy) {
       const r = this._getHierarchyProperty(t, n);
-      if (st(r))
+      if (rt(r))
         return r;
     }
   }
   setProperty(t, n, s) {
     const r = this.featureCount;
-    if (this._checkBatchId(t), it(typeof n == "string", n), this._binaryProperties) {
+    if (this._checkBatchId(t), U(typeof n == "string", n), this._binaryProperties) {
       const o = this._binaryProperties[n];
       if (o) {
         this._setBinaryProperty(o, t, s);
@@ -5827,7 +5838,7 @@ class na {
     if (this._hierarchy && this._setHierarchyProperty(this, t, n, s))
       return;
     let i = this._properties[n];
-    st(i) || (this._properties[n] = new Array(r), i = this._properties[n]), i[t] = Ze(s);
+    rt(i) || (this._properties[n] = new Array(r), i = this._properties[n]), i[t] = Ye(s);
   }
   _checkBatchId(t) {
     if (!(t >= 0 && t < this.featureCount))
@@ -5850,8 +5861,8 @@ class na {
   _initializeBinaryProperty(t, n) {
     if ("byteOffset" in n) {
       const s = n;
-      it(this.binary, `Property ${t} requires a batch table binary.`), it(s.type, `Property ${t} requires a type.`);
-      const r = zd(s, this.binary.buffer, this.binary.byteOffset | 0, this.featureCount);
+      U(this.binary, `Property ${t} requires a batch table binary.`), U(s.type, `Property ${t} requires a type.`);
+      const r = Fd(s, this.binary.buffer, this.binary.byteOffset | 0, this.featureCount);
       return {
         typedArray: r.values,
         componentCount: r.size,
@@ -5866,9 +5877,9 @@ class na {
       return !1;
     const s = Ae(this._hierarchy, t, (r, i) => {
       const o = r.classIds[i], a = r.classes[o].instances;
-      return st(a[n]);
+      return rt(a[n]);
     });
-    return st(s);
+    return rt(s);
   }
   _getPropertyNamesInHierarchy(t, n) {
     Ae(this._hierarchy, t, (s, r) => {
@@ -5880,27 +5891,27 @@ class na {
   _getHierarchyProperty(t, n) {
     return Ae(this._hierarchy, t, (s, r) => {
       const i = s.classIds[r], o = s.classes[i], a = s.classIndexes[r], c = o.instances[n];
-      return st(c) ? st(c.typedArray) ? this._getBinaryProperty(c, a) : Ze(c[a]) : null;
+      return rt(c) ? rt(c.typedArray) ? this._getBinaryProperty(c, a) : Ye(c[a]) : null;
     });
   }
   _setHierarchyProperty(t, n, s, r) {
     const i = Ae(this._hierarchy, n, (o, a) => {
       const c = o.classIds[a], u = o.classes[c], l = o.classIndexes[a], h = u.instances[s];
-      return st(h) ? (it(a === n, `Inherited property "${s}" is read-only.`), st(h.typedArray) ? this._setBinaryProperty(h, l, r) : h[l] = Ze(r), !0) : !1;
+      return rt(h) ? (U(a === n, `Inherited property "${s}" is read-only.`), rt(h.typedArray) ? this._setBinaryProperty(h, l, r) : h[l] = Ye(r), !0) : !1;
     });
-    return st(i);
+    return rt(i);
   }
 }
-const rs = 4;
-function Sn(e, t) {
+const es = 4;
+function Rn(e, t) {
   let n = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : 0;
   const s = new DataView(t);
-  if (e.magic = s.getUint32(n, !0), n += rs, e.version = s.getUint32(n, !0), n += rs, e.byteLength = s.getUint32(n, !0), n += rs, e.version !== 1)
+  if (e.magic = s.getUint32(n, !0), n += es, e.version = s.getUint32(n, !0), n += es, e.byteLength = s.getUint32(n, !0), n += es, e.version !== 1)
     throw new Error(`3D Tile Version ${e.version} not supported`);
   return n;
 }
-const ne = 4, Bi = "b3dm tile in legacy format.";
-function Ws(e, t, n) {
+const ne = 4, di = "b3dm tile in legacy format.";
+function ks(e, t, n) {
   const s = new DataView(t);
   let r;
   e.header = e.header || {};
@@ -5911,12 +5922,12 @@ function Ws(e, t, n) {
   let a = s.getUint32(n, !0);
   n += ne;
   let c = s.getUint32(n, !0);
-  return n += ne, a >= 570425344 ? (n -= ne * 2, r = i, a = o, c = 0, i = 0, o = 0, console.warn(Bi)) : c >= 570425344 && (n -= ne, r = a, a = i, c = o, i = 0, o = 0, console.warn(Bi)), e.header.featureTableJsonByteLength = i, e.header.featureTableBinaryByteLength = o, e.header.batchTableJsonByteLength = a, e.header.batchTableBinaryByteLength = c, e.header.batchLength = r, n;
+  return n += ne, a >= 570425344 ? (n -= ne * 2, r = i, a = o, c = 0, i = 0, o = 0, console.warn(di)) : c >= 570425344 && (n -= ne, r = a, a = i, c = o, i = 0, o = 0, console.warn(di)), e.header.featureTableJsonByteLength = i, e.header.featureTableBinaryByteLength = o, e.header.batchTableJsonByteLength = a, e.header.batchTableBinaryByteLength = c, e.header.batchLength = r, n;
 }
-function zs(e, t, n, s) {
-  return n = tm(e, t, n), n = em(e, t, n), n;
+function js(e, t, n, s) {
+  return n = Pd(e, t, n), n = Nd(e, t, n), n;
 }
-function tm(e, t, n, s) {
+function Pd(e, t, n, s) {
   const {
     featureTableJsonByteLength: r,
     featureTableBinaryByteLength: i,
@@ -5925,23 +5936,23 @@ function tm(e, t, n, s) {
   if (e.featureTableJson = {
     BATCH_LENGTH: o || 0
   }, r && r > 0) {
-    const a = $o(t, n, r);
+    const a = Vo(t, n, r);
     e.featureTableJson = JSON.parse(a);
   }
   return n += r || 0, e.featureTableBinary = new Uint8Array(t, n, i), n += i || 0, n;
 }
-function em(e, t, n, s) {
+function Nd(e, t, n, s) {
   const {
     batchTableJsonByteLength: r,
     batchTableBinaryByteLength: i
   } = e.header || {};
   if (r && r > 0) {
-    const o = $o(t, n, r);
+    const o = Vo(t, n, r);
     e.batchTableJson = JSON.parse(o), n += r, i && i > 0 && (e.batchTableBinary = new Uint8Array(t, n, i), e.batchTableBinary = new Uint8Array(e.batchTableBinary), n += i);
   }
   return n;
 }
-function sa(e, t, n) {
+function Wo(e, t, n) {
   if (!t && (!e || !e.batchIds || !n))
     return null;
   const {
@@ -5965,7 +5976,7 @@ function sa(e, t, n) {
   if (t && r) {
     const o = new Uint8ClampedArray(i * 3);
     for (let a = 0; a < i; a++) {
-      const c = Jd(t[a]);
+      const c = wd(t[a]);
       o[a * 3] = c[0], o[a * 3 + 1] = c[1], o[a * 3 + 2] = c[2];
     }
     return {
@@ -5987,14 +5998,14 @@ function sa(e, t, n) {
     normalized: !0
   };
 }
-const yi = new m();
-function nm(e, t) {
+const mi = new m();
+function Hd(e, t) {
   if (!t)
     return null;
   if (e.isOctEncoded16P) {
     const n = new Float32Array((e.pointsLength || 0) * 3);
     for (let s = 0; s < (e.pointsLength || 0); s++)
-      kd(t[s * 2], t[s * 2 + 1], yi), yi.toArray(n, s * 3);
+      Rd(t[s * 2], t[s * 2 + 1], mi), mi.toArray(n, s * 3);
     return {
       type: x.FLOAT,
       size: 2,
@@ -6007,29 +6018,29 @@ function nm(e, t) {
     value: t
   };
 }
-function sm(e, t, n) {
-  return e.isQuantized ? n["3d-tiles"] && n["3d-tiles"].decodeQuantizedPositions ? (e.isQuantized = !1, rm(e, t)) : {
+function Jd(e, t, n) {
+  return e.isQuantized ? n["3d-tiles"] && n["3d-tiles"].decodeQuantizedPositions ? (e.isQuantized = !1, Vd(e, t)) : {
     type: x.UNSIGNED_SHORT,
     value: t,
     size: 3,
     normalized: !0
   } : t;
 }
-function rm(e, t) {
+function Vd(e, t) {
   const n = new m(), s = new Float32Array(e.pointCount * 3);
   for (let r = 0; r < e.pointCount; r++)
     n.set(t[r * 3], t[r * 3 + 1], t[r * 3 + 2]).scale(1 / e.quantizedRange).multiply(e.quantizedVolumeScale).add(e.quantizedVolumeOffset).toArray(s, r * 3);
   return s;
 }
-async function im(e, t, n, s, r) {
-  n = Sn(e, t, n), n = Ws(e, t, n), n = zs(e, t, n), om(e);
+async function kd(e, t, n, s, r) {
+  n = Rn(e, t, n), n = ks(e, t, n), n = js(e, t, n), jd(e);
   const {
     featureTable: i,
     batchTable: o
-  } = am(e);
-  return await fm(e, i, o, s, r), cm(e, i, s), um(e, i, o), lm(e, i), n;
+  } = Kd(e);
+  return await qd(e, i, o, s, r), zd(e, i, s), Wd(e, i, o), Xd(e, i), n;
 }
-function om(e) {
+function jd(e) {
   e.attributes = {
     positions: null,
     colors: null,
@@ -6037,18 +6048,18 @@ function om(e) {
     batchIds: null
   }, e.isQuantized = !1, e.isTranslucent = !1, e.isRGB565 = !1, e.isOctEncoded16P = !1;
 }
-function am(e) {
-  const t = new Ks(e.featureTableJson, e.featureTableBinary), n = t.getGlobalProperty("POINTS_LENGTH");
+function Kd(e) {
+  const t = new Vs(e.featureTableJson, e.featureTableBinary), n = t.getGlobalProperty("POINTS_LENGTH");
   if (!Number.isFinite(n))
     throw new Error("POINTS_LENGTH must be defined");
   t.featuresLength = n, e.featuresLength = n, e.pointsLength = n, e.pointCount = n, e.rtcCenter = t.getGlobalProperty("RTC_CENTER", x.FLOAT, 3);
-  const s = hm(e, t);
+  const s = Qd(e, t);
   return {
     featureTable: t,
     batchTable: s
   };
 }
-function cm(e, t, n) {
+function zd(e, t, n) {
   if (e.attributes = e.attributes || {
     positions: null,
     colors: null,
@@ -6063,13 +6074,13 @@ function cm(e, t, n) {
         throw new Error("QUANTIZED_VOLUME_SCALE must be defined for quantized positions.");
       if (e.quantizedVolumeOffset = t.getGlobalProperty("QUANTIZED_VOLUME_OFFSET", x.FLOAT, 3), !e.quantizedVolumeOffset)
         throw new Error("QUANTIZED_VOLUME_OFFSET must be defined for quantized positions.");
-      e.attributes.positions = sm(e, s, n);
+      e.attributes.positions = Jd(e, s, n);
     }
   }
   if (!e.attributes.positions)
     throw new Error("Either POSITION or POSITION_QUANTIZED must be defined.");
 }
-function um(e, t, n) {
+function Wd(e, t, n) {
   if (e.attributes = e.attributes || {
     positions: null,
     colors: null,
@@ -6077,11 +6088,11 @@ function um(e, t, n) {
     batchIds: null
   }, !e.attributes.colors) {
     let s = null;
-    t.hasProperty("RGBA") ? (s = t.getPropertyArray("RGBA", x.UNSIGNED_BYTE, 4), e.isTranslucent = !0) : t.hasProperty("RGB") ? s = t.getPropertyArray("RGB", x.UNSIGNED_BYTE, 3) : t.hasProperty("RGB565") && (s = t.getPropertyArray("RGB565", x.UNSIGNED_SHORT, 1), e.isRGB565 = !0), e.attributes.colors = sa(e, s, n);
+    t.hasProperty("RGBA") ? (s = t.getPropertyArray("RGBA", x.UNSIGNED_BYTE, 4), e.isTranslucent = !0) : t.hasProperty("RGB") ? s = t.getPropertyArray("RGB", x.UNSIGNED_BYTE, 3) : t.hasProperty("RGB565") && (s = t.getPropertyArray("RGB565", x.UNSIGNED_SHORT, 1), e.isRGB565 = !0), e.attributes.colors = Wo(e, s, n);
   }
   t.hasProperty("CONSTANT_RGBA") && (e.constantRGBA = t.getGlobalProperty("CONSTANT_RGBA", x.UNSIGNED_BYTE, 4));
 }
-function lm(e, t) {
+function Xd(e, t) {
   if (e.attributes = e.attributes || {
     positions: null,
     colors: null,
@@ -6089,10 +6100,10 @@ function lm(e, t) {
     batchIds: null
   }, !e.attributes.normals) {
     let n = null;
-    t.hasProperty("NORMAL") ? n = t.getPropertyArray("NORMAL", x.FLOAT, 3) : t.hasProperty("NORMAL_OCT16P") && (n = t.getPropertyArray("NORMAL_OCT16P", x.UNSIGNED_BYTE, 2), e.isOctEncoded16P = !0), e.attributes.normals = nm(e, n);
+    t.hasProperty("NORMAL") ? n = t.getPropertyArray("NORMAL", x.FLOAT, 3) : t.hasProperty("NORMAL_OCT16P") && (n = t.getPropertyArray("NORMAL_OCT16P", x.UNSIGNED_BYTE, 2), e.isOctEncoded16P = !0), e.attributes.normals = Hd(e, n);
   }
 }
-function hm(e, t) {
+function Qd(e, t) {
   let n = null;
   if (!e.batchIds && t.hasProperty("BATCH_ID") && (e.batchIds = t.getPropertyArray("BATCH_ID", x.UNSIGNED_SHORT, 1), e.batchIds)) {
     const s = t.getGlobalProperty("BATCH_LENGTH");
@@ -6102,11 +6113,11 @@ function hm(e, t) {
       batchTableJson: r,
       batchTableBinary: i
     } = e;
-    n = new na(r, i, s);
+    n = new zo(r, i, s);
   }
   return n;
 }
-async function fm(e, t, n, s, r) {
+async function qd(e, t, n, s, r) {
   let i, o, a;
   const c = e.batchTableJson && e.batchTableJson.extensions && e.batchTableJson.extensions["3DTILES_draco_point_compression"];
   c && (a = c.properties);
@@ -6130,9 +6141,9 @@ async function fm(e, t, n, s, r) {
     batchTableProperties: a,
     dequantizeInShader: !1
   };
-  return await dm(e, l, s, r);
+  return await Yd(e, l, s, r);
 }
-async function dm(e, t, n, s) {
+async function Yd(e, t, n, s) {
   if (!s)
     return;
   const r = {
@@ -6143,7 +6154,7 @@ async function dm(e, t, n, s) {
     }
   };
   delete r["3d-tiles"];
-  const i = await Us(t.buffer, ta, r, s), o = i.attributes.POSITION && i.attributes.POSITION.value, a = i.attributes.COLOR_0 && i.attributes.COLOR_0.value, c = i.attributes.NORMAL && i.attributes.NORMAL.value, u = i.attributes.BATCH_ID && i.attributes.BATCH_ID.value, l = o && i.attributes.POSITION.value.quantization, h = c && i.attributes.NORMAL.value.quantization;
+  const i = await Re(t.buffer, jo, r, s), o = i.attributes.POSITION && i.attributes.POSITION.value, a = i.attributes.COLOR_0 && i.attributes.COLOR_0.value, c = i.attributes.NORMAL && i.attributes.NORMAL.value, u = i.attributes.BATCH_ID && i.attributes.BATCH_ID.value, l = o && i.attributes.POSITION.value.quantization, h = c && i.attributes.NORMAL.value.quantization;
   if (l) {
     const d = i.POSITION.data.quantization, A = d.range;
     e.quantizedVolumeScale = new m(A, A, A), e.quantizedVolumeOffset = new m(d.minValues), e.quantizedRange = (1 << d.quantizationBits) - 1, e.isQuantizedDraco = !0;
@@ -6155,52 +6166,46 @@ async function dm(e, t, n, s) {
       i.attributes[d] && i.attributes[d].value && (f[d.toLowerCase()] = i.attributes[d].value);
   e.attributes = {
     positions: o,
-    colors: sa(e, a, void 0),
+    colors: Wo(e, a, void 0),
     normals: c,
     batchIds: u,
     ...f
   };
 }
-const mm = "4.1.0-alpha.10";
-function ra(e, t) {
-  if (!e)
-    throw new Error(t || "loader assertion failed.");
-}
-const ia = !!(typeof process != "object" || String(process) !== "[object process]" || process.browser), Ci = typeof process < "u" && process.version && /v([0-9]*)/.exec(process.version);
-Ci && parseFloat(Ci[1]);
-var is;
-const Am = (is = globalThis.loaders) === null || is === void 0 ? void 0 : is.parseImageNode, ws = typeof Image < "u", Ms = typeof ImageBitmap < "u", gm = !!Am, Rs = ia ? !0 : gm;
-function pm(e) {
+const $d = "4.1.1";
+var ns;
+const Zd = (ns = globalThis.loaders) === null || ns === void 0 ? void 0 : ns.parseImageNode, Ts = typeof Image < "u", Es = typeof ImageBitmap < "u", tm = !!Zd, bs = Cn ? !0 : tm;
+function em(e) {
   switch (e) {
     case "auto":
-      return Ms || ws || Rs;
+      return Es || Ts || bs;
     case "imagebitmap":
-      return Ms;
+      return Es;
     case "image":
-      return ws;
+      return Ts;
     case "data":
-      return Rs;
+      return bs;
     default:
       throw new Error(`@loaders.gl/images: image ${e} not supported in this environment`);
   }
 }
-function Bm() {
-  if (Ms)
+function nm() {
+  if (Es)
     return "imagebitmap";
-  if (ws)
+  if (Ts)
     return "image";
-  if (Rs)
+  if (bs)
     return "data";
   throw new Error("Install '@loaders.gl/polyfills' to parse images under Node.js");
 }
-function ym(e) {
-  const t = Cm(e);
+function sm(e) {
+  const t = rm(e);
   if (!t)
     throw new Error("Not an image");
   return t;
 }
-function oa(e) {
-  switch (ym(e)) {
+function Xo(e) {
+  switch (sm(e)) {
     case "data":
       return e;
     case "image":
@@ -6213,15 +6218,15 @@ function oa(e) {
       throw new Error("getImageData");
   }
 }
-function Cm(e) {
+function rm(e) {
   return typeof ImageBitmap < "u" && e instanceof ImageBitmap ? "imagebitmap" : typeof Image < "u" && e instanceof Image ? "image" : e && typeof e == "object" && e.data && e.width && e.height ? "data" : null;
 }
-const Tm = /^data:image\/svg\+xml/, Em = /\.svg((\?|#).*)?$/;
-function Xs(e) {
-  return e && (Tm.test(e) || Em.test(e));
+const im = /^data:image\/svg\+xml/, om = /\.svg((\?|#).*)?$/;
+function Ks(e) {
+  return e && (im.test(e) || om.test(e));
 }
-function bm(e, t) {
-  if (Xs(t)) {
+function am(e, t) {
+  if (Ks(t)) {
     let s = new TextDecoder().decode(e);
     try {
       typeof unescape == "function" && typeof encodeURIComponent == "function" && (s = unescape(encodeURIComponent(s)));
@@ -6230,22 +6235,22 @@ function bm(e, t) {
     }
     return `data:image/svg+xml;base64,${btoa(s)}`;
   }
-  return aa(e, t);
+  return Qo(e, t);
 }
-function aa(e, t) {
-  if (Xs(t))
+function Qo(e, t) {
+  if (Ks(t))
     throw new Error("SVG cannot be parsed directly to imagebitmap");
   return new Blob([new Uint8Array(e)]);
 }
-async function ca(e, t, n) {
-  const s = bm(e, n), r = self.URL || self.webkitURL, i = typeof s != "string" && r.createObjectURL(s);
+async function qo(e, t, n) {
+  const s = am(e, n), r = self.URL || self.webkitURL, i = typeof s != "string" && r.createObjectURL(s);
   try {
-    return await _m(i || s, t);
+    return await cm(i || s, t);
   } finally {
     i && r.revokeObjectURL(i);
   }
 }
-async function _m(e, t) {
+async function cm(e, t) {
   const n = new Image();
   return n.src = e, t.image && t.image.decode && n.decode ? (await n.decode(), n) : await new Promise((s, r) => {
     try {
@@ -6258,34 +6263,34 @@ async function _m(e, t) {
     }
   });
 }
-const wm = {};
-let Ti = !0;
-async function Mm(e, t, n) {
+const um = {};
+let Ai = !0;
+async function lm(e, t, n) {
   let s;
-  Xs(n) ? s = await ca(e, t, n) : s = aa(e, n);
+  Ks(n) ? s = await qo(e, t, n) : s = Qo(e, n);
   const r = t && t.imagebitmap;
-  return await Rm(s, r);
+  return await hm(s, r);
 }
-async function Rm(e) {
+async function hm(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : null;
-  if ((Im(t) || !Ti) && (t = null), t)
+  if ((fm(t) || !Ai) && (t = null), t)
     try {
       return await createImageBitmap(e, t);
     } catch (n) {
-      console.warn(n), Ti = !1;
+      console.warn(n), Ai = !1;
     }
   return await createImageBitmap(e);
 }
-function Im(e) {
-  for (const t in e || wm)
+function fm(e) {
+  for (const t in e || um)
     return !1;
   return !0;
 }
-function Sm(e) {
-  return !vm(e, "ftyp", 4) || !(e[8] & 96) ? null : Fm(e);
+function dm(e) {
+  return !pm(e, "ftyp", 4) || !(e[8] & 96) ? null : mm(e);
 }
-function Fm(e) {
-  switch (Dm(e, 8, 12).replace("\0", " ").trim()) {
+function mm(e) {
+  switch (Am(e, 8, 12).replace("\0", " ").trim()) {
     case "avif":
     case "avis":
       return {
@@ -6296,81 +6301,81 @@ function Fm(e) {
       return null;
   }
 }
-function Dm(e, t, n) {
+function Am(e, t, n) {
   return String.fromCharCode(...e.slice(t, n));
 }
-function Om(e) {
+function gm(e) {
   return [...e].map((t) => t.charCodeAt(0));
 }
-function vm(e, t) {
+function pm(e, t) {
   let n = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : 0;
-  const s = Om(t);
+  const s = gm(t);
   for (let r = 0; r < s.length; ++r)
     if (s[r] !== e[r + n])
       return !1;
   return !0;
 }
-const It = !1, Ee = !0;
-function Qs(e) {
+const St = !1, Ee = !0;
+function zs(e) {
   const t = xe(e);
-  return Lm(t) || Nm(t) || Gm(t) || Um(t) || xm(t);
+  return ym(t) || Em(t) || Cm(t) || Tm(t) || Bm(t);
 }
-function xm(e) {
-  const t = new Uint8Array(e instanceof DataView ? e.buffer : e), n = Sm(t);
+function Bm(e) {
+  const t = new Uint8Array(e instanceof DataView ? e.buffer : e), n = dm(t);
   return n ? {
     mimeType: n.mimeType,
     width: 0,
     height: 0
   } : null;
 }
-function Lm(e) {
+function ym(e) {
   const t = xe(e);
-  return t.byteLength >= 24 && t.getUint32(0, It) === 2303741511 ? {
+  return t.byteLength >= 24 && t.getUint32(0, St) === 2303741511 ? {
     mimeType: "image/png",
-    width: t.getUint32(16, It),
-    height: t.getUint32(20, It)
+    width: t.getUint32(16, St),
+    height: t.getUint32(20, St)
   } : null;
 }
-function Gm(e) {
+function Cm(e) {
   const t = xe(e);
-  return t.byteLength >= 10 && t.getUint32(0, It) === 1195984440 ? {
+  return t.byteLength >= 10 && t.getUint32(0, St) === 1195984440 ? {
     mimeType: "image/gif",
     width: t.getUint16(6, Ee),
     height: t.getUint16(8, Ee)
   } : null;
 }
-function Um(e) {
+function Tm(e) {
   const t = xe(e);
-  return t.byteLength >= 14 && t.getUint16(0, It) === 16973 && t.getUint32(2, Ee) === t.byteLength ? {
+  return t.byteLength >= 14 && t.getUint16(0, St) === 16973 && t.getUint32(2, Ee) === t.byteLength ? {
     mimeType: "image/bmp",
     width: t.getUint32(18, Ee),
     height: t.getUint32(22, Ee)
   } : null;
 }
-function Nm(e) {
+function Em(e) {
   const t = xe(e);
-  if (!(t.byteLength >= 3 && t.getUint16(0, It) === 65496 && t.getUint8(2) === 255))
+  if (!(t.byteLength >= 3 && t.getUint16(0, St) === 65496 && t.getUint8(2) === 255))
     return null;
   const {
     tableMarkers: s,
     sofMarkers: r
-  } = Pm();
+  } = bm();
   let i = 2;
   for (; i + 9 < t.byteLength; ) {
-    const o = t.getUint16(i, It);
+    const o = t.getUint16(i, St);
     if (r.has(o))
       return {
         mimeType: "image/jpeg",
-        height: t.getUint16(i + 5, It),
-        width: t.getUint16(i + 7, It)
+        height: t.getUint16(i + 5, St),
+        width: t.getUint16(i + 7, St)
       };
     if (!s.has(o))
       return null;
-    i += 2, i += t.getUint16(i, It);
+    i += 2, i += t.getUint16(i, St);
   }
   return null;
 }
-function Pm() {
+function bm() {
   const e = /* @__PURE__ */ new Set([65499, 65476, 65484, 65501, 65534]);
   for (let n = 65504; n < 65520; ++n)
     e.add(n);
@@ -6388,136 +6393,92 @@ function xe(e) {
     return new DataView(e);
   throw new Error("toDataView");
 }
-async function Hm(e, t) {
+async function _m(e, t) {
   var n;
   const {
     mimeType: s
-  } = Qs(e) || {}, r = (n = globalThis.loaders) === null || n === void 0 ? void 0 : n.parseImageNode;
-  return ra(r), await r(e, s);
+  } = zs(e) || {}, r = (n = globalThis.loaders) === null || n === void 0 ? void 0 : n.parseImageNode;
+  return U(r), await r(e, s);
 }
-async function Jm(e, t, n) {
+async function wm(e, t, n) {
   t = t || {};
   const r = (t.image || {}).type || "auto", {
     url: i
-  } = n || {}, o = Vm(r);
+  } = n || {}, o = Mm(r);
   let a;
   switch (o) {
     case "imagebitmap":
-      a = await Mm(e, t, i);
+      a = await lm(e, t, i);
       break;
     case "image":
-      a = await ca(e, t, i);
+      a = await qo(e, t, i);
       break;
     case "data":
-      a = await Hm(e);
+      a = await _m(e);
       break;
     default:
-      ra(!1);
+      U(!1);
   }
-  return r === "data" && (a = oa(a)), a;
+  return r === "data" && (a = Xo(a)), a;
 }
-function Vm(e) {
+function Mm(e) {
   switch (e) {
     case "auto":
     case "data":
-      return Bm();
+      return nm();
     default:
-      return pm(e), e;
+      return em(e), e;
   }
 }
-const km = ["png", "jpg", "jpeg", "gif", "webp", "bmp", "ico", "svg", "avif"], jm = ["image/png", "image/jpeg", "image/gif", "image/webp", "image/avif", "image/bmp", "image/vnd.microsoft.icon", "image/svg+xml"], Km = {
+const Rm = ["png", "jpg", "jpeg", "gif", "webp", "bmp", "ico", "svg", "avif"], Im = ["image/png", "image/jpeg", "image/gif", "image/webp", "image/avif", "image/bmp", "image/vnd.microsoft.icon", "image/svg+xml"], Sm = {
   image: {
     type: "auto",
     decode: !0
   }
-}, Wm = {
+}, Dm = {
   id: "image",
   module: "images",
   name: "Images",
-  version: mm,
-  mimeTypes: jm,
-  extensions: km,
-  parse: Jm,
-  tests: [(e) => !!Qs(new DataView(e))],
-  options: Km
-}, os = {};
-function zm(e) {
-  if (os[e] === void 0) {
-    const t = ia ? Qm(e) : Xm(e);
-    os[e] = t;
+  version: $d,
+  mimeTypes: Im,
+  extensions: Rm,
+  parse: wm,
+  tests: [(e) => !!zs(new DataView(e))],
+  options: Sm
+}, ss = {};
+function Fm(e) {
+  if (ss[e] === void 0) {
+    const t = Cn ? vm(e) : Om(e);
+    ss[e] = t;
   }
-  return os[e];
+  return ss[e];
 }
-function Xm(e) {
+function Om(e) {
   var t, n;
   const s = ["image/png", "image/jpeg", "image/gif"], r = ((t = globalThis.loaders) === null || t === void 0 ? void 0 : t.imageFormatsNode) || s;
   return !!((n = globalThis.loaders) === null || n === void 0 ? void 0 : n.parseImageNode) && r.includes(e);
 }
-function Qm(e) {
+function vm(e) {
   switch (e) {
     case "image/avif":
     case "image/webp":
-      return qm(e);
+      return xm(e);
     default:
       return !0;
   }
 }
-function qm(e) {
+function xm(e) {
   try {
     return document.createElement("canvas").toDataURL(e).indexOf(`data:${e}`) === 0;
   } catch {
     return !1;
   }
 }
-async function ua(e, t, n, s) {
-  return s._parse(e, t, n, s);
-}
-function Me(e, t) {
-  if (!e)
-    throw new Error(t || "loader assertion failed.");
-}
-function Ym(e) {
-  let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 5;
-  return typeof e == "string" ? e.slice(0, t) : ArrayBuffer.isView(e) ? Ei(e.buffer, e.byteOffset, t) : e instanceof ArrayBuffer ? Ei(e, 0, t) : "";
-}
-function Ei(e, t, n) {
-  if (e.byteLength <= t + n)
-    return "";
-  const s = new DataView(e);
-  let r = "";
-  for (let i = 0; i < n; i++)
-    r += String.fromCharCode(s.getUint8(t + i));
-  return r;
-}
-function $m(e) {
-  try {
-    return JSON.parse(e);
-  } catch {
-    throw new Error(`Failed to parse JSON from data starting with "${Ym(e)}"`);
-  }
-}
-function la(e, t, n) {
-  const s = n !== void 0 ? new Uint8Array(e).subarray(t, t + n) : new Uint8Array(e).subarray(t);
-  return new Uint8Array(s).buffer;
-}
-function Le(e, t) {
-  return Me(e >= 0), Me(t > 0), e + (t - 1) & ~(t - 1);
-}
-function Zm(e, t, n) {
-  let s;
-  if (e instanceof ArrayBuffer)
-    s = new Uint8Array(e);
-  else {
-    const r = e.byteOffset, i = e.byteLength;
-    s = new Uint8Array(e.buffer || e.arrayBuffer, r, i);
-  }
-  return t.set(s, n), n + Le(s.byteLength, 4);
-}
 function ft(e, t) {
   if (!e)
     throw new Error(t || "assert failed: gltf");
 }
-const ha = {
+const Yo = {
   SCALAR: 1,
   VEC2: 2,
   VEC3: 3,
@@ -6525,14 +6486,14 @@ const ha = {
   MAT2: 4,
   MAT3: 9,
   MAT4: 16
-}, fa = {
+}, $o = {
   5120: 1,
   5121: 1,
   5122: 2,
   5123: 2,
   5125: 4,
   5126: 4
-}, tA = 1.33, bi = ["SCALAR", "VEC2", "VEC3", "VEC4"], eA = [[Int8Array, 5120], [Uint8Array, 5121], [Int16Array, 5122], [Uint16Array, 5123], [Uint32Array, 5125], [Float32Array, 5126], [Float64Array, 5130]], nA = new Map(eA), sA = {
+}, Lm = 1.33, gi = ["SCALAR", "VEC2", "VEC3", "VEC4"], Gm = [[Int8Array, 5120], [Uint8Array, 5121], [Int16Array, 5122], [Uint16Array, 5123], [Uint32Array, 5125], [Float32Array, 5126], [Float64Array, 5130]], Um = new Map(Gm), Pm = {
   SCALAR: 1,
   VEC2: 2,
   VEC3: 3,
@@ -6540,14 +6501,14 @@ const ha = {
   MAT2: 4,
   MAT3: 9,
   MAT4: 16
-}, rA = {
+}, Nm = {
   5120: 1,
   5121: 1,
   5122: 2,
   5123: 2,
   5125: 4,
   5126: 4
-}, iA = {
+}, Hm = {
   5120: Int8Array,
   5121: Uint8Array,
   5122: Int16Array,
@@ -6555,19 +6516,19 @@ const ha = {
   5125: Uint32Array,
   5126: Float32Array
 };
-function da(e) {
-  return bi[e - 1] || bi[0];
+function Zo(e) {
+  return gi[e - 1] || gi[0];
 }
-function qs(e) {
-  const t = nA.get(e.constructor);
+function Ws(e) {
+  const t = Um.get(e.constructor);
   if (!t)
     throw new Error("Illegal typed array");
   return t;
 }
-function Ys(e, t) {
-  const n = iA[e.componentType], s = sA[e.type], r = rA[e.componentType], i = e.count * s, o = e.count * s * r;
+function Xs(e, t) {
+  const n = Hm[e.componentType], s = Pm[e.type], r = Nm[e.componentType], i = e.count * s, o = e.count * s * r;
   ft(o >= 0 && o <= t.byteLength);
-  const a = fa[e.componentType], c = ha[e.type];
+  const a = $o[e.componentType], c = Yo[e.type];
   return {
     ArrayType: n,
     length: i,
@@ -6576,7 +6537,7 @@ function Ys(e, t) {
     numberOfComponentsInElement: c
   };
 }
-function ma(e) {
+function ta(e) {
   let {
     images: t,
     bufferViews: n
@@ -6591,9 +6552,9 @@ function ma(e) {
     } = a.image;
     return o + c * u;
   }, 0);
-  return r + Math.ceil(4 * i * tA);
+  return r + Math.ceil(4 * i * Lm);
 }
-function oA(e, t, n) {
+function Jm(e, t, n) {
   const s = e.bufferViews[n];
   ft(s);
   const r = s.buffer, i = t[r];
@@ -6601,7 +6562,7 @@ function oA(e, t, n) {
   const o = (s.byteOffset || 0) + i.byteOffset;
   return new Uint8Array(i.arrayBuffer, o, s.byteLength);
 }
-function aA(e, t, n) {
+function Vm(e, t, n) {
   var s, r;
   const i = typeof n == "number" ? (s = e.accessors) === null || s === void 0 ? void 0 : s[n] : n;
   if (!i)
@@ -6617,7 +6578,7 @@ function aA(e, t, n) {
     length: h,
     componentByteSize: f,
     numberOfComponentsInElement: d
-  } = Ys(i, o), A = f * d, g = o.byteStride || A;
+  } = Xs(i, o), A = f * d, g = o.byteStride || A;
   if (typeof o.byteStride > "u" || o.byteStride === A)
     return new l(a, u, h);
   const p = new l(h);
@@ -6627,7 +6588,7 @@ function aA(e, t, n) {
   }
   return p;
 }
-function cA() {
+function km() {
   return {
     asset: {
       version: "2.0",
@@ -6639,10 +6600,10 @@ function cA() {
     extensionsUsed: []
   };
 }
-class $ {
+class Z {
   constructor(t) {
     this.gltf = void 0, this.sourceBuffers = void 0, this.byteLength = void 0, this.gltf = {
-      json: (t == null ? void 0 : t.json) || cA(),
+      json: (t == null ? void 0 : t.json) || km(),
       buffers: (t == null ? void 0 : t.buffers) || [],
       images: (t == null ? void 0 : t.images) || []
     }, this.sourceBuffers = [], this.byteLength = 0, this.gltf.buffers && this.gltf.buffers[0] && (this.byteLength = this.gltf.buffers[0].byteLength, this.sourceBuffers = [this.gltf.buffers[0]]);
@@ -6729,7 +6690,7 @@ class $ {
   }
   getTypedArrayForAccessor(t) {
     const n = this.getAccessor(t);
-    return aA(this.gltf.json, this.gltf.buffers, n);
+    return Vm(this.gltf.json, this.gltf.buffers, n);
   }
   getTypedArrayForImageData(t) {
     t = this.getAccessor(t);
@@ -6831,7 +6792,7 @@ class $ {
     return this.json.meshes = this.json.meshes || [], this.json.meshes.push(s), this.json.meshes.length - 1;
   }
   addImage(t, n) {
-    const s = Qs(t), r = n || (s == null ? void 0 : s.mimeType), o = {
+    const s = zs(t), r = n || (s == null ? void 0 : s.mimeType), o = {
       bufferView: this.addBufferView(t),
       mimeType: r
     };
@@ -6846,12 +6807,12 @@ class $ {
       byteOffset: s,
       byteLength: r
     };
-    return this.byteLength += Le(r, 4), this.json.bufferViews = this.json.bufferViews || [], this.json.bufferViews.push(i), this.json.bufferViews.length - 1;
+    return this.byteLength += Ie(r, 4), this.json.bufferViews = this.json.bufferViews || [], this.json.bufferViews.push(i), this.json.bufferViews.length - 1;
   }
   addAccessor(t, n) {
     const s = {
       bufferView: t,
-      type: da(n.size),
+      type: Zo(n.size),
       componentType: n.componentType,
       count: n.count,
       max: n.max,
@@ -6871,7 +6832,7 @@ class $ {
     (!r.min || !r.max) && (r = this._getAccessorMinMax(t, n.size));
     const i = {
       size: n.size,
-      componentType: qs(t),
+      componentType: Ws(t),
       count: Math.round(t.length / n.size),
       min: r.min,
       max: r.max
@@ -6895,7 +6856,7 @@ class $ {
     const s = this.byteLength, r = new ArrayBuffer(s), i = new Uint8Array(r);
     let o = 0;
     for (const a of this.sourceBuffers || [])
-      o = Zm(a, i, o);
+      o = Dc(a, i, o);
     (t = this.json) !== null && t !== void 0 && (n = t.buffers) !== null && n !== void 0 && n[0] ? this.json.buffers[0].byteLength = s : this.json.buffers = [{
       byteLength: s
     }], this.gltf.binary = r, this.sourceBuffers = [r];
@@ -6957,10 +6918,10 @@ class $ {
     return s;
   }
 }
-function _i(e) {
+function pi(e) {
   return (e % 1 + 1) % 1;
 }
-const Aa = {
+const ea = {
   SCALAR: 1,
   VEC2: 2,
   VEC3: 3,
@@ -6971,7 +6932,7 @@ const Aa = {
   BOOLEAN: 1,
   STRING: 1,
   ENUM: 1
-}, uA = {
+}, jm = {
   INT8: Int8Array,
   UINT8: Uint8Array,
   INT16: Int16Array,
@@ -6982,7 +6943,7 @@ const Aa = {
   UINT64: BigUint64Array,
   FLOAT32: Float32Array,
   FLOAT64: Float64Array
-}, ga = {
+}, na = {
   INT8: 1,
   UINT8: 1,
   INT16: 2,
@@ -6994,22 +6955,22 @@ const Aa = {
   FLOAT32: 4,
   FLOAT64: 8
 };
-function $s(e, t) {
-  return ga[t] * Aa[e];
+function Qs(e, t) {
+  return na[t] * ea[e];
 }
-function Fn(e, t, n, s) {
+function In(e, t, n, s) {
   if (n !== "UINT8" && n !== "UINT16" && n !== "UINT32" && n !== "UINT64")
     return null;
-  const r = e.getTypedArrayForBufferView(t), i = Dn(r, "SCALAR", n, s + 1);
+  const r = e.getTypedArrayForBufferView(t), i = Sn(r, "SCALAR", n, s + 1);
   return i instanceof BigInt64Array || i instanceof BigUint64Array ? null : i;
 }
-function Dn(e, t, n) {
+function Sn(e, t, n) {
   let s = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : 1;
-  const r = Aa[t], i = uA[n], o = ga[n], a = s * r, c = a * o;
+  const r = ea[t], i = jm[n], o = na[n], a = s * r, c = a * o;
   let u = e.buffer, l = e.byteOffset;
   return l % o !== 0 && (u = new Uint8Array(u).slice(l, l + c).buffer, l = 0), new i(u, l, a);
 }
-function Zs(e, t, n) {
+function qs(e, t, n) {
   var s, r;
   const i = `TEXCOORD_${t.texCoord || 0}`, o = n.attributes[i], a = e.getTypedArrayForAccessor(o), c = e.gltf.json, u = t.index, l = (s = c.textures) === null || s === void 0 || (r = s[u]) === null || r === void 0 ? void 0 : r.source;
   if (typeof l < "u") {
@@ -7018,7 +6979,7 @@ function Zs(e, t, n) {
     if (g && typeof g.width < "u") {
       const p = [];
       for (let y = 0; y < a.length; y += 2) {
-        const _ = lA(g, A, a, y, t.channels);
+        const _ = Km(g, A, a, y, t.channels);
         p.push(_);
       }
       return p;
@@ -7026,7 +6987,7 @@ function Zs(e, t, n) {
   }
   return [];
 }
-function pa(e, t, n, s, r) {
+function sa(e, t, n, s, r) {
   if (!(n != null && n.length))
     return;
   const i = [];
@@ -7040,12 +7001,12 @@ function pa(e, t, n, s, r) {
     byteLength: o.byteLength
   }) - 1, c = e.addBufferView(o, a, 0), u = e.addAccessor(c, {
     size: 1,
-    componentType: qs(o),
+    componentType: Ws(o),
     count: o.length
   });
   r.attributes[t] = u;
 }
-function lA(e, t, n, s) {
+function Km(e, t, n, s) {
   let r = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : [0];
   const i = {
     r: {
@@ -7067,10 +7028,10 @@ function lA(e, t, n, s) {
   }, o = n[s], a = n[s + 1];
   let c = 1;
   t && (t.indexOf("image/jpeg") !== -1 || t.indexOf("image/png") !== -1) && (c = 4);
-  const u = hA(o, a, e, c);
+  const u = zm(o, a, e, c);
   let l = 0;
   for (const h of r) {
-    const f = typeof h == "number" ? Object.values(i)[h] : i[h], d = u + f.offset, A = oa(e);
+    const f = typeof h == "number" ? Object.values(i)[h] : i[h], d = u + f.offset, A = Xo(e);
     if (A.data.length <= d)
       throw new Error(`${A.data.length} <= ${d}`);
     const g = A.data[d];
@@ -7078,12 +7039,12 @@ function lA(e, t, n, s) {
   }
   return l;
 }
-function hA(e, t, n) {
+function zm(e, t, n) {
   let s = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : 1;
-  const r = n.width, i = _i(e) * (r - 1), o = Math.round(i), a = n.height, c = _i(t) * (a - 1), u = Math.round(c), l = n.components ? n.components : s;
+  const r = n.width, i = pi(e) * (r - 1), o = Math.round(i), a = n.height, c = pi(t) * (a - 1), u = Math.round(c), l = n.components ? n.components : s;
   return (u * r + o) * l;
 }
-function Ba(e, t, n, s, r) {
+function ra(e, t, n, s, r) {
   const i = [];
   for (let o = 0; o < t; o++) {
     const a = n[o], c = n[o + 1] - n[o];
@@ -7094,7 +7055,7 @@ function Ba(e, t, n, s, r) {
   }
   return i;
 }
-function ya(e, t, n) {
+function ia(e, t, n) {
   const s = [];
   for (let r = 0; r < t; r++) {
     const i = r * n;
@@ -7102,7 +7063,7 @@ function ya(e, t, n) {
   }
   return s;
 }
-function Ca(e, t, n, s) {
+function oa(e, t, n, s) {
   if (n)
     throw new Error("Not implemented - arrayOffsets for strings is specified");
   if (s) {
@@ -7119,23 +7080,23 @@ function Ca(e, t, n, s) {
   }
   return [];
 }
-const Ta = "EXT_mesh_features", fA = Ta;
-async function dA(e, t) {
-  const n = new $(e);
-  mA(n, t);
+const aa = "EXT_mesh_features", Wm = aa;
+async function Xm(e, t) {
+  const n = new Z(e);
+  Qm(n, t);
 }
-function mA(e, t) {
+function Qm(e, t) {
   const n = e.gltf.json;
   if (n.meshes)
     for (const s of n.meshes)
       for (const r of s.primitives)
-        AA(e, r, t);
+        qm(e, r, t);
 }
-function AA(e, t, n) {
+function qm(e, t, n) {
   var s, r;
   if (!(n != null && (s = n.gltf) !== null && s !== void 0 && s.loadBuffers))
     return;
-  const i = (r = t.extensions) === null || r === void 0 ? void 0 : r[Ta], o = i == null ? void 0 : i.featureIds;
+  const i = (r = t.extensions) === null || r === void 0 ? void 0 : r[aa], o = i == null ? void 0 : i.featureIds;
   if (o)
     for (const c of o) {
       var a;
@@ -7144,62 +7105,62 @@ function AA(e, t, n) {
         const l = `_FEATURE_ID_${c.attribute}`, h = t.attributes[l];
         u = e.getTypedArrayForAccessor(h);
       } else
-        typeof c.texture < "u" && n !== null && n !== void 0 && (a = n.gltf) !== null && a !== void 0 && a.loadImages ? u = Zs(e, c.texture, t) : u = [];
+        typeof c.texture < "u" && n !== null && n !== void 0 && (a = n.gltf) !== null && a !== void 0 && a.loadImages ? u = qs(e, c.texture, t) : u = [];
       c.data = u;
     }
 }
-const gA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const Ym = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  decode: dA,
-  name: fA
-}, Symbol.toStringTag, { value: "Module" })), tr = "EXT_structural_metadata", pA = tr;
-async function BA(e, t) {
-  const n = new $(e);
-  yA(n, t);
+  decode: Xm,
+  name: Wm
+}, Symbol.toStringTag, { value: "Module" })), Ys = "EXT_structural_metadata", $m = Ys;
+async function Zm(e, t) {
+  const n = new Z(e);
+  tA(n, t);
 }
-function yA(e, t) {
+function tA(e, t) {
   var n, s;
   if (!((n = t.gltf) !== null && n !== void 0 && n.loadBuffers))
     return;
-  const r = e.getExtension(tr);
-  r && ((s = t.gltf) !== null && s !== void 0 && s.loadImages && CA(e, r), TA(e, r));
+  const r = e.getExtension(Ys);
+  r && ((s = t.gltf) !== null && s !== void 0 && s.loadImages && eA(e, r), nA(e, r));
 }
-function CA(e, t) {
+function eA(e, t) {
   const n = t.propertyTextures, s = e.gltf.json;
   if (n && s.meshes)
     for (const r of s.meshes)
       for (const i of r.primitives)
-        bA(e, n, i, t);
+        rA(e, n, i, t);
 }
-function TA(e, t) {
+function nA(e, t) {
   const n = t.schema;
   if (!n)
     return;
   const s = n.classes, r = t.propertyTables;
   if (s && r)
     for (const i in s) {
-      const o = EA(r, i);
-      o && wA(e, n, o);
+      const o = sA(r, i);
+      o && oA(e, n, o);
     }
 }
-function EA(e, t) {
+function sA(e, t) {
   for (const n of e)
     if (n.class === t)
       return n;
   return null;
 }
-function bA(e, t, n, s) {
+function rA(e, t, n, s) {
   var r;
   if (!t)
     return;
-  const i = (r = n.extensions) === null || r === void 0 ? void 0 : r[tr], o = i == null ? void 0 : i.propertyTextures;
+  const i = (r = n.extensions) === null || r === void 0 ? void 0 : r[Ys], o = i == null ? void 0 : i.propertyTextures;
   if (o)
     for (const a of o) {
       const c = t[a];
-      _A(e, c, n, s);
+      iA(e, c, n, s);
     }
 }
-function _A(e, t, n, s) {
+function iA(e, t, n, s) {
   if (!t.properties)
     return;
   s.dataAttributeNames || (s.dataAttributeNames = []);
@@ -7210,11 +7171,11 @@ function _A(e, t, n, s) {
     if (!c)
       continue;
     c.data || (c.data = []);
-    const u = c.data, l = Zs(e, c, n);
-    l !== null && (pa(e, a, l, u, n), c.data = u, s.dataAttributeNames.push(a));
+    const u = c.data, l = qs(e, c, n);
+    l !== null && (sa(e, a, l, u, n), c.data = u, s.dataAttributeNames.push(a));
   }
 }
-function wA(e, t, n) {
+function oA(e, t, n) {
   var s;
   const r = (s = t.classes) === null || s === void 0 ? void 0 : s[n.class];
   if (!r)
@@ -7224,14 +7185,14 @@ function wA(e, t, n) {
     var o;
     const c = r.properties[a], u = (o = n.properties) === null || o === void 0 ? void 0 : o[a];
     if (u) {
-      const l = MA(e, t, c, i, u);
+      const l = aA(e, t, c, i, u);
       u.data = l;
     }
   }
 }
-function MA(e, t, n, s, r) {
+function aA(e, t, n, s, r) {
   let i = [];
-  const o = r.values, a = e.getTypedArrayForBufferView(o), c = RA(e, n, r, s), u = IA(e, r, s);
+  const o = r.values, a = e.getTypedArrayForBufferView(o), c = cA(e, n, r, s), u = uA(e, r, s);
   switch (n.type) {
     case "SCALAR":
     case "VEC2":
@@ -7240,17 +7201,17 @@ function MA(e, t, n, s, r) {
     case "MAT2":
     case "MAT3":
     case "MAT4": {
-      i = SA(n, s, a, c);
+      i = lA(n, s, a, c);
       break;
     }
     case "BOOLEAN":
       throw new Error(`Not implemented - classProperty.type=${n.type}`);
     case "STRING": {
-      i = Ca(s, a, c, u);
+      i = oa(s, a, c, u);
       break;
     }
     case "ENUM": {
-      i = FA(t, n, s, a, c);
+      i = hA(t, n, s, a, c);
       break;
     }
     default:
@@ -7258,18 +7219,18 @@ function MA(e, t, n, s, r) {
   }
   return i;
 }
-function RA(e, t, n, s) {
-  return t.array && typeof t.count > "u" && typeof n.arrayOffsets < "u" ? Fn(e, n.arrayOffsets, n.arrayOffsetType || "UINT32", s) : null;
+function cA(e, t, n, s) {
+  return t.array && typeof t.count > "u" && typeof n.arrayOffsets < "u" ? In(e, n.arrayOffsets, n.arrayOffsetType || "UINT32", s) : null;
 }
-function IA(e, t, n) {
-  return typeof t.stringOffsets < "u" ? Fn(e, t.stringOffsets, t.stringOffsetType || "UINT32", n) : null;
+function uA(e, t, n) {
+  return typeof t.stringOffsets < "u" ? In(e, t.stringOffsets, t.stringOffsetType || "UINT32", n) : null;
 }
-function SA(e, t, n, s) {
-  const r = e.array, i = e.count, o = $s(e.type, e.componentType), a = n.byteLength / o;
+function lA(e, t, n, s) {
+  const r = e.array, i = e.count, o = Qs(e.type, e.componentType), a = n.byteLength / o;
   let c;
-  return e.componentType ? c = Dn(n, e.type, e.componentType, a) : c = n, r ? s ? Ba(c, t, s, n.length, o) : i ? ya(c, t, i) : [] : c;
+  return e.componentType ? c = Sn(n, e.type, e.componentType, a) : c = n, r ? s ? ra(c, t, s, n.length, o) : i ? ia(c, t, i) : [] : c;
 }
-function FA(e, t, n, s, r) {
+function hA(e, t, n, s, r) {
   var i;
   const o = t.enumType;
   if (!o)
@@ -7277,11 +7238,11 @@ function FA(e, t, n, s, r) {
   const a = (i = e.enums) === null || i === void 0 ? void 0 : i[o];
   if (!a)
     throw new Error(`Incorrect data in the EXT_structural_metadata extension: schema.enums does't contain ${o}`);
-  const c = a.valueType || "UINT16", u = $s(t.type, c), l = s.byteLength / u;
-  let h = Dn(s, t.type, c, l);
+  const c = a.valueType || "UINT16", u = Qs(t.type, c), l = s.byteLength / u;
+  let h = Sn(s, t.type, c, l);
   if (h || (h = s), t.array) {
     if (r)
-      return DA({
+      return fA({
         valuesData: h,
         numberOfElements: n,
         arrayOffsets: r,
@@ -7290,11 +7251,11 @@ function FA(e, t, n, s, r) {
         enumEntry: a
       });
     const f = t.count;
-    return f ? OA(h, n, f, a) : [];
+    return f ? dA(h, n, f, a) : [];
   }
-  return er(h, 0, n, a);
+  return $s(h, 0, n, a);
 }
-function DA(e) {
+function fA(e) {
   const {
     valuesData: t,
     numberOfElements: n,
@@ -7307,53 +7268,53 @@ function DA(e) {
     const u = s[c], l = s[c + 1] - s[c];
     if (l + u > r)
       break;
-    const h = u / i, f = l / i, d = er(t, h, f, o);
+    const h = u / i, f = l / i, d = $s(t, h, f, o);
     a.push(d);
   }
   return a;
 }
-function OA(e, t, n, s) {
+function dA(e, t, n, s) {
   const r = [];
   for (let i = 0; i < t; i++) {
-    const o = n * i, a = er(e, o, n, s);
+    const o = n * i, a = $s(e, o, n, s);
     r.push(a);
   }
   return r;
 }
-function er(e, t, n, s) {
+function $s(e, t, n, s) {
   const r = [];
   for (let i = 0; i < n; i++)
     if (e instanceof BigInt64Array || e instanceof BigUint64Array)
       r.push("");
     else {
-      const o = e[t + i], a = vA(s, o);
+      const o = e[t + i], a = mA(s, o);
       a ? r.push(a.name) : r.push("");
     }
   return r;
 }
-function vA(e, t) {
+function mA(e, t) {
   for (const n of e.values)
     if (n.value === t)
       return n;
   return null;
 }
-const xA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const AA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  decode: BA,
-  name: pA
-}, Symbol.toStringTag, { value: "Module" })), Ea = "EXT_feature_metadata", LA = Ea;
-async function GA(e, t) {
-  const n = new $(e);
-  UA(n, t);
+  decode: Zm,
+  name: $m
+}, Symbol.toStringTag, { value: "Module" })), ca = "EXT_feature_metadata", gA = ca;
+async function pA(e, t) {
+  const n = new Z(e);
+  BA(n, t);
 }
-function UA(e, t) {
+function BA(e, t) {
   var n, s;
   if (!((n = t.gltf) !== null && n !== void 0 && n.loadBuffers))
     return;
-  const r = e.getExtension(Ea);
-  r && ((s = t.gltf) !== null && s !== void 0 && s.loadImages && NA(e, r), PA(e, r));
+  const r = e.getExtension(ca);
+  r && ((s = t.gltf) !== null && s !== void 0 && s.loadImages && yA(e, r), CA(e, r));
 }
-function NA(e, t) {
+function yA(e, t) {
   const n = t.schema;
   if (!n)
     return;
@@ -7362,22 +7323,22 @@ function NA(e, t) {
   } = t;
   if (s && r)
     for (const i in s) {
-      const o = s[i], a = JA(r, i);
-      a && kA(e, a, o);
+      const o = s[i], a = EA(r, i);
+      a && _A(e, a, o);
     }
 }
-function PA(e, t) {
+function CA(e, t) {
   const n = t.schema;
   if (!n)
     return;
   const s = n.classes, r = t.featureTables;
   if (s && r)
     for (const i in s) {
-      const o = HA(r, i);
-      o && VA(e, n, o);
+      const o = TA(r, i);
+      o && bA(e, n, o);
     }
 }
-function HA(e, t) {
+function TA(e, t) {
   for (const n in e) {
     const s = e[n];
     if (s.class === t)
@@ -7385,7 +7346,7 @@ function HA(e, t) {
   }
   return null;
 }
-function JA(e, t) {
+function EA(e, t) {
   for (const n in e) {
     const s = e[n];
     if (s.class === t)
@@ -7393,7 +7354,7 @@ function JA(e, t) {
   }
   return null;
 }
-function VA(e, t, n) {
+function bA(e, t, n) {
   var s;
   if (!n.class)
     return;
@@ -7405,137 +7366,78 @@ function VA(e, t, n) {
     var o;
     const c = r.properties[a], u = (o = n.properties) === null || o === void 0 ? void 0 : o[a];
     if (u) {
-      const l = jA(e, t, c, i, u);
+      const l = wA(e, t, c, i, u);
       u.data = l;
     }
   }
 }
-function kA(e, t, n) {
+function _A(e, t, n) {
   const s = t.class;
   for (const i in n.properties) {
     var r;
     const o = t == null || (r = t.properties) === null || r === void 0 ? void 0 : r[i];
     if (o) {
-      const a = QA(e, o, s);
+      const a = DA(e, o, s);
       o.data = a;
     }
   }
 }
-function jA(e, t, n, s, r) {
+function wA(e, t, n, s, r) {
   let i = [];
-  const o = r.bufferView, a = e.getTypedArrayForBufferView(o), c = KA(e, n, r, s), u = WA(e, n, r, s);
-  return n.type === "STRING" || n.componentType === "STRING" ? i = Ca(s, a, c, u) : zA(n) && (i = XA(n, s, a, c)), i;
+  const o = r.bufferView, a = e.getTypedArrayForBufferView(o), c = MA(e, n, r, s), u = RA(e, n, r, s);
+  return n.type === "STRING" || n.componentType === "STRING" ? i = oa(s, a, c, u) : IA(n) && (i = SA(n, s, a, c)), i;
 }
-function KA(e, t, n, s) {
-  return t.type === "ARRAY" && typeof t.componentCount > "u" && typeof n.arrayOffsetBufferView < "u" ? Fn(e, n.arrayOffsetBufferView, n.offsetType || "UINT32", s) : null;
+function MA(e, t, n, s) {
+  return t.type === "ARRAY" && typeof t.componentCount > "u" && typeof n.arrayOffsetBufferView < "u" ? In(e, n.arrayOffsetBufferView, n.offsetType || "UINT32", s) : null;
 }
-function WA(e, t, n, s) {
-  return typeof n.stringOffsetBufferView < "u" ? Fn(e, n.stringOffsetBufferView, n.offsetType || "UINT32", s) : null;
+function RA(e, t, n, s) {
+  return typeof n.stringOffsetBufferView < "u" ? In(e, n.stringOffsetBufferView, n.offsetType || "UINT32", s) : null;
 }
-function zA(e) {
+function IA(e) {
   const t = ["UINT8", "INT16", "UINT16", "INT32", "UINT32", "INT64", "UINT64", "FLOAT32", "FLOAT64"];
   return t.includes(e.type) || typeof e.componentType < "u" && t.includes(e.componentType);
 }
-function XA(e, t, n, s) {
-  const r = e.type === "ARRAY", i = e.componentCount, o = "SCALAR", a = e.componentType || e.type, c = $s(o, a), u = n.byteLength / c, l = Dn(n, o, a, u);
-  return r ? s ? Ba(l, t, s, n.length, c) : i ? ya(l, t, i) : [] : l;
+function SA(e, t, n, s) {
+  const r = e.type === "ARRAY", i = e.componentCount, o = "SCALAR", a = e.componentType || e.type, c = Qs(o, a), u = n.byteLength / c, l = Sn(n, o, a, u);
+  return r ? s ? ra(l, t, s, n.length, c) : i ? ia(l, t, i) : [] : l;
 }
-function QA(e, t, n) {
+function DA(e, t, n) {
   const s = e.gltf.json;
   if (!s.meshes)
     return [];
   const r = [];
   for (const i of s.meshes)
     for (const o of i.primitives)
-      qA(e, n, t, r, o);
+      FA(e, n, t, r, o);
   return r;
 }
-function qA(e, t, n, s, r) {
+function FA(e, t, n, s, r) {
   const i = {
     channels: n.channels,
     ...n.texture
-  }, o = Zs(e, i, r);
-  o && pa(e, t, o, s, r);
+  }, o = qs(e, i, r);
+  o && sa(e, t, o, s, r);
 }
-const YA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const OA = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  decode: GA,
-  name: LA
-}, Symbol.toStringTag, { value: "Module" })), $A = "4.1.0-alpha.10", ZA = "4.1.0-alpha.10";
-function tg() {
-  var e;
-  return (e = globalThis._loadersgl_) !== null && e !== void 0 && e.version || (globalThis._loadersgl_ = globalThis._loadersgl_ || {}, globalThis._loadersgl_.version = "4.1.0-alpha.10"), globalThis._loadersgl_.version;
-}
-const eg = tg();
-function ng(e, t) {
-  if (!e)
-    throw new Error(t || "loaders.gl assertion failed.");
-}
-const Ge = typeof process != "object" || String(process) !== "[object process]" || process.browser, nr = typeof importScripts == "function", wi = typeof process < "u" && process.version && /v([0-9]*)/.exec(process.version);
-wi && parseFloat(wi[1]);
-const as = {};
-async function gn(e) {
-  let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : null, n = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {}, s = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : null;
-  return t && (e = sg(e, t, n, s)), as[e] = as[e] || rg(e), await as[e];
-}
-function sg(e, t) {
-  let n = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {}, s = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : null;
-  if (!n.useLocalLibraries && e.startsWith("http"))
-    return e;
-  s = s || e;
-  const r = n.modules || {};
-  return r[s] ? r[s] : Ge ? n.CDN ? (ng(n.CDN.startsWith("http")), `${n.CDN}/${t}@${eg}/dist/libs/${s}`) : nr ? `../src/libs/${s}` : `modules/${t}/src/libs/${s}` : `modules/${t}/dist/libs/${s}`;
-}
-async function rg(e) {
-  if (e.endsWith("wasm"))
-    return await og(e);
-  if (!Ge)
-    try {
-      return ho && void 0;
-    } catch (n) {
-      return console.error(n), null;
-    }
-  if (nr)
-    return importScripts(e);
-  const t = await ag(e);
-  return ig(t, e);
-}
-function ig(e, t) {
-  if (!Ge)
-    return;
-  if (nr)
-    return eval.call(globalThis, e), null;
-  const n = document.createElement("script");
-  n.id = t;
-  try {
-    n.appendChild(document.createTextNode(e));
-  } catch {
-    n.text = e;
-  }
-  return document.body.appendChild(n), null;
-}
-async function og(e) {
-  return await (await fetch(e)).arrayBuffer();
-}
-async function ag(e) {
-  return await (await fetch(e)).text();
-}
-const pn = {
+  decode: pA,
+  name: gA
+}, Symbol.toStringTag, { value: "Module" })), vA = "4.1.1", xA = "4.1.1", mn = {
   TRANSCODER: "basis_transcoder.js",
   TRANSCODER_WASM: "basis_transcoder.wasm",
   ENCODER: "basis_encoder.js",
   ENCODER_WASM: "basis_encoder.wasm"
 };
-let cs;
-async function Mi(e) {
+let rs;
+async function Bi(e) {
   const t = e.modules || {};
-  return t.basis ? t.basis : (cs = cs || cg(e), await cs);
+  return t.basis ? t.basis : (rs = rs || LA(e), await rs);
 }
-async function cg(e) {
+async function LA(e) {
   let t = null, n = null;
-  return [t, n] = await Promise.all([await gn(pn.TRANSCODER, "textures", e), await gn(pn.TRANSCODER_WASM, "textures", e)]), t = t || globalThis.BASIS, await ug(t, n);
+  return [t, n] = await Promise.all([await zt(mn.TRANSCODER, "textures", e), await zt(mn.TRANSCODER_WASM, "textures", e)]), t = t || globalThis.BASIS, await GA(t, n);
 }
-function ug(e, t) {
+function GA(e, t) {
   const n = {};
   return t && (n.wasmBinary = t), new Promise((s) => {
     e(n).then((r) => {
@@ -7549,16 +7451,16 @@ function ug(e, t) {
     });
   });
 }
-let us;
-async function Ri(e) {
+let is;
+async function yi(e) {
   const t = e.modules || {};
-  return t.basisEncoder ? t.basisEncoder : (us = us || lg(e), await us);
+  return t.basisEncoder ? t.basisEncoder : (is = is || UA(e), await is);
 }
-async function lg(e) {
+async function UA(e) {
   let t = null, n = null;
-  return [t, n] = await Promise.all([await gn(pn.ENCODER, "textures", e), await gn(pn.ENCODER_WASM, "textures", e)]), t = t || globalThis.BASIS, await hg(t, n);
+  return [t, n] = await Promise.all([await zt(mn.ENCODER, "textures", e), await zt(mn.ENCODER_WASM, "textures", e)]), t = t || globalThis.BASIS, await PA(t, n);
 }
-function hg(e, t) {
+function PA(e, t) {
   const n = {};
   return t && (n.wasmBinary = t), new Promise((s) => {
     e(n).then((r) => {
@@ -7635,7 +7537,7 @@ const se = {
   COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT: 35917,
   COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT: 35918,
   COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT: 35919
-}, fg = ["", "WEBKIT_", "MOZ_"], Ii = {
+}, NA = ["", "WEBKIT_", "MOZ_"], Ci = {
   WEBGL_compressed_texture_s3tc: "dxt",
   WEBGL_compressed_texture_s3tc_srgb: "dxt-srgb",
   WEBGL_compressed_texture_etc1: "etc1",
@@ -7645,50 +7547,50 @@ const se = {
   WEBGL_compressed_texture_astc: "astc",
   EXT_texture_compression_rgtc: "rgtc"
 };
-let tn = null;
-function dg(e) {
-  if (!tn) {
-    e = e || mg() || void 0, tn = /* @__PURE__ */ new Set();
-    for (const t of fg)
-      for (const n in Ii)
+let $e = null;
+function HA(e) {
+  if (!$e) {
+    e = e || JA() || void 0, $e = /* @__PURE__ */ new Set();
+    for (const t of NA)
+      for (const n in Ci)
         if (e && e.getExtension(`${t}${n}`)) {
-          const s = Ii[n];
-          tn.add(s);
+          const s = Ci[n];
+          $e.add(s);
         }
   }
-  return tn;
+  return $e;
 }
-function mg() {
+function JA() {
   try {
     return document.createElement("canvas").getContext("webgl");
   } catch {
     return null;
   }
 }
-var Si, Fi, Di, Oi, vi, xi, Li, Gi;
+var Ti, Ei, bi, _i, wi, Mi, Ri, Ii;
 (function(e) {
   e[e.NONE = 0] = "NONE", e[e.BASISLZ = 1] = "BASISLZ", e[e.ZSTD = 2] = "ZSTD", e[e.ZLIB = 3] = "ZLIB";
-})(Si || (Si = {})), function(e) {
+})(Ti || (Ti = {})), function(e) {
   e[e.BASICFORMAT = 0] = "BASICFORMAT";
-}(Fi || (Fi = {})), function(e) {
+}(Ei || (Ei = {})), function(e) {
   e[e.UNSPECIFIED = 0] = "UNSPECIFIED", e[e.ETC1S = 163] = "ETC1S", e[e.UASTC = 166] = "UASTC";
-}(Di || (Di = {})), function(e) {
+}(bi || (bi = {})), function(e) {
   e[e.UNSPECIFIED = 0] = "UNSPECIFIED", e[e.SRGB = 1] = "SRGB";
-}(Oi || (Oi = {})), function(e) {
+}(_i || (_i = {})), function(e) {
   e[e.UNSPECIFIED = 0] = "UNSPECIFIED", e[e.LINEAR = 1] = "LINEAR", e[e.SRGB = 2] = "SRGB", e[e.ITU = 3] = "ITU", e[e.NTSC = 4] = "NTSC", e[e.SLOG = 5] = "SLOG", e[e.SLOG2 = 6] = "SLOG2";
-}(vi || (vi = {})), function(e) {
+}(wi || (wi = {})), function(e) {
   e[e.ALPHA_STRAIGHT = 0] = "ALPHA_STRAIGHT", e[e.ALPHA_PREMULTIPLIED = 1] = "ALPHA_PREMULTIPLIED";
-}(xi || (xi = {})), function(e) {
+}(Mi || (Mi = {})), function(e) {
   e[e.RGB = 0] = "RGB", e[e.RRR = 3] = "RRR", e[e.GGG = 4] = "GGG", e[e.AAA = 15] = "AAA";
-}(Li || (Li = {})), function(e) {
+}(Ri || (Ri = {})), function(e) {
   e[e.RGB = 0] = "RGB", e[e.RGBA = 3] = "RGBA", e[e.RRR = 4] = "RRR", e[e.RRRG = 5] = "RRRG";
-}(Gi || (Gi = {}));
+}(Ii || (Ii = {}));
 const lt = [171, 75, 84, 88, 32, 50, 48, 187, 13, 10, 26, 10];
-function Ag(e) {
+function VA(e) {
   const t = new Uint8Array(e);
   return !(t.byteLength < lt.length || t[0] !== lt[0] || t[1] !== lt[1] || t[2] !== lt[2] || t[3] !== lt[3] || t[4] !== lt[4] || t[5] !== lt[5] || t[6] !== lt[6] || t[7] !== lt[7] || t[8] !== lt[8] || t[9] !== lt[9] || t[10] !== lt[10] || t[11] !== lt[11]);
 }
-const gg = {
+const kA = {
   etc1: {
     basisFormat: 0,
     compressed: !0,
@@ -7764,36 +7666,36 @@ const gg = {
     compressed: !1
   }
 };
-async function pg(e, t) {
+async function jA(e, t) {
   if (t.basis.containerFormat === "auto") {
-    if (Ag(e)) {
-      const s = await Ri(t);
-      return Ui(s.KTX2File, e, t);
+    if (VA(e)) {
+      const s = await yi(t);
+      return Si(s.KTX2File, e, t);
     }
     const {
       BasisFile: n
-    } = await Mi(t);
-    return ls(n, e, t);
+    } = await Bi(t);
+    return os(n, e, t);
   }
   switch (t.basis.module) {
     case "encoder":
-      const n = await Ri(t);
+      const n = await yi(t);
       switch (t.basis.containerFormat) {
         case "ktx2":
-          return Ui(n.KTX2File, e, t);
+          return Si(n.KTX2File, e, t);
         case "basis":
         default:
-          return ls(n.BasisFile, e, t);
+          return os(n.BasisFile, e, t);
       }
     case "transcoder":
     default:
       const {
         BasisFile: s
-      } = await Mi(t);
-      return ls(s, e, t);
+      } = await Bi(t);
+      return os(s, e, t);
   }
 }
-function ls(e, t, n) {
+function os(e, t, n) {
   const s = new e(new Uint8Array(t));
   try {
     if (!s.startTranscoding())
@@ -7802,7 +7704,7 @@ function ls(e, t, n) {
     for (let o = 0; o < r; o++) {
       const a = s.getNumLevels(o), c = [];
       for (let u = 0; u < a; u++)
-        c.push(Bg(s, o, u, n));
+        c.push(KA(s, o, u, n));
       i.push(c);
     }
     return i;
@@ -7810,12 +7712,12 @@ function ls(e, t, n) {
     s.close(), s.delete();
   }
 }
-function Bg(e, t, n, s) {
+function KA(e, t, n, s) {
   const r = e.getImageWidth(t, n), i = e.getImageHeight(t, n), o = e.getHasAlpha(), {
     compressed: a,
     format: c,
     basisFormat: u
-  } = ba(s, o), l = e.getImageTranscodedSizeInBytes(t, n, u), h = new Uint8Array(l);
+  } = ua(s, o), l = e.getImageTranscodedSizeInBytes(t, n, u), h = new Uint8Array(l);
   if (!e.transcodeImage(h, t, n, u, 0, 0))
     throw new Error("failed to start Basis transcoding");
   return {
@@ -7827,14 +7729,14 @@ function Bg(e, t, n, s) {
     hasAlpha: o
   };
 }
-function Ui(e, t, n) {
+function Si(e, t, n) {
   const s = new e(new Uint8Array(t));
   try {
     if (!s.startTranscoding())
       throw new Error("failed to start KTX2 transcoding");
     const r = s.getLevels(), i = [];
     for (let o = 0; o < r; o++) {
-      i.push(yg(s, o, n));
+      i.push(zA(s, o, n));
       break;
     }
     return [i];
@@ -7842,7 +7744,7 @@ function Ui(e, t, n) {
     s.close(), s.delete();
   }
 }
-function yg(e, t, n) {
+function zA(e, t, n) {
   const {
     alphaFlag: s,
     height: r,
@@ -7851,7 +7753,7 @@ function yg(e, t, n) {
     compressed: o,
     format: a,
     basisFormat: c
-  } = ba(n, s), u = e.getImageTranscodedSizeInBytes(t, 0, 0, c), l = new Uint8Array(u);
+  } = ua(n, s), u = e.getImageTranscodedSizeInBytes(t, 0, 0, c), l = new Uint8Array(u);
   if (!e.transcodeImage(l, t, 0, 0, c, 0, -1, -1))
     throw new Error("Failed to transcode KTX2 image");
   return {
@@ -7864,12 +7766,12 @@ function yg(e, t, n) {
     format: a
   };
 }
-function ba(e, t) {
+function ua(e, t) {
   let n = e && e.basis && e.basis.format;
-  return n === "auto" && (n = _a()), typeof n == "object" && (n = t ? n.alpha : n.noAlpha), n = n.toLowerCase(), gg[n];
+  return n === "auto" && (n = la()), typeof n == "object" && (n = t ? n.alpha : n.noAlpha), n = n.toLowerCase(), kA[n];
 }
-function _a() {
-  const e = dg();
+function la() {
+  const e = HA();
   return e.has("astc") ? "astc-4x4" : e.has("dxt") ? {
     alpha: "bc3",
     noAlpha: "bc1"
@@ -7878,11 +7780,11 @@ function _a() {
     noAlpha: "pvrtc1-4-rgb"
   } : e.has("etc1") ? "etc1" : e.has("etc2") ? "etc2" : "rgb565";
 }
-const Cg = {
+const WA = {
   name: "Basis",
   id: "basis",
   module: "textures",
-  version: ZA,
+  version: xA,
   worker: !0,
   extensions: ["basis", "ktx2"],
   mimeTypes: ["application/octet-stream", "image/ktx2"],
@@ -7896,24 +7798,24 @@ const Cg = {
       module: "transcoder"
     }
   }
-}, Tg = {
-  ...Cg,
-  parse: pg
-}, ae = !0, Ni = 1735152710, sr = 12, Bn = 8, Eg = 1313821514, bg = 5130562, _g = 0, wg = 0, Mg = 1;
-function Rg(e) {
+}, XA = {
+  ...WA,
+  parse: jA
+}, ae = !0, Di = 1735152710, Zs = 12, An = 8, QA = 1313821514, qA = 5130562, YA = 0, $A = 0, ZA = 1;
+function t0(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 0;
   return `${String.fromCharCode(e.getUint8(t + 0))}${String.fromCharCode(e.getUint8(t + 1))}${String.fromCharCode(e.getUint8(t + 2))}${String.fromCharCode(e.getUint8(t + 3))}`;
 }
-function Ig(e) {
+function e0(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 0, n = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {};
   const s = new DataView(e), {
-    magic: r = Ni
+    magic: r = Di
   } = n, i = s.getUint32(t, !1);
-  return i === r || i === Ni;
+  return i === r || i === Di;
 }
-function Sg(e, t) {
+function n0(e, t) {
   let n = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : 0;
-  const s = new DataView(t), r = Rg(s, n + 0), i = s.getUint32(n + 4, ae), o = s.getUint32(n + 8, ae);
+  const s = new DataView(t), r = t0(s, n + 0), i = s.getUint32(n + 4, ae), o = s.getUint32(n + 8, ae);
   switch (Object.assign(e, {
     header: {
       byteOffset: n,
@@ -7924,56 +7826,56 @@ function Sg(e, t) {
     version: i,
     json: {},
     binChunks: []
-  }), n += sr, e.version) {
+  }), n += Zs, e.version) {
     case 1:
-      return Fg(e, s, n);
+      return s0(e, s, n);
     case 2:
-      return Dg(e, s, n, {});
+      return r0(e, s, n, {});
     default:
       throw new Error(`Invalid GLB version ${e.version}. Only supports version 1 and 2.`);
   }
 }
-function Fg(e, t, n) {
-  Me(e.header.byteLength > sr + Bn);
+function s0(e, t, n) {
+  U(e.header.byteLength > Zs + An);
   const s = t.getUint32(n + 0, ae), r = t.getUint32(n + 4, ae);
-  return n += Bn, Me(r === _g), Is(e, t, n, s), n += s, n += Ss(e, t, n, e.header.byteLength), n;
+  return n += An, U(r === YA), _s(e, t, n, s), n += s, n += ws(e, t, n, e.header.byteLength), n;
 }
-function Dg(e, t, n, s) {
-  return Me(e.header.byteLength > sr + Bn), Og(e, t, n, s), n + e.header.byteLength;
+function r0(e, t, n, s) {
+  return U(e.header.byteLength > Zs + An), i0(e, t, n, s), n + e.header.byteLength;
 }
-function Og(e, t, n, s) {
+function i0(e, t, n, s) {
   for (; n + 8 <= e.header.byteLength; ) {
     const r = t.getUint32(n + 0, ae), i = t.getUint32(n + 4, ae);
-    switch (n += Bn, i) {
-      case Eg:
-        Is(e, t, n, r);
+    switch (n += An, i) {
+      case QA:
+        _s(e, t, n, r);
         break;
-      case bg:
-        Ss(e, t, n, r);
+      case qA:
+        ws(e, t, n, r);
         break;
-      case wg:
-        s.strict || Is(e, t, n, r);
+      case $A:
+        s.strict || _s(e, t, n, r);
         break;
-      case Mg:
-        s.strict || Ss(e, t, n, r);
+      case ZA:
+        s.strict || ws(e, t, n, r);
         break;
     }
-    n += Le(r, 4);
+    n += Ie(r, 4);
   }
   return n;
 }
-function Is(e, t, n, s) {
+function _s(e, t, n, s) {
   const r = new Uint8Array(t.buffer, n, s), o = new TextDecoder("utf8").decode(r);
-  return e.json = JSON.parse(o), Le(s, 4);
+  return e.json = JSON.parse(o), Ie(s, 4);
 }
-function Ss(e, t, n, s) {
+function ws(e, t, n, s) {
   return e.header.hasBinChunk = !0, e.binChunks.push({
     byteOffset: n,
     byteLength: s,
     arrayBuffer: t.buffer
-  }), Le(s, 4);
+  }), Ie(s, 4);
 }
-function wa(e, t) {
+function ha(e, t) {
   if (e.startsWith("data:") || e.startsWith("http:") || e.startsWith("https:"))
     return e;
   const s = t.baseUri || t.uri;
@@ -7981,7 +7883,7 @@ function wa(e, t) {
     throw new Error(`'baseUri' must be provided to resolve relative url ${e}`);
   return s.substr(0, s.lastIndexOf("/") + 1) + e;
 }
-const vg = "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", xg = "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", Lg = new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 4, 1, 96, 0, 0, 3, 3, 2, 0, 0, 5, 3, 1, 0, 1, 12, 1, 0, 10, 22, 2, 12, 0, 65, 0, 65, 0, 65, 0, 252, 10, 0, 0, 11, 7, 0, 65, 0, 253, 15, 26, 11]), Gg = new Uint8Array([32, 0, 65, 253, 3, 1, 2, 34, 4, 106, 6, 5, 11, 8, 7, 20, 13, 33, 12, 16, 128, 9, 116, 64, 19, 113, 127, 15, 10, 21, 22, 14, 255, 66, 24, 54, 136, 107, 18, 23, 192, 26, 114, 118, 132, 17, 77, 101, 130, 144, 27, 87, 131, 44, 45, 74, 156, 154, 70, 167]), Ug = {
+const o0 = "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", a0 = "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", c0 = new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0, 1, 4, 1, 96, 0, 0, 3, 3, 2, 0, 0, 5, 3, 1, 0, 1, 12, 1, 0, 10, 22, 2, 12, 0, 65, 0, 65, 0, 65, 0, 252, 10, 0, 0, 11, 7, 0, 65, 0, 253, 15, 26, 11]), u0 = new Uint8Array([32, 0, 65, 253, 3, 1, 2, 34, 4, 106, 6, 5, 11, 8, 7, 20, 13, 33, 12, 16, 128, 9, 116, 64, 19, 113, 127, 15, 10, 21, 22, 14, 255, 66, 24, 54, 136, 107, 18, 23, 192, 26, 114, 118, 132, 17, 77, 101, 130, 144, 27, 87, 131, 44, 45, 74, 156, 154, 70, 167]), l0 = {
   0: "",
   1: "meshopt_decodeFilterOct",
   2: "meshopt_decodeFilterQuat",
@@ -7990,7 +7892,7 @@ const vg = "B9h9z9tFBBBF8fL9gBB9gLaaaaaFa9gEaaaB9gFaFa9gEaaaFaEMcBFFFGGGEIIILF9w
   OCTAHEDRAL: "meshopt_decodeFilterOct",
   QUATERNION: "meshopt_decodeFilterQuat",
   EXPONENTIAL: "meshopt_decodeFilterExp"
-}, Ng = {
+}, h0 = {
   0: "meshopt_decodeVertexBuffer",
   1: "meshopt_decodeIndexBuffer",
   2: "meshopt_decodeIndexSequence",
@@ -7998,22 +7900,22 @@ const vg = "B9h9z9tFBBBF8fL9gBB9gLaaaaaFa9gEaaaB9gFaFa9gEaaaFaEMcBFFFGGGEIIILF9w
   TRIANGLES: "meshopt_decodeIndexBuffer",
   INDICES: "meshopt_decodeIndexSequence"
 };
-async function Pg(e, t, n, s, r) {
+async function f0(e, t, n, s, r) {
   let i = arguments.length > 5 && arguments[5] !== void 0 ? arguments[5] : "NONE";
-  const o = await Hg();
-  kg(o, o.exports[Ng[r]], e, t, n, s, o.exports[Ug[i || "NONE"]]);
+  const o = await d0();
+  g0(o, o.exports[h0[r]], e, t, n, s, o.exports[l0[i || "NONE"]]);
 }
-let hs;
-async function Hg() {
-  return hs || (hs = Jg()), hs;
+let as;
+async function d0() {
+  return as || (as = m0()), as;
 }
-async function Jg() {
-  let e = vg;
-  WebAssembly.validate(Lg) && (e = xg, console.log("Warning: meshopt_decoder is using experimental SIMD support"));
-  const t = await WebAssembly.instantiate(Vg(e), {});
+async function m0() {
+  let e = o0;
+  WebAssembly.validate(c0) && (e = a0, console.log("Warning: meshopt_decoder is using experimental SIMD support"));
+  const t = await WebAssembly.instantiate(A0(e), {});
   return await t.instance.exports.__wasm_call_ctors(), t.instance;
 }
-function Vg(e) {
+function A0(e) {
   const t = new Uint8Array(e.length);
   for (let s = 0; s < e.length; ++s) {
     const r = e.charCodeAt(s);
@@ -8021,29 +7923,29 @@ function Vg(e) {
   }
   let n = 0;
   for (let s = 0; s < e.length; ++s)
-    t[n++] = t[s] < 60 ? Gg[t[s]] : (t[s] - 60) * 64 + t[++s];
+    t[n++] = t[s] < 60 ? u0[t[s]] : (t[s] - 60) * 64 + t[++s];
   return t.buffer.slice(0, n);
 }
-function kg(e, t, n, s, r, i, o) {
+function g0(e, t, n, s, r, i, o) {
   const a = e.exports.sbrk, c = s + 3 & -4, u = a(c * r), l = a(i.length), h = new Uint8Array(e.exports.memory.buffer);
   h.set(i, l);
   const f = t(u, s, r, l, i.length);
   if (f === 0 && o && o(u, c, r), n.set(h.subarray(u, u + s * r)), a(u - a(0)), f !== 0)
     throw new Error(`Malformed buffer data: ${f}`);
 }
-const yn = "EXT_meshopt_compression", jg = yn;
-async function Kg(e, t) {
+const gn = "EXT_meshopt_compression", p0 = gn;
+async function B0(e, t) {
   var n, s;
-  const r = new $(e);
+  const r = new Z(e);
   if (!(t != null && (n = t.gltf) !== null && n !== void 0 && n.decompressMeshes) || !((s = t.gltf) !== null && s !== void 0 && s.loadBuffers))
     return;
   const i = [];
   for (const o of e.json.bufferViews || [])
-    i.push(Wg(r, o));
-  await Promise.all(i), r.removeExtension(yn);
+    i.push(y0(r, o));
+  await Promise.all(i), r.removeExtension(gn);
 }
-async function Wg(e, t) {
-  const n = e.getObjectExtension(t, yn);
+async function y0(e, t) {
+  const n = e.getObjectExtension(t, gn);
   if (n) {
     const {
       byteOffset: s = 0,
@@ -8054,17 +7956,17 @@ async function Wg(e, t) {
       filter: c = "NONE",
       buffer: u
     } = n, l = e.gltf.buffers[u], h = new Uint8Array(l.arrayBuffer, l.byteOffset + s, r), f = new Uint8Array(e.gltf.buffers[t.buffer].arrayBuffer, t.byteOffset, t.byteLength);
-    await Pg(f, o, i, h, a, c), e.removeObjectExtension(t, yn);
+    await f0(f, o, i, h, a, c), e.removeObjectExtension(t, gn);
   }
 }
-const zg = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const C0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  decode: Kg,
-  name: jg
-}, Symbol.toStringTag, { value: "Module" })), re = "EXT_texture_webp", Xg = re;
-function Qg(e, t) {
-  const n = new $(e);
-  if (!zm("image/webp")) {
+  decode: B0,
+  name: p0
+}, Symbol.toStringTag, { value: "Module" })), re = "EXT_texture_webp", T0 = re;
+function E0(e, t) {
+  const n = new Z(e);
+  if (!Fm("image/webp")) {
     if (n.getRequiredExtensions().includes(re))
       throw new Error(`gltf: Required extension ${re} not supported by browser`);
     return;
@@ -8078,102 +7980,102 @@ function Qg(e, t) {
   }
   n.removeExtension(re);
 }
-const qg = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const b0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  name: Xg,
-  preprocess: Qg
-}, Symbol.toStringTag, { value: "Module" })), un = "KHR_texture_basisu", Yg = un;
-function $g(e, t) {
-  const n = new $(e), {
+  name: T0,
+  preprocess: E0
+}, Symbol.toStringTag, { value: "Module" })), an = "KHR_texture_basisu", _0 = an;
+function w0(e, t) {
+  const n = new Z(e), {
     json: s
   } = n;
   for (const r of s.textures || []) {
-    const i = n.getObjectExtension(r, un);
-    i && (r.source = i.source, n.removeObjectExtension(r, un));
+    const i = n.getObjectExtension(r, an);
+    i && (r.source = i.source, n.removeObjectExtension(r, an));
   }
-  n.removeExtension(un);
+  n.removeExtension(an);
 }
-const Zg = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const M0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  name: Yg,
-  preprocess: $g
+  name: _0,
+  preprocess: w0
 }, Symbol.toStringTag, { value: "Module" }));
-function t0(e) {
+function R0(e) {
   const t = {};
   for (const n in e) {
     const s = e[n];
     if (n !== "indices") {
-      const r = Ma(s);
+      const r = fa(s);
       t[n] = r;
     }
   }
   return t;
 }
-function Ma(e) {
+function fa(e) {
   const {
     buffer: t,
     size: n,
     count: s
-  } = e0(e);
+  } = I0(e);
   return {
     value: t,
     size: n,
     byteOffset: 0,
     count: s,
-    type: da(n),
-    componentType: qs(t)
+    type: Zo(n),
+    componentType: Ws(t)
   };
 }
-function e0(e) {
+function I0(e) {
   let t = e, n = 1, s = 0;
-  return e && e.value && (t = e.value, n = e.size || 1), t && (ArrayBuffer.isView(t) || (t = n0(t, Float32Array)), s = t.length / n), {
+  return e && e.value && (t = e.value, n = e.size || 1), t && (ArrayBuffer.isView(t) || (t = S0(t, Float32Array)), s = t.length / n), {
     buffer: t,
     size: n,
     count: s
   };
 }
-function n0(e, t) {
+function S0(e, t) {
   let n = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : !1;
   return e ? Array.isArray(e) ? new t(e) : n && !(e instanceof t) ? new t(e) : e : null;
 }
-const Pt = "KHR_draco_mesh_compression", s0 = Pt;
-function r0(e, t, n) {
-  const s = new $(e);
-  for (const r of Ra(s))
-    s.getObjectExtension(r, Pt);
+const Ht = "KHR_draco_mesh_compression", D0 = Ht;
+function F0(e, t, n) {
+  const s = new Z(e);
+  for (const r of da(s))
+    s.getObjectExtension(r, Ht);
 }
-async function i0(e, t, n) {
+async function O0(e, t, n) {
   var s;
   if (!(t != null && (s = t.gltf) !== null && s !== void 0 && s.decompressMeshes))
     return;
-  const r = new $(e), i = [];
-  for (const o of Ra(r))
-    r.getObjectExtension(o, Pt) && i.push(a0(r, o, t, n));
-  await Promise.all(i), r.removeExtension(Pt);
+  const r = new Z(e), i = [];
+  for (const o of da(r))
+    r.getObjectExtension(o, Ht) && i.push(x0(r, o, t, n));
+  await Promise.all(i), r.removeExtension(Ht);
 }
-function o0(e) {
+function v0(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
-  const n = new $(e);
+  const n = new Z(e);
   for (const s of n.json.meshes || [])
-    c0(s, t), n.addRequiredExtension(Pt);
+    L0(s, t), n.addRequiredExtension(Ht);
 }
-async function a0(e, t, n, s) {
-  const r = e.getObjectExtension(t, Pt);
+async function x0(e, t, n, s) {
+  const r = e.getObjectExtension(t, Ht);
   if (!r)
     return;
-  const i = e.getTypedArrayForBufferView(r.bufferView), o = la(i.buffer, i.byteOffset), a = {
+  const i = e.getTypedArrayForBufferView(r.bufferView), o = Fs(i.buffer, i.byteOffset), a = {
     ...n
   };
   delete a["3d-tiles"];
-  const c = await ua(o, ta, a, s), u = t0(c.attributes);
+  const c = await Re(o, jo, a, s), u = R0(c.attributes);
   for (const [l, h] of Object.entries(u))
     if (l in t.attributes) {
       const f = t.attributes[l], d = e.getAccessor(f);
       d != null && d.min && d !== null && d !== void 0 && d.max && (h.min = d.min, h.max = d.max);
     }
-  t.attributes = u, c.indices && (t.indices = Ma(c.indices)), e.removeObjectExtension(t, Pt), u0(t);
+  t.attributes = u, c.indices && (t.indices = fa(c.indices)), e.removeObjectExtension(t, Ht), G0(t);
 }
-function c0(e, t) {
+function L0(e, t) {
   var n;
   let s = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : 4, r = arguments.length > 3 ? arguments[3] : void 0, i = arguments.length > 4 ? arguments[4] : void 0;
   if (!r.DracoWriter)
@@ -8188,7 +8090,7 @@ function c0(e, t) {
       attributes: c,
       mode: s,
       extensions: {
-        [Pt]: {
+        [Ht]: {
           bufferView: u,
           attributes: c
         }
@@ -8196,31 +8098,31 @@ function c0(e, t) {
     }]
   };
 }
-function u0(e) {
+function G0(e) {
   if (!e.attributes && Object.keys(e.attributes).length > 0)
     throw new Error("glTF: Empty primitive detected: Draco decompression failure?");
 }
-function* Ra(e) {
+function* da(e) {
   for (const t of e.json.meshes || [])
     for (const n of t.primitives)
       yield n;
 }
-const l0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const U0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  decode: i0,
-  encode: o0,
-  name: s0,
-  preprocess: r0
-}, Symbol.toStringTag, { value: "Module" })), rr = "KHR_texture_transform", h0 = rr, en = new m(), f0 = new k(), d0 = new k();
-async function m0(e, t) {
+  decode: O0,
+  encode: v0,
+  name: D0,
+  preprocess: F0
+}, Symbol.toStringTag, { value: "Module" })), tr = "KHR_texture_transform", P0 = tr, Ze = new m(), N0 = new j(), H0 = new j();
+async function J0(e, t) {
   var n;
-  if (!new $(e).hasExtension(rr) || !((n = t.gltf) !== null && n !== void 0 && n.loadBuffers))
+  if (!new Z(e).hasExtension(tr) || !((n = t.gltf) !== null && n !== void 0 && n.loadBuffers))
     return;
   const i = e.json.materials || [];
   for (let o = 0; o < i.length; o++)
-    A0(o, e);
+    V0(o, e);
 }
-function A0(e, t) {
+function V0(e, t) {
   var n, s, r;
   const i = [], o = (n = t.json.materials) === null || n === void 0 ? void 0 : n[e], a = o == null || (s = o.pbrMetallicRoughness) === null || s === void 0 ? void 0 : s.baseColorTexture;
   a && ge(t, e, a, i);
@@ -8234,19 +8136,19 @@ function A0(e, t) {
   h && ge(t, e, h, i);
 }
 function ge(e, t, n, s) {
-  const r = g0(n, s);
+  const r = k0(n, s);
   if (!r)
     return;
   const i = e.json.meshes || [];
   for (const o of i)
     for (const a of o.primitives) {
       const c = a.material;
-      Number.isFinite(c) && t === c && p0(e, a, r);
+      Number.isFinite(c) && t === c && j0(e, a, r);
     }
 }
-function g0(e, t) {
+function k0(e, t) {
   var n;
-  const s = (n = e.extensions) === null || n === void 0 ? void 0 : n[rr], {
+  const s = (n = e.extensions) === null || n === void 0 ? void 0 : n[tr], {
     texCoord: r = 0
   } = e, {
     texCoord: i = r
@@ -8255,7 +8157,7 @@ function g0(e, t) {
     let [c, u] = a;
     return c === r && u === i;
   }) !== -1)) {
-    const a = C0(s);
+    const a = W0(s);
     return r !== i && (e.texCoord = i), t.push([r, i]), {
       originalTexCoord: r,
       texCoord: i,
@@ -8264,7 +8166,7 @@ function g0(e, t) {
   }
   return null;
 }
-function p0(e, t, n) {
+function j0(e, t, n) {
   const {
     originalTexCoord: s,
     texCoord: r,
@@ -8283,24 +8185,24 @@ function p0(e, t, n) {
         } = e.buffers[l.buffer], d = (f || 0) + (u.byteOffset || 0) + (l.byteOffset || 0), {
           ArrayType: A,
           length: g
-        } = Ys(u, l), p = fa[u.componentType], y = ha[u.type], _ = l.byteStride || p * y, b = new Float32Array(g);
+        } = Xs(u, l), p = $o[u.componentType], y = Yo[u.type], _ = l.byteStride || p * y, b = new Float32Array(g);
         for (let w = 0; w < u.count; w++) {
           const M = new A(h, d + w * _, 2);
-          en.set(M[0], M[1], 1), en.transformByMatrix3(i), b.set([en[0], en[1]], w * y);
+          Ze.set(M[0], M[1], 1), Ze.transformByMatrix3(i), b.set([Ze[0], Ze[1]], w * y);
         }
-        s === r ? B0(u, l, e.buffers, b) : y0(r, u, t, e, b);
+        s === r ? K0(u, l, e.buffers, b) : z0(r, u, t, e, b);
       }
     }
   }
 }
-function B0(e, t, n, s) {
+function K0(e, t, n, s) {
   e.componentType = 5126, n.push({
     arrayBuffer: s.buffer,
     byteOffset: 0,
     byteLength: s.buffer.byteLength
   }), t.buffer = n.length - 1, t.byteLength = s.buffer.byteLength, t.byteOffset = 0, delete t.byteStride;
 }
-function y0(e, t, n, s, r) {
+function z0(e, t, n, s, r) {
   s.buffers.push({
     arrayBuffer: r.buffer,
     byteOffset: 0,
@@ -8323,21 +8225,21 @@ function y0(e, t, n, s, r) {
     type: "VEC2"
   }), n.attributes[`TEXCOORD_${e}`] = o.length - 1);
 }
-function C0(e) {
+function W0(e) {
   const {
     offset: t = [0, 0],
     rotation: n = 0,
     scale: s = [1, 1]
-  } = e, r = new k().set(1, 0, 0, 0, 1, 0, t[0], t[1], 1), i = f0.set(Math.cos(n), Math.sin(n), 0, -Math.sin(n), Math.cos(n), 0, 0, 0, 1), o = d0.set(s[0], 0, 0, 0, s[1], 0, 0, 0, 1);
+  } = e, r = new j().set(1, 0, 0, 0, 1, 0, t[0], t[1], 1), i = N0.set(Math.cos(n), Math.sin(n), 0, -Math.sin(n), Math.cos(n), 0, 0, 0, 1), o = H0.set(s[0], 0, 0, 0, s[1], 0, 0, 0, 1);
   return r.multiplyRight(i).multiplyRight(o);
 }
-const T0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const X0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  decode: m0,
-  name: h0
-}, Symbol.toStringTag, { value: "Module" })), Kt = "KHR_lights_punctual", E0 = Kt;
-async function b0(e) {
-  const t = new $(e), {
+  decode: J0,
+  name: P0
+}, Symbol.toStringTag, { value: "Module" })), Kt = "KHR_lights_punctual", Q0 = Kt;
+async function q0(e) {
+  const t = new Z(e), {
     json: n
   } = t, s = t.getExtension(Kt);
   s && (t.json.lights = s.lights, t.removeExtension(Kt));
@@ -8346,8 +8248,8 @@ async function b0(e) {
     i && (r.light = i.light), t.removeObjectExtension(r, Kt);
   }
 }
-async function _0(e) {
-  const t = new $(e), {
+async function Y0(e) {
+  const t = new Z(e), {
     json: n
   } = t;
   if (n.lights) {
@@ -8362,50 +8264,50 @@ async function _0(e) {
     delete t.json.lights;
   }
 }
-const w0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const $0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  decode: b0,
-  encode: _0,
-  name: E0
-}, Symbol.toStringTag, { value: "Module" })), Re = "KHR_materials_unlit", M0 = Re;
-async function R0(e) {
-  const t = new $(e), {
+  decode: q0,
+  encode: Y0,
+  name: Q0
+}, Symbol.toStringTag, { value: "Module" })), Me = "KHR_materials_unlit", Z0 = Me;
+async function tg(e) {
+  const t = new Z(e), {
     json: n
   } = t;
   for (const s of n.materials || [])
-    s.extensions && s.extensions.KHR_materials_unlit && (s.unlit = !0), t.removeObjectExtension(s, Re);
-  t.removeExtension(Re);
+    s.extensions && s.extensions.KHR_materials_unlit && (s.unlit = !0), t.removeObjectExtension(s, Me);
+  t.removeExtension(Me);
 }
-function I0(e) {
-  const t = new $(e), {
+function eg(e) {
+  const t = new Z(e), {
     json: n
   } = t;
   if (t.materials)
     for (const s of n.materials || [])
-      s.unlit && (delete s.unlit, t.addObjectExtension(s, Re, {}), t.addExtension(Re));
+      s.unlit && (delete s.unlit, t.addObjectExtension(s, Me, {}), t.addExtension(Me));
 }
-const S0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const ng = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  decode: R0,
-  encode: I0,
-  name: M0
-}, Symbol.toStringTag, { value: "Module" })), Be = "KHR_techniques_webgl", F0 = Be;
-async function D0(e) {
-  const t = new $(e), {
+  decode: tg,
+  encode: eg,
+  name: Z0
+}, Symbol.toStringTag, { value: "Module" })), Be = "KHR_techniques_webgl", sg = Be;
+async function rg(e) {
+  const t = new Z(e), {
     json: n
   } = t, s = t.getExtension(Be);
   if (s) {
-    const r = v0(s, t);
+    const r = og(s, t);
     for (const i of n.materials || []) {
       const o = t.getObjectExtension(i, Be);
-      o && (i.technique = Object.assign({}, o, r[o.technique]), i.technique.values = x0(i.technique, t)), t.removeObjectExtension(i, Be);
+      o && (i.technique = Object.assign({}, o, r[o.technique]), i.technique.values = ag(i.technique, t)), t.removeObjectExtension(i, Be);
     }
     t.removeExtension(Be);
   }
 }
-async function O0(e, t) {
+async function ig(e, t) {
 }
-function v0(e, t) {
+function og(e, t) {
   const {
     programs: n = [],
     shaders: s = [],
@@ -8422,7 +8324,7 @@ function v0(e, t) {
     o.program = n[o.program];
   }), r;
 }
-function x0(e, t) {
+function ag(e, t) {
   const n = Object.assign({}, e.values);
   return Object.keys(e.uniforms || {}).forEach((s) => {
     e.uniforms[s].value && !(s in n) && (n[s] = e.uniforms[s].value);
@@ -8430,45 +8332,45 @@ function x0(e, t) {
     typeof n[s] == "object" && n[s].index !== void 0 && (n[s].texture = t.getTexture(n[s].index));
   }), n;
 }
-const L0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const cg = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  decode: D0,
-  encode: O0,
-  name: F0
-}, Symbol.toStringTag, { value: "Module" })), Ia = [xA, gA, zg, qg, Zg, l0, w0, S0, L0, T0, YA];
-function G0(e) {
+  decode: rg,
+  encode: ig,
+  name: sg
+}, Symbol.toStringTag, { value: "Module" })), ma = [AA, Ym, C0, b0, M0, U0, $0, ng, cg, X0, OA];
+function ug(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {}, n = arguments.length > 2 ? arguments[2] : void 0;
-  const s = Ia.filter((i) => Sa(i.name, t));
+  const s = ma.filter((i) => Aa(i.name, t));
   for (const i of s) {
     var r;
     (r = i.preprocess) === null || r === void 0 || r.call(i, e, t, n);
   }
 }
-async function U0(e) {
+async function lg(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {}, n = arguments.length > 2 ? arguments[2] : void 0;
-  const s = Ia.filter((i) => Sa(i.name, t));
+  const s = ma.filter((i) => Aa(i.name, t));
   for (const i of s) {
     var r;
     await ((r = i.decode) === null || r === void 0 ? void 0 : r.call(i, e, t, n));
   }
 }
-function Sa(e, t) {
+function Aa(e, t) {
   var n;
   const s = (t == null || (n = t.gltf) === null || n === void 0 ? void 0 : n.excludeExtensions) || {};
   return !(e in s && !s[e]);
 }
-const fs = "KHR_binary_glTF";
-function N0(e) {
-  const t = new $(e), {
+const cs = "KHR_binary_glTF";
+function hg(e) {
+  const t = new Z(e), {
     json: n
   } = t;
   for (const s of n.images || []) {
-    const r = t.getObjectExtension(s, fs);
-    r && Object.assign(s, r), t.removeObjectExtension(s, fs);
+    const r = t.getObjectExtension(s, cs);
+    r && Object.assign(s, r), t.removeObjectExtension(s, cs);
   }
-  n.buffers && n.buffers[0] && delete n.buffers[0].uri, t.removeExtension(fs);
+  n.buffers && n.buffers[0] && delete n.buffers[0].uri, t.removeExtension(cs);
 }
-const Pi = {
+const Fi = {
   accessors: "accessor",
   animations: "animation",
   buffers: "buffer",
@@ -8481,7 +8383,7 @@ const Pi = {
   scenes: "scene",
   skins: "skin",
   textures: "texture"
-}, P0 = {
+}, fg = {
   accessor: "accessors",
   animations: "animation",
   buffer: "buffers",
@@ -8495,7 +8397,7 @@ const Pi = {
   skin: "skins",
   texture: "textures"
 };
-class H0 {
+class dg {
   constructor() {
     this.idToIndexMap = {
       animations: {},
@@ -8527,13 +8429,13 @@ class H0 {
     }
     if (!n.normalize)
       throw new Error("glTF v1 is not supported.");
-    console.warn("Converting glTF v1 to glTF v2 format. This is experimental and may fail."), this._addAsset(s), this._convertTopLevelObjectsToArrays(s), N0(t), this._convertObjectIdsToArrayIndices(s), this._updateObjects(s), this._updateMaterial(s);
+    console.warn("Converting glTF v1 to glTF v2 format. This is experimental and may fail."), this._addAsset(s), this._convertTopLevelObjectsToArrays(s), hg(t), this._convertObjectIdsToArrayIndices(s), this._updateObjects(s), this._updateMaterial(s);
   }
   _addAsset(t) {
     t.asset = t.asset || {}, t.asset.version = "2.0", t.asset.generator = t.asset.generator || "Normalized to glTF 2.0 by loaders.gl";
   }
   _convertTopLevelObjectsToArrays(t) {
-    for (const n in Pi)
+    for (const n in Fi)
       this._convertTopLevelObjectToArray(t, n);
   }
   _convertTopLevelObjectToArray(t, n) {
@@ -8549,7 +8451,7 @@ class H0 {
     }
   }
   _convertObjectIdsToArrayIndices(t) {
-    for (const n in Pi)
+    for (const n in Fi)
       this._convertIdsToIndices(t, n);
     "scene" in t && (t.scene = this._convertIdToIndex(t.scene, "scene"));
     for (const n of t.textures)
@@ -8591,7 +8493,7 @@ class H0 {
       }
   }
   _convertIdToIndex(t, n) {
-    const s = P0[n];
+    const s = fg[n];
     if (s in this.idToIndexMap) {
       const r = this.idToIndexMap[s][t];
       if (!Number.isFinite(r))
@@ -8619,23 +8521,23 @@ class H0 {
     }
   }
 }
-function J0(e) {
+function mg(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
-  return new H0().normalize(e, t);
+  return new dg().normalize(e, t);
 }
-async function V0(e, t) {
+async function Ag(e, t) {
   var n, s, r;
   let i = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : 0, o = arguments.length > 3 ? arguments[3] : void 0, a = arguments.length > 4 ? arguments[4] : void 0;
-  return k0(e, t, i, o), J0(e, {
+  return gg(e, t, i, o), mg(e, {
     normalize: o == null || (n = o.gltf) === null || n === void 0 ? void 0 : n.normalize
-  }), G0(e, o, a), o != null && (s = o.gltf) !== null && s !== void 0 && s.loadBuffers && e.json.buffers && await j0(e, o, a), o != null && (r = o.gltf) !== null && r !== void 0 && r.loadImages && await K0(e, o, a), await U0(e, o, a), e;
+  }), ug(e, o, a), o != null && (s = o.gltf) !== null && s !== void 0 && s.loadBuffers && e.json.buffers && await pg(e, o, a), o != null && (r = o.gltf) !== null && r !== void 0 && r.loadImages && await Bg(e, o, a), await lg(e, o, a), e;
 }
-function k0(e, t, n, s) {
-  if (s.uri && (e.baseUri = s.uri), t instanceof ArrayBuffer && !Ig(t, n, s) && (t = new TextDecoder().decode(t)), typeof t == "string")
-    e.json = $m(t);
+function gg(e, t, n, s) {
+  if (s.uri && (e.baseUri = s.uri), t instanceof ArrayBuffer && !e0(t, n, s) && (t = new TextDecoder().decode(t)), typeof t == "string")
+    e.json = Mc(t);
   else if (t instanceof ArrayBuffer) {
     const o = {};
-    n = Sg(o, t, n, s.glb), ft(o.type === "glTF", `Invalid GLB magic string ${o.type}`), e._glb = o, e.json = o.json;
+    n = n0(o, t, n, s.glb), ft(o.type === "glTF", `Invalid GLB magic string ${o.type}`), e._glb = o, e.json = o.json;
   } else
     ft(!1, "GLTF: must be ArrayBuffer or string");
   const r = e.json.buffers || [];
@@ -8652,7 +8554,7 @@ function k0(e, t, n, s) {
   const i = e.json.images || [];
   e.images = new Array(i.length).fill({});
 }
-async function j0(e, t, n) {
+async function pg(e, t, n) {
   const s = e.json.buffers || [];
   for (let o = 0; o < s.length; ++o) {
     const a = s[o];
@@ -8662,7 +8564,7 @@ async function j0(e, t, n) {
         fetch: c
       } = n;
       ft(c);
-      const u = wa(a.uri, t), l = await (n == null || (r = n.fetch) === null || r === void 0 ? void 0 : r.call(n, u)), h = await (l == null || (i = l.arrayBuffer) === null || i === void 0 ? void 0 : i.call(l));
+      const u = ha(a.uri, t), l = await (n == null || (r = n.fetch) === null || r === void 0 ? void 0 : r.call(n, u)), h = await (l == null || (i = l.arrayBuffer) === null || i === void 0 ? void 0 : i.call(l));
       e.buffers[o] = {
         arrayBuffer: h,
         byteOffset: 0,
@@ -8676,22 +8578,22 @@ async function j0(e, t, n) {
       });
   }
 }
-async function K0(e, t, n) {
-  const s = W0(e), r = e.json.images || [], i = [];
+async function Bg(e, t, n) {
+  const s = yg(e), r = e.json.images || [], i = [];
   for (const o of s)
-    i.push(z0(e, r[o], o, t, n));
+    i.push(Cg(e, r[o], o, t, n));
   return await Promise.all(i);
 }
-function W0(e) {
+function yg(e) {
   const t = /* @__PURE__ */ new Set(), n = e.json.textures || [];
   for (const s of n)
     s.source !== void 0 && t.add(s.source);
   return Array.from(t).sort();
 }
-async function z0(e, t, n, s, r) {
+async function Cg(e, t, n, s, r) {
   let i;
   if (t.uri && !t.hasOwnProperty("bufferView")) {
-    const a = wa(t.uri, s), {
+    const a = ha(t.uri, s), {
       fetch: c
     } = r;
     i = await (await c(a)).arrayBuffer(), t.bufferView = {
@@ -8699,15 +8601,15 @@ async function z0(e, t, n, s, r) {
     };
   }
   if (Number.isFinite(t.bufferView)) {
-    const a = oA(e.json, e.buffers, t.bufferView);
-    i = la(a.buffer, a.byteOffset, a.byteLength);
+    const a = Jm(e.json, e.buffers, t.bufferView);
+    i = Fs(a.buffer, a.byteOffset, a.byteLength);
   }
   ft(i, "glTF image has no data");
-  let o = await ua(i, [Wm, Tg], {
+  let o = await Re(i, [Dm, XA], {
     ...s,
     mimeType: t.mimeType,
     basis: s.basis || {
-      format: _a()
+      format: la()
     }
   }, r);
   o && o[0] && (o = {
@@ -8718,17 +8620,17 @@ async function z0(e, t, n, s, r) {
     data: o[0]
   }), e.images = e.images || [], e.images[n] = o;
 }
-const Cn = {
+const pn = {
   name: "glTF",
   id: "gltf",
   module: "gltf",
-  version: $A,
+  version: vA,
   extensions: ["gltf", "glb"],
   mimeTypes: ["model/gltf+json", "model/gltf-binary"],
   text: !0,
   binary: !0,
   tests: ["glTF"],
-  parse: X0,
+  parse: Tg,
   options: {
     gltf: {
       normalize: !0,
@@ -8739,21 +8641,21 @@ const Cn = {
     log: console
   }
 };
-async function X0(e) {
+async function Tg(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {}, n = arguments.length > 2 ? arguments[2] : void 0;
   t = {
-    ...Cn.options,
+    ...pn.options,
     ...t
   }, t.gltf = {
-    ...Cn.options.gltf,
+    ...pn.options.gltf,
     ...t.gltf
   };
   const {
     byteOffset: s = 0
   } = t;
-  return await V0({}, e, s, t, n);
+  return await Ag({}, e, s, t, n);
 }
-const Q0 = {
+const Eg = {
   SCALAR: 1,
   VEC2: 2,
   VEC3: 3,
@@ -8761,7 +8663,7 @@ const Q0 = {
   MAT2: 4,
   MAT3: 9,
   MAT4: 16
-}, q0 = {
+}, bg = {
   5120: 1,
   5121: 1,
   5122: 2,
@@ -8776,30 +8678,30 @@ const Q0 = {
   REPEAT: 10497,
   LINEAR: 9729,
   NEAREST_MIPMAP_LINEAR: 9986
-}, Y0 = {
+}, _g = {
   magFilter: mt.TEXTURE_MAG_FILTER,
   minFilter: mt.TEXTURE_MIN_FILTER,
   wrapS: mt.TEXTURE_WRAP_S,
   wrapT: mt.TEXTURE_WRAP_T
-}, $0 = {
+}, wg = {
   [mt.TEXTURE_MAG_FILTER]: mt.LINEAR,
   [mt.TEXTURE_MIN_FILTER]: mt.NEAREST_MIPMAP_LINEAR,
   [mt.TEXTURE_WRAP_S]: mt.REPEAT,
   [mt.TEXTURE_WRAP_T]: mt.REPEAT
 };
-function Z0() {
+function Mg() {
   return {
     id: "default-sampler",
-    parameters: $0
+    parameters: wg
   };
 }
-function tp(e) {
-  return q0[e];
+function Rg(e) {
+  return bg[e];
 }
-function ep(e) {
-  return Q0[e];
+function Ig(e) {
+  return Eg[e];
 }
-class np {
+class Sg {
   constructor() {
     this.baseUri = "", this.jsonUnprocessed = void 0, this.json = void 0, this.buffers = [], this.images = [];
   }
@@ -8935,7 +8837,7 @@ class np {
     return s;
   }
   _resolveAccessor(t, n) {
-    const s = tp(t.componentType), r = ep(t.type), i = s * r, o = {
+    const s = Rg(t.componentType), r = Ig(t.type), i = s * r, o = {
       ...t,
       id: t.id || `accessor-${n}`,
       bytesPerComponent: s,
@@ -8949,7 +8851,7 @@ class np {
       const a = o.bufferView.buffer, {
         ArrayType: c,
         byteLength: u
-      } = Ys(o, o.bufferView), l = (o.bufferView.byteOffset || 0) + (o.byteOffset || 0) + a.byteOffset;
+      } = Xs(o, o.bufferView), l = (o.bufferView.byteOffset || 0) + (o.byteOffset || 0) + a.byteOffset;
       let h = a.arrayBuffer.slice(l, l + u);
       o.bufferView.byteStride && (h = this._getValueFromInterleavedBuffer(a, l, o.bufferView.byteStride, o.bytesPerElement, o.count)), o.value = new c(h);
     }
@@ -8967,7 +8869,7 @@ class np {
     return {
       ...t,
       id: t.id || `texture-${n}`,
-      sampler: typeof t.sampler == "number" ? this.getSampler(t.sampler) : Z0(),
+      sampler: typeof t.sampler == "number" ? this.getSampler(t.sampler) : Mg(),
       source: typeof t.source == "number" ? this.getImage(t.source) : void 0
     };
   }
@@ -8984,7 +8886,7 @@ class np {
     return s;
   }
   _enumSamplerParameter(t) {
-    return Y0[t];
+    return _g[t];
   }
   _resolveImage(t, n) {
     const s = {
@@ -9013,23 +8915,23 @@ class np {
     return s.perspective, s.orthographic, s;
   }
 }
-function Fa(e, t) {
-  return new np().postProcess(e, t);
+function ga(e, t) {
+  return new Sg().postProcess(e, t);
 }
-const Fs = {
+const Ms = {
   URI: 0,
   EMBEDDED: 1
 };
-function Da(e, t, n, s) {
+function pa(e, t, n, s) {
   e.rotateYtoZ = !0;
   const r = (e.byteOffset || 0) + (e.byteLength || 0) - n;
   if (r === 0)
     throw new Error("glTF byte length must be greater than 0.");
-  return e.gltfUpAxis = s != null && s["3d-tiles"] && s["3d-tiles"].assetGltfUpAxis ? s["3d-tiles"].assetGltfUpAxis : "Y", e.gltfArrayBuffer = el(t, n, r), e.gltfByteOffset = 0, e.gltfByteLength = r, n % 4 === 0 || console.warn(`${e.type}: embedded glb is not aligned to a 4-byte boundary.`), (e.byteOffset || 0) + (e.byteLength || 0);
+  return e.gltfUpAxis = s != null && s["3d-tiles"] && s["3d-tiles"].assetGltfUpAxis ? s["3d-tiles"].assetGltfUpAxis : "Y", e.gltfArrayBuffer = Fs(t, n, r), e.gltfByteOffset = 0, e.gltfByteLength = r, n % 4 === 0 || console.warn(`${e.type}: embedded glb is not aligned to a 4-byte boundary.`), (e.byteOffset || 0) + (e.byteLength || 0);
 }
-async function Oa(e, t, n, s) {
+async function Ba(e, t, n, s) {
   const r = (n == null ? void 0 : n["3d-tiles"]) || {};
-  if (sp(e, t), r.loadGLTF) {
+  if (Dg(e, t), r.loadGLTF) {
     if (!s)
       return;
     if (e.gltfUrl) {
@@ -9039,59 +8941,59 @@ async function Oa(e, t, n, s) {
       e.gltfArrayBuffer = await o.arrayBuffer(), e.gltfByteOffset = 0;
     }
     if (e.gltfArrayBuffer) {
-      const i = await Us(e.gltfArrayBuffer, Cn, n, s);
-      e.gltf = Fa(i), e.gpuMemoryUsageInBytes = ma(e.gltf), delete e.gltfArrayBuffer, delete e.gltfByteOffset, delete e.gltfByteLength;
+      const i = await Re(e.gltfArrayBuffer, pn, n, s);
+      e.gltf = ga(i), e.gpuMemoryUsageInBytes = ta(e.gltf), delete e.gltfArrayBuffer, delete e.gltfByteOffset, delete e.gltfByteLength;
     }
   }
 }
-function sp(e, t, n) {
+function Dg(e, t, n) {
   switch (t) {
-    case Fs.URI:
+    case Ms.URI:
       if (e.gltfArrayBuffer) {
         const s = new Uint8Array(e.gltfArrayBuffer, e.gltfByteOffset), i = new TextDecoder().decode(s);
         e.gltfUrl = i.replace(/[\s\0]+$/, "");
       }
       delete e.gltfArrayBuffer, delete e.gltfByteOffset, delete e.gltfByteLength;
       break;
-    case Fs.EMBEDDED:
+    case Ms.EMBEDDED:
       break;
     default:
       throw new Error("b3dm: Illegal glTF format field");
   }
 }
-async function rp(e, t, n, s, r) {
+async function Fg(e, t, n, s, r) {
   var i;
-  n = ip(e, t, n, s), await Oa(e, Fs.EMBEDDED, s, r);
+  n = Og(e, t, n, s), await Ba(e, Ms.EMBEDDED, s, r);
   const o = e == null || (i = e.gltf) === null || i === void 0 ? void 0 : i.extensions;
   return o && o.CESIUM_RTC && (e.rtcCenter = o.CESIUM_RTC.center), n;
 }
-function ip(e, t, n, s, r) {
-  n = Sn(e, t, n), n = Ws(e, t, n), n = zs(e, t, n), n = Da(e, t, n, s);
-  const i = new Ks(e.featureTableJson, e.featureTableBinary);
+function Og(e, t, n, s, r) {
+  n = Rn(e, t, n), n = ks(e, t, n), n = js(e, t, n), n = pa(e, t, n, s);
+  const i = new Vs(e.featureTableJson, e.featureTableBinary);
   return e.rtcCenter = i.getGlobalProperty("RTC_CENTER", x.FLOAT, 3), n;
 }
-async function op(e, t, n, s, r) {
-  return n = ap(e, t, n, s), await Oa(e, e.gltfFormat || 0, s, r), n;
+async function vg(e, t, n, s, r) {
+  return n = xg(e, t, n, s), await Ba(e, e.gltfFormat || 0, s, r), n;
 }
-function ap(e, t, n, s, r) {
+function xg(e, t, n, s, r) {
   var i;
-  if (n = Sn(e, t, n), e.version !== 1)
+  if (n = Rn(e, t, n), e.version !== 1)
     throw new Error(`Instanced 3D Model version ${e.version} is not supported`);
-  n = Ws(e, t, n);
+  n = ks(e, t, n);
   const o = new DataView(t);
-  if (e.gltfFormat = o.getUint32(n, !0), n += 4, n = zs(e, t, n), n = Da(e, t, n, s), !(e != null && (i = e.header) !== null && i !== void 0 && i.featureTableJsonByteLength) || e.header.featureTableJsonByteLength === 0)
+  if (e.gltfFormat = o.getUint32(n, !0), n += 4, n = js(e, t, n), n = pa(e, t, n, s), !(e != null && (i = e.header) !== null && i !== void 0 && i.featureTableJsonByteLength) || e.header.featureTableJsonByteLength === 0)
     throw new Error("i3dm parser: featureTableJsonByteLength is zero.");
-  const a = new Ks(e.featureTableJson, e.featureTableBinary), c = a.getGlobalProperty("INSTANCES_LENGTH");
+  const a = new Vs(e.featureTableJson, e.featureTableBinary), c = a.getGlobalProperty("INSTANCES_LENGTH");
   if (a.featuresLength = c, !Number.isFinite(c))
     throw new Error("i3dm parser: INSTANCES_LENGTH must be defined");
   e.eastNorthUp = a.getGlobalProperty("EAST_NORTH_UP"), e.rtcCenter = a.getGlobalProperty("RTC_CENTER", x.FLOAT, 3);
-  const u = new na(e.batchTableJson, e.batchTableBinary, c);
-  return cp(e, a, u, c), n;
+  const u = new zo(e.batchTableJson, e.batchTableBinary, c);
+  return Lg(e, a, u, c), n;
 }
-function cp(e, t, n, s) {
+function Lg(e, t, n, s) {
   const r = new Array(s), i = new m();
   new m(), new m(), new m();
-  const o = new k(), a = new dn(), c = new m(), u = {}, l = new N(), h = [], f = [], d = [], A = [];
+  const o = new j(), a = new hn(), c = new m(), u = {}, l = new N(), h = [], f = [], d = [], A = [];
   for (let g = 0; g < s; g++) {
     let p;
     if (t.hasProperty("POSITION"))
@@ -9101,12 +9003,12 @@ function cp(e, t, n, s) {
       const C = t.getGlobalProperty("QUANTIZED_VOLUME_OFFSET", x.FLOAT, 3);
       if (!C)
         throw new Error("i3dm parser: QUANTIZED_VOLUME_OFFSET must be defined for quantized positions.");
-      const F = t.getGlobalProperty("QUANTIZED_VOLUME_SCALE", x.FLOAT, 3);
-      if (!F)
+      const D = t.getGlobalProperty("QUANTIZED_VOLUME_SCALE", x.FLOAT, 3);
+      if (!D)
         throw new Error("i3dm parser: QUANTIZED_VOLUME_SCALE must be defined for quantized positions.");
-      const D = 65535;
+      const F = 65535;
       for (let I = 0; I < 3; I++)
-        p[I] = p[I] / D * F[I] + C[I];
+        p[I] = p[I] / F * D[I] + C[I];
     }
     if (!p)
       throw new Error("i3dm: POSITION or POSITION_QUANTIZED must be defined for each instance.");
@@ -9117,7 +9019,7 @@ function cp(e, t, n, s) {
     } else {
       if (e.octNormalUp = t.getProperty("NORMAL_UP_OCT32P", x.UNSIGNED_SHORT, 2, g, h), e.octNormalRight = t.getProperty("NORMAL_RIGHT_OCT32P", x.UNSIGNED_SHORT, 2, g, f), e.octNormalUp)
         throw e.octNormalRight ? new Error("i3dm: oct-encoded orientation not implemented") : new Error("i3dm: oct-encoded orientation requires NORMAL_UP_OCT32P and NORMAL_RIGHT_OCT32P");
-      e.eastNorthUp ? (P.WGS84.eastNorthUpToFixedFrame(i, l), l.getRotationMatrix3(o)) : o.identity();
+      e.eastNorthUp ? (H.WGS84.eastNorthUpToFixedFrame(i, l), l.getRotationMatrix3(o)) : o.identity();
     }
     a.fromMatrix3(o), u.rotation = a, c.set(1, 1, 1);
     const y = t.getProperty("SCALE", x.FLOAT, 1, g, d);
@@ -9136,8 +9038,8 @@ function cp(e, t, n, s) {
   }
   e.instances = r;
 }
-async function up(e, t, n, s, r, i) {
-  n = Sn(e, t, n);
+async function Gg(e, t, n, s, r, i) {
+  n = Rn(e, t, n);
   const o = new DataView(t);
   for (e.tilesLength = o.getUint32(n, !0), n += 4, e.tiles = []; e.tiles.length < e.tilesLength && (e.byteLength || 0) - n > 12; ) {
     const a = {
@@ -9147,52 +9049,52 @@ async function up(e, t, n, s, r, i) {
   }
   return n;
 }
-async function lp(e, t, n, s) {
+async function Ug(e, t, n, s) {
   var r, i;
   if (e.rotateYtoZ = !0, e.gltfUpAxis = n != null && (r = n["3d-tiles"]) !== null && r !== void 0 && r.assetGltfUpAxis ? n["3d-tiles"].assetGltfUpAxis : "Y", n != null && (i = n["3d-tiles"]) !== null && i !== void 0 && i.loadGLTF) {
     if (!s)
       return t.byteLength;
-    const o = await Us(t, Cn, n, s);
-    e.gltf = Fa(o), e.gpuMemoryUsageInBytes = ma(e.gltf);
+    const o = await Re(t, pn, n, s);
+    e.gltf = ga(o), e.gpuMemoryUsageInBytes = ta(e.gltf);
   } else
     e.gltfArrayBuffer = t;
   return t.byteLength;
 }
-async function va(e) {
+async function ya(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 0, n = arguments.length > 2 ? arguments[2] : void 0, s = arguments.length > 3 ? arguments[3] : void 0, r = arguments.length > 4 && arguments[4] !== void 0 ? arguments[4] : {
     shape: "tile3d"
   };
-  switch (r.byteOffset = t, r.type = dd(e, t), r.type) {
+  switch (r.byteOffset = t, r.type = id(e, t), r.type) {
     case de.COMPOSITE:
-      return await up(r, e, t, n, s, va);
+      return await Gg(r, e, t, n, s, ya);
     case de.BATCHED_3D_MODEL:
-      return await rp(r, e, t, n, s);
+      return await Fg(r, e, t, n, s);
     case de.GLTF:
-      return await lp(r, e, n, s);
+      return await Ug(r, e, n, s);
     case de.INSTANCED_3D_MODEL:
-      return await op(r, e, t, n, s);
+      return await vg(r, e, t, n, s);
     case de.POINT_CLOUD:
-      return await im(r, e, t, n, s);
+      return await kd(r, e, t, n, s);
     default:
       throw new Error(`3DTileLoader: unknown type ${r.type}`);
   }
 }
-const hp = 1952609651, fp = 1;
-async function dp(e, t, n) {
-  if (new Uint32Array(e.slice(0, 4))[0] !== hp)
+const Pg = 1952609651, Ng = 1;
+async function Hg(e, t, n) {
+  if (new Uint32Array(e.slice(0, 4))[0] !== Pg)
     throw new Error("Wrong subtree file magic number");
-  if (new Uint32Array(e.slice(4, 8))[0] !== fp)
+  if (new Uint32Array(e.slice(4, 8))[0] !== Ng)
     throw new Error("Wrong subtree file verson, must be 1");
-  const i = Hi(e.slice(8, 16)), o = new Uint8Array(e, 24, i), c = new TextDecoder("utf8").decode(o), u = JSON.parse(c), l = Hi(e.slice(16, 24));
+  const i = Oi(e.slice(8, 16)), o = new Uint8Array(e, 24, i), c = new TextDecoder("utf8").decode(o), u = JSON.parse(c), l = Oi(e.slice(16, 24));
   let h = new ArrayBuffer(0);
-  if (l && (h = e.slice(24 + i)), await nn(u, u.tileAvailability, h, n), Array.isArray(u.contentAvailability))
+  if (l && (h = e.slice(24 + i)), await tn(u, u.tileAvailability, h, n), Array.isArray(u.contentAvailability))
     for (const f of u.contentAvailability)
-      await nn(u, f, h, n);
+      await tn(u, f, h, n);
   else
-    await nn(u, u.contentAvailability, h, n);
-  return await nn(u, u.childSubtreeAvailability, h, n), u;
+    await tn(u, u.contentAvailability, h, n);
+  return await tn(u, u.childSubtreeAvailability, h, n), u;
 }
-async function nn(e, t, n, s) {
+async function tn(e, t, n, s) {
   const r = Number.isFinite(t.bitstream) ? t.bitstream : t.bufferView;
   if (typeof r != "number")
     return;
@@ -9209,19 +9111,19 @@ async function nn(e, t, n, s) {
   const a = e.buffers.slice(0, i.buffer).reduce((c, u) => c + u.byteLength, 0);
   t.explicitBitstream = new Uint8Array(n.slice(a, a + o.byteLength), i.byteOffset, i.byteLength);
 }
-function Hi(e) {
+function Oi(e) {
   const t = new DataView(e), n = t.getUint32(0, !0), s = t.getUint32(4, !0);
   return n + 2 ** 32 * s;
 }
-const xa = {
+const Ca = {
   id: "3d-tiles-subtree",
   name: "3D Tiles Subtree",
   module: "3d-tiles",
-  version: Yo,
+  version: Jo,
   extensions: ["subtree"],
   mimeTypes: ["application/octet-stream"],
   tests: ["subtree"],
-  parse: dp,
+  parse: Hg,
   options: {}
 };
 /**
@@ -9535,91 +9437,91 @@ try {
   ])), {}).exports;
 } catch {
 }
-function U(e, t, n) {
+function P(e, t, n) {
   this.low = e | 0, this.high = t | 0, this.unsigned = !!n;
 }
-U.prototype.__isLong__;
-Object.defineProperty(U.prototype, "__isLong__", { value: !0 });
-function Z(e) {
+P.prototype.__isLong__;
+Object.defineProperty(P.prototype, "__isLong__", { value: !0 });
+function tt(e) {
   return (e && e.__isLong__) === !0;
 }
-function Ji(e) {
+function vi(e) {
   var t = Math.clz32(e & -e);
   return e ? 31 - t : t;
 }
-U.isLong = Z;
-var Vi = {}, ki = {};
+P.isLong = tt;
+var xi = {}, Li = {};
 function qt(e, t) {
   var n, s, r;
-  return t ? (e >>>= 0, (r = 0 <= e && e < 256) && (s = ki[e], s) ? s : (n = L(e, 0, !0), r && (ki[e] = n), n)) : (e |= 0, (r = -128 <= e && e < 128) && (s = Vi[e], s) ? s : (n = L(e, e < 0 ? -1 : 0, !1), r && (Vi[e] = n), n));
+  return t ? (e >>>= 0, (r = 0 <= e && e < 256) && (s = Li[e], s) ? s : (n = L(e, 0, !0), r && (Li[e] = n), n)) : (e |= 0, (r = -128 <= e && e < 128) && (s = xi[e], s) ? s : (n = L(e, e < 0 ? -1 : 0, !1), r && (xi[e] = n), n));
 }
-U.fromInt = qt;
+P.fromInt = qt;
 function pt(e, t) {
   if (isNaN(e))
-    return t ? Ot : Et;
+    return t ? vt : bt;
   if (t) {
     if (e < 0)
-      return Ot;
-    if (e >= La)
-      return Na;
+      return vt;
+    if (e >= Ta)
+      return _a;
   } else {
-    if (e <= -Ki)
+    if (e <= -Ui)
       return ct;
-    if (e + 1 >= Ki)
-      return Ua;
+    if (e + 1 >= Ui)
+      return ba;
   }
   return e < 0 ? pt(-e, t).neg() : L(e % ce | 0, e / ce | 0, t);
 }
-U.fromNumber = pt;
+P.fromNumber = pt;
 function L(e, t, n) {
-  return new U(e, t, n);
+  return new P(e, t, n);
 }
-U.fromBits = L;
-var Tn = Math.pow;
-function ir(e, t, n) {
+P.fromBits = L;
+var Bn = Math.pow;
+function er(e, t, n) {
   if (e.length === 0)
     throw Error("empty string");
   if (typeof t == "number" ? (n = t, t = !1) : t = !!t, e === "NaN" || e === "Infinity" || e === "+Infinity" || e === "-Infinity")
-    return t ? Ot : Et;
+    return t ? vt : bt;
   if (n = n || 10, n < 2 || 36 < n)
     throw RangeError("radix");
   var s;
   if ((s = e.indexOf("-")) > 0)
     throw Error("interior hyphen");
   if (s === 0)
-    return ir(e.substring(1), t, n).neg();
-  for (var r = pt(Tn(n, 8)), i = Et, o = 0; o < e.length; o += 8) {
+    return er(e.substring(1), t, n).neg();
+  for (var r = pt(Bn(n, 8)), i = bt, o = 0; o < e.length; o += 8) {
     var a = Math.min(8, e.length - o), c = parseInt(e.substring(o, o + a), n);
     if (a < 8) {
-      var u = pt(Tn(n, a));
+      var u = pt(Bn(n, a));
       i = i.mul(u).add(pt(c));
     } else
       i = i.mul(r), i = i.add(pt(c));
   }
   return i.unsigned = t, i;
 }
-U.fromString = ir;
-function _t(e, t) {
-  return typeof e == "number" ? pt(e, t) : typeof e == "string" ? ir(e, t) : L(e.low, e.high, typeof t == "boolean" ? t : e.unsigned);
+P.fromString = er;
+function wt(e, t) {
+  return typeof e == "number" ? pt(e, t) : typeof e == "string" ? er(e, t) : L(e.low, e.high, typeof t == "boolean" ? t : e.unsigned);
 }
-U.fromValue = _t;
-var ji = 65536, mp = 1 << 24, ce = ji * ji, La = ce * ce, Ki = La / 2, Wi = qt(mp), Et = qt(0);
-U.ZERO = Et;
-var Ot = qt(0, !0);
-U.UZERO = Ot;
+P.fromValue = wt;
+var Gi = 65536, Jg = 1 << 24, ce = Gi * Gi, Ta = ce * ce, Ui = Ta / 2, Pi = qt(Jg), bt = qt(0);
+P.ZERO = bt;
+var vt = qt(0, !0);
+P.UZERO = vt;
 var oe = qt(1);
-U.ONE = oe;
-var Ga = qt(1, !0);
-U.UONE = Ga;
-var Ds = qt(-1);
-U.NEG_ONE = Ds;
-var Ua = L(-1, 2147483647, !1);
-U.MAX_VALUE = Ua;
-var Na = L(-1, -1, !0);
-U.MAX_UNSIGNED_VALUE = Na;
+P.ONE = oe;
+var Ea = qt(1, !0);
+P.UONE = Ea;
+var Rs = qt(-1);
+P.NEG_ONE = Rs;
+var ba = L(-1, 2147483647, !1);
+P.MAX_VALUE = ba;
+var _a = L(-1, -1, !0);
+P.MAX_UNSIGNED_VALUE = _a;
 var ct = L(0, -2147483648, !1);
-U.MIN_VALUE = ct;
-var B = U.prototype;
+P.MIN_VALUE = ct;
+var B = P.prototype;
 B.toInt = function() {
   return this.unsigned ? this.low >>> 0 : this.low;
 };
@@ -9637,7 +9539,7 @@ B.toString = function(t) {
       return s.toString(t) + r.toInt().toString(t);
     } else
       return "-" + this.neg().toString(t);
-  for (var i = pt(Tn(t, 6), this.unsigned), o = this, a = ""; ; ) {
+  for (var i = pt(Bn(t, 6), this.unsigned), o = this, a = ""; ; ) {
     var c = o.div(i), u = o.sub(c.mul(i)).toInt() >>> 0, l = u.toString(t);
     if (o = c, o.isZero())
       return l + a;
@@ -9682,7 +9584,7 @@ B.isEven = function() {
   return (this.low & 1) === 0;
 };
 B.equals = function(t) {
-  return Z(t) || (t = _t(t)), this.unsigned !== t.unsigned && this.high >>> 31 === 1 && t.high >>> 31 === 1 ? !1 : this.high === t.high && this.low === t.low;
+  return tt(t) || (t = wt(t)), this.unsigned !== t.unsigned && this.high >>> 31 === 1 && t.high >>> 31 === 1 ? !1 : this.high === t.high && this.low === t.low;
 };
 B.eq = B.equals;
 B.notEquals = function(t) {
@@ -9724,7 +9626,7 @@ B.greaterThanOrEqual = function(t) {
 B.gte = B.greaterThanOrEqual;
 B.ge = B.greaterThanOrEqual;
 B.compare = function(t) {
-  if (Z(t) || (t = _t(t)), this.eq(t))
+  if (tt(t) || (t = wt(t)), this.eq(t))
     return 0;
   var n = this.isNegative(), s = t.isNegative();
   return n && !s ? -1 : !n && s ? 1 : this.unsigned ? t.high >>> 0 > this.high >>> 0 || t.high === this.high && t.low >>> 0 > this.low >>> 0 ? -1 : 1 : this.sub(t).isNegative() ? -1 : 1;
@@ -9735,18 +9637,18 @@ B.negate = function() {
 };
 B.neg = B.negate;
 B.add = function(t) {
-  Z(t) || (t = _t(t));
+  tt(t) || (t = wt(t));
   var n = this.high >>> 16, s = this.high & 65535, r = this.low >>> 16, i = this.low & 65535, o = t.high >>> 16, a = t.high & 65535, c = t.low >>> 16, u = t.low & 65535, l = 0, h = 0, f = 0, d = 0;
   return d += i + u, f += d >>> 16, d &= 65535, f += r + c, h += f >>> 16, f &= 65535, h += s + a, l += h >>> 16, h &= 65535, l += n + o, l &= 65535, L(f << 16 | d, l << 16 | h, this.unsigned);
 };
 B.subtract = function(t) {
-  return Z(t) || (t = _t(t)), this.add(t.neg());
+  return tt(t) || (t = wt(t)), this.add(t.neg());
 };
 B.sub = B.subtract;
 B.multiply = function(t) {
   if (this.isZero())
     return this;
-  if (Z(t) || (t = _t(t)), gt) {
+  if (tt(t) || (t = wt(t)), gt) {
     var n = gt.mul(
       this.low,
       this.high,
@@ -9756,23 +9658,23 @@ B.multiply = function(t) {
     return L(n, gt.get_high(), this.unsigned);
   }
   if (t.isZero())
-    return this.unsigned ? Ot : Et;
+    return this.unsigned ? vt : bt;
   if (this.eq(ct))
-    return t.isOdd() ? ct : Et;
+    return t.isOdd() ? ct : bt;
   if (t.eq(ct))
-    return this.isOdd() ? ct : Et;
+    return this.isOdd() ? ct : bt;
   if (this.isNegative())
     return t.isNegative() ? this.neg().mul(t.neg()) : this.neg().mul(t).neg();
   if (t.isNegative())
     return this.mul(t.neg()).neg();
-  if (this.lt(Wi) && t.lt(Wi))
+  if (this.lt(Pi) && t.lt(Pi))
     return pt(this.toNumber() * t.toNumber(), this.unsigned);
   var s = this.high >>> 16, r = this.high & 65535, i = this.low >>> 16, o = this.low & 65535, a = t.high >>> 16, c = t.high & 65535, u = t.low >>> 16, l = t.low & 65535, h = 0, f = 0, d = 0, A = 0;
   return A += o * l, d += A >>> 16, A &= 65535, d += i * l, f += d >>> 16, d &= 65535, d += o * u, f += d >>> 16, d &= 65535, f += r * l, h += f >>> 16, f &= 65535, f += i * u, h += f >>> 16, f &= 65535, f += o * c, h += f >>> 16, f &= 65535, h += s * l + r * u + i * c + o * a, h &= 65535, L(d << 16 | A, h << 16 | f, this.unsigned);
 };
 B.mul = B.multiply;
 B.divide = function(t) {
-  if (Z(t) || (t = _t(t)), t.isZero())
+  if (tt(t) || (t = wt(t)), t.isZero())
     throw Error("division by zero");
   if (gt) {
     if (!this.unsigned && this.high === -2147483648 && t.low === -1 && t.high === -1)
@@ -9786,33 +9688,33 @@ B.divide = function(t) {
     return L(n, gt.get_high(), this.unsigned);
   }
   if (this.isZero())
-    return this.unsigned ? Ot : Et;
+    return this.unsigned ? vt : bt;
   var s, r, i;
   if (this.unsigned) {
     if (t.unsigned || (t = t.toUnsigned()), t.gt(this))
-      return Ot;
+      return vt;
     if (t.gt(this.shru(1)))
-      return Ga;
-    i = Ot;
+      return Ea;
+    i = vt;
   } else {
     if (this.eq(ct)) {
-      if (t.eq(oe) || t.eq(Ds))
+      if (t.eq(oe) || t.eq(Rs))
         return ct;
       if (t.eq(ct))
         return oe;
       var o = this.shr(1);
-      return s = o.div(t).shl(1), s.eq(Et) ? t.isNegative() ? oe : Ds : (r = this.sub(t.mul(s)), i = s.add(r.div(t)), i);
+      return s = o.div(t).shl(1), s.eq(bt) ? t.isNegative() ? oe : Rs : (r = this.sub(t.mul(s)), i = s.add(r.div(t)), i);
     } else if (t.eq(ct))
-      return this.unsigned ? Ot : Et;
+      return this.unsigned ? vt : bt;
     if (this.isNegative())
       return t.isNegative() ? this.neg().div(t.neg()) : this.neg().div(t).neg();
     if (t.isNegative())
       return this.div(t.neg()).neg();
-    i = Et;
+    i = bt;
   }
   for (r = this; r.gte(t); ) {
     s = Math.max(1, Math.floor(r.toNumber() / t.toNumber()));
-    for (var a = Math.ceil(Math.log(s) / Math.LN2), c = a <= 48 ? 1 : Tn(2, a - 48), u = pt(s), l = u.mul(t); l.isNegative() || l.gt(r); )
+    for (var a = Math.ceil(Math.log(s) / Math.LN2), c = a <= 48 ? 1 : Bn(2, a - 48), u = pt(s), l = u.mul(t); l.isNegative() || l.gt(r); )
       s -= c, u = pt(s, this.unsigned), l = u.mul(t);
     u.isZero() && (u = oe), i = i.add(u), r = r.sub(l);
   }
@@ -9820,7 +9722,7 @@ B.divide = function(t) {
 };
 B.div = B.divide;
 B.modulo = function(t) {
-  if (Z(t) || (t = _t(t)), gt) {
+  if (tt(t) || (t = wt(t)), gt) {
     var n = (this.unsigned ? gt.rem_u : gt.rem_s)(
       this.low,
       this.high,
@@ -9841,39 +9743,39 @@ B.countLeadingZeros = function() {
 };
 B.clz = B.countLeadingZeros;
 B.countTrailingZeros = function() {
-  return this.low ? Ji(this.low) : Ji(this.high) + 32;
+  return this.low ? vi(this.low) : vi(this.high) + 32;
 };
 B.ctz = B.countTrailingZeros;
 B.and = function(t) {
-  return Z(t) || (t = _t(t)), L(this.low & t.low, this.high & t.high, this.unsigned);
+  return tt(t) || (t = wt(t)), L(this.low & t.low, this.high & t.high, this.unsigned);
 };
 B.or = function(t) {
-  return Z(t) || (t = _t(t)), L(this.low | t.low, this.high | t.high, this.unsigned);
+  return tt(t) || (t = wt(t)), L(this.low | t.low, this.high | t.high, this.unsigned);
 };
 B.xor = function(t) {
-  return Z(t) || (t = _t(t)), L(this.low ^ t.low, this.high ^ t.high, this.unsigned);
+  return tt(t) || (t = wt(t)), L(this.low ^ t.low, this.high ^ t.high, this.unsigned);
 };
 B.shiftLeft = function(t) {
-  return Z(t) && (t = t.toInt()), (t &= 63) === 0 ? this : t < 32 ? L(this.low << t, this.high << t | this.low >>> 32 - t, this.unsigned) : L(0, this.low << t - 32, this.unsigned);
+  return tt(t) && (t = t.toInt()), (t &= 63) === 0 ? this : t < 32 ? L(this.low << t, this.high << t | this.low >>> 32 - t, this.unsigned) : L(0, this.low << t - 32, this.unsigned);
 };
 B.shl = B.shiftLeft;
 B.shiftRight = function(t) {
-  return Z(t) && (t = t.toInt()), (t &= 63) === 0 ? this : t < 32 ? L(this.low >>> t | this.high << 32 - t, this.high >> t, this.unsigned) : L(this.high >> t - 32, this.high >= 0 ? 0 : -1, this.unsigned);
+  return tt(t) && (t = t.toInt()), (t &= 63) === 0 ? this : t < 32 ? L(this.low >>> t | this.high << 32 - t, this.high >> t, this.unsigned) : L(this.high >> t - 32, this.high >= 0 ? 0 : -1, this.unsigned);
 };
 B.shr = B.shiftRight;
 B.shiftRightUnsigned = function(t) {
-  return Z(t) && (t = t.toInt()), (t &= 63) === 0 ? this : t < 32 ? L(this.low >>> t | this.high << 32 - t, this.high >>> t, this.unsigned) : t === 32 ? L(this.high, 0, this.unsigned) : L(this.high >>> t - 32, 0, this.unsigned);
+  return tt(t) && (t = t.toInt()), (t &= 63) === 0 ? this : t < 32 ? L(this.low >>> t | this.high << 32 - t, this.high >>> t, this.unsigned) : t === 32 ? L(this.high, 0, this.unsigned) : L(this.high >>> t - 32, 0, this.unsigned);
 };
 B.shru = B.shiftRightUnsigned;
 B.shr_u = B.shiftRightUnsigned;
 B.rotateLeft = function(t) {
   var n;
-  return Z(t) && (t = t.toInt()), (t &= 63) === 0 ? this : t === 32 ? L(this.high, this.low, this.unsigned) : t < 32 ? (n = 32 - t, L(this.low << t | this.high >>> n, this.high << t | this.low >>> n, this.unsigned)) : (t -= 32, n = 32 - t, L(this.high << t | this.low >>> n, this.low << t | this.high >>> n, this.unsigned));
+  return tt(t) && (t = t.toInt()), (t &= 63) === 0 ? this : t === 32 ? L(this.high, this.low, this.unsigned) : t < 32 ? (n = 32 - t, L(this.low << t | this.high >>> n, this.high << t | this.low >>> n, this.unsigned)) : (t -= 32, n = 32 - t, L(this.high << t | this.low >>> n, this.low << t | this.high >>> n, this.unsigned));
 };
 B.rotl = B.rotateLeft;
 B.rotateRight = function(t) {
   var n;
-  return Z(t) && (t = t.toInt()), (t &= 63) === 0 ? this : t === 32 ? L(this.high, this.low, this.unsigned) : t < 32 ? (n = 32 - t, L(this.high << n | this.low >>> t, this.low << n | this.high >>> t, this.unsigned)) : (t -= 32, n = 32 - t, L(this.low << n | this.high >>> t, this.high << n | this.low >>> t, this.unsigned));
+  return tt(t) && (t = t.toInt()), (t &= 63) === 0 ? this : t === 32 ? L(this.high, this.low, this.unsigned) : t < 32 ? (n = 32 - t, L(this.high << n | this.low >>> t, this.low << n | this.high >>> t, this.unsigned)) : (t -= 32, n = 32 - t, L(this.low << n | this.high >>> t, this.high << n | this.low >>> t, this.unsigned));
 };
 B.rotr = B.rotateRight;
 B.toSigned = function() {
@@ -9911,30 +9813,30 @@ B.toBytesBE = function() {
     n & 255
   ];
 };
-U.fromBytes = function(t, n, s) {
-  return s ? U.fromBytesLE(t, n) : U.fromBytesBE(t, n);
+P.fromBytes = function(t, n, s) {
+  return s ? P.fromBytesLE(t, n) : P.fromBytesBE(t, n);
 };
-U.fromBytesLE = function(t, n) {
-  return new U(
+P.fromBytesLE = function(t, n) {
+  return new P(
     t[0] | t[1] << 8 | t[2] << 16 | t[3] << 24,
     t[4] | t[5] << 8 | t[6] << 16 | t[7] << 24,
     n
   );
 };
-U.fromBytesBE = function(t, n) {
-  return new U(
+P.fromBytesBE = function(t, n) {
+  return new P(
     t[4] << 24 | t[5] << 16 | t[6] << 8 | t[7],
     t[0] << 24 | t[1] << 16 | t[2] << 8 | t[3],
     n
   );
 };
-const Ap = 16;
-function Pa(e) {
+const Vg = 16;
+function wa(e) {
   e === "X" && (e = "");
-  const t = e.padEnd(Ap, "0");
-  return U.fromString(t, !0, 16);
+  const t = e.padEnd(Vg, "0");
+  return P.fromString(t, !0, 16);
 }
-function gp(e) {
+function kg(e) {
   if (e.isZero())
     return "X";
   let t = e.countTrailingZeros();
@@ -9945,15 +9847,15 @@ function gp(e) {
   const i = e.shiftRightUnsigned(t).toString(16).replace(/0+$/, "");
   return Array(17 - s - i.length).join("0") + i;
 }
-function pp(e, t) {
-  const n = Bp(e).shiftRightUnsigned(2);
-  return e.add(U.fromNumber(2 * t + 1 - 4).multiply(n));
+function jg(e, t) {
+  const n = Kg(e).shiftRightUnsigned(2);
+  return e.add(P.fromNumber(2 * t + 1 - 4).multiply(n));
 }
-function Bp(e) {
+function Kg(e) {
   return e.and(e.not().add(1));
 }
-const yp = 3, Cp = 30, Tp = 2 * Cp + 1, zi = 180 / Math.PI;
-function Ep(e) {
+const zg = 3, Wg = 30, Xg = 2 * Wg + 1, Ni = 180 / Math.PI;
+function Qg(e) {
   if (e.length === 0)
     throw new Error(`Invalid Hilbert quad key ${e}`);
   const t = e.split("/"), n = parseInt(t[0], 10), s = t[1], r = s.length;
@@ -9965,7 +9867,7 @@ function Ep(e) {
     let u = 0, l = 0;
     c === "1" ? l = 1 : c === "2" ? (u = 1, l = 1) : c === "3" && (u = 1);
     const h = Math.pow(2, i - 1);
-    _p(h, o, u, l), o[0] += h * u, o[1] += h * l;
+    Yg(h, o, u, l), o[0] += h * u, o[1] += h * l;
   }
   if (n % 2 === 1) {
     const a = o[0];
@@ -9977,30 +9879,30 @@ function Ep(e) {
     level: i
   };
 }
-function bp(e) {
+function qg(e) {
   if (e.isZero())
     return "";
   let t = e.toString(2);
-  for (; t.length < yp + Tp; )
+  for (; t.length < zg + Xg; )
     t = "0" + t;
-  const n = t.lastIndexOf("1"), s = t.substring(0, 3), r = t.substring(3, n), i = r.length / 2, o = U.fromString(s, !0, 2).toString(10);
+  const n = t.lastIndexOf("1"), s = t.substring(0, 3), r = t.substring(3, n), i = r.length / 2, o = P.fromString(s, !0, 2).toString(10);
   let a = "";
   if (i !== 0)
-    for (a = U.fromString(r, !0, 2).toString(4); a.length < i; )
+    for (a = P.fromString(r, !0, 2).toString(4); a.length < i; )
       a = "0" + a;
   return `${o}/${a}`;
 }
-function Ha(e, t, n) {
+function Ma(e, t, n) {
   const s = 1 << t;
   return [(e[0] + n[0]) / s, (e[1] + n[1]) / s];
 }
-function Xi(e) {
+function Hi(e) {
   return e >= 0.5 ? 1 / 3 * (4 * e * e - 1) : 1 / 3 * (1 - 4 * (1 - e) * (1 - e));
 }
-function Ja(e) {
-  return [Xi(e[0]), Xi(e[1])];
+function Ra(e) {
+  return [Hi(e[0]), Hi(e[1])];
 }
-function Va(e, t) {
+function Ia(e, t) {
   let [n, s] = t;
   switch (e) {
     case 0:
@@ -10019,35 +9921,35 @@ function Va(e, t) {
       throw new Error("Invalid face");
   }
 }
-function ka(e) {
+function Sa(e) {
   let [t, n, s] = e;
   const r = Math.atan2(s, Math.sqrt(t * t + n * n));
-  return [Math.atan2(n, t) * zi, r * zi];
+  return [Math.atan2(n, t) * Ni, r * Ni];
 }
-function _p(e, t, n, s) {
+function Yg(e, t, n, s) {
   if (s === 0) {
     n === 1 && (t[0] = e - 1 - t[0], t[1] = e - 1 - t[1]);
     const r = t[0];
     t[0] = t[1], t[1] = r;
   }
 }
-function wp(e) {
-  const t = Ha(e.ij, e.level, [0.5, 0.5]), n = Ja(t), s = Va(e.face, n);
-  return ka(s);
+function $g(e) {
+  const t = Ma(e.ij, e.level, [0.5, 0.5]), n = Ra(t), s = Ia(e.face, n);
+  return Sa(s);
 }
-const Mp = 100;
-function Qi(e) {
+const Zg = 100;
+function Ji(e) {
   const {
     face: t,
     ij: n,
     level: s
-  } = e, r = [[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]], i = Math.max(1, Math.ceil(Mp * Math.pow(2, -s))), o = new Float64Array(4 * i * 2 + 2);
+  } = e, r = [[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]], i = Math.max(1, Math.ceil(Zg * Math.pow(2, -s))), o = new Float64Array(4 * i * 2 + 2);
   let a = 0, c = 0;
   for (let u = 0; u < 4; u++) {
     const l = r[u].slice(0), h = r[u + 1], f = (h[0] - l[0]) / i, d = (h[1] - l[1]) / i;
     for (let A = 0; A < i; A++) {
       l[0] += f, l[1] += d;
-      const g = Ha(n, s, l), p = Ja(g), y = Va(t, p), _ = ka(y);
+      const g = Ma(n, s, l), p = Ra(g), y = Ia(t, p), _ = Sa(y);
       Math.abs(_[1]) > 89.999 && (_[0] = c);
       const b = _[0] - c;
       _[0] += b > 180 ? -360 : b < -180 ? 360 : 0, o[a++] = _[0], o[a++] = _[1], c = _[0];
@@ -10055,36 +9957,36 @@ function Qi(e) {
   }
   return o[a++] = o[0], o[a++] = o[1], o;
 }
-function or(e) {
-  const t = Rp(e);
-  return Ep(t);
+function nr(e) {
+  const t = tp(e);
+  return Qg(t);
 }
-function Rp(e) {
+function tp(e) {
   if (e.indexOf("/") > 0)
     return e;
-  const t = Pa(e);
-  return bp(t);
+  const t = wa(e);
+  return qg(t);
 }
-function Ip(e) {
-  const t = or(e);
-  return wp(t);
+function ep(e) {
+  const t = nr(e);
+  return $g(t);
 }
-function Sp(e) {
+function np(e) {
   let t;
   if (e.face === 2 || e.face === 5) {
     let n = null, s = 0;
     for (let r = 0; r < 4; r++) {
-      const i = `${e.face}/${r}`, o = or(i), a = Qi(o);
+      const i = `${e.face}/${r}`, o = nr(i), a = Ji(o);
       (typeof n > "u" || n === null) && (n = new Float64Array(4 * a.length)), n.set(a, s), s += a.length;
     }
-    t = qi(n);
+    t = Vi(n);
   } else {
-    const n = Qi(e);
-    t = qi(n);
+    const n = Ji(e);
+    t = Vi(n);
   }
   return t;
 }
-function qi(e) {
+function Vi(e) {
   if (e.length % 2 !== 0)
     throw new Error("Invalid corners");
   const t = [], n = [];
@@ -10097,26 +9999,26 @@ function qi(e) {
     south: n[0]
   };
 }
-function Fp(e, t) {
-  const n = (t == null ? void 0 : t.minimumHeight) || 0, s = (t == null ? void 0 : t.maximumHeight) || 0, r = or(e), i = Sp(r), o = i.west, a = i.south, c = i.east, u = i.north, l = [];
+function sp(e, t) {
+  const n = (t == null ? void 0 : t.minimumHeight) || 0, s = (t == null ? void 0 : t.maximumHeight) || 0, r = nr(e), i = np(r), o = i.west, a = i.south, c = i.east, u = i.north, l = [];
   return l.push(new m(o, u, n)), l.push(new m(c, u, n)), l.push(new m(c, a, n)), l.push(new m(o, a, n)), l.push(new m(o, u, s)), l.push(new m(c, u, s)), l.push(new m(c, a, s)), l.push(new m(o, a, s)), l;
 }
-function ja(e) {
+function Da(e) {
   const t = e.token, n = {
     minimumHeight: e.minimumHeight,
     maximumHeight: e.maximumHeight
-  }, s = Fp(t, n), r = Ip(t), i = r[0], o = r[1], a = P.WGS84.cartographicToCartesian([i, o, n.maximumHeight]), c = new m(a[0], a[1], a[2]);
+  }, s = sp(t, n), r = ep(t), i = r[0], o = r[1], a = H.WGS84.cartographicToCartesian([i, o, n.maximumHeight]), c = new m(a[0], a[1], a[2]);
   s.push(c);
-  const u = Gf(s);
+  const u = If(s);
   return [...u.center, ...u.halfAxes];
 }
-const Dp = 4, Op = 8, vp = {
-  QUADTREE: Dp,
-  OCTREE: Op
+const rp = 4, ip = 8, op = {
+  QUADTREE: rp,
+  OCTREE: ip
 };
-function xp(e, t, n) {
+function ap(e, t, n) {
   if (e != null && e.box) {
-    const s = Pa(e.s2VolumeInfo.token), r = pp(s, t), i = gp(r), o = {
+    const s = wa(e.s2VolumeInfo.token), r = jg(s, t), i = kg(r), o = {
       ...e.s2VolumeInfo
     };
     switch (o.token = i, n) {
@@ -10126,12 +10028,12 @@ function xp(e, t, n) {
         break;
     }
     return {
-      box: ja(o),
+      box: Da(o),
       s2VolumeInfo: o
     };
   }
 }
-async function Ka(e) {
+async function Fa(e) {
   const {
     implicitOptions: t,
     parentData: n = {
@@ -10168,62 +10070,62 @@ async function Ka(e) {
     contentUrl: ""
   };
   if (!h)
-    return To.once(`Missing 'maximumLevel' or 'availableLevels' property. The subtree ${f} won't be loaded...`), g;
+    return lo.once(`Missing 'maximumLevel' or 'availableLevels' property. The subtree ${f} won't be loaded...`), g;
   const p = a + c.level;
   if (p > h)
     return g;
-  const y = vp[u], _ = Math.log2(y), b = s & 1, w = s >> 1 & 1, M = s >> 2 & 1, C = (y ** a - 1) / (y - 1);
-  let F = Vt(n.mortonIndex, s, _), D = C + F, I = Vt(n.x, b, 1), S = Vt(n.y, w, 1), J = Vt(n.z, M, 1), j = !1;
-  a >= l && (j = ds(o.childSubtreeAvailability, F));
-  const V = Vt(c.x, I, a), O = Vt(c.y, S, a), nt = Vt(c.z, J, a);
-  if (j) {
-    const Bt = `${A}/${d}`, $t = Os(Bt, p, V, O, nt);
-    o = await Fe($t, xa, i), c = {
-      mortonIndex: F,
+  const y = op[u], _ = Math.log2(y), b = s & 1, w = s >> 1 & 1, M = s >> 2 & 1, C = (y ** a - 1) / (y - 1);
+  let D = kt(n.mortonIndex, s, _), F = C + D, I = kt(n.x, b, 1), S = kt(n.y, w, 1), V = kt(n.z, M, 1), K = !1;
+  a >= l && (K = us(o.childSubtreeAvailability, D));
+  const k = kt(c.x, I, a), O = kt(c.y, S, a), st = kt(c.z, V, a);
+  if (K) {
+    const yt = `${A}/${d}`, $t = Is(yt, p, k, O, st);
+    o = await Fe($t, Ca, i), c = {
+      mortonIndex: D,
       x: I,
       y: S,
-      z: J,
+      z: V,
       level: a
-    }, F = 0, D = 0, I = 0, S = 0, J = 0, a = 0;
+    }, D = 0, F = 0, I = 0, S = 0, V = 0, a = 0;
   }
-  if (!ds(o.tileAvailability, D))
+  if (!us(o.tileAvailability, F))
     return g;
-  ds(o.contentAvailability, D) && (g.contentUrl = Os(f, p, V, O, nt));
-  const Ht = a + 1, ut = {
-    mortonIndex: F,
+  us(o.contentAvailability, F) && (g.contentUrl = Is(f, p, k, O, st));
+  const Jt = a + 1, ut = {
+    mortonIndex: D,
     x: I,
     y: S,
-    z: J
+    z: V
   };
-  for (let Bt = 0; Bt < y; Bt++) {
-    const $t = xp(r, Bt, u), xt = await Ka({
+  for (let yt = 0; yt < y; yt++) {
+    const $t = ap(r, yt, u), Gt = await Fa({
       subtree: o,
       implicitOptions: t,
       loaderOptions: i,
       parentData: ut,
-      childIndex: Bt,
-      level: Ht,
+      childIndex: yt,
+      level: Jt,
       globalData: {
         ...c
       },
       s2VolumeBox: $t
     });
-    if (xt.contentUrl || xt.children.length) {
-      const Ue = p + 1, v = Lp(xt, Ue, {
+    if (Gt.contentUrl || Gt.children.length) {
+      const Le = p + 1, v = cp(Gt, Le, {
         childTileX: I,
         childTileY: S,
-        childTileZ: J
+        childTileZ: V
       }, t, r);
       g.children.push(v);
     }
   }
   return g;
 }
-function ds(e, t) {
+function us(e, t) {
   let n;
-  return Array.isArray(e) ? (n = e[0], e.length > 1 && To.once('Not supported extension "3DTILES_multiple_contents" has been detected')) : n = e, "constant" in n ? !!n.constant : n.explicitBitstream ? Np(t, n.explicitBitstream) : !1;
+  return Array.isArray(e) ? (n = e[0], e.length > 1 && lo.once('Not supported extension "3DTILES_multiple_contents" has been detected')) : n = e, "constant" in n ? !!n.constant : n.explicitBitstream ? hp(t, n.explicitBitstream) : !1;
 }
-function Lp(e, t, n, s, r) {
+function cp(e, t, n, s, r) {
   const {
     basePath: i,
     refine: o,
@@ -10234,7 +10136,7 @@ function Lp(e, t, n, s, r) {
     rootBoundingVolume: h
   } = s, f = e.contentUrl && e.contentUrl.replace(`${i}/`, ""), d = l / 2 ** t, A = r != null && r.box ? {
     box: r.box
-  } : h, g = Gp(t, A, n);
+  } : h, g = up(t, A, n);
   return {
     children: e.children,
     contentUrl: e.contentUrl,
@@ -10251,7 +10153,7 @@ function Lp(e, t, n, s, r) {
     boundingVolume: g
   };
 }
-function Gp(e, t, n) {
+function up(e, t, n) {
   if (t.region) {
     const {
       childTileX: s,
@@ -10266,11 +10168,11 @@ function Gp(e, t, n) {
     return t;
   throw new Error(`Unsupported bounding volume type ${t}`);
 }
-function Vt(e, t, n) {
+function kt(e, t, n) {
   return (e << n) + t;
 }
-function Os(e, t, n, s, r) {
-  const i = Up({
+function Is(e, t, n, s, r) {
+  const i = lp({
     level: t,
     x: n,
     y: s,
@@ -10278,17 +10180,17 @@ function Os(e, t, n, s, r) {
   });
   return e.replace(/{level}|{x}|{y}|{z}/gi, (o) => i[o]);
 }
-function Up(e) {
+function lp(e) {
   const t = {};
   for (const n in e)
     t[`{${n}}`] = e[n];
   return t;
 }
-function Np(e, t) {
+function hp(e, t) {
   const n = Math.floor(e / 8), s = e % 8;
   return (t[n] >> s & 1) === 1;
 }
-function ar(e) {
+function sr(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : "";
   if (!t)
     return jt.EMPTY;
@@ -10305,63 +10207,63 @@ function ar(e) {
       return s || jt.EMPTY;
   }
 }
-function cr(e) {
+function rr(e) {
   switch (e) {
     case "REPLACE":
     case "replace":
-      return vt.REPLACE;
+      return xt.REPLACE;
     case "ADD":
     case "add":
-      return vt.ADD;
+      return xt.ADD;
     default:
       return e;
   }
 }
-function vs(e, t) {
+function Ss(e, t) {
   if (/^[a-z][0-9a-z+.-]*:/i.test(t)) {
     const s = new URL(e, `${t}/`);
     return decodeURI(s.toString());
   } else if (e.startsWith("/"))
     return e;
-  return rl(t, e);
+  return kc(t, e);
 }
-function Yi(e, t) {
+function ki(e, t) {
   if (!e)
     return null;
   let n;
   if (e.content) {
     var s;
     const i = e.content.uri || ((s = e.content) === null || s === void 0 ? void 0 : s.url);
-    typeof i < "u" && (n = vs(i, t));
+    typeof i < "u" && (n = Ss(i, t));
   }
   return {
     ...e,
     id: n,
     contentUrl: n,
-    lodMetricType: Rn.GEOMETRIC_ERROR,
+    lodMetricType: wn.GEOMETRIC_ERROR,
     lodMetricValue: e.geometricError,
     transformMatrix: e.transform,
-    type: ar(e, n),
-    refine: cr(e.refine)
+    type: sr(e, n),
+    refine: rr(e.refine)
   };
 }
-async function Pp(e, t, n) {
+async function fp(e, t, n) {
   let s = null;
-  const r = Zi(e.root);
-  r && e.root ? s = await $i(e.root, e, t, r, n) : s = Yi(e.root, t);
+  const r = Ki(e.root);
+  r && e.root ? s = await ji(e.root, e, t, r, n) : s = ki(e.root, t);
   const i = [];
   for (i.push(s); i.length > 0; ) {
     const o = i.pop() || {}, a = o.children || [], c = [];
     for (const u of a) {
-      const l = Zi(u);
+      const l = Ki(u);
       let h;
-      l ? h = await $i(u, e, t, l, n) : h = Yi(u, t), h && (c.push(h), i.push(h));
+      l ? h = await ji(u, e, t, l, n) : h = ki(u, t), h && (c.push(h), i.push(h));
     }
     o.children = c;
   }
   return s;
 }
-async function $i(e, t, n, s, r) {
+async function ji(e, t, n, s, r) {
   var i, o, a;
   const {
     subdivisionScheme: c,
@@ -10371,13 +10273,13 @@ async function $i(e, t, n, s, r) {
     subtrees: {
       uri: f
     }
-  } = s, d = Os(f, 0, 0, 0, 0), A = vs(d, n), g = await Fe(A, xa, r), p = (i = e.content) === null || i === void 0 ? void 0 : i.uri, y = p ? vs(p, n) : "", _ = t == null || (o = t.root) === null || o === void 0 ? void 0 : o.refine, b = e.geometricError, w = (a = e.boundingVolume.extensions) === null || a === void 0 ? void 0 : a["3DTILES_bounding_volume_S2"];
+  } = s, d = Is(f, 0, 0, 0, 0), A = Ss(d, n), g = await Fe(A, Ca, r), p = (i = e.content) === null || i === void 0 ? void 0 : i.uri, y = p ? Ss(p, n) : "", _ = t == null || (o = t.root) === null || o === void 0 ? void 0 : o.refine, b = e.geometricError, w = (a = e.boundingVolume.extensions) === null || a === void 0 ? void 0 : a["3DTILES_bounding_volume_S2"];
   if (w) {
-    const D = {
-      box: ja(w),
+    const F = {
+      box: Da(w),
       s2VolumeInfo: w
     };
-    e.boundingVolume = D;
+    e.boundingVolume = F;
   }
   const M = e.boundingVolume, C = {
     contentUrlTemplate: y,
@@ -10387,21 +10289,21 @@ async function $i(e, t, n, s, r) {
     maximumLevel: Number.isFinite(l) ? l - 1 : u,
     refine: _,
     basePath: n,
-    lodMetricType: Rn.GEOMETRIC_ERROR,
+    lodMetricType: wn.GEOMETRIC_ERROR,
     rootLodMetricValue: b,
     rootBoundingVolume: M,
-    getTileType: ar,
-    getRefine: cr
+    getTileType: sr,
+    getRefine: rr
   };
-  return await Hp(e, n, g, C, r);
+  return await dp(e, n, g, C, r);
 }
-async function Hp(e, t, n, s, r) {
+async function dp(e, t, n, s, r) {
   if (!e)
     return null;
   const {
     children: i,
     contentUrl: o
-  } = await Ka({
+  } = await Fa({
     subtree: n,
     implicitOptions: s,
     loaderOptions: r
@@ -10413,16 +10315,16 @@ async function Hp(e, t, n, s, r) {
     ...e,
     id: a,
     contentUrl: a,
-    lodMetricType: Rn.GEOMETRIC_ERROR,
+    lodMetricType: wn.GEOMETRIC_ERROR,
     lodMetricValue: e.geometricError,
     transformMatrix: e.transform,
-    type: ar(e, a),
-    refine: cr(e.refine),
+    type: sr(e, a),
+    refine: rr(e.refine),
     content: c || e.content,
     children: i
   };
 }
-function Zi(e) {
+function Ki(e) {
   var t;
   return (e == null || (t = e.extensions) === null || t === void 0 ? void 0 : t["3DTILES_implicit_tiling"]) || (e == null ? void 0 : e.implicitTiling);
 }
@@ -10430,11 +10332,11 @@ const be = {
   id: "3d-tiles",
   name: "3D Tiles",
   module: "3d-tiles",
-  version: Yo,
+  version: Jo,
   extensions: ["cmpt", "pnts", "b3dm", "i3dm"],
   mimeTypes: ["application/octet-stream"],
   tests: ["cmpt", "pnts", "b3dm", "i3dm"],
-  parse: Jp,
+  parse: mp,
   options: {
     "3d-tiles": {
       loadGLTF: !0,
@@ -10444,15 +10346,15 @@ const be = {
     }
   }
 };
-async function Jp(e) {
+async function mp(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {}, n = arguments.length > 2 ? arguments[2] : void 0;
   const s = t["3d-tiles"] || {};
   let r;
-  return s.isTileset === "auto" ? r = (n == null ? void 0 : n.url) && n.url.indexOf(".json") !== -1 : r = s.isTileset, r ? Vp(e, t, n) : kp(e, t, n);
+  return s.isTileset === "auto" ? r = (n == null ? void 0 : n.url) && n.url.indexOf(".json") !== -1 : r = s.isTileset, r ? Ap(e, t, n) : gp(e, t, n);
 }
-async function Vp(e, t, n) {
+async function Ap(e, t, n) {
   var s;
-  const r = JSON.parse(new TextDecoder().decode(e)), i = (n == null ? void 0 : n.url) || "", o = jp(i), a = await Pp(r, o, t || {});
+  const r = JSON.parse(new TextDecoder().decode(e)), i = (n == null ? void 0 : n.url) || "", o = pp(i), a = await fp(r, o, t || {});
   return {
     ...r,
     shape: "tileset3d",
@@ -10462,40 +10364,40 @@ async function Vp(e, t, n) {
     basePath: o,
     root: a || r.root,
     type: dt.TILES3D,
-    lodMetricType: Rn.GEOMETRIC_ERROR,
+    lodMetricType: wn.GEOMETRIC_ERROR,
     lodMetricValue: ((s = r.root) === null || s === void 0 ? void 0 : s.geometricError) || 0
   };
 }
-async function kp(e, t, n) {
+async function gp(e, t, n) {
   const s = {
     content: {
       shape: "tile3d",
       featureIds: null
     }
   };
-  return await va(e, 0, t, n, s.content), s.content;
+  return await ya(e, 0, t, n, s.content), s.content;
 }
-function jp(e) {
-  return sl(e);
+function pp(e) {
+  return Os(e);
 }
-const Wa = "https://api.cesium.com/v1/assets";
-async function Kp(e, t) {
+const Oa = "https://api.cesium.com/v1/assets";
+async function Bp(e, t) {
   if (!t) {
-    const i = await Wp(e);
+    const i = await yp(e);
     for (const o of i.items)
       o.type === "3DTILES" && (t = o.id);
   }
-  const n = await zp(e, t), {
+  const n = await Cp(e, t), {
     type: s,
     url: r
   } = n;
-  return it(s === "3DTILES" && r), n.headers = {
+  return U(s === "3DTILES" && r), n.headers = {
     Authorization: `Bearer ${n.accessToken}`
   }, n;
 }
-async function Wp(e) {
-  it(e);
-  const t = Wa, n = {
+async function yp(e) {
+  U(e);
+  const t = Oa, n = {
     Authorization: `Bearer ${e}`
   }, s = await _e(t, {
     headers: n
@@ -10504,11 +10406,11 @@ async function Wp(e) {
     throw new Error(s.statusText);
   return await s.json();
 }
-async function zp(e, t) {
-  it(e, t);
+async function Cp(e, t) {
+  U(e, t);
   const n = {
     Authorization: `Bearer ${e}`
-  }, s = `${Wa}/${t}`;
+  }, s = `${Oa}/${t}`;
   let r = await _e(`${s}`, {
     headers: n
   });
@@ -10525,7 +10427,7 @@ async function zp(e, t) {
     ...o
   }, i;
 }
-async function Xp(e) {
+async function Tp(e) {
   let t = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
   t = t["cesium-ion"] || {};
   const {
@@ -10536,16 +10438,16 @@ async function Xp(e) {
     const r = e.match(/\/([0-9]+)\/tileset.json/);
     s = r && r[1];
   }
-  return Kp(n, s);
+  return Bp(n, s);
 }
-const za = {
+const va = {
   ...be,
   id: "cesium-ion",
   name: "Cesium Ion",
-  preload: Xp,
+  preload: Tp,
   parse: async (e, t, n) => (t = {
     ...t
-  }, t["3d-tiles"] = t["cesium-ion"], t.loader = za, be.parse(e, t, n)),
+  }, t["3d-tiles"] = t["cesium-ion"], t.loader = va, be.parse(e, t, n)),
   options: {
     "cesium-ion": {
       ...be.options["3d-tiles"],
@@ -10553,7 +10455,7 @@ const za = {
     }
   }
 };
-function Qp(e) {
+function Ep(e) {
   let t = 0;
   for (const s in e.attributes) {
     const r = e.getAttribute(s);
@@ -10562,7 +10464,7 @@ function Qp(e) {
   const n = e.getIndex();
   return t += n ? n.count * n.itemSize * n.array.BYTES_PER_ELEMENT : 0, t;
 }
-function Xa(e) {
+function xa(e) {
   const n = document.createElement("canvas");
   n.width = 64, n.height = 64;
   const s = n.getContext("2d");
@@ -10573,32 +10475,32 @@ function Xa(e) {
     r.addColorStop(a[0], "#" + a[1].getHexString());
   }
   s.fillStyle = r, s.fill();
-  const i = new tc(n);
-  return i.needsUpdate = !0, i.minFilter = ec, i.wrapS = hr, i.wrapT = hr, i.repeat.set(2, 2), i;
+  const i = new Ha(n);
+  return i.needsUpdate = !0, i.minFilter = Ja, i.wrapS = ar, i.wrapT = ar, i.repeat.set(2, 2), i;
 }
-function to(e) {
+function zi(e) {
   e.updateMatrix(), e.updateMatrixWorld(), e.matrixWorldInverse.copy(e.matrixWorld).invert();
-  const t = new nc();
-  return t.setFromProjectionMatrix(new z().multiplyMatrices(e.projectionMatrix, e.matrixWorldInverse)), t;
+  const t = new Va();
+  return t.setFromProjectionMatrix(new X().multiplyMatrices(e.projectionMatrix, e.matrixWorldInverse)), t;
 }
-function qp(e) {
-  const t = new sn(), n = new sc(10, 5), s = new et(...e.projectPointOntoPlane([0, 0, 0])), r = new et(e.normal.x, e.normal.y, e.normal.z), i = new et().copy(s).add(r);
+function bp(e) {
+  const t = new en(), n = new ka(10, 5), s = new nt(...e.projectPointOntoPlane([0, 0, 0])), r = new nt(e.normal.x, e.normal.y, e.normal.z), i = new nt().copy(s).add(r);
   n.lookAt(i), n.translate(s.x, s.y, s.z);
-  const o = new so({ color: 65535, side: rc }), a = new ro(n, o), c = new ic(r, s, 5, 16776960);
+  const o = new Qi({ color: 65535, side: ja }), a = new qi(n, o), c = new Ka(r, s, 5, 16776960);
   return t.add(c), t.add(a), t;
 }
-function eo(e) {
+function Wi(e) {
   const { boundingVolume: t } = e;
   let n = 0;
   e.content && (n = Math.min(e.content.byteLength / 5e5, 1));
-  const s = new T(n, 1, 0), r = new oc(1, 1, 1), i = new z();
-  t.halfAxes ? i.copy(Qa(t.halfAxes)) : t.radius && r.scale(t.radius * 2, t.radius * 2, t.radius * 2), r.applyMatrix4(i);
-  const o = new ac(r), a = new cc(o, new uc({ color: s }));
-  return a.position.copy(new et(...t.center)), a;
+  const s = new T(n, 1, 0), r = new za(1, 1, 1), i = new X();
+  t.halfAxes ? i.copy(La(t.halfAxes)) : t.radius && r.scale(t.radius * 2, t.radius * 2, t.radius * 2), r.applyMatrix4(i);
+  const o = new Wa(r), a = new Xa(o, new Qa({ color: s }));
+  return a.position.copy(new nt(...t.center)), a;
 }
-function Qa(e) {
+function La(e) {
   const t = e;
-  return new z().fromArray([
+  return new X().fromArray([
     t[0] * 2,
     t[1] * 2,
     t[2] * 2,
@@ -10617,12 +10519,12 @@ function Qa(e) {
     1
   ]);
 }
-function Yp(e, t) {
+function _p(e, t) {
   const r = 2 * Math.PI * 6378137 / 2, i = t * r / 180;
   let o = Math.log(Math.tan((90 + e) * Math.PI / 360)) / (Math.PI / 180);
-  return o = o * r / 180, new io(i, o);
+  return o = o * r / 180, new Yi(i, o);
 }
-function $p(e) {
+function wp(e) {
   let t = 0;
   if (e.userData.mimeType == "image/ktx2" && e.mipmaps) {
     for (let n = 0; n < e.mipmaps.length; n++)
@@ -10637,10 +10539,10 @@ function $p(e) {
   } else
     return;
 }
-function qa(e) {
-  return Qp(e);
+function Ga(e) {
+  return Ep(e);
 }
-const Ya = {
+const Ua = {
   // From chroma spectral http://gka.github.io/chroma.js/
   SPECTRAL: [
     [0, new T(0.3686, 0.3098, 0.6353)],
@@ -10747,7 +10649,7 @@ const Ya = {
     [0.04, new T(1, 1, 1)],
     [1, new T(1, 1, 1)]
   ]
-}, Zp = `
+}, Mp = `
   varying vec3 vColor;
   uniform float alpha;
 
@@ -10758,7 +10660,7 @@ const Ya = {
       gl_FragColor = vec4( vColor, alpha);
     }
   }
-`, tB = `
+`, Rp = `
   varying vec3 vColor;
   uniform sampler2D gradient;
   uniform sampler2D grayscale;
@@ -10834,8 +10736,8 @@ const Ya = {
       gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
   }
 `;
-var $a = /* @__PURE__ */ ((e) => (e[e.Intensity = 1] = "Intensity", e[e.Classification = 2] = "Classification", e[e.Elevation = 3] = "Elevation", e[e.RGB = 4] = "RGB", e[e.White = 5] = "White", e))($a || {}), En = /* @__PURE__ */ ((e) => (e[e.FlatTexture = 1] = "FlatTexture", e[e.ShadedTexture = 2] = "ShadedTexture", e[e.ShadedNoTexture = 3] = "ShadedNoTexture", e))(En || {}), Mt = /* @__PURE__ */ ((e) => (e[e.Reset = 1] = "Reset", e[e.Mercator = 2] = "Mercator", e[e.WGS84Cartesian = 3] = "WGS84Cartesian", e))(Mt || {});
-const eB = Ya.RAINBOW, nB = typeof document < "u" ? Xa(eB) : null, sB = Ya.GRAYSCALE, rB = typeof document < "u" ? Xa(sB) : null, iB = {
+var Pa = /* @__PURE__ */ ((e) => (e[e.Intensity = 1] = "Intensity", e[e.Classification = 2] = "Classification", e[e.Elevation = 3] = "Elevation", e[e.RGB = 4] = "RGB", e[e.White = 5] = "White", e))(Pa || {}), yn = /* @__PURE__ */ ((e) => (e[e.FlatTexture = 1] = "FlatTexture", e[e.ShadedTexture = 2] = "ShadedTexture", e[e.ShadedNoTexture = 3] = "ShadedNoTexture", e))(yn || {}), Rt = /* @__PURE__ */ ((e) => (e[e.Reset = 1] = "Reset", e[e.Mercator = 2] = "Mercator", e[e.WGS84Cartesian = 3] = "WGS84Cartesian", e))(Rt || {});
+const Ip = Ua.RAINBOW, Sp = typeof document < "u" ? xa(Ip) : null, Dp = Ua.GRAYSCALE, Fp = typeof document < "u" ? xa(Dp) : null, Op = {
   throttleRequests: !0,
   maxRequests: 64,
   updateInterval: 0.1,
@@ -10847,9 +10749,9 @@ const eB = Ya.RAINBOW, nB = typeof document < "u" ? Xa(eB) : null, sB = Ya.GRAYS
   viewDistanceScale: 1,
   skipLevelOfDetail: !1,
   updateTransforms: !0,
-  shading: En.FlatTexture,
+  shading: yn.FlatTexture,
   transparent: !1,
-  pointCloudColoring: $a.White,
+  pointCloudColoring: Pa.White,
   pointSize: 1,
   worker: !0,
   wireframe: !1,
@@ -10860,10 +10762,10 @@ const eB = Ya.RAINBOW, nB = typeof document < "u" ? Xa(eB) : null, sB = Ya.GRAYS
   material: null,
   computeNormals: !1,
   shaderCallback: null,
-  geoTransform: Mt.Reset,
+  geoTransform: Rt.Reset,
   preloadTilesCount: null
 };
-class dB {
+class Hp {
   /**
   * Loads a tileset of 3D Tiles according to the given {@link LoaderProps}
   * @public
@@ -10873,41 +10775,41 @@ class dB {
   * and a runtime engine to be updated every frame.
   */
   static async load(t) {
-    const n = { ...iB, ...t.options }, { url: s } = t, r = n.updateInterval, i = 5, o = {};
+    const n = { ...Op, ...t.options }, { url: s } = t, r = n.updateInterval, i = 5, o = {};
     if (n.cesiumIONToken) {
       o["cesium-ion"] = {
         accessToken: n.cesiumIONToken
       };
-      const E = await za.preload(s, o);
+      const E = await va.preload(s, o);
       o.fetch = { headers: E.headers };
     }
     n.googleApiKey && (o.fetch = { headers: { "X-GOOG-API-KEY": n.googleApiKey } }), t.loadingManager && t.loadingManager.itemStart(s);
     const a = await Fe(s, be, {
       ...o
-    }), c = {}, u = {}, l = [], h = new sn(), f = new sn();
+    }), c = {}, u = {}, l = [], h = new en(), f = new en();
     n.debug || (f.visible = !1);
     const d = {
       pointSize: { type: "f", value: n.pointSize },
-      gradient: { type: "t", value: nB },
-      grayscale: { type: "t", value: rB },
-      rootCenter: { type: "vec3", value: new et() },
-      rootNormal: { type: "vec3", value: new et() },
+      gradient: { type: "t", value: Sp },
+      grayscale: { type: "t", value: Fp },
+      rootCenter: { type: "vec3", value: new nt() },
+      rootNormal: { type: "vec3", value: new nt() },
       coloring: { type: "i", value: n.pointCloudColoring },
       hideGround: { type: "b", value: !0 },
-      elevationRange: { type: "vec2", value: new io(0, 400) },
+      elevationRange: { type: "vec2", value: new Yi(0, 400) },
       maxIntensity: { type: "f", value: 1 },
       intensityContrast: { type: "f", value: 1 },
       alpha: { type: "f", value: 1 }
-    }, A = new lc({
+    }, A = new qa({
       uniforms: d,
-      vertexShader: tB,
-      fragmentShader: Zp,
+      vertexShader: Rp,
+      fragmentShader: Mp,
       transparent: n.transparent,
       vertexColors: !0
     });
     let g = null, p = 0, y, _, b;
-    n.gltfLoader ? y = n.gltfLoader : (y = new mc(), n.basisTranscoderPath && (_ = new gc(), _.detectSupport(t.renderer), _.setTranscoderPath(n.basisTranscoderPath + "/"), _.setWorkerLimit(1), y.setKTX2Loader(_)), n.dracoDecoderPath && (b = new Ac(), b.setDecoderPath(n.dracoDecoderPath + "/"), b.setWorkerLimit(n.maxConcurrency), y.setDRACOLoader(b)));
-    const w = new so({ transparent: n.transparent }), M = {
+    n.gltfLoader ? y = n.gltfLoader : (y = new tc(), n.basisTranscoderPath && (_ = new nc(), _.detectSupport(t.renderer), _.setTranscoderPath(n.basisTranscoderPath + "/"), _.setWorkerLimit(1), y.setKTX2Loader(_)), n.dracoDecoderPath && (b = new ec(), b.setDecoderPath(n.dracoDecoderPath + "/"), b.setWorkerLimit(n.maxConcurrency), y.setDRACOLoader(b)));
+    const w = new Qi({ transparent: n.transparent }), M = {
       maximumMemoryUsage: n.maximumMemoryUsage,
       maximumScreenSpaceError: n.maximumScreenSpaceError,
       memoryAdjustedScreenSpaceError: n.memoryAdjustedScreenSpaceError,
@@ -10921,22 +10823,22 @@ class dB {
         let v = null;
         switch (E.type) {
           case jt.POINTCLOUD: {
-            v = aB(E, A, n, Bt);
+            v = xp(E, A, n, yt);
             break;
           }
           case jt.SCENEGRAPH:
           case jt.MESH: {
-            v = await oB(y, E, w, n, Bt);
+            v = await vp(y, E, w, n, yt);
             break;
           }
         }
         if (v && (v.visible = !1, c[E.id] = v, h.add(c[E.id]), n.debug)) {
-          const Q = eo(E);
-          f.add(Q), u[E.id] = Q;
+          const q = Wi(E);
+          f.add(q), u[E.id] = q;
         }
       },
       onTileLoad: async (E) => {
-        C && (n.geoTransform == Mt.Reset && !S && (E == null ? void 0 : E.depth) <= i && $t(E), Yt = !0);
+        C && (n.geoTransform == Rt.Reset && !S && (E == null ? void 0 : E.depth) <= i && $t(E), Yt = !0);
       },
       onTileUnload: (E) => {
         l.push(E);
@@ -10944,7 +10846,7 @@ class dB {
       onTileError: (E, v) => {
         console.error("Tile error", E.id, v);
       }
-    }, C = new fd(a, {
+    }, C = new rd(a, {
       ...M,
       loadOptions: {
         ...o,
@@ -10957,25 +10859,25 @@ class dB {
           loadGLTF: !1
         }
       }
-    }), F = new z(), D = new z(), I = new et();
+    }), D = new X(), F = new X(), I = new nt();
     let S = !1;
-    if (C.root.boundingVolume ? (C.root.header.boundingVolume.region && (console.warn("Cannot apply a model matrix to bounding volumes of type region. Tileset stays in original geo-coordinates."), n.geoTransform = Mt.WGS84Cartesian), D.setPosition(
+    if (C.root.boundingVolume ? (C.root.header.boundingVolume.region && (console.warn("Cannot apply a model matrix to bounding volumes of type region. Tileset stays in original geo-coordinates."), n.geoTransform = Rt.WGS84Cartesian), F.setPosition(
       C.root.boundingVolume.center[0],
       C.root.boundingVolume.center[1],
       C.root.boundingVolume.center[2]
     )) : console.warn("Bounding volume not found, no transformations applied"), n.debug) {
-      const E = eo(C.root);
+      const E = Wi(C.root);
       f.add(E), u[C.root.id] = E;
     }
-    let J = !1, j = !1;
-    d.rootCenter.value.copy(I), d.rootNormal.value.copy(new et(0, 0, 1).normalize()), C.stats.get("Loader concurrency").count = n.maxConcurrency, C.stats.get("Maximum mem usage").count = n.maximumMemoryUsage;
-    let V = 0, O = null, nt = null, Yt = !1;
-    const ue = new et(1 / 0, 1 / 0, 1 / 0);
-    let Ht = null;
+    let V = !1, K = !1;
+    d.rootCenter.value.copy(I), d.rootNormal.value.copy(new nt(0, 0, 1).normalize()), C.stats.get("Loader concurrency").count = n.maxConcurrency, C.stats.get("Maximum mem usage").count = n.maximumMemoryUsage;
+    let k = 0, O = null, st = null, Yt = !1;
+    const ue = new nt(1 / 0, 1 / 0, 1 / 0);
+    let Jt = null;
     h.updateMatrixWorld(!0);
-    const ut = new z().copy(h.matrixWorld), Bt = new z().copy(ut).invert();
-    if ((n.geoTransform == Mt.Reset || n.geoTransform == Mt.Mercator) && ($t(C.root), xt()), n.debug && (u[C.root.id].applyMatrix4(F), f.matrixWorld.copy(h.matrixWorld)), n.geoTransform == Mt.Mercator) {
-      const E = Yp(
+    const ut = new X().copy(h.matrixWorld), yt = new X().copy(ut).invert();
+    if ((n.geoTransform == Rt.Reset || n.geoTransform == Rt.Mercator) && ($t(C.root), Gt()), n.debug && (u[C.root.id].applyMatrix4(D), f.matrixWorld.copy(h.matrixWorld)), n.geoTransform == Rt.Mercator) {
+      const E = _p(
         C.cartographicCenter[1],
         C.cartographicCenter[0]
       );
@@ -10985,57 +10887,57 @@ class dB {
         -E.y
       ), h.position.copy(I), h.updateMatrixWorld(!0);
     } else
-      n.geoTransform == Mt.WGS84Cartesian && (h.applyMatrix4(D), h.updateMatrixWorld(!0), I.copy(h.position));
+      n.geoTransform == Rt.WGS84Cartesian && (h.applyMatrix4(F), h.updateMatrixWorld(!0), I.copy(h.position));
     function $t(E) {
       if (!E.boundingVolume.halfAxes)
         return;
-      const v = E.boundingVolume.halfAxes, Q = new z().extractRotation(Qa(v)).premultiply(new z().extractRotation(Bt));
-      if (!new vn().setFromRotationMatrix(Q).equals(new vn())) {
+      const v = E.boundingVolume.halfAxes, q = new X().extractRotation(La(v)).premultiply(new X().extractRotation(yt));
+      if (!new Fn().setFromRotationMatrix(q).equals(new Fn())) {
         S = !0;
-        const yt = new et(
-          D.elements[12],
-          D.elements[13],
-          D.elements[14]
+        const Ct = new nt(
+          F.elements[12],
+          F.elements[13],
+          F.elements[14]
         );
-        D.extractRotation(Q), D.setPosition(yt), xt();
+        F.extractRotation(q), F.setPosition(Ct), Gt();
       }
     }
-    function xt() {
-      F.copy(D).invert(), F.premultiply(ut), F.copy(ut).multiply(new z().copy(D).invert()), C.modelMatrix = new N(F.toArray());
+    function Gt() {
+      D.copy(F).invert(), D.premultiply(ut), D.copy(ut).multiply(new X().copy(F).invert()), C.modelMatrix = new N(D.toArray());
     }
-    function Ue(E, v, Q, tt) {
-      if (J)
+    function Le(E, v, q, et) {
+      if (V)
         return;
-      (!Ht || tt.aspect != nt) && (Ht = new An({
-        fov: tt.fov / 180 * Math.PI,
-        aspectRatio: tt.aspect,
-        near: tt.near,
-        far: tt.far
-      }).sseDenominator, nt = tt.aspect, n.debug && console.log("Updated sse denonimator:", Ht));
-      const Ne = to(tt).planes.map((K) => new q(K.normal.toArray(), K.constant)), Za = new at(Ne), ur = {
+      (!Jt || et.aspect != st) && (Jt = new dn({
+        fov: et.fov / 180 * Math.PI,
+        aspectRatio: et.aspect,
+        near: et.near,
+        far: et.far
+      }).sseDenominator, st = et.aspect, n.debug && console.log("Updated sse denonimator:", Jt));
+      const Ge = zi(et).planes.map((z) => new Y(z.normal.toArray(), z.constant)), Na = new at(Ge), ir = {
         camera: {
           position: ue.toArray()
         },
-        height: Q,
+        height: q,
         frameNumber: E._frameNumber,
-        sseDenominator: Ht,
-        cullingVolume: Za,
+        sseDenominator: Jt,
+        cullingVolume: Na,
         viewport: {
           id: 0
         }
       };
-      E._cache.reset(), E._traverser.traverse(E.root, ur, E.options);
-      for (const K of E.tiles)
-        K.selected ? v[K.id] ? v[K.id].visible = !0 : console.error("TILE SELECTED BUT NOT LOADED!!", K.id) : v[K.id] && (v[K.id].visible = !1);
+      E._cache.reset(), E._traverser.traverse(E.root, ir, E.options);
+      for (const z of E.tiles)
+        z.selected ? v[z.id] ? v[z.id].visible = !0 : console.error("TILE SELECTED BUT NOT LOADED!!", z.id) : v[z.id] && (v[z.id].visible = !1);
       for (; l.length > 0; ) {
-        const K = l.pop();
-        v[K.id] && K.contentState == rt.UNLOADED && (h.remove(v[K.id]), ms(v[K.id]), delete v[K.id]), u[K.id] && (ms(u[K.id]), f.remove(u[K.id]), delete u[K.id]);
+        const z = l.pop();
+        v[z.id] && z.contentState == it.UNLOADED && (h.remove(v[z.id]), ls(v[z.id]), delete v[z.id]), u[z.id] && (ls(u[z.id]), f.remove(u[z.id]), delete u[z.id]);
       }
-      const On = E.stats.get("Tiles Loaded").count, lr = E.stats.get("Tiles Loading").count;
+      const Dn = E.stats.get("Tiles Loaded").count, or = E.stats.get("Tiles Loading").count;
       return t.onProgress && t.onProgress(
-        On,
-        On + lr
-      ), t.loadingManager && !j && lr == 0 && (n.preloadTilesCount == null || On >= n.preloadTilesCount) && (j = !0, t.loadingManager.itemEnd(t.url)), ur;
+        Dn,
+        Dn + or
+      ), t.loadingManager && !K && or == 0 && (n.preloadTilesCount == null || Dn >= n.preloadTilesCount) && (K = !0, t.loadingManager.itemEnd(t.url)), ir;
     }
     return {
       model: h,
@@ -11047,7 +10949,7 @@ class dB {
         },
         setWireframe: (E) => {
           n.wireframe = E, h.traverse((v) => {
-            v instanceof ro && (v.material.wireframe = E);
+            v instanceof qi && (v.material.wireframe = E);
           });
         },
         setDebug: (E) => {
@@ -11058,7 +10960,7 @@ class dB {
         },
         getTileBoxes: () => f,
         setViewDistanceScale: (E) => {
-          C.options.viewDistanceScale = E, C._frameNumber++, Ue(C, c, p, g);
+          C.options.viewDistanceScale = E, C._frameNumber++, Le(C, c, p, g);
         },
         setHideGround: (E) => {
           d.hideGround.value = E;
@@ -11080,7 +10982,7 @@ class dB {
         },
         getLatLongHeightFromPosition: (E) => {
           const v = C.ellipsoid.cartesianToCartographic(
-            new et().copy(E).applyMatrix4(new z().copy(F).invert()).toArray()
+            new nt().copy(E).applyMatrix4(new X().copy(D).invert()).toArray()
           );
           return {
             lat: v[1],
@@ -11090,38 +10992,38 @@ class dB {
         },
         getPositionFromLatLongHeight: (E) => {
           const v = C.ellipsoid.cartographicToCartesian([
-            ps(E.long),
-            ps(E.lat),
+            ds(E.long),
+            ds(E.lat),
             E.height
           ]);
-          return new et(...v).applyMatrix4(F);
+          return new nt(...v).applyMatrix4(D);
         },
         orientToGeocoord: (E) => {
-          const v = [E.long, E.lat, E.height], Q = C.ellipsoid.cartographicToCartesian(v), tt = new z().fromArray(C.ellipsoid.eastNorthUpToFixedFrame(Q)), yt = new z().makeRotationFromEuler(
-            new vn(Math.PI / 2, Math.PI / 2, 0)
-          ), Ne = new z().copy(tt).multiply(yt).invert();
-          C.modelMatrix = new N(Ne.toArray()), h.applyMatrix4(Ne), h.updateMatrixWorld(!0);
+          const v = [E.long, E.lat, E.height], q = C.ellipsoid.cartographicToCartesian(v), et = new X().fromArray(C.ellipsoid.eastNorthUpToFixedFrame(q)), Ct = new X().makeRotationFromEuler(
+            new Fn(Math.PI / 2, Math.PI / 2, 0)
+          ), Ge = new X().copy(et).multiply(Ct).invert();
+          C.modelMatrix = new N(Ge.toArray()), h.applyMatrix4(Ge), h.updateMatrixWorld(!0);
         },
         getCameraFrustum: (E) => {
-          const Q = to(E).planes.map((yt) => new q(yt.normal.toArray(), yt.constant)).map((yt) => qp(yt)), tt = new sn();
-          for (const yt of Q)
-            tt.add(yt);
-          return tt;
+          const q = zi(E).planes.map((Ct) => new Y(Ct.normal.toArray(), Ct.constant)).map((Ct) => bp(Ct)), et = new en();
+          for (const Ct of q)
+            et.add(Ct);
+          return et;
         },
-        update: function(E, v, Q) {
-          if (g = Q, p = v, V += E, C && V >= r) {
+        update: function(E, v, q) {
+          if (g = q, p = v, k += E, C && k >= r) {
             if (!ut.equals(h.matrixWorld)) {
-              V = 0, ut.copy(h.matrixWorld), (n.geoTransform == Mt.Reset || n.geoTransform == Mt.Mercator) && xt();
-              const tt = new et().setFromMatrixPosition(ut);
-              d.rootCenter.value.copy(tt), d.rootNormal.value.copy(new et(0, 0, 1).applyMatrix4(ut).normalize()), Bt.copy(ut).invert(), n.debug && (u[C.root.id].matrixWorld.copy(F), u[C.root.id].applyMatrix4(ut));
+              k = 0, ut.copy(h.matrixWorld), (n.geoTransform == Rt.Reset || n.geoTransform == Rt.Mercator) && Gt();
+              const et = new nt().setFromMatrixPosition(ut);
+              d.rootCenter.value.copy(et), d.rootNormal.value.copy(new nt(0, 0, 1).applyMatrix4(ut).normalize()), yt.copy(ut).invert(), n.debug && (u[C.root.id].matrixWorld.copy(D), u[C.root.id].applyMatrix4(ut));
             }
-            O == null ? O = new z().copy(Q.matrixWorld) : (Yt || cB(Q, O, nt)) && (V = 0, Yt = !1, C._frameNumber++, Q.getWorldPosition(ue), O.copy(Q.matrixWorld), Ue(C, c, p, Q));
+            O == null ? O = new X().copy(q.matrixWorld) : (Yt || Lp(q, O, st)) && (k = 0, Yt = !1, C._frameNumber++, q.getWorldPosition(ue), O.copy(q.matrixWorld), Le(C, c, p, q));
           }
         },
         dispose: function() {
-          for (J = !0, C._destroy(); h.children.length > 0; ) {
+          for (V = !0, C._destroy(); h.children.length > 0; ) {
             const E = h.children[0];
-            ms(E), h.remove(E);
+            ls(E), h.remove(E);
           }
           for (; f.children.length > 0; ) {
             const E = f.children[0];
@@ -11133,9 +11035,9 @@ class dB {
     };
   }
 }
-async function oB(e, t, n, s, r) {
+async function vp(e, t, n, s, r) {
   return new Promise((i, o) => {
-    const a = new z().makeRotationAxis(new et(1, 0, 0), Math.PI / 2), c = t.content.gltfUpAxis !== "Z", u = new z().fromArray(t.computedTransform).premultiply(r);
+    const a = new X().makeRotationAxis(new nt(1, 0, 0), Math.PI / 2), c = t.content.gltfUpAxis !== "Z", u = new X().fromArray(t.computedTransform).premultiply(r);
     c && u.multiply(a), t.content.byteLength || (t.content.byteLength = t.content.gltfArrayBuffer.byteLength), e.parse(
       t.content.gltfArrayBuffer,
       t.contentUrl ? t.contentUrl.substr(0, t.contentUrl.lastIndexOf("/") + 1) : "",
@@ -11144,9 +11046,9 @@ async function oB(e, t, n, s, r) {
         h.applyMatrix4(u), t.content.texturesByteLength = 0, t.content.geometriesByteLength = 0, h.traverse((f) => {
           if (f.type == "Mesh") {
             const d = f;
-            t.content.geometriesByteLength += qa(d.geometry);
-            const A = d.material, g = A.map, p = $p(g);
-            p && (t.content.texturesByteLength += p), s.material ? (d.material = s.material.clone(), A.dispose()) : s.shading == En.FlatTexture && (d.material = n.clone(), A.dispose()), s.shading != En.ShadedNoTexture ? d.material.type == "ShaderMaterial" ? d.material.uniforms.map = { value: g } : d.material.map = g : (g && g.dispose(), d.material.map = null), s.shaderCallback && (d.onBeforeRender = (y, _, b, w, M, C) => {
+            t.content.geometriesByteLength += Ga(d.geometry);
+            const A = d.material, g = A.map, p = wp(g);
+            p && (t.content.texturesByteLength += p), s.material ? (d.material = s.material.clone(), A.dispose()) : s.shading == yn.FlatTexture && (d.material = n.clone(), A.dispose()), s.shading != yn.ShadedNoTexture ? d.material.type == "ShaderMaterial" ? d.material.uniforms.map = { value: g } : d.material.map = g : (g && g.dispose(), d.material.map = null), s.shaderCallback && (d.onBeforeRender = (y, _, b, w, M, C) => {
               s.shaderCallback(y, M);
             }), d.material.wireframe = s.wireframe, s.computeNormals && d.geometry.computeVertexNormals();
           }
@@ -11158,7 +11060,7 @@ async function oB(e, t, n, s, r) {
     );
   });
 }
-function aB(e, t, n, s) {
+function xp(e, t, n, s) {
   const r = {
     rtc_center: e.content.rtcCenter,
     // eslint-disable-line camelcase
@@ -11169,45 +11071,45 @@ function aB(e, t, n, s) {
     rgba: null
   }, { colors: i } = e.content.attributes;
   i && i.size === 3 && (r.rgb = i.value), i && i.size === 4 && (r.rgba = i.value);
-  const o = new hc();
-  o.setAttribute("position", new fr(r.points, 3));
-  const a = new z().fromArray(e.computedTransform).premultiply(s);
-  r.rgba ? o.setAttribute("color", new fr(r.rgba, 4)) : r.rgb && o.setAttribute("color", new dr(r.rgb, 3, !0)), r.intensities && o.setAttribute(
+  const o = new Ya();
+  o.setAttribute("position", new cr(r.points, 3));
+  const a = new X().fromArray(e.computedTransform).premultiply(s);
+  r.rgba ? o.setAttribute("color", new cr(r.rgba, 4)) : r.rgb && o.setAttribute("color", new ur(r.rgb, 3, !0)), r.intensities && o.setAttribute(
     "intensity",
     // Handles both 16bit or 8bit intensity values
-    new fc(r.intensities, 1, !0)
-  ), r.classifications && o.setAttribute("classification", new dr(r.classifications, 1, !1)), e.content.geometriesByteLength = qa(o), e.content.gpuMemoryUsageInBytes = e.content.geometriesByteLength;
-  const c = new dc(o, n.material || t);
+    new $a(r.intensities, 1, !0)
+  ), r.classifications && o.setAttribute("classification", new ur(r.classifications, 1, !1)), e.content.geometriesByteLength = Ga(o), e.content.gpuMemoryUsageInBytes = e.content.geometriesByteLength;
+  const c = new Za(o, n.material || t);
   if (r.rtc_center) {
     const u = r.rtc_center;
-    a.multiply(new z().makeTranslation(u[0], u[1], u[2]));
+    a.multiply(new X().makeTranslation(u[0], u[1], u[2]));
   }
   return c.applyMatrix4(a), c;
 }
-function no(e) {
+function Xi(e) {
   var t, n, s, r;
   (t = e == null ? void 0 : e.uniforms) != null && t.map ? (s = (n = e == null ? void 0 : e.uniforms) == null ? void 0 : n.map.value) == null || s.dispose() : e.map && ((r = e.map) == null || r.dispose()), e.dispose();
 }
-function ms(e) {
+function ls(e) {
   e.traverse((t) => {
     if (t.isMesh)
       if (t.geometry.dispose(), t.material.isMaterial)
-        no(t.material);
+        Xi(t.material);
       else
         for (const n of t.material)
-          no(n);
+          Xi(n);
   });
   for (let t = e.children.length - 1; t >= 0; t--) {
     const n = e.children[t];
     e.remove(n);
   }
 }
-function cB(e, t, n) {
+function Lp(e, t, n) {
   return !e.matrixWorld.equals(t) || e.aspect != n;
 }
 export {
-  Mt as GeoTransform,
-  dB as Loader3DTiles,
-  $a as PointCloudColoring,
-  En as Shading
+  Rt as GeoTransform,
+  Hp as Loader3DTiles,
+  Pa as PointCloudColoring,
+  yn as Shading
 };

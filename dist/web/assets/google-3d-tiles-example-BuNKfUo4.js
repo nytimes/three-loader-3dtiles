@@ -1,4 +1,4 @@
-import{O as T,S as W,a as J}from"./stats-widget-FuDRuBfE.js";import{S as X,P as R,W as N,L as U,a as Q,G as Z,C as q}from"./three-loader-3diles-hrSmYP0K.js";/**
+import{O as T,S as W,a as J}from"./stats-widget-ShOKPx9C.js";import{S as X,P as R,W as N,L as U,a as Q,G as Z,C as q}from"./three-loader-3diles-ps1xEBUX.js";/**
  * lil-gui
  * https://lil-gui.georgealways.com
  * @version 0.17.0

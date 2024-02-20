@@ -61,7 +61,7 @@ steps:
       - echo "node_modules\ntemp" > .gitignore
     when:
       branch:
-      - dev
+      - main
       event:
       - push
 
@@ -77,7 +77,7 @@ steps:
       force_push: true
     when:
       branch:
-      - dev
+      - main
       event:
       - push
 

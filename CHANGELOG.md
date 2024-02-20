@@ -1,3 +1,16 @@
+## v1.2
+
+## v1.2.0
+ - Support for Photorealistic 3D Tiles by Google Maps ([demo: requires API key](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/google-3dtiles/), [demo source](https://github.com/nytimes/three-loader-3dtiles/blob/main/examples/demos/google-3dtiles/index.html)).
+ - Upgrade to loaders.gl v4.1 and Three.js r160.
+   - Includes loaders.gl PRs [#2847](https://github.com/visgl/loaders.gl/pull/2847) and [#2851](https://github.com/visgl/loaders.gl/pull/2851).
+ - Faster build system with Vite.
+ - Support for `memoryAdjustedScreenSpaceError` and `memoryCacheOverflow` - Adjust the maximum screen space error based on GPU memory utilization.
+ - More accurate estimates of GPU memory utilization.
+ - `runtime.update()` function now takes `viewportHeight` instead of the whole `renderer` object (for screen space error calculations).
+ - Support providing an external `gltfLoader` in `options`, to reuse existing loader workers.
+ - Minor performance optimizations.
+
 ## v1.1
 
 ### v1.1.17

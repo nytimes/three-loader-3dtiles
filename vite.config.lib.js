@@ -3,11 +3,6 @@ import { defineConfig } from 'vite';
 const input = 'src/index.ts';
 
 export default defineConfig({
-    resolve: {
-      alias: {
-      //  '@loaders.gl/tiles': '@softrobot/loaders.gl-tiles'
-      }
-    },
     build: {
         outDir: 'dist/lib',
         lib: {

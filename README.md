@@ -170,7 +170,7 @@ npm run test
 
 ## Docs
 * API documentation is available [here](docs/three-loader-3dtiles.md). 
-* Code for the demos is in [`examples/demos`](examples/demos).
+* Code for the demos is in [examples/demos](https://github.com/nytimes/three-loader-3dtiles/tree/main/examples/demos).
 
 ## Alternatives
 To our knowledge, this is the only [loaders.gl](https://github.com/visgl/loaders.gl)-based Three.js library, but there are several implementations of 3D Tiles for Three.js. Notable examples:

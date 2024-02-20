@@ -1,21 +1,16 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-    resolve: {
-      alias: {
-        //'@loaders.gl/tiles': '@softrobot/loaders.gl-tiles'
-      }
-    },
     base: './',
     optimizeDeps: {
-      exclude: ['@loaders.gl/tiles', '@loaders.gl/3d-tiles'],
       // These packages raise import errors unless specifically included in here
       include: ['jszip', 'pako', 'snappyjs']
     },
     server: {
         port: 8000,
         host: true,
-        hmr: true
+        hmr: true,
+        open: '/examples/demos/index.html'
     },
     build: {
         outDir: 'dist/web',

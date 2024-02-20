@@ -65,8 +65,8 @@ interface LoaderOptions {
   maximumScreenSpaceError?: number;
   /** Whether to adjust the screen space error to maintain the maximum memory limit - Default `true`.*/
   memoryAdjustedScreenSpaceError?: boolean;
-  /* The maximum additional memory (in MB) to allow for cache headroom before adjusting the screen spacer error - Default: `1`. */
-  memoryCacheOverflow: number;
+  /** The maximum additional memory (in MB) to allow for cache headroom before adjusting the screen spacer error - Default: `1`. */
+  memoryCacheOverflow?: number;
   /** 0-1 scale for the LOD quality. A lower value loads tiles from lower LODs (increases performance). */ 
   viewDistanceScale?: number;
   /** Maximum worker thread concurrency when processing DRACO-compressed tiles - Default: `1` worker. */

@@ -4,8 +4,10 @@
 
 ## LoaderOptions.memoryCacheOverflow property
 
+The maximum additional memory (in MB) to allow for cache headroom before adjusting the screen spacer error - Default: `1`<!-- -->.
+
 **Signature:**
 
 ```typescript
-memoryCacheOverflow: number;
+memoryCacheOverflow?: number;
 ```

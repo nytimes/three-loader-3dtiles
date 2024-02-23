@@ -523,8 +523,8 @@ class Loader3DTiles {
         },
         getPositionFromLatLongHeight: (coord) => {
           const cartesianPosition = tileset.ellipsoid.cartographicToCartesian([
-            toRadians(coord.long),
-            toRadians(coord.lat),
+            coord.long,
+            coord.lat,
             coord.height
           ]);
           return new Vector3(...cartesianPosition).applyMatrix4(threeMat);

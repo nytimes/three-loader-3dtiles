@@ -569,7 +569,7 @@ class Loader3DTiles {
             if (!lastRootTransform.equals(root.matrixWorld)) {
               timer = 0;
               lastRootTransform.copy(root.matrixWorld);
-              if (options.geoTransform == GeoTransform.Reset || options.geoTransform == GeoTransform.Mercator) {
+              if (options.geoTransform == GeoTransform.WGS84Cartesian || options.geoTransform == GeoTransform.Reset || options.geoTransform == GeoTransform.Mercator) {
                 updateResetTransform();
               }
 

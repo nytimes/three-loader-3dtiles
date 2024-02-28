@@ -26,7 +26,8 @@ import {
   PerspectiveCamera,
   WebGLRenderer,
   Texture,
-  Euler
+  Euler,
+  Quaternion
 } from 'three';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -458,6 +459,24 @@ class Loader3DTiles {
       return frameState;
     }
 
+    function setGeoTransformation(root, transformationMatrix) {
+      const position = new Vector3();
+      const quaternion = new Quaternion();
+      const scale = new Vector3();
+
+      // Decompose the matrix into position, quaternion, and scale
+      transformationMatrix.decompose(position, quaternion, scale);
+
+      // Apply the decomposed values to the root object
+      root.position.copy(position);
+      root.quaternion.copy(quaternion);
+      root.scale.copy(scale);
+
+      // Update the root object's matrix to reflect the changes
+      root.updateMatrix();
+      root.updateMatrixWorld(true);
+    }
+
     return {
       model: root,
       runtime: {
@@ -545,9 +564,9 @@ class Loader3DTiles {
           
           tileset.modelMatrix = new MathGLMatrix4(geoTransform.toArray());
 
-          root.applyMatrix4(geoTransform);
-          root.updateMatrixWorld(true);
+          setGeoTransformation(root, geoTransform);
         },
+        
         getCameraFrustum: (camera: Camera) => {
           const frustum = Util.getCameraFrustum(camera);
           const meshes = frustum.planes

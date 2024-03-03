@@ -255,6 +255,8 @@ class Loader3DTiles {
     const rootCenter = new Vector3();
     let orientationDetected = false;
 
+    let dataAttributions = '';
+
     if (tileset.root.boundingVolume) {
       if (tileset.root.header.boundingVolume.region) {
         // TODO: Handle region type bounding volumes
@@ -407,6 +409,8 @@ class Loader3DTiles {
       tileset._cache.reset();
       tileset._traverser.traverse(tileset.root, frameState, tileset.options);
 
+      dataAttributions = collectAttributions(tileset.tiles.filter(tile => tile.selected));
+
       for (const tile of tileset.tiles) {
         if (tile.selected) {
           if (!renderMap[tile.id]) {
@@ -492,6 +496,9 @@ class Loader3DTiles {
         },
         getStats: () => {
           return tileset.stats;
+        },
+        getDataAttributions: () => {
+          return dataAttributions;
         },
         showTiles: (visible) => {
           tileBoxes.visible = visible;
@@ -672,6 +679,8 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTra
       tile.content.gltfArrayBuffer,
       tile.contentUrl ? tile.contentUrl.substr(0,tile.contentUrl.lastIndexOf('/') + 1) : '',
       (gltf) => {
+        tile.userData.asset = gltf.asset;
+        
         const tileContent = gltf.scenes[0] as Group;
         tileContent.applyMatrix4(contentTransform); 
 
@@ -724,6 +733,9 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTra
             if (options.computeNormals) {
               mesh.geometry.computeVertexNormals();
             }
+
+            mesh.receiveShadow = options.receiveShadow;
+
           }
         });
         tile.content.gpuMemoryUsageInBytes = tile.content.texturesByteLength + tile.content.geometriesByteLength;
@@ -822,6 +834,30 @@ function disposeNode(node) {
 function cameraChanged(camera:Camera, lastCameraTransform:Matrix4, lastCameraAspect: number) {
   return !camera.matrixWorld.equals(lastCameraTransform) ||
   !((<PerspectiveCamera>camera).aspect == lastCameraAspect);
+}
+
+function collectAttributions(tiles) {
+  const copyrightCounts = new Map(); // Use a Map to keep track of counts
+
+  tiles.forEach(tile => {
+    const copyright = tile?.userData?.asset?.copyright;
+    if (copyright) {
+      const attributions = copyright.split(/;/g).map(attr => attr.trim());
+      attributions.forEach(attr => {
+        if (attr) {
+          // Increment the count for this attribution in the Map
+          copyrightCounts.set(attr, (copyrightCounts.get(attr) || 0) + 1);
+        }
+      });
+    }
+  });
+
+  const sortedAttributions = Array.from(copyrightCounts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([attr,]) => attr);
+
+  const attributionString = sortedAttributions.join(', ');
+  return attributionString;
 }
 
 export { Loader3DTiles, PointCloudColoring, Shading, Runtime, GeoCoord, GeoTransform, LoaderOptions, LoaderProps };

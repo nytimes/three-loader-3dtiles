@@ -459,7 +459,7 @@ class Loader3DTiles {
       return frameState;
     }
 
-    function setGeoTransformation(root, transformationMatrix) {
+    function setGeoTransformation(transformationMatrix) {
       const position = new Vector3();
       const quaternion = new Quaternion();
       const scale = new Vector3();
@@ -475,6 +475,13 @@ class Loader3DTiles {
       // Update the root object's matrix to reflect the changes
       root.updateMatrix();
       root.updateMatrixWorld(true);
+
+      lastRootTransform.copy(root.matrixWorld);
+      threeMat.copy(lastRootTransform);
+
+      tileset.modelMatrix = new MathGLMatrix4(transformationMatrix.toArray());
+      rootTransformInverse.copy(lastRootTransform).invert();
+      
     }
 
     return {
@@ -561,10 +568,8 @@ class Loader3DTiles {
           );
 
           const geoTransform = new Matrix4().copy(ellipsoidTransform).multiply(alignRotation).invert()
-          
-          tileset.modelMatrix = new MathGLMatrix4(geoTransform.toArray());
 
-          setGeoTransformation(root, geoTransform);
+          setGeoTransformation(geoTransform);
         },
         
         getCameraFrustum: (camera: Camera) => {

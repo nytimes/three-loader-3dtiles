@@ -131,6 +131,8 @@ interface Runtime {
   getStats(): Stats;
   /** Get the tile bounding boxes group when `debug: true` is set. */
   getTileBoxes(): Object3D;
+  /** Get the tileset's attribution text. */
+  getDataAttributions(): string;
   /** Show or hide the tile bounding boxes. */
   showTiles(boolean): void;
   /** Enable or disable wireframe mode. */

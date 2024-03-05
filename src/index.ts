@@ -856,7 +856,7 @@ function collectAttributions(tiles) {
     .sort((a, b) => b[1] - a[1])
     .map(([attr,]) => attr);
 
-  const attributionString = sortedAttributions.join(', ');
+  const attributionString = sortedAttributions.join('; ');
   return attributionString;
 }
 

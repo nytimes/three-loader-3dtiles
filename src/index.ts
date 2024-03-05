@@ -837,6 +837,8 @@ function cameraChanged(camera:Camera, lastCameraTransform:Matrix4, lastCameraAsp
 }
 
 function collectAttributions(tiles) {
+  // attribution guidelines: https://developers.google.com/maps/documentation/tile/create-renderer#display-attributions
+  
   const copyrightCounts = new Map(); // Use a Map to keep track of counts
 
   tiles.forEach(tile => {

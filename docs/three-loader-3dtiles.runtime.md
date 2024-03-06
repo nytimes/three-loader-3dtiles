@@ -18,6 +18,7 @@ interface Runtime
 |  --- | --- |
 |  [dispose()](./three-loader-3dtiles.runtime.dispose.md) | Dispose of all of the tileset's assets in memory. |
 |  [getCameraFrustum(camera)](./three-loader-3dtiles.runtime.getcamerafrustum.md) | Get the current camera frustum as mesh planes (for debugging purposes). |
+|  [getDataAttributions()](./three-loader-3dtiles.runtime.getdataattributions.md) | Get the tileset's attribution text. |
 |  [getLatLongHeightFromPosition(Vector3)](./three-loader-3dtiles.runtime.getlatlongheightfromposition.md) | When viewing a Geo-located tileset, get the [GeoCoord](./three-loader-3dtiles.geocoord.md) value from a world-space <code>Vector3</code>. |
 |  [getPositionFromLatLongHeight(GeoCoord)](./three-loader-3dtiles.runtime.getpositionfromlatlongheight.md) | When viewing a Geo-located tileset, world-space <code>Vector3</code> from a [GeoCoord](./three-loader-3dtiles.geocoord.md)<!-- -->. |
 |  [getStats()](./three-loader-3dtiles.runtime.getstats.md) | Get a reference to the probe.gl [Stats](https://github.com/uber-web/probe.gl/blob/master/docs/api-reference/stats/stats.md) object. |

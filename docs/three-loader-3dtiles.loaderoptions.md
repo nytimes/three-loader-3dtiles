@@ -18,6 +18,7 @@ interface LoaderOptions
 |  --- | --- | --- | --- |
 |  [basisTranscoderPath?](./three-loader-3dtiles.loaderoptions.basistranscoderpath.md) |  | string | _(Optional)_ A path to that contains the basis universal library. e.g: <code>https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/basis</code> - Default: <code>undefined</code> |
 |  [cesiumIONToken?](./three-loader-3dtiles.loaderoptions.cesiumiontoken.md) |  | string | _(Optional)_ A Cesium ION access token when loading tilesets from Cesium ION. |
+|  [collectAttributions?](./three-loader-3dtiles.loaderoptions.collectattributions.md) |  | boolean | _(Optional)_ Collect tile attribution data (copyright) - Default: <code>true</code> if <code>googleApiKey</code> is set, otherwise <code>false</code>. |
 |  [computeNormals?](./three-loader-3dtiles.loaderoptions.computenormals.md) |  | boolean | _(Optional)_ When viewing b3dm (mesh) tiles, compute the vertex normals - Default: <code>false</code>. |
 |  [debug?](./three-loader-3dtiles.loaderoptions.debug.md) |  | boolean | _(Optional)_ Debug mode: Show tile bounding boxes. Make sure to add the boxes to the scene from [Runtime.getTileBoxes()](./three-loader-3dtiles.runtime.gettileboxes.md) - Default: <code>false</code> |
 |  [dracoDecoderPath?](./three-loader-3dtiles.loaderoptions.dracodecoderpath.md) |  | string | _(Optional)_ A path to that contains the draco library. e.g: <code>https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco</code> - Default: <code>undefined</code> |

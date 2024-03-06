@@ -46,6 +46,7 @@ export class Loader3DTiles {
 export interface LoaderOptions {
     basisTranscoderPath?: string;
     cesiumIONToken?: string;
+    collectAttributions?: boolean;
     computeNormals?: boolean;
     debug?: boolean;
     dracoDecoderPath?: string;
@@ -101,6 +102,7 @@ export enum PointCloudColoring {
 export interface Runtime {
     dispose(): void;
     getCameraFrustum(camera: Camera): Object3D;
+    getDataAttributions(): string;
     getLatLongHeightFromPosition(Vector3: any): GeoCoord;
     getPositionFromLatLongHeight(GeoCoord: any): Vector3;
     getStats(): Stats_2;

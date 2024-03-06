@@ -55,6 +55,8 @@ interface LoaderOptions {
   cesiumIONToken?: string;
   /** Google API Key for loading Google Maps 3D Tiles*/
   googleApiKey?: string;
+  /** Collect tile attribution data (copyright) - Default: `true` if `googleApiKey` is set, otherwise `false`. */
+  collectAttributions?: boolean;
   /** Whether to check if the tileset was transformed, set to `true` if the model is changes position in runtime - Default: `true`. */
   updateTransforms?: boolean;
   /** Interval in seconds for the traverser to check in an update is needed - Default: `0.1`. */
@@ -129,10 +131,10 @@ interface Runtime {
   * @returns {@link https://github.com/uber-web/probe.gl/blob/master/docs/api-reference/stats/stats.md | Stats}
   */
   getStats(): Stats;
-  /** Get the tile bounding boxes group when `debug: true` is set. */
-  getTileBoxes(): Object3D;
   /** Get the tileset's attribution text. */
   getDataAttributions(): string;
+  /** Get the tile bounding boxes group when `debug: true` is set. */
+  getTileBoxes(): Object3D;
   /** Show or hide the tile bounding boxes. */
   showTiles(boolean): void;
   /** Enable or disable wireframe mode. */

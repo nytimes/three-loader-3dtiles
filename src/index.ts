@@ -73,7 +73,8 @@ const defaultOptions: LoaderOptions = {
   computeNormals: false,
   shaderCallback: null,
   geoTransform: GeoTransform.Reset,
-  preloadTilesCount: null
+  preloadTilesCount: null,
+  collectAttributions: false
 };
 
 /** 3D Tiles Loader */
@@ -105,6 +106,9 @@ class Loader3DTiles {
 
     if (options.googleApiKey) {
       loadersGLOptions['fetch'] = { headers: { 'X-GOOG-API-KEY': options.googleApiKey} };
+      if (!props.options.hasOwnProperty('collectAttributions')) {  
+        options.collectAttributions = true;
+      }
     }
 
 
@@ -233,6 +237,12 @@ class Loader3DTiles {
       onTileError: (tile, message) => {
         console.error('Tile error', tile.id, message);
       },
+      onTraversalComplete(selectedTiles) {
+        if (options.collectAttributions) {
+          dataAttributions = collectAttributions(selectedTiles);
+        }
+        return selectedTiles;
+      }
     };
     const tileset = new Tileset3D(tilesetJson, {
       ...tileOptions,
@@ -408,8 +418,6 @@ class Loader3DTiles {
 
       tileset._cache.reset();
       tileset._traverser.traverse(tileset.root, frameState, tileset.options);
-
-      dataAttributions = collectAttributions(tileset.tiles.filter(tile => tile.selected));
 
       for (const tile of tileset.tiles) {
         if (tile.selected) {

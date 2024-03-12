@@ -14,7 +14,6 @@
 
 |  Enumeration | Description |
 |  --- | --- |
-|  [GeoTransform](./three-loader-3dtiles.geotransform.md) |  |
 |  [PointCloudColoring](./three-loader-3dtiles.pointcloudcoloring.md) | Types of coloring used when viewing point cloud tiles |
 |  [Shading](./three-loader-3dtiles.shading.md) | Types of shading used when viewing b3dm (mesh) tiles |
 

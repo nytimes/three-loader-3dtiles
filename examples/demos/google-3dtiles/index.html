@@ -91,7 +91,7 @@
     import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
     import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 
-    import { Loader3DTiles, PointCloudColoring, GeoTransform } from '../../../src/index';
+    import { Loader3DTiles, PointCloudColoring  } from '../../../src/index';
     import { MapView, OpenStreetMapsProvider } from 'geo-three'
     import { TweenMax } from 'gsap'
 
@@ -168,8 +168,7 @@
             dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco',
             basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/basis',
             pointCloudColoring: PointCloudColoring.RGB,
-            maximumScreenSpaceError: queryParams.get('sse') ?? 16,
-            geoTransform: GeoTransform.WGS84Cartesian
+            maximumScreenSpaceError: queryParams.get('sse') ?? 16
           }
         }
       );

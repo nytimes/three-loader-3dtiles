@@ -33,7 +33,7 @@
     }
   },
   "scripts": {
-    "build": "npm run build:lib && npm run build:examples",
+    "build": "npm run build:lib && npm run build:types && npm run build:examples",
     "build:lib": "vite --config vite.config.lib.js build",
     "build:examples": "vite --config vite.config.examples.js build",
     "dev": "vite --config vite.config.examples.js",

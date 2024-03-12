@@ -24,16 +24,6 @@ export interface GeoCoord {
     long: number;
 }
 
-// @public (undocumented)
-export enum GeoTransform {
-    // (undocumented)
-    Mercator = 2,
-    // (undocumented)
-    Reset = 1,
-    // (undocumented)
-    WGS84Cartesian = 3
-}
-
 // @public
 export class Loader3DTiles {
     static load(props: LoaderProps): Promise<{
@@ -50,7 +40,6 @@ export interface LoaderOptions {
     computeNormals?: boolean;
     debug?: boolean;
     dracoDecoderPath?: string;
-    geoTransform?: GeoTransform;
     gltfLoader?: GLTFLoader;
     googleApiKey?: string;
     material?: Material;
@@ -63,6 +52,7 @@ export interface LoaderOptions {
     pointCloudColoring?: PointCloudColoring;
     pointSize?: number;
     preloadTilesCount?: number;
+    resetTransform?: boolean;
     shaderCallback?: (renderer: WebGLRenderer, material: Material) => void;
     shading?: Shading;
     skipLevelOfDetail?: boolean;
@@ -108,6 +98,7 @@ export interface Runtime {
     getStats(): Stats_2;
     getTileBoxes(): Object3D;
     getTileset(): Tileset3D;
+    getWebMercatorCoord(coord: GeoCoord): void;
     orientToGeocoord(coord: GeoCoord): void;
     setDebug(boolean: any): void;
     setElevationRange(range: ReadonlyArray<number>): void;

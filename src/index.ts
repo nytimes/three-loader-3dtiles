@@ -39,7 +39,7 @@ import { Gradients } from './gradients';
 import { PointCloudFS, PointCloudVS } from './shaders';
 
 import type { LoaderProps, LoaderOptions, Runtime, GeoCoord} from './types';
-import { PointCloudColoring, Shading, GeoTransform } from './types';
+import { PointCloudColoring, Shading  } from './types';
 
 const gradient = Gradients.RAINBOW;
 const gradientTexture = typeof document != 'undefined' ? Util.generateGradientTexture(gradient) : null;
@@ -58,6 +58,7 @@ const defaultOptions: LoaderOptions = {
   memoryCacheOverflow : 128,
   viewDistanceScale: 1.0,
   skipLevelOfDetail: false,
+  resetTransform: false,
   updateTransforms: true,
   shading: Shading.FlatTexture,
   transparent: false,
@@ -72,7 +73,6 @@ const defaultOptions: LoaderOptions = {
   material: null,
   computeNormals: false,
   shaderCallback: null,
-  geoTransform: GeoTransform.Reset,
   preloadTilesCount: null,
   collectAttributions: false
 };
@@ -225,7 +225,7 @@ class Loader3DTiles {
       },
       onTileLoad: async (tile) => {
         if (tileset) {
-          if (options.geoTransform == GeoTransform.Reset && !orientationDetected && tile?.depth <= MAX_DEPTH_FOR_ORIENTATION) {
+          if (options.resetTransform && !orientationDetected && tile?.depth <= MAX_DEPTH_FOR_ORIENTATION) {
             detectOrientation(tile);
           }
           needsUpdate = true;
@@ -261,7 +261,7 @@ class Loader3DTiles {
     //
     // transformations
     const threeMat = new Matrix4();
-    const tileTrasnform = new Matrix4();
+    const tileTransform = new Matrix4();
     const rootCenter = new Vector3();
     let orientationDetected = false;
 
@@ -272,9 +272,8 @@ class Loader3DTiles {
         // TODO: Handle region type bounding volumes
         // https://github.com/visgl/loaders.gl/issues/1994
         console.warn("Cannot apply a model matrix to bounding volumes of type region. Tileset stays in original geo-coordinates.")
-        options.geoTransform = GeoTransform.WGS84Cartesian;
       }
-      tileTrasnform.setPosition(
+      tileTransform.setPosition(
         tileset.root.boundingVolume.center[0],
         tileset.root.boundingVolume.center[1],
         tileset.root.boundingVolume.center[2]
@@ -312,35 +311,13 @@ class Loader3DTiles {
     const lastRootTransform:Matrix4 = new Matrix4().copy(root.matrixWorld)
     const rootTransformInverse = new Matrix4().copy(lastRootTransform).invert();
 
-    if (options.geoTransform == GeoTransform.Reset || options.geoTransform == GeoTransform.Mercator) {
+    if (options.resetTransform) {
       detectOrientation(tileset.root);
-      updateResetTransform();
     }
 
     if (options.debug) {
       boxMap[tileset.root.id].applyMatrix4(threeMat);
       tileBoxes.matrixWorld.copy(root.matrixWorld);
-    }
-
-    if (options.geoTransform == GeoTransform.Mercator) {
-      const coords = Util.datumsToSpherical(
-        tileset.cartographicCenter[1],
-        tileset.cartographicCenter[0]
-      )
-      rootCenter.set(
-       coords.x,
-       0,
-       -coords.y
-      );
-
-      root.position.copy(rootCenter);
-
-      root.updateMatrixWorld(true);
-
-    } else if (options.geoTransform == GeoTransform.WGS84Cartesian) {
-      root.applyMatrix4(tileTrasnform);
-      root.updateMatrixWorld(true);
-      rootCenter.copy(root.position);
     }
 
     function detectOrientation(tile) {
@@ -357,22 +334,23 @@ class Loader3DTiles {
       if (!rotation.equals(new Euler())) {
         orientationDetected = true;
         const pos = new Vector3(
-          tileTrasnform.elements[12], 
-          tileTrasnform.elements[13], 
-          tileTrasnform.elements[14])
+          tileTransform.elements[12], 
+          tileTransform.elements[13], 
+          tileTransform.elements[14])
         ;
-        tileTrasnform.extractRotation(orientationMatrix);
-        tileTrasnform.setPosition(pos);
-        updateResetTransform();
+        tileTransform.extractRotation(orientationMatrix);
+        tileTransform.setPosition(pos);
       } 
+      updateTransform();
     }
 
-    function updateResetTransform() {
+    function updateTransform() {
       // Reset the current model matrix and apply our own transformation
-      threeMat.copy(tileTrasnform).invert();
-      threeMat.premultiply(lastRootTransform);
-    
-      threeMat.copy(lastRootTransform).multiply(new Matrix4().copy(tileTrasnform).invert());
+      threeMat.copy(lastRootTransform);
+      
+      if (options.resetTransform) {
+        threeMat.multiply(new Matrix4().copy(tileTransform).invert());
+      }
 
       tileset.modelMatrix = new MathGLMatrix4(threeMat.toArray());
     }
@@ -586,7 +564,9 @@ class Loader3DTiles {
 
           setGeoTransformation(geoTransform);
         },
-        
+        getWebMercatorCoord: (coord:GeoCoord): Vector2 => {
+          return Util.datumsToSpherical(coord.lat, coord.long);
+        },
         getCameraFrustum: (camera: Camera) => {
           const frustum = Util.getCameraFrustum(camera);
           const meshes = frustum.planes
@@ -608,8 +588,8 @@ class Loader3DTiles {
             if (!lastRootTransform.equals(root.matrixWorld)) {
               timer = 0;
               lastRootTransform.copy(root.matrixWorld);
-              if (options.geoTransform == GeoTransform.WGS84Cartesian || options.geoTransform == GeoTransform.Reset || options.geoTransform == GeoTransform.Mercator) {
-                updateResetTransform();
+              if (options.updateTransforms) {
+                  updateTransform();
               }
 
               const rootCenter = new Vector3().setFromMatrixPosition(lastRootTransform);
@@ -870,4 +850,4 @@ function collectAttributions(tiles) {
   return attributionString;
 }
 
-export { Loader3DTiles, PointCloudColoring, Shading, Runtime, GeoCoord, GeoTransform, LoaderOptions, LoaderProps };
+export { Loader3DTiles, PointCloudColoring, Shading, Runtime, GeoCoord, LoaderOptions, LoaderProps };

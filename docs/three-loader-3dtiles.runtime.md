@@ -18,11 +18,13 @@ interface Runtime
 |  --- | --- |
 |  [dispose()](./three-loader-3dtiles.runtime.dispose.md) | Dispose of all of the tileset's assets in memory. |
 |  [getCameraFrustum(camera)](./three-loader-3dtiles.runtime.getcamerafrustum.md) | Get the current camera frustum as mesh planes (for debugging purposes). |
+|  [getDataAttributions()](./three-loader-3dtiles.runtime.getdataattributions.md) | Get the tileset's attribution text. |
 |  [getLatLongHeightFromPosition(Vector3)](./three-loader-3dtiles.runtime.getlatlongheightfromposition.md) | When viewing a Geo-located tileset, get the [GeoCoord](./three-loader-3dtiles.geocoord.md) value from a world-space <code>Vector3</code>. |
 |  [getPositionFromLatLongHeight(GeoCoord)](./three-loader-3dtiles.runtime.getpositionfromlatlongheight.md) | When viewing a Geo-located tileset, world-space <code>Vector3</code> from a [GeoCoord](./three-loader-3dtiles.geocoord.md)<!-- -->. |
 |  [getStats()](./three-loader-3dtiles.runtime.getstats.md) | Get a reference to the probe.gl [Stats](https://github.com/uber-web/probe.gl/blob/master/docs/api-reference/stats/stats.md) object. |
 |  [getTileBoxes()](./three-loader-3dtiles.runtime.gettileboxes.md) | Get the tile bounding boxes group when <code>debug: true</code> is set. |
 |  [getTileset()](./three-loader-3dtiles.runtime.gettileset.md) | Get a reference to the loaders.gl [Tileset3D](https://github.com/visgl/loaders.gl/blob/master/modules/tiles/docs/api-reference/tileset-3d.md) object. |
+|  [getWebMercatorCoord(coord)](./three-loader-3dtiles.runtime.getwebmercatorcoord.md) | Get Web-Mercator coordinates from Lat/long |
 |  [orientToGeocoord(coord)](./three-loader-3dtiles.runtime.orienttogeocoord.md) | Orient a WGS84 globe to lat/long |
 |  [setDebug(boolean)](./three-loader-3dtiles.runtime.setdebug.md) | Enable or disable deubg mode. |
 |  [setElevationRange(range)](./three-loader-3dtiles.runtime.setelevationrange.md) | In point clouds when coloring by <code>PointCloudColoring.Elevation</code>, set the min/max elevation values - Default: <code>[0, 400]</code>. |

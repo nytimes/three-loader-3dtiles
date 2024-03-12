@@ -97,7 +97,7 @@
 
     import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-    import { Loader3DTiles, PointCloudColoring, GeoTransform } from '../../../src/index.ts';
+    import { Loader3DTiles, PointCloudColoring } from '../../../src/index.ts';
     import { MapView, OpenStreetMapsProvider } from 'geo-three'
     import { TweenMax } from 'gsap'
 
@@ -162,8 +162,7 @@
             basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/basis',
             pointCloudColoring: PointCloudColoring.RGB,
             maximumScreenSpaceError: queryParams.get('sse') ?? 6,
-            memoryAdjustedScreenSpaceError: false,
-            geoTransform: GeoTransform.Mercator
+            memoryAdjustedScreenSpaceError: false
           }
         }
       );
@@ -178,16 +177,23 @@
       statsRuntime = new StatsWidget(runtime.getStats(), {container: statsParent });
       statsParent.style.visibility = 'visible';
 
-      if (!queryParams.get('tilesetUrl')) {
-        // Scaling the scan to align with Maps, and bringing it up above the map
-        //model.scale.set(1.27, 1.27, 1.27);
-        model.translateZ(230);
-      }
-      camera.position.copy(model.position);
-      camera.translateY(80000);
+      camera.translateY(10000);
 
-      controls.target.copy(model.position);
-      controls.update();
+      runtime.orientToGeocoord({
+        long: runtime.getTileset().cartographicCenter[0],
+        lat: runtime.getTileset().cartographicCenter[1],
+        height: runtime.getTileset().cartographicCenter[2]
+      })
+
+      const coords = runtime.getWebMercatorCoord({
+        long: runtime.getTileset().cartographicCenter[0],
+        lat: runtime.getTileset().cartographicCenter[1],
+        height: 0
+      })
+
+      // Set the inverse of the coordinate to bring the map to origin and below the tiles.
+      // TODO: It is not accurately aligned with the tiles (problem with geo-three?).
+      map.position.set(-coords.x, -200, coords.y);
 
       zoomIn();
     }

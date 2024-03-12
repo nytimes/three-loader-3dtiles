@@ -272,86 +272,6 @@
           "extendsTokenRanges": []
         },
         {
-          "kind": "Enum",
-          "canonicalReference": "three-loader-3dtiles!GeoTransform:enum",
-          "docComment": "",
-          "excerptTokens": [
-            {
-              "kind": "Content",
-              "text": "declare enum GeoTransform "
-            }
-          ],
-          "fileUrlPath": "src/types.ts",
-          "releaseTag": "Public",
-          "name": "GeoTransform",
-          "preserveMemberOrder": false,
-          "members": [
-            {
-              "kind": "EnumMember",
-              "canonicalReference": "three-loader-3dtiles!GeoTransform.Mercator:member",
-              "docComment": "",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "Mercator = "
-                },
-                {
-                  "kind": "Content",
-                  "text": "2"
-                }
-              ],
-              "initializerTokenRange": {
-                "startIndex": 1,
-                "endIndex": 2
-              },
-              "releaseTag": "Public",
-              "name": "Mercator"
-            },
-            {
-              "kind": "EnumMember",
-              "canonicalReference": "three-loader-3dtiles!GeoTransform.Reset:member",
-              "docComment": "",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "Reset = "
-                },
-                {
-                  "kind": "Content",
-                  "text": "1"
-                }
-              ],
-              "initializerTokenRange": {
-                "startIndex": 1,
-                "endIndex": 2
-              },
-              "releaseTag": "Public",
-              "name": "Reset"
-            },
-            {
-              "kind": "EnumMember",
-              "canonicalReference": "three-loader-3dtiles!GeoTransform.WGS84Cartesian:member",
-              "docComment": "",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "WGS84Cartesian = "
-                },
-                {
-                  "kind": "Content",
-                  "text": "3"
-                }
-              ],
-              "initializerTokenRange": {
-                "startIndex": 1,
-                "endIndex": 2
-              },
-              "releaseTag": "Public",
-              "name": "WGS84Cartesian"
-            }
-          ]
-        },
-        {
           "kind": "Class",
           "canonicalReference": "three-loader-3dtiles!Loader3DTiles:class",
           "docComment": "/**\n * 3D Tiles Loader\n */\n",
@@ -513,6 +433,33 @@
             },
             {
               "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#collectAttributions:member",
+              "docComment": "/**\n * Collect tile attribution data (copyright) - Default: `true` if `googleApiKey` is set, otherwise `false`.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "collectAttributions?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "collectAttributions",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
               "canonicalReference": "three-loader-3dtiles!LoaderOptions#computeNormals:member",
               "docComment": "/**\n * When viewing b3dm (mesh) tiles, compute the vertex normals - Default: `false`.\n */\n",
               "excerptTokens": [
@@ -587,34 +534,6 @@
               "isOptional": true,
               "releaseTag": "Public",
               "name": "dracoDecoderPath",
-              "propertyTypeTokenRange": {
-                "startIndex": 1,
-                "endIndex": 2
-              }
-            },
-            {
-              "kind": "PropertySignature",
-              "canonicalReference": "three-loader-3dtiles!LoaderOptions#geoTransform:member",
-              "docComment": "/**\n * How to handle geo transformations: Reset any geo location and place the model at (0,0,0), Apply Mercator projection (for use with ccommon 2D mapping applications, or convert WGS84 long/lat to 3D cartesian coordinates)- Default: `Reset`\n */\n",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "geoTransform?: "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "GeoTransform",
-                  "canonicalReference": "three-loader-3dtiles!GeoTransform:enum"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isReadonly": false,
-              "isOptional": true,
-              "releaseTag": "Public",
-              "name": "geoTransform",
               "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
@@ -942,6 +861,33 @@
               "isOptional": true,
               "releaseTag": "Public",
               "name": "preloadTilesCount",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#resetTransform:member",
+              "docComment": "/**\n * Whether to reset the tileset to the origin (0, 0, 0) - Default: `false`.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "resetTransform?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "resetTransform",
               "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
@@ -1661,6 +1607,34 @@
             },
             {
               "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!Runtime#getDataAttributions:member(1)",
+              "docComment": "/**\n * Get the tileset's attribution text.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "getDataAttributions(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [],
+              "name": "getDataAttributions"
+            },
+            {
+              "kind": "MethodSignature",
               "canonicalReference": "three-loader-3dtiles!Runtime#getLatLongHeightFromPosition:member(1)",
               "docComment": "/**\n * When viewing a Geo-located tileset, get the {@link GeoCoord} value from a world-space `Vector3`.\n */\n",
               "excerptTokens": [
@@ -1837,6 +1811,52 @@
               "overloadIndex": 1,
               "parameters": [],
               "name": "getTileset"
+            },
+            {
+              "kind": "MethodSignature",
+              "canonicalReference": "three-loader-3dtiles!Runtime#getWebMercatorCoord:member(1)",
+              "docComment": "/**\n * Get Web-Mercator coordinates from Lat/long\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "getWebMercatorCoord(coord: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "GeoCoord",
+                  "canonicalReference": "three-loader-3dtiles!GeoCoord:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "coord",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "getWebMercatorCoord"
             },
             {
               "kind": "MethodSignature",

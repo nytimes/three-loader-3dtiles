@@ -1,6 +1,6 @@
 import { Object3D } from 'three';
 import type { LoaderProps, LoaderOptions, Runtime, GeoCoord } from './types';
-import { PointCloudColoring, Shading, GeoTransform } from './types';
+import { PointCloudColoring, Shading } from './types';
 /** 3D Tiles Loader */
 declare class Loader3DTiles {
     /**
@@ -16,5 +16,5 @@ declare class Loader3DTiles {
         runtime: Runtime;
     }>;
 }
-export { Loader3DTiles, PointCloudColoring, Shading, Runtime, GeoCoord, GeoTransform, LoaderOptions, LoaderProps };
+export { Loader3DTiles, PointCloudColoring, Shading, Runtime, GeoCoord, LoaderOptions, LoaderProps };
 //# sourceMappingURL=index.d.ts.map

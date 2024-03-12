@@ -16,11 +16,6 @@ declare enum Shading {
     ShadedTexture = 2,
     ShadedNoTexture = 3
 }
-declare enum GeoTransform {
-    Reset = 1,
-    Mercator = 2,
-    WGS84Cartesian = 3
-}
 /** Properties for loading a tileset */
 interface LoaderProps {
     /** The URL of the tileset. For example if using Cesium ION,
@@ -42,6 +37,10 @@ interface LoaderOptions {
     cesiumIONToken?: string;
     /** Google API Key for loading Google Maps 3D Tiles*/
     googleApiKey?: string;
+    /** Collect tile attribution data (copyright) - Default: `true` if `googleApiKey` is set, otherwise `false`. */
+    collectAttributions?: boolean;
+    /** Whether to reset the tileset to the origin (0, 0, 0) - Default: `false`. */
+    resetTransform?: boolean;
     /** Whether to check if the tileset was transformed, set to `true` if the model is changes position in runtime - Default: `true`. */
     updateTransforms?: boolean;
     /** Interval in seconds for the traverser to check in an update is needed - Default: `0.1`. */
@@ -90,8 +89,6 @@ interface LoaderOptions {
     basisTranscoderPath?: string;
     /** A path to that contains the draco library. e.g: `https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco` - Default: `undefined` */
     dracoDecoderPath?: string;
-    /** How to handle geo transformations: Reset any geo location and place the model at (0,0,0), Apply Mercator projection (for use with ccommon 2D mapping applications, or convert WGS84 long/lat to 3D cartesian coordinates)- Default: `Reset` */
-    geoTransform?: GeoTransform;
     /** When using a three.js loading manager, do not call `onLoad` until this number of tiles were loaded - Default: `undefined` */
     preloadTilesCount?: number;
 }
@@ -114,6 +111,8 @@ interface Runtime {
     * @returns {@link https://github.com/uber-web/probe.gl/blob/master/docs/api-reference/stats/stats.md | Stats}
     */
     getStats(): Stats;
+    /** Get the tileset's attribution text. */
+    getDataAttributions(): string;
     /** Get the tile bounding boxes group when `debug: true` is set. */
     getTileBoxes(): Object3D;
     /** Show or hide the tile bounding boxes. */
@@ -144,6 +143,8 @@ interface Runtime {
     getPositionFromLatLongHeight(GeoCoord: any): Vector3;
     /** Orient a WGS84 globe to lat/long*/
     orientToGeocoord(coord: GeoCoord): void;
+    /** Get Web-Mercator coordinates from Lat/long */
+    getWebMercatorCoord(coord: GeoCoord): void;
     /** Get the current camera frustum as mesh planes (for debugging purposes). */
     getCameraFrustum(camera: Camera): Object3D;
     /** Update the tileset for rendering. */
@@ -152,5 +153,5 @@ interface Runtime {
     dispose(): void;
 }
 export type { LoaderProps, LoaderOptions, Runtime, GeoCoord };
-export { PointCloudColoring, Shading, GeoTransform };
+export { PointCloudColoring, Shading };
 //# sourceMappingURL=types.d.ts.map

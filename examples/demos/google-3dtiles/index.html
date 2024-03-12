@@ -58,28 +58,23 @@
     @media (max-width:480px) {
       #guide, #stats-widget { display: none; }
     }
+
+    #data-attribution {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      padding: 10px;
+      font-size: 14px;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+    }
   </style>
 </head>
 <body>
   <div id="canvas-parent"></div>
   <div id="stats-widget"></div>
+  <div id="data-attribution">Data attribution: <span id="copyright"></span></div>
 
-  <!--div id="guide">
-    <p>
-    <span id="example-desc">
-      Map overlay provided by <b>OpenStreetMap</b> using the <b>geo-three</b> library.
-    </span>
-    </p>
-    <p>
-    Use arrow keys, mouse wheel/trackpad, or right click to move around, and left click and drag to turn/rotate the camera.
-    </p>
-    <p>
-      <u>Available URL parameters:</u>
-      <ul>
-        <li><b>tilesetUrl</b>: Load another tileset json.</li>
-      </ul>
-    </p>
-  </div-->
 
   <script type='module'>
     import { 
@@ -96,7 +91,7 @@
     import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
     import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 
-    import { Loader3DTiles, PointCloudColoring, GeoTransform } from '../../../src/index';
+    import { Loader3DTiles, PointCloudColoring  } from '../../../src/index';
     import { MapView, OpenStreetMapsProvider } from 'geo-three'
     import { TweenMax } from 'gsap'
 
@@ -131,6 +126,8 @@
     canvasParent.appendChild( threeJsStats.domElement );
 
     const queryParams = new URLSearchParams(document.location.search);
+
+    const copyrightElement = document.getElementById('copyright');
 
     loadTileset();
 
@@ -171,8 +168,7 @@
             dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco',
             basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/basis',
             pointCloudColoring: PointCloudColoring.RGB,
-            maximumScreenSpaceError: queryParams.get('sse') ?? 16,
-            geoTransform: GeoTransform.WGS84Cartesian
+            maximumScreenSpaceError: queryParams.get('sse') ?? 16
           }
         }
       );
@@ -212,6 +208,7 @@
       }
       renderer.render(scene, camera);
       threeJsStats.update();
+      copyrightElement.innerHTML = tilesRuntime?.getDataAttributions() ?? '';
       window.requestAnimationFrame(render);
 
     }
@@ -241,6 +238,6 @@
 
     render();
   </script>
-  <a id="button" target="_blank" href="https://github.com/nytimes/three-loader-3dtiles/blob/master/examples/demos/map-overlay/index.html" title="View source code for demo" style=""><img src="../ic_code_black_24dp.svg"></a>
+  <a id="button" target="_blank" href="https://github.com/nytimes/three-loader-3dtiles/blob/main/examples/demos/google-3dtiles/index.html" title="View source code for demo" style=""><img src="../ic_code_black_24dp.svg"></a>
 </body>
 </html>

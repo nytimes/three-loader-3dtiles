@@ -8,7 +8,9 @@ import { Camera } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { LoadingManager } from 'three';
 import { Material } from 'three';
+import { Mesh } from 'three';
 import { Object3D } from 'three';
+import { Points } from 'three';
 import { Stats as Stats_2 } from '@probe.gl/stats';
 import { Tileset3D } from '@loaders.gl/tiles';
 import { Vector3 } from 'three';
@@ -37,7 +39,7 @@ export interface LoaderOptions {
     basisTranscoderPath?: string;
     cesiumIONToken?: string;
     collectAttributions?: boolean;
-    computeNormals?: boolean;
+    contentPostProcess?: (content: Mesh | Points) => void;
     debug?: boolean;
     dracoDecoderPath?: string;
     gltfLoader?: GLTFLoader;
@@ -53,7 +55,6 @@ export interface LoaderOptions {
     pointSize?: number;
     preloadTilesCount?: number;
     resetTransform?: boolean;
-    shaderCallback?: (renderer: WebGLRenderer, material: Material) => void;
     shading?: Shading;
     skipLevelOfDetail?: boolean;
     throttleRequests?: boolean;

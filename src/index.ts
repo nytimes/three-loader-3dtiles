@@ -71,8 +71,7 @@ const defaultOptions: LoaderOptions = {
   basisTranscoderPath: null,
   dracoDecoderPath: null,
   material: null,
-  computeNormals: false,
-  shaderCallback: null,
+  contentPostProcess: undefined,
   preloadTilesCount: null,
   collectAttributions: false
 };
@@ -671,10 +670,10 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTra
         
         const tileContent = gltf.scenes[0] as Group;
         tileContent.applyMatrix4(contentTransform); 
-
-      // Memory usage 
-      tile.content.texturesByteLength = 0;
-      tile.content.geometriesByteLength = 0;
+      
+        // Memory usage 
+        tile.content.texturesByteLength = 0;
+        tile.content.geometriesByteLength = 0;
 
         tileContent.traverse((object) => {
           if (object.type == "Mesh") {
@@ -693,7 +692,7 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTra
             if (options.material) {
               mesh.material = options.material.clone();
               originalMaterial.dispose();
-            } else if (options.shading == Shading.FlatTexture) {
+            } else if (options.shading == Shading.FlatTexture && (mesh.material as Material).type !== "MeshBasicMaterial") {
               mesh.material = unlitMaterial.clone();
               originalMaterial.dispose();
             }
@@ -711,19 +710,11 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTra
               (mesh.material as MeshStandardMaterial).map = null;
             }
 
-            if (options.shaderCallback) {
-              mesh.onBeforeRender = (renderer, scene, camera, geometry, material, group) => {
-                options.shaderCallback(renderer,material);
-              }
-            }
             (mesh.material as MeshStandardMaterial | MeshBasicMaterial).wireframe = options.wireframe;
 
-            if (options.computeNormals) {
-              mesh.geometry.computeVertexNormals();
+            if (options.contentPostProcess) {
+              options.contentPostProcess(mesh);
             }
-
-            mesh.receiveShadow = options.receiveShadow;
-
           }
         });
         tile.content.gpuMemoryUsageInBytes = tile.content.texturesByteLength + tile.content.geometriesByteLength;
@@ -783,6 +774,11 @@ function createPointNodes(tile, pointcloudMaterial, options, rootTransformInvers
     contentTransform.multiply(new Matrix4().makeTranslation(c[0], c[1], c[2]));
   }
   tileContent.applyMatrix4(contentTransform);
+
+  if (options.contentPostProcess) {
+    options.contentPostProcess(tileContent);
+  }
+
   return tileContent;
 }
 

@@ -548,6 +548,9 @@ class Loader3DTiles {
           ]);
           return new Vector3(...cartesianPosition).applyMatrix4(threeMat);
         },
+        getRootTransformationMatrix: () => {
+          return threeMat.clone();
+        },
         orientToGeocoord: (coord:GeoCoord) => {
           // Set the transofrmation matrix to the rotate the WGS84 globe to the given lat/long/Alt
           const cartographicPosition = [coord.long, coord.lat, coord.height];

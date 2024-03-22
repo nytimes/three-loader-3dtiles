@@ -6,7 +6,8 @@ import {
   Material,
   Camera,
   WebGLRenderer,
-  LoadingManager
+  LoadingManager,
+  Matrix4
 } from 'three';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -165,6 +166,8 @@ interface Runtime {
   update(dt:Number, viewportHeight:number, camera:Camera): void;
   /** Dispose of all of the tileset's assets in memory. */
   dispose(): void;
+  /** Get the root transformation matrix of the tileset. */
+  getRootTransformationMatrix(): Matrix4;
 }
 
 export type { LoaderProps, LoaderOptions, Runtime, GeoCoord };

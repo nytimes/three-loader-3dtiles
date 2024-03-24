@@ -131,6 +131,7 @@
 
     loadTileset();
 
+
     // Default is Tokyo Tower
     const demoLat = queryParams.get('lat') ?? 35.6586;
     const demoLong = queryParams.get('long') ?? 139.7454;
@@ -156,6 +157,8 @@
     let tilesRuntime = undefined;
     let tilesModel = undefined;
     let statsRuntime = undefined;
+    
+
 
     async function loadTileset() {
       const result = await Loader3DTiles.load(
@@ -193,6 +196,15 @@
 
       camera.translateY(1000);
       controls.update();
+      
+      const geoJSONMesh = await Loader3DTiles.loadGeoJSON('https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/google-3d-tiles/buildings.geojson');
+      console.log("GeoJSON mesh", geoJSONMesh);
+      console.log("Should apply transformation matrix", runtime.getTileset().modelMatrix);
+      geoJSONMesh.applyMatrix4(new Matrix4().fromArray(runtime.getTileset().modelMatrix));
+      geoJSONMesh.updateMatrixWorld();
+      //geoJSONMesh.translateZ(320);
+      scene.add(geoJSONMesh);
+
 
       //zoomIn();
     }

@@ -1,9 +1,11 @@
 import { load } from '@loaders.gl/core';
 import { CesiumIonLoader, Tiles3DLoader } from '@loaders.gl/3d-tiles';
+import { JSONLoader, _GeoJSONLoader } from '@loaders.gl/json';
 import { Tileset3D, TILE_TYPE, TILE_CONTENT_STATE } from '@loaders.gl/tiles';
 import { CullingVolume, Plane } from '@math.gl/culling';
 import  { _PerspectiveFrustum as PerspectiveFrustum}  from '@math.gl/culling';
 import { Matrix4 as MathGLMatrix4, toRadians } from '@math.gl/core';
+import { Ellipsoid } from '@math.gl/geospatial';
 import * as Util from './util';
 import {
   Object3D,
@@ -40,6 +42,8 @@ import { PointCloudFS, PointCloudVS } from './shaders';
 
 import type { LoaderProps, LoaderOptions, Runtime, GeoCoord} from './types';
 import { PointCloudColoring, Shading  } from './types';
+import { BinaryFeatureCollection, FeatureCollection } from '@loaders.gl/schema';
+import { features } from 'process';
 
 const gradient = Gradients.RAINBOW;
 const gradientTexture = typeof document != 'undefined' ? Util.generateGradientTexture(gradient) : null;
@@ -647,7 +651,35 @@ class Loader3DTiles {
       },
     };
   }
+  public static async loadGeoJSON(url: string): Promise <Object3D> {
+    return load(url, _GeoJSONLoader, { worker: false,  gis: {format: 'binary'}}).then((data) => {  
+        const featureCollection = data as unknown as BinaryFeatureCollection;
+        const geometry = new BufferGeometry();
+        const cartesianPositions = (featureCollection.polygons.positions.value as Float32Array).reduce((acc, val, i, src) => {
+          if (i % 2 == 0) {
+            const cartographic = [val, src[i + 1], 280];
+            const cartesian = Ellipsoid.WGS84.cartographicToCartesian(cartographic);
+
+            acc.push(...cartesian);
+          }
+          return acc;
+        }, []);
+        geometry.setAttribute('position', new Float32BufferAttribute(
+          cartesianPositions,
+          3
+        ));
+        geometry.setIndex(
+          new BufferAttribute(featureCollection.polygons.triangles.value, 1)
+        );
+        const material = new MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, transparent: true } );
+        const mesh = new Mesh( geometry, material );
+
+        return mesh;
+    });
+  }
 }
+
+
 
 async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTransformInverse): Promise<Object3D> {
   return new Promise((resolve, reject) => {

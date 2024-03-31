@@ -1,6 +1,6 @@
 import { Stats } from '@probe.gl/stats';
 import { Tileset3D } from '@loaders.gl/tiles';
-import { Object3D, Vector3, Material, Camera, WebGLRenderer, LoadingManager } from 'three';
+import { Object3D, Vector3, Material, Camera, WebGLRenderer, LoadingManager, Mesh, Points } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 /** Types of coloring used when viewing point cloud tiles */
 declare enum PointCloudColoring {
@@ -71,12 +71,10 @@ interface LoaderOptions {
     transparent?: boolean;
     /** Apply a custom material, supports both b3dm (mesh) tiles and Point Cloud tiles - Default: `undefined` **/
     material?: Material;
-    /** When viewing b3dm (mesh) tiles, a callback to update shader uniforms - Default: `undefined` */
-    shaderCallback?: (renderer: WebGLRenderer, material: Material) => void;
+    /** A callback for running post-processing on tile content (Mesh or Points) - Default: `undefined` */
+    contentPostProcess?: (content: Mesh | Points) => void;
     /** When viewing b3dm (mesh) tiles, show meshes as wireframe - Default: `false`. */
     wireframe?: boolean;
-    /** When viewing b3dm (mesh) tiles, compute the vertex normals - Default: `false`. */
-    computeNormals?: boolean;
     /** When viewing Point Cloud tiles, how should the points be colored ({@link PointCloudColoring}) - Default: `PointCloudColoring.White` */
     pointCloudColoring?: PointCloudColoring;
     /** Point size for Point Cloud tiles -  Default: `1.0` */

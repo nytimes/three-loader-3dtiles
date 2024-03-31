@@ -460,16 +460,34 @@
             },
             {
               "kind": "PropertySignature",
-              "canonicalReference": "three-loader-3dtiles!LoaderOptions#computeNormals:member",
-              "docComment": "/**\n * When viewing b3dm (mesh) tiles, compute the vertex normals - Default: `false`.\n */\n",
+              "canonicalReference": "three-loader-3dtiles!LoaderOptions#contentPostProcess:member",
+              "docComment": "/**\n * A callback for running post-processing on tile content (Mesh or Points) - Default: `undefined`\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "computeNormals?: "
+                  "text": "contentPostProcess?: "
                 },
                 {
                   "kind": "Content",
-                  "text": "boolean"
+                  "text": "(content: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Mesh",
+                  "canonicalReference": "@types/three!Mesh:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": " | "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Points",
+                  "canonicalReference": "@types/three!Points:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ") => void"
                 },
                 {
                   "kind": "Content",
@@ -479,10 +497,10 @@
               "isReadonly": false,
               "isOptional": true,
               "releaseTag": "Public",
-              "name": "computeNormals",
+              "name": "contentPostProcess",
               "propertyTypeTokenRange": {
                 "startIndex": 1,
-                "endIndex": 2
+                "endIndex": 6
               }
             },
             {
@@ -891,51 +909,6 @@
               "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
-              }
-            },
-            {
-              "kind": "PropertySignature",
-              "canonicalReference": "three-loader-3dtiles!LoaderOptions#shaderCallback:member",
-              "docComment": "/**\n * When viewing b3dm (mesh) tiles, a callback to update shader uniforms - Default: `undefined`\n */\n",
-              "excerptTokens": [
-                {
-                  "kind": "Content",
-                  "text": "shaderCallback?: "
-                },
-                {
-                  "kind": "Content",
-                  "text": "(renderer: "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "WebGLRenderer",
-                  "canonicalReference": "@types/three!WebGLRenderer:class"
-                },
-                {
-                  "kind": "Content",
-                  "text": ", material: "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "Material",
-                  "canonicalReference": "@types/three!Material:class"
-                },
-                {
-                  "kind": "Content",
-                  "text": ") => void"
-                },
-                {
-                  "kind": "Content",
-                  "text": ";"
-                }
-              ],
-              "isReadonly": false,
-              "isOptional": true,
-              "releaseTag": "Public",
-              "name": "shaderCallback",
-              "propertyTypeTokenRange": {
-                "startIndex": 1,
-                "endIndex": 6
               }
             },
             {

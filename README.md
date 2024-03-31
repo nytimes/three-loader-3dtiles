@@ -55,8 +55,8 @@ async function loadTileset() {
       url: 'https://<TILESET URL>/tileset.json',
       renderer: renderer,
       options: {
-        dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/libs/draco',
-        basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/libs/basis',
+        dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco',
+        basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/basis',
       }
   )
   const {model, runtime} = result

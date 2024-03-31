@@ -1,5 +1,16 @@
 ## v1.2
 
+## v1.2.2
+ - Extract data attributions from Google's 3D Tiles.
+ - Options added: 
+    - `collectAttributions` 
+    - `contentPostProcess`
+    - `resetTransform`
+ - Options removed:
+    - `geoTransform` (use `orientToGeocoord` and `getWebMercatorCoord`)
+    - `shaderCallback` (use `contentPostProcess`)
+    - `computeNormals` (use `contentPostProcess`)
+
 ## v1.2.0
  - Support for Photorealistic 3D Tiles by Google Maps ([demo: requires API key](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/google-3dtiles/), [demo source](https://github.com/nytimes/three-loader-3dtiles/blob/main/examples/demos/google-3dtiles/index.html)).
  - Upgrade to loaders.gl v4.1 and Three.js r160.

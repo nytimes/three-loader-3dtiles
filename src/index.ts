@@ -466,10 +466,9 @@ class Loader3DTiles {
       root.updateMatrixWorld(true);
 
       lastRootTransform.copy(root.matrixWorld);
-      threeMat.copy(lastRootTransform);
-
-      tileset.modelMatrix = new MathGLMatrix4(transformationMatrix.toArray());
       rootTransformInverse.copy(lastRootTransform).invert();
+
+      updateTransform();
       
     }
 

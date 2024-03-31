@@ -2,6 +2,7 @@ import { Stats } from '@probe.gl/stats';
 import { Tileset3D } from '@loaders.gl/tiles';
 import {
   Object3D,
+  Vector2,
   Vector3,
   Material,
   Camera,
@@ -163,8 +164,10 @@ interface Runtime {
   getWebMercatorCoord(coord: GeoCoord): void;
   /** Get the current camera frustum as mesh planes (for debugging purposes). */
   getCameraFrustum(camera: Camera): Object3D;
+  /* Overlay a GeoJSON */
+  overlayGeoJSON(url: string): void;  
   /** Update the tileset for rendering. */
-  update(dt:Number, viewportHeight:number, camera:Camera): void;
+  update(dt:Number, viewportSize: Vector2, camera:Camera): void;
   /** Dispose of all of the tileset's assets in memory. */
   dispose(): void;
 }

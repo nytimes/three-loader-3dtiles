@@ -29,7 +29,9 @@ import {
   WebGLRenderer,
   Texture,
   Euler,
-  Quaternion
+  Quaternion,
+  WebGLRenderTarget,
+  Scene
 } from 'three';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -159,7 +161,7 @@ class Loader3DTiles {
     });
     
     let cameraReference = null;
-    let lastViewportHeight = 0;
+    let lastViewportSize = new Vector2();
 
     let gltfLoader = undefined;
     let ktx2Loader = undefined;
@@ -293,7 +295,6 @@ class Loader3DTiles {
 
     let disposeFlag = false;
     let loadingEnded = false;
-
 
     pointcloudUniforms.rootCenter.value.copy(rootCenter);
     pointcloudUniforms.rootNormal.value.copy(new Vector3(0, 0, 1).normalize());
@@ -476,6 +477,8 @@ class Loader3DTiles {
       
     }
 
+    let geoJSONOverlay = null;
+
     return {
       model: root,
       runtime: {
@@ -512,7 +515,7 @@ class Loader3DTiles {
         setViewDistanceScale: (scale) => {
           tileset.options.viewDistanceScale = scale;
           tileset._frameNumber++;
-          tilesetUpdate(tileset, renderMap, lastViewportHeight, cameraReference);
+          tilesetUpdate(tileset, renderMap, lastViewportSize.y, cameraReference);
         },
         setMaximumScreenSpaceError: (sse) => {
           tileset.options.maximumScreenSpaceError = sse;
@@ -585,9 +588,21 @@ class Loader3DTiles {
 
           return model;
         },
-        update: function (dt: number, viewportHeight: number, camera: Camera) {
+        async overlayGeoJSON(url: string) {
+          const mesh = await Loader3DTiles.loadGeoJSON(url);
+          geoJSONOverlay = {
+            renderer: new WebGLRenderer(),
+            renderTarget: new WebGLRenderTarget(lastViewportSize.x, lastViewportSize.y);
+            scene: new Scene(),
+            camera: cameraReference
+          }
+
+          geoJSONOverlay.scene.add(mesh);
+          geoJSONOverlay.renderer.setRenderTarget(geoJSONOverlay.renderTarget);
+        },
+        update: function (dt: number, viewportSize:Vector2, camera: Camera) {
           cameraReference = camera;
-          lastViewportHeight = viewportHeight;
+          lastViewportSize.copy(viewportSize);
 
           timer += dt;
 
@@ -622,9 +637,12 @@ class Loader3DTiles {
                 tileset._frameNumber++;
                 camera.getWorldPosition(lastCameraPosition);
                 lastCameraTransform.copy(camera.matrixWorld);
-                tilesetUpdate(tileset, renderMap, lastViewportHeight, camera);
+                tilesetUpdate(tileset, renderMap, lastViewportSize.y, camera);
               }
             }
+          }
+          if (geoJSONOverlay) {
+            geoJSONOverlay.renderer.render(geoJSONOverlay.scene, geoJSONOverlay.camera);
           }
         },
         dispose: function () {
@@ -653,27 +671,39 @@ class Loader3DTiles {
   }
   public static async loadGeoJSON(url: string): Promise <Object3D> {
     return load(url, _GeoJSONLoader, { worker: false,  gis: {format: 'binary'}}).then((data) => {  
+        console.log("GeoJSON Data", data);
         const featureCollection = data as unknown as BinaryFeatureCollection;
         const geometry = new BufferGeometry();
         const cartesianPositions = (featureCollection.polygons.positions.value as Float32Array).reduce((acc, val, i, src) => {
           if (i % 2 == 0) {
-            const cartographic = [val, src[i + 1], 280];
+            const cartographic = [val, src[i + 1], 270];
             const cartesian = Ellipsoid.WGS84.cartographicToCartesian(cartographic);
 
             acc.push(...cartesian);
           }
           return acc;
         }, []);
+        const colors = ((featureCollection.polygons.numericProps as any)
+        ?.distance_to_nearest_tree.value as Float64Array).reduce((acc, val, i, src) => {
+            acc[i * 3] = val <= 50 ? 0.0 : 0.5;
+            acc[(i *3) + 1] = val <= 50 ? 0.8 : 0.0;
+            acc[(i *3) + 2] = val <= 300.0 ? 0.5 : 0.0;
+            return acc;
+        }, []);
         geometry.setAttribute('position', new Float32BufferAttribute(
           cartesianPositions,
+          3
+        ));
+        geometry.setAttribute('color', new Float32BufferAttribute(
+          colors,
           3
         ));
         geometry.setIndex(
           new BufferAttribute(featureCollection.polygons.triangles.value, 1)
         );
-        const material = new MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, transparent: true } );
+        const material = new MeshBasicMaterial( { opacity: 0.5, transparent: true } );
+        material.vertexColors = true;
         const mesh = new Mesh( geometry, material );
-
         return mesh;
     });
   }

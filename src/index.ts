@@ -24,6 +24,7 @@ import {
   Points,
   Camera,
   PerspectiveCamera,
+  OrthographicCamera,
   WebGLRenderer,
   Texture,
   Euler
@@ -370,14 +371,22 @@ class Loader3DTiles {
 
       // Assumes camera fov, near and far are not changing
       if (!sseDenominator || camera.aspect != lastCameraAspect) {
-        const loadersFrustum = new PerspectiveFrustum({
-          fov: (camera.fov / 180) * Math.PI,
-          aspectRatio: camera.aspect,
-          near: camera.near,
-          far: camera.far,
-        });
+        if (camera instanceof PerspectiveCamera) {
+          const loadersFrustum = new PerspectiveFrustum({
+            fov: (camera.fov / 180) * Math.PI,
+            aspectRatio: camera.aspect,
+            near: camera.near,
+            far: camera.far,
+          });
+          sseDenominator = loadersFrustum.sseDenominator;
 
-        sseDenominator = loadersFrustum.sseDenominator;
+        } else if (camera instanceof OrthographicCamera) {
+          const width = camera.right - camera.left;
+          const height = camera.top - camera.bottom;
+          sseDenominator = Math.max(width, height);
+
+        }          
+        
         lastCameraAspect = camera.aspect;
 
         if (options.debug) {
@@ -795,9 +804,17 @@ function disposeNode(node) {
   }
 }
 
-function cameraChanged(camera:Camera, lastCameraTransform:Matrix4, lastCameraAspect: number) {
-  return !camera.matrixWorld.equals(lastCameraTransform) ||
-  !((<PerspectiveCamera>camera).aspect == lastCameraAspect);
+function cameraChanged(camera: Camera, lastCameraTransform: Matrix4, lastCameraAspect?: number) {
+  // check if camera position changed
+  const positionChanged = !camera.matrixWorld.equals(lastCameraTransform);
+
+  // if camera is Perspective, check camera aspect also
+  if (camera instanceof PerspectiveCamera) {
+    return positionChanged || camera.aspect !== lastCameraAspect;
+  }
+
+  // check only position for Orthographic camera
+  return positionChanged;
 }
 
 export { Loader3DTiles, PointCloudColoring, Shading, Runtime, GeoCoord, GeoTransform, LoaderOptions, LoaderProps };

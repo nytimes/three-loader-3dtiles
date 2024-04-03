@@ -139,6 +139,8 @@ interface Runtime {
   setShading(Shading): void;
   /** Set the current view distance scale. See {@link LoaderOptions} */
   setViewDistanceScale(number): void;
+  /** Set the current maximum screen space error. See {@link LoaderOptions} */
+  setMaximumScreenSpaceError(number): void;
   /** In point clouds wher the points are classified as `Ground`, hide the ground level points - Default: `false`.*/
   setHideGround(boolean): void;
   /** In point clouds set the type of coloring used. See {@link PointCloudColoring} */

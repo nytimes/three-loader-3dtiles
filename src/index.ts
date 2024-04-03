@@ -354,7 +354,7 @@ class Loader3DTiles {
       tileset.modelMatrix = new MathGLMatrix4(threeMat.toArray());
     }
     function tilesetUpdate(tileset, renderMap, viewportHeight, camera) {
-      if (disposeFlag) {
+      if (disposeFlag || !camera) {
         return;
       }
 
@@ -508,6 +508,12 @@ class Loader3DTiles {
         setViewDistanceScale: (scale) => {
           tileset.options.viewDistanceScale = scale;
           tileset._frameNumber++;
+          tilesetUpdate(tileset, renderMap, lastViewportHeight, cameraReference);
+        },
+        setMaximumScreenSpaceError: (sse) => {
+          tileset.options.maximumScreenSpaceError = sse;
+          tileset._frameNumber++;
+          sseDenominator = null;
           tilesetUpdate(tileset, renderMap, lastViewportHeight, cameraReference);
         },
         setHideGround: (enabled) => {

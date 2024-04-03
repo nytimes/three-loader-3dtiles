@@ -105,6 +105,7 @@ export interface Runtime {
     setElevationRange(range: ReadonlyArray<number>): void;
     setHideGround(boolean: any): void;
     setIntensityContrast(number: any): void;
+    setMaximumScreenSpaceError(number: any): void;
     setMaxIntensity(number: any): void;
     setPointAlpha(number: any): void;
     setPointCloudColoring(PointCloudColoring: any): void;

@@ -513,7 +513,6 @@ class Loader3DTiles {
         setMaximumScreenSpaceError: (sse) => {
           tileset.options.maximumScreenSpaceError = sse;
           tileset._frameNumber++;
-          sseDenominator = null;
           tilesetUpdate(tileset, renderMap, lastViewportHeight, cameraReference);
         },
         setHideGround: (enabled) => {

@@ -30,6 +30,7 @@ interface Runtime
 |  [setElevationRange(range)](./three-loader-3dtiles.runtime.setelevationrange.md) | In point clouds when coloring by <code>PointCloudColoring.Elevation</code>, set the min/max elevation values - Default: <code>[0, 400]</code>. |
 |  [setHideGround(boolean)](./three-loader-3dtiles.runtime.sethideground.md) | In point clouds wher the points are classified as <code>Ground</code>, hide the ground level points - Default: <code>false</code>. |
 |  [setIntensityContrast(number)](./three-loader-3dtiles.runtime.setintensitycontrast.md) | In point clouds when coloring by <code>PointCloudColoring.Intensity</code>, set the contrast factor. Default: <code>1.0</code>. |
+|  [setMaximumScreenSpaceError(number)](./three-loader-3dtiles.runtime.setmaximumscreenspaceerror.md) | Set the current maximum screen space error. See [LoaderOptions](./three-loader-3dtiles.loaderoptions.md) |
 |  [setMaxIntensity(number)](./three-loader-3dtiles.runtime.setmaxintensity.md) | In point clouds when coloring by <code>PointCloudColoring.Intensity</code>, set the max intensity value - Default: <code>1.0</code> |
 |  [setPointAlpha(number)](./three-loader-3dtiles.runtime.setpointalpha.md) | In point clouds when, set the alpha value. Default: <code>1.0</code>. |
 |  [setPointCloudColoring(PointCloudColoring)](./three-loader-3dtiles.runtime.setpointcloudcoloring.md) | In point clouds set the type of coloring used. See [PointCloudColoring](./three-loader-3dtiles.pointcloudcoloring.md) |

@@ -109,7 +109,7 @@ interface LoaderOptions {
 
 /** Container object for interfacing with lat/long/height coordinates */
 interface GeoCoord {
-  /** longitude */
+  /** Longitude */
   long: number;
   /** Latitude */
   lat: number;

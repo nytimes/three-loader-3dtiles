@@ -18,5 +18,5 @@ interface GeoCoord
 |  --- | --- | --- | --- |
 |  [height](./three-loader-3dtiles.geocoord.height.md) |  | number | Height |
 |  [lat](./three-loader-3dtiles.geocoord.lat.md) |  | number | Latitude |
-|  [long](./three-loader-3dtiles.geocoord.long.md) |  | number | longitude |
+|  [long](./three-loader-3dtiles.geocoord.long.md) |  | number | Longitude |
 

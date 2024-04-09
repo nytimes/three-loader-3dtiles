@@ -4,7 +4,7 @@
 
 ## GeoCoord.long property
 
-longitude
+Longitude
 
 **Signature:**
 

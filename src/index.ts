@@ -42,7 +42,7 @@ import { Gradients } from './gradients';
 
 import { PointCloudFS, PointCloudVS } from './shaders';
 
-import type { LoaderProps, LoaderOptions, Runtime, GeoCoord} from './types';
+import type { LoaderProps, LoaderOptions, Runtime, GeoCoord, FeatureToColor} from './types';
 import { PointCloudColoring, Shading  } from './types';
 import { BinaryFeatureCollection, FeatureCollection } from '@loaders.gl/schema';
 import { features } from 'process';
@@ -477,8 +477,6 @@ class Loader3DTiles {
       
     }
 
-    let geoJSONOverlay = null;
-
     return {
       model: root,
       runtime: {
@@ -588,17 +586,10 @@ class Loader3DTiles {
 
           return model;
         },
-        async overlayGeoJSON(url: string) {
-          const mesh = await Loader3DTiles.loadGeoJSON(url);
-          geoJSONOverlay = {
-            renderer: new WebGLRenderer(),
-            renderTarget: new WebGLRenderTarget(lastViewportSize.x, lastViewportSize.y);
-            scene: new Scene(),
-            camera: cameraReference
-          }
-
-          geoJSONOverlay.scene.add(mesh);
-          geoJSONOverlay.renderer.setRenderTarget(geoJSONOverlay.renderTarget);
+        async overlayGeoJSON(geoJSONMesh) {
+          geoJSONMesh.applyMatrix4(threeMat);
+          geoJSONMesh.updateMatrixWorld();
+          return geoJSONMesh;
         },
         update: function (dt: number, viewportSize:Vector2, camera: Camera) {
           cameraReference = camera;
@@ -641,9 +632,6 @@ class Loader3DTiles {
               }
             }
           }
-          if (geoJSONOverlay) {
-            geoJSONOverlay.renderer.render(geoJSONOverlay.scene, geoJSONOverlay.camera);
-          }
         },
         dispose: function () {
           disposeFlag = true;
@@ -669,14 +657,13 @@ class Loader3DTiles {
       },
     };
   }
-  public static async loadGeoJSON(url: string): Promise <Object3D> {
+  public static async loadGeoJSON(url: string, height: number, featureToColor: FeatureToColor): Promise <Object3D> {
     return load(url, _GeoJSONLoader, { worker: false,  gis: {format: 'binary'}}).then((data) => {  
-        console.log("GeoJSON Data", data);
         const featureCollection = data as unknown as BinaryFeatureCollection;
         const geometry = new BufferGeometry();
         const cartesianPositions = (featureCollection.polygons.positions.value as Float32Array).reduce((acc, val, i, src) => {
           if (i % 2 == 0) {
-            const cartographic = [val, src[i + 1], 270];
+            const cartographic = [val, src[i + 1], height];
             const cartesian = Ellipsoid.WGS84.cartographicToCartesian(cartographic);
 
             acc.push(...cartesian);
@@ -684,10 +671,11 @@ class Loader3DTiles {
           return acc;
         }, []);
         const colors = ((featureCollection.polygons.numericProps as any)
-        ?.distance_to_nearest_tree.value as Float64Array).reduce((acc, val, i, src) => {
-            acc[i * 3] = val <= 50 ? 0.0 : 0.5;
-            acc[(i *3) + 1] = val <= 50 ? 0.8 : 0.0;
-            acc[(i *3) + 2] = val <= 300.0 ? 0.5 : 0.0;
+        [featureToColor.feature].value as Array<number>).reduce((acc, val, i, src) => {
+            const color = featureToColor.colorMap(val);
+            acc[i * 3] = color.r;
+            acc[(i *3) + 1] = color.g;
+            acc[(i *3) + 2] = color.b;
             return acc;
         }, []);
         geometry.setAttribute('position', new Float32BufferAttribute(
@@ -701,7 +689,7 @@ class Loader3DTiles {
         geometry.setIndex(
           new BufferAttribute(featureCollection.polygons.triangles.value, 1)
         );
-        const material = new MeshBasicMaterial( { opacity: 0.5, transparent: true } );
+        const material = new MeshBasicMaterial( { transparent: true } );
         material.vertexColors = true;
         const mesh = new Mesh( geometry, material );
         return mesh;

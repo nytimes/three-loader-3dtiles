@@ -9,7 +9,7 @@ Update the tileset for rendering.
 **Signature:**
 
 ```typescript
-update(dt: Number, viewportHeight: number, camera: Camera): void;
+update(dt: Number, viewportSize: Vector2, camera: Camera): void;
 ```
 
 ## Parameters
@@ -17,7 +17,7 @@ update(dt: Number, viewportHeight: number, camera: Camera): void;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  dt | Number |  |
-|  viewportHeight | number |  |
+|  viewportSize | Vector2 |  |
 |  camera | Camera |  |
 
 **Returns:**

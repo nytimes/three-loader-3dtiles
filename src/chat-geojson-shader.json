@@ -1,0 +1,552 @@
+{
+  "requesterUsername": "Avnerus",
+  "requesterAvatarIconUri": {
+    "$mid": 1,
+    "path": "/Avnerus",
+    "scheme": "https",
+    "authority": "avatars.githubusercontent.com"
+  },
+  "responderUsername": "GitHub Copilot",
+  "responderAvatarIconUri": {
+    "id": "copilot"
+  },
+  "welcomeMessage": [
+    "Welcome, **@Avnerus**, I'm your Copilot and I'm here to help you get things done faster. You can also [start an inline chat session](command:workbench.action.quickchat.launchInlineChat).",
+    "I'm powered by AI, so surprises and mistakes are possible. Make sure to verify any generated code or suggestions, and [share feedback](https://aka.ms/microsoft/vscode-copilot-release) so that we can learn and improve. Check out the [Copilot documentation](https://code.visualstudio.com/docs/copilot/getting-started-chat) to learn more."
+  ],
+  "requests": [
+    {
+      "message": {
+        "text": "In three.js, I have a 3D object and a 2D object. I would like to create a shader that blends the texture of 2D object with the 3D object, whenever the x and y values of the 3D object's vertex are overlapping with the 2D object's vertex.",
+        "parts": [
+          {
+            "range": {
+              "start": 0,
+              "endExclusive": 236
+            },
+            "editorRange": {
+              "startLineNumber": 1,
+              "startColumn": 1,
+              "endLineNumber": 1,
+              "endColumn": 237
+            },
+            "text": "In three.js, I have a 3D object and a 2D object. I would like to create a shader that blends the texture of 2D object with the 3D object, whenever the x and y values of the 3D object's vertex are overlapping with the 2D object's vertex.",
+            "kind": "text"
+          }
+        ]
+      },
+      "variableData": {
+        "variables": []
+      },
+      "response": [
+        {
+          "value": "To achieve this, you can use a custom shader in Three.js. Here's a step-by-step plan:\n\n1. Create a uniform to pass the texture of the 2D object to the shader.\n2. In the vertex shader, transform the vertex position to screen space.\n3. In the fragment shader, sample the texture of the 2D object at the position corresponding to the screen space position of the 3D object's vertex.\n4. Blend the color of the 3D object's fragment with the color obtained from the 2D texture.\n\nHere's a basic example of how you might implement this in GLSL, the shading language used in Three.js:\n\n```typescript\n// Create the shader material\nconst shaderMaterial = new THREE.ShaderMaterial({\n    uniforms: {\n        texture2D: { value: new THREE.TextureLoader().load('path_to_your_2D_texture') },\n    },\n    vertexShader: `\n        varying vec2 vUv;\n        void main() {\n            vUv = uv;\n            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n        }\n    `,\n    fragmentShader: `\n        uniform sampler2D texture2D;\n        varying vec2 vUv;\n        void main() {\n            vec4 color3D = texture2D(texture2D, vUv);\n            vec4 color2D = texture2D(texture2D, gl_FragCoord.xy / resolution.xy);\n            gl_FragColor = mix(color3D, color2D, 0.5); // blend the two colors\n        }\n    `,\n});\n\n// Apply the shader material to your 3D object\nyour3DObject.material = shaderMaterial;\n```\n\nThis is a basic example and might not work perfectly for your specific use case. You might need to adjust the blending function or the way you calculate the screen space position, depending on the specifics of your 3D and 2D objects and how you want them to interact.",
+          "isTrusted": false,
+          "supportThemeIcons": false,
+          "supportHtml": false
+        }
+      ],
+      "result": {
+        "timings": {
+          "firstProgress": 3418,
+          "totalElapsed": 28757
+        },
+        "metadata": {
+          "responseId": "a5711aa3-acfb-4648-aa13-858658d688bf",
+          "sessionId": "48a2d781-38db-4d2d-b943-3a764d47efce"
+        }
+      },
+      "followups": [
+        {
+          "kind": "reply",
+          "agentId": "github.copilot.default",
+          "message": "How can I pass additional data to the shader in Three.js?"
+        }
+      ],
+      "isCanceled": false,
+      "agent": {
+        "id": "github.copilot.default",
+        "name": "copilot",
+        "description": "Ask Copilot or type / for commands",
+        "extensionId": {
+          "value": "GitHub.copilot-chat",
+          "_lower": "github.copilot-chat"
+        },
+        "metadata": {
+          "fullName": "GitHub Copilot",
+          "themeIcon": {
+            "id": "copilot"
+          },
+          "hasFollowups": true,
+          "helpTextPrefix": "You can ask me general programming questions, or chat with the following participants which have specialized expertise and can perform actions:",
+          "helpTextVariablesPrefix": "You can also help me understand your question by using the following variables to give me extra context:",
+          "helpTextPostfix": {
+            "value": "To have a great conversation, ask me questions as if I was a real programmer:\n\n* **Show me the code** you want to talk about by having the files open and selecting the most important lines.\n* **Make refinements** by asking me follow-up questions, adding clarifications, providing errors, etc.\n* **Review my suggested code** and tell me about issues or improvements, so I can iterate on it.\n\nYou can also ask me questions about your editor selection by [starting an inline chat session](command:inlineChat.start).\n\nLearn more about [GitHub Copilot](https://docs.github.com/copilot/using-github-copilot/getting-started-with-github-copilot?tool=vscode&utm_source=editor&utm_medium=chat-panel&utm_campaign=2024q3-em-MSFT-getstarted) in [Visual Studio Code](https://code.visualstudio.com/docs/copilot/overview).",
+            "isTrusted": {
+              "enabledCommands": [
+                "inlineChat.start"
+              ]
+            },
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "uris": {
+              "command:inlineChat.start": {
+                "$mid": 1,
+                "path": "inlineChat.start",
+                "scheme": "command"
+              },
+              "https://docs.github.com/copilot/using-github-copilot/getting-started-with-github-copilot?tool=vscode&utm_source=editor&utm_medium=chat-panel&utm_campaign=2024q3-em-MSFT-getstarted": {
+                "$mid": 1,
+                "path": "/copilot/using-github-copilot/getting-started-with-github-copilot",
+                "scheme": "https",
+                "authority": "docs.github.com",
+                "query": "tool=vscode&utm_source=editor&utm_medium=chat-panel&utm_campaign=2024q3-em-MSFT-getstarted"
+              },
+              "https://code.visualstudio.com/docs/copilot/overview": {
+                "$mid": 1,
+                "path": "/docs/copilot/overview",
+                "scheme": "https",
+                "authority": "code.visualstudio.com"
+              }
+            }
+          },
+          "supportIssueReporting": false,
+          "requester": {
+            "name": "Avnerus",
+            "icon": {
+              "$mid": 1,
+              "path": "/Avnerus",
+              "scheme": "https",
+              "authority": "avatars.githubusercontent.com"
+            }
+          }
+        },
+        "slashCommands": [],
+        "locations": [
+          "panel"
+        ],
+        "isDefault": true
+      },
+      "contentReferences": [
+        {
+          "kind": "reference",
+          "reference": {
+            "uri": {
+              "$mid": 1,
+              "external": "vscode-remote://wsl%2Bnixos/home/nixos/Projects/three-loader-3dtiles/src/index.ts",
+              "path": "/home/nixos/Projects/three-loader-3dtiles/src/index.ts",
+              "scheme": "vscode-remote",
+              "authority": "wsl+nixos"
+            },
+            "range": {
+              "startLineNumber": 603,
+              "startColumn": 22,
+              "endLineNumber": 603,
+              "endColumn": 22
+            }
+          }
+        }
+      ]
+    },
+    {
+      "message": {
+        "text": "But actually my 2D object uses vertex colors. Is there a way to access the 2D object's vertex colors from the 3D object's shader?",
+        "parts": [
+          {
+            "range": {
+              "start": 0,
+              "endExclusive": 129
+            },
+            "editorRange": {
+              "startLineNumber": 1,
+              "startColumn": 1,
+              "endLineNumber": 1,
+              "endColumn": 130
+            },
+            "text": "But actually my 2D object uses vertex colors. Is there a way to access the 2D object's vertex colors from the 3D object's shader?",
+            "kind": "text"
+          }
+        ]
+      },
+      "variableData": {
+        "variables": []
+      },
+      "response": [
+        {
+          "value": "Yes, you can access the vertex colors of the 2D object from the 3D object's shader, but it requires a bit more work. You would need to create a texture that stores the vertex colors of the 2D object, and then pass this texture to the shader. Here's how you can do it:\n\n1. Create a texture that stores the vertex colors of the 2D object. Each pixel of the texture corresponds to a vertex of the 2D object, and the color of the pixel is the color of the vertex.\n2. Pass this texture to the shader as a uniform.\n3. In the fragment shader, sample the vertex color texture at the position corresponding to the screen space position of the 3D object's vertex.\n4. Blend the color of the 3D object's fragment with the color obtained from the vertex color texture.\n\nHere's an example of how you might implement this in your shader:\n\n```typescript\n// Create the shader material\nconst shaderMaterial = new THREE.ShaderMaterial({\n    uniforms: {\n        texture2D: { value: new THREE.TextureLoader().load('path_to_your_2D_texture') },\n        vertexColors2D: { value: new THREE.DataTexture(vertexColors, width, height, THREE.RGBFormat) },\n    },\n    vertexShader: `\n        varying vec2 vUv;\n        void main() {\n            vUv = uv;\n            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n        }\n    `,\n    fragmentShader: `\n        uniform sampler2D texture2D;\n        uniform sampler2D vertexColors2D;\n        varying vec2 vUv;\n        void main() {\n            vec4 color3D = texture2D(texture2D, vUv);\n            vec4 color2D = texture2D(vertexColors2D, gl_FragCoord.xy / resolution.xy);\n            gl_FragColor = mix(color3D, color2D, 0.5); // blend the two colors\n        }\n    `,\n});\n\n// Apply the shader material to your 3D object\nyour3DObject.material = shaderMaterial;\n```\n\nIn this code, `vertexColors` is a flat array containing the RGB values of the vertex colors of the 2D object, and `width` and `height` are the dimensions of the texture. You would need to create this array and set these dimensions based on the geometry of your 2D object.",
+          "isTrusted": false,
+          "supportThemeIcons": false,
+          "supportHtml": false
+        }
+      ],
+      "result": {
+        "timings": {
+          "firstProgress": 1602,
+          "totalElapsed": 29596
+        },
+        "metadata": {
+          "responseId": "b347c017-8478-46c1-8b7f-b16253db8cc9",
+          "sessionId": "48a2d781-38db-4d2d-b943-3a764d47efce"
+        }
+      },
+      "followups": [
+        {
+          "kind": "reply",
+          "agentId": "github.copilot.default",
+          "message": "How can I pass vertex colors from a 2D object to a shader in Three.js?"
+        }
+      ],
+      "isCanceled": false,
+      "agent": {
+        "id": "github.copilot.default",
+        "name": "copilot",
+        "description": "Ask Copilot or type / for commands",
+        "extensionId": {
+          "value": "GitHub.copilot-chat",
+          "_lower": "github.copilot-chat"
+        },
+        "metadata": {
+          "fullName": "GitHub Copilot",
+          "themeIcon": {
+            "id": "copilot"
+          },
+          "hasFollowups": true,
+          "helpTextPrefix": "You can ask me general programming questions, or chat with the following participants which have specialized expertise and can perform actions:",
+          "helpTextVariablesPrefix": "You can also help me understand your question by using the following variables to give me extra context:",
+          "helpTextPostfix": {
+            "value": "To have a great conversation, ask me questions as if I was a real programmer:\n\n* **Show me the code** you want to talk about by having the files open and selecting the most important lines.\n* **Make refinements** by asking me follow-up questions, adding clarifications, providing errors, etc.\n* **Review my suggested code** and tell me about issues or improvements, so I can iterate on it.\n\nYou can also ask me questions about your editor selection by [starting an inline chat session](command:inlineChat.start).\n\nLearn more about [GitHub Copilot](https://docs.github.com/copilot/using-github-copilot/getting-started-with-github-copilot?tool=vscode&utm_source=editor&utm_medium=chat-panel&utm_campaign=2024q3-em-MSFT-getstarted) in [Visual Studio Code](https://code.visualstudio.com/docs/copilot/overview).",
+            "isTrusted": {
+              "enabledCommands": [
+                "inlineChat.start"
+              ]
+            },
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "uris": {
+              "command:inlineChat.start": {
+                "$mid": 1,
+                "path": "inlineChat.start",
+                "scheme": "command"
+              },
+              "https://docs.github.com/copilot/using-github-copilot/getting-started-with-github-copilot?tool=vscode&utm_source=editor&utm_medium=chat-panel&utm_campaign=2024q3-em-MSFT-getstarted": {
+                "$mid": 1,
+                "path": "/copilot/using-github-copilot/getting-started-with-github-copilot",
+                "scheme": "https",
+                "authority": "docs.github.com",
+                "query": "tool=vscode&utm_source=editor&utm_medium=chat-panel&utm_campaign=2024q3-em-MSFT-getstarted"
+              },
+              "https://code.visualstudio.com/docs/copilot/overview": {
+                "$mid": 1,
+                "path": "/docs/copilot/overview",
+                "scheme": "https",
+                "authority": "code.visualstudio.com"
+              }
+            }
+          },
+          "supportIssueReporting": false,
+          "requester": {
+            "name": "Avnerus",
+            "icon": {
+              "$mid": 1,
+              "path": "/Avnerus",
+              "scheme": "https",
+              "authority": "avatars.githubusercontent.com"
+            }
+          }
+        },
+        "slashCommands": [],
+        "locations": [
+          "panel"
+        ],
+        "isDefault": true
+      },
+      "contentReferences": [
+        {
+          "kind": "reference",
+          "reference": {
+            "uri": {
+              "$mid": 1,
+              "external": "vscode-remote://wsl%2Bnixos/home/nixos/Projects/three-loader-3dtiles/src/index.ts",
+              "path": "/home/nixos/Projects/three-loader-3dtiles/src/index.ts",
+              "scheme": "vscode-remote",
+              "authority": "wsl+nixos"
+            },
+            "range": {
+              "startLineNumber": 603,
+              "startColumn": 22,
+              "endLineNumber": 603,
+              "endColumn": 22
+            }
+          }
+        }
+      ]
+    },
+    {
+      "message": {
+        "text": "What if my 2D object is very big? I don't want to create a texture for all the colors, but just for the ones that are currently displayed in the viewport?",
+        "parts": [
+          {
+            "range": {
+              "start": 0,
+              "endExclusive": 154
+            },
+            "editorRange": {
+              "startLineNumber": 1,
+              "startColumn": 1,
+              "endLineNumber": 1,
+              "endColumn": 155
+            },
+            "text": "What if my 2D object is very big? I don't want to create a texture for all the colors, but just for the ones that are currently displayed in the viewport?",
+            "kind": "text"
+          }
+        ]
+      },
+      "variableData": {
+        "variables": []
+      },
+      "response": [
+        {
+          "value": "If your 2D object is very large and you only want to create a texture for the colors that are currently displayed in the viewport, you can use a technique called \"render to texture\". Here's how it works:\n\n1. Create a new scene and camera that only contain the 2D object.\n2. Render this scene to a texture using a WebGLRenderTarget.\n3. Pass this texture to the shader of the 3D object.\n\nHere's an example of how you might implement this:\n\n```typescript\n// Create the render target\nconst renderTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight);\n\n// Create the scene and camera for the 2D object\nconst scene2D = new THREE.Scene();\nconst camera2D = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, -1000, 1000);\nscene2D.add(your2DObject);\n\n// Render the 2D scene to the render target\nrenderer.setRenderTarget(renderTarget);\nrenderer.render(scene2D, camera2D);\nrenderer.setRenderTarget(null);\n\n// Create the shader material\nconst shaderMaterial = new THREE.ShaderMaterial({\n    uniforms: {\n        texture2D: { value: renderTarget.texture },\n    },\n    vertexShader: `\n        varying vec2 vUv;\n        void main() {\n            vUv = uv;\n            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n        }\n    `,\n    fragmentShader: `\n        uniform sampler2D texture2D;\n        varying vec2 vUv;\n        void main() {\n            vec4 color3D = texture2D(texture2D, vUv);\n            vec4 color2D = texture2D(texture2D, gl_FragCoord.xy / resolution.xy);\n            gl_FragColor = mix(color3D, color2D, 0.5); // blend the two colors\n        }\n    `,\n});\n\n// Apply the shader material to your 3D object\nyour3DObject.material = shaderMaterial;\n```\n\nThis will create a texture that only contains the colors of the 2D object that are currently visible in the viewport. Note that you will need to update the render target every time the 2D object or the camera moves.",
+          "isTrusted": false,
+          "supportThemeIcons": false,
+          "supportHtml": false
+        }
+      ],
+      "result": {
+        "timings": {
+          "firstProgress": 1581,
+          "totalElapsed": 19969
+        },
+        "metadata": {
+          "responseId": "c509971d-3260-4015-a23e-765c2b25cbce",
+          "sessionId": "48a2d781-38db-4d2d-b943-3a764d47efce"
+        }
+      },
+      "followups": [
+        {
+          "kind": "reply",
+          "agentId": "github.copilot.default",
+          "message": "How can I update the render target when the 2D object or camera moves?"
+        }
+      ],
+      "isCanceled": false,
+      "agent": {
+        "id": "github.copilot.default",
+        "name": "copilot",
+        "description": "Ask Copilot or type / for commands",
+        "extensionId": {
+          "value": "GitHub.copilot-chat",
+          "_lower": "github.copilot-chat"
+        },
+        "metadata": {
+          "fullName": "GitHub Copilot",
+          "themeIcon": {
+            "id": "copilot"
+          },
+          "hasFollowups": true,
+          "helpTextPrefix": "You can ask me general programming questions, or chat with the following participants which have specialized expertise and can perform actions:",
+          "helpTextVariablesPrefix": "You can also help me understand your question by using the following variables to give me extra context:",
+          "helpTextPostfix": {
+            "value": "To have a great conversation, ask me questions as if I was a real programmer:\n\n* **Show me the code** you want to talk about by having the files open and selecting the most important lines.\n* **Make refinements** by asking me follow-up questions, adding clarifications, providing errors, etc.\n* **Review my suggested code** and tell me about issues or improvements, so I can iterate on it.\n\nYou can also ask me questions about your editor selection by [starting an inline chat session](command:inlineChat.start).\n\nLearn more about [GitHub Copilot](https://docs.github.com/copilot/using-github-copilot/getting-started-with-github-copilot?tool=vscode&utm_source=editor&utm_medium=chat-panel&utm_campaign=2024q3-em-MSFT-getstarted) in [Visual Studio Code](https://code.visualstudio.com/docs/copilot/overview).",
+            "isTrusted": {
+              "enabledCommands": [
+                "inlineChat.start"
+              ]
+            },
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "uris": {
+              "command:inlineChat.start": {
+                "$mid": 1,
+                "path": "inlineChat.start",
+                "scheme": "command"
+              },
+              "https://docs.github.com/copilot/using-github-copilot/getting-started-with-github-copilot?tool=vscode&utm_source=editor&utm_medium=chat-panel&utm_campaign=2024q3-em-MSFT-getstarted": {
+                "$mid": 1,
+                "path": "/copilot/using-github-copilot/getting-started-with-github-copilot",
+                "scheme": "https",
+                "authority": "docs.github.com",
+                "query": "tool=vscode&utm_source=editor&utm_medium=chat-panel&utm_campaign=2024q3-em-MSFT-getstarted"
+              },
+              "https://code.visualstudio.com/docs/copilot/overview": {
+                "$mid": 1,
+                "path": "/docs/copilot/overview",
+                "scheme": "https",
+                "authority": "code.visualstudio.com"
+              }
+            }
+          },
+          "supportIssueReporting": false,
+          "requester": {
+            "name": "Avnerus",
+            "icon": {
+              "$mid": 1,
+              "path": "/Avnerus",
+              "scheme": "https",
+              "authority": "avatars.githubusercontent.com"
+            }
+          }
+        },
+        "slashCommands": [],
+        "locations": [
+          "panel"
+        ],
+        "isDefault": true
+      },
+      "contentReferences": [
+        {
+          "kind": "reference",
+          "reference": {
+            "uri": {
+              "$mid": 1,
+              "external": "vscode-remote://wsl%2Bnixos/home/nixos/Projects/three-loader-3dtiles/src/index.ts",
+              "path": "/home/nixos/Projects/three-loader-3dtiles/src/index.ts",
+              "scheme": "vscode-remote",
+              "authority": "wsl+nixos"
+            },
+            "range": {
+              "startLineNumber": 603,
+              "startColumn": 22,
+              "endLineNumber": 603,
+              "endColumn": 22
+            }
+          }
+        }
+      ]
+    },
+    {
+      "message": {
+        "text": "Now since the 2D object is on an orthographic camera, I think I need to also project the pixel of the 3D object to an orthographic plane in order to correctly align them in a 3D space. Is that possible?",
+        "parts": [
+          {
+            "range": {
+              "start": 0,
+              "endExclusive": 202
+            },
+            "editorRange": {
+              "startLineNumber": 1,
+              "startColumn": 1,
+              "endLineNumber": 1,
+              "endColumn": 203
+            },
+            "text": "Now since the 2D object is on an orthographic camera, I think I need to also project the pixel of the 3D object to an orthographic plane in order to correctly align them in a 3D space. Is that possible?",
+            "kind": "text"
+          }
+        ]
+      },
+      "variableData": {
+        "variables": []
+      },
+      "response": [
+        {
+          "value": "Yes, you're correct. To align the 3D object's pixels with the 2D object's pixels in the orthographic projection, you need to project the 3D object's vertices onto the orthographic plane in the vertex shader. \n\nHere's how you can do it:\n\n1. Pass the orthographic camera's projection matrix and the model-view matrix for the 2D object to the shader as uniforms.\n2. In the vertex shader, transform the 3D object's vertices to the 2D object's space using these matrices.\n3. Use the transformed vertices to calculate the UV coordinates for sampling the 2D object's texture.\n\nHere's an example of how you might implement this:\n\n```typescript\n// Create the shader material\nconst shaderMaterial = new THREE.ShaderMaterial({\n    uniforms: {\n        texture2D: { value: renderTarget.texture },\n        projectionMatrix2D: { value: camera2D.projectionMatrix },\n        modelViewMatrix2D: { value: your2DObject.matrixWorldInverse },\n    },\n    vertexShader: `\n        uniform mat4 projectionMatrix2D;\n        uniform mat4 modelViewMatrix2D;\n        varying vec2 vUv;\n        void main() {\n            // Transform the vertex to the 2D object's space\n            vec4 vertex2D = modelViewMatrix2D * vec4(position, 1.0);\n            // Project the vertex onto the orthographic plane\n            vec4 projectedVertex = projectionMatrix2D * vertex2D;\n            // Calculate the UV coordinates\n            vUv = projectedVertex.xy * 0.5 + 0.5;\n            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n        }\n    `,\n    fragmentShader: `\n        uniform sampler2D texture2D;\n        varying vec2 vUv;\n        void main() {\n            vec4 color3D = texture2D(texture2D, vUv);\n            vec4 color2D = texture2D(texture2D, gl_FragCoord.xy / resolution.xy);\n            gl_FragColor = mix(color3D, color2D, 0.5); // blend the two colors\n        }\n    `,\n});\n\n// Apply the shader material to your 3D object\nyour3DObject.material = shaderMaterial;\n```\n\nThis will project the 3D object's vertices onto the orthographic plane, aligning them with the 2D object's pixels. Note that you will need to update the `modelViewMatrix2D` uniform every time the 2D object moves.",
+          "isTrusted": false,
+          "supportThemeIcons": false,
+          "supportHtml": false
+        }
+      ],
+      "result": {
+        "timings": {
+          "firstProgress": 3420,
+          "totalElapsed": 37309
+        },
+        "metadata": {
+          "responseId": "30550059-36dc-42f1-be72-39201be3b480",
+          "sessionId": "48a2d781-38db-4d2d-b943-3a764d47efce"
+        }
+      },
+      "followups": [
+        {
+          "kind": "reply",
+          "agentId": "github.copilot.default",
+          "message": "How can I pass additional attributes from the 2D object to the shader of the 3D object?"
+        }
+      ],
+      "isCanceled": false,
+      "agent": {
+        "id": "github.copilot.default",
+        "name": "copilot",
+        "description": "Ask Copilot or type / for commands",
+        "extensionId": {
+          "value": "GitHub.copilot-chat",
+          "_lower": "github.copilot-chat"
+        },
+        "metadata": {
+          "fullName": "GitHub Copilot",
+          "themeIcon": {
+            "id": "copilot"
+          },
+          "hasFollowups": true,
+          "helpTextPrefix": "You can ask me general programming questions, or chat with the following participants which have specialized expertise and can perform actions:",
+          "helpTextVariablesPrefix": "You can also help me understand your question by using the following variables to give me extra context:",
+          "helpTextPostfix": {
+            "value": "To have a great conversation, ask me questions as if I was a real programmer:\n\n* **Show me the code** you want to talk about by having the files open and selecting the most important lines.\n* **Make refinements** by asking me follow-up questions, adding clarifications, providing errors, etc.\n* **Review my suggested code** and tell me about issues or improvements, so I can iterate on it.\n\nYou can also ask me questions about your editor selection by [starting an inline chat session](command:inlineChat.start).\n\nLearn more about [GitHub Copilot](https://docs.github.com/copilot/using-github-copilot/getting-started-with-github-copilot?tool=vscode&utm_source=editor&utm_medium=chat-panel&utm_campaign=2024q3-em-MSFT-getstarted) in [Visual Studio Code](https://code.visualstudio.com/docs/copilot/overview).",
+            "isTrusted": {
+              "enabledCommands": [
+                "inlineChat.start"
+              ]
+            },
+            "supportThemeIcons": false,
+            "supportHtml": false,
+            "uris": {
+              "command:inlineChat.start": {
+                "$mid": 1,
+                "path": "inlineChat.start",
+                "scheme": "command"
+              },
+              "https://docs.github.com/copilot/using-github-copilot/getting-started-with-github-copilot?tool=vscode&utm_source=editor&utm_medium=chat-panel&utm_campaign=2024q3-em-MSFT-getstarted": {
+                "$mid": 1,
+                "path": "/copilot/using-github-copilot/getting-started-with-github-copilot",
+                "scheme": "https",
+                "authority": "docs.github.com",
+                "query": "tool=vscode&utm_source=editor&utm_medium=chat-panel&utm_campaign=2024q3-em-MSFT-getstarted"
+              },
+              "https://code.visualstudio.com/docs/copilot/overview": {
+                "$mid": 1,
+                "path": "/docs/copilot/overview",
+                "scheme": "https",
+                "authority": "code.visualstudio.com"
+              }
+            }
+          },
+          "supportIssueReporting": false,
+          "requester": {
+            "name": "Avnerus",
+            "icon": {
+              "$mid": 1,
+              "path": "/Avnerus",
+              "scheme": "https",
+              "authority": "avatars.githubusercontent.com"
+            }
+          }
+        },
+        "slashCommands": [],
+        "locations": [
+          "panel"
+        ],
+        "isDefault": true
+      },
+      "contentReferences": [
+        {
+          "kind": "reference",
+          "reference": {
+            "uri": {
+              "$mid": 1,
+              "external": "vscode-remote://wsl%2Bnixos/home/nixos/Projects/three-loader-3dtiles/src/index.ts",
+              "path": "/home/nixos/Projects/three-loader-3dtiles/src/index.ts",
+              "scheme": "vscode-remote",
+              "authority": "wsl+nixos"
+            },
+            "range": {
+              "startLineNumber": 603,
+              "startColumn": 22,
+              "endLineNumber": 603,
+              "endColumn": 22
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "providerId": "copilot"
+}

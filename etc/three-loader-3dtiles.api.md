@@ -5,6 +5,7 @@
 ```ts
 
 import { Camera } from 'three';
+import { Color } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { LoadingManager } from 'three';
 import { Material } from 'three';
@@ -13,6 +14,7 @@ import { Object3D } from 'three';
 import { Points } from 'three';
 import { Stats as Stats_2 } from '@probe.gl/stats';
 import { Tileset3D } from '@loaders.gl/tiles';
+import { Vector2 } from 'three';
 import { Vector3 } from 'three';
 import { WebGLRenderer } from 'three';
 
@@ -32,6 +34,10 @@ export class Loader3DTiles {
         model: Object3D;
         runtime: Runtime;
     }>;
+    // Warning: (ae-forgotten-export) The symbol "FeatureToColor" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    static loadGeoJSON(url: string, height: number, featureToColor: FeatureToColor): Promise<Object3D>;
 }
 
 // @public
@@ -101,6 +107,8 @@ export interface Runtime {
     getTileset(): Tileset3D;
     getWebMercatorCoord(coord: GeoCoord): void;
     orientToGeocoord(coord: GeoCoord): void;
+    // (undocumented)
+    overlayGeoJSON(geoJSONMesh: Mesh): void;
     setDebug(boolean: any): void;
     setElevationRange(range: ReadonlyArray<number>): void;
     setHideGround(boolean: any): void;
@@ -113,7 +121,7 @@ export interface Runtime {
     setViewDistanceScale(number: any): void;
     setWireframe(boolean: any): void;
     showTiles(boolean: any): void;
-    update(dt: Number, viewportHeight: number, camera: Camera): void;
+    update(dt: Number, viewportSize: Vector2, camera: Camera): void;
 }
 
 // @public

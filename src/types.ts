@@ -9,7 +9,8 @@ import {
   WebGLRenderer,
   LoadingManager,
   Mesh,
-  Points
+  Points,
+  Color
 } from 'three';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -113,6 +114,11 @@ interface GeoCoord {
   height: number;
 }
 
+interface FeatureToColor {
+  feature: string;
+  colorMap: (value: number) => Color;
+}
+
 /** Runtime methods that can be used once a tileset is loaded */
 interface Runtime {
   /** 
@@ -165,12 +171,12 @@ interface Runtime {
   /** Get the current camera frustum as mesh planes (for debugging purposes). */
   getCameraFrustum(camera: Camera): Object3D;
   /* Overlay a GeoJSON */
-  overlayGeoJSON(url: string): void;  
+  overlayGeoJSON(geoJSONMesh: Mesh): void;  
   /** Update the tileset for rendering. */
   update(dt:Number, viewportSize: Vector2, camera:Camera): void;
   /** Dispose of all of the tileset's assets in memory. */
   dispose(): void;
 }
 
-export type { LoaderProps, LoaderOptions, Runtime, GeoCoord };
+export type { LoaderProps, LoaderOptions, Runtime, GeoCoord, FeatureToColor };
 export { PointCloudColoring, Shading }

@@ -20,19 +20,14 @@ import { WebGLRenderer } from 'three';
 
 // @public (undocumented)
 export interface FeatureToColor {
-    // (undocumented)
     colorMap: (value: number) => Color;
-    // (undocumented)
     feature: string;
 }
 
 // @public
 export interface GeoCoord {
-    // (undocumented)
     height: number;
-    // (undocumented)
     lat: number;
-    // (undocumented)
     long: number;
 }
 

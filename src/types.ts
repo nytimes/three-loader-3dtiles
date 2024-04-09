@@ -109,13 +109,18 @@ interface LoaderOptions {
 
 /** Container object for interfacing with lat/long/height coordinates */
 interface GeoCoord {
+  /** longitude */
   long: number;
+  /** Latitude */
   lat: number;
+  /** Height */
   height: number;
 }
 
 interface FeatureToColor {
+  /** Name of the property in the GeoJSON feature data */
   feature: string;
+  /** A function mapping a value of the property to a vertex color*/
   colorMap: (value: number) => Color;
 }
 

@@ -136,7 +136,6 @@
     loadTileset();
 
 
-    // Default is Tokyo Tower
     const demoLat = queryParams.get('lat') ?? 50.089;
     const demoLong = queryParams.get('long') ?? 14.42;
     const demoHeight = queryParams.get('height') ?? 100;
@@ -191,15 +190,12 @@
       statsRuntime = new StatsWidget(runtime.getStats(), {container: statsParent });
       statsParent.style.visibility = 'visible';
 
-      // Tokyo tower
       runtime.orientToGeocoord({
         lat: Number(demoLat), 
         long: Number(demoLong), 
         height: Number(demoHeight)
       });
       
-      console.log("Oriented to Tokyo Tower", tilesModel.matrixWorld);
-
       camera.translateY(1000);
       controls.update();
       
@@ -259,6 +255,6 @@
 
     render();
   </script>
-  <a id="button" target="_blank" href="https://github.com/nytimes/three-loader-3dtiles/blob/main/examples/demos/google-3dtiles/index.html" title="View source code for demo"><img src="../ic_code_black_24dp.svg"></a>
+  <a id="button" target="_blank" href="https://github.com/nytimes/three-loader-3dtiles/blob/main/examples/demos/google-geojson/index.html" title="View source code for demo"><img src="../ic_code_black_24dp.svg"></a>
 </body>
 </html>

@@ -4,6 +4,8 @@
 
 ## FeatureToColor.colorMap property
 
+A function mapping a value of the property to a vertex color
+
 **Signature:**
 
 ```typescript

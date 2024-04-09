@@ -4,6 +4,8 @@
 
 ## FeatureToColor.feature property
 
+Name of the property in the GeoJSON feature data
+
 **Signature:**
 
 ```typescript

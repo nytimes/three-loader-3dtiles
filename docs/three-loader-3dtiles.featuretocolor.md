@@ -14,6 +14,6 @@ interface FeatureToColor
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [colorMap](./three-loader-3dtiles.featuretocolor.colormap.md) |  | (value: number) =&gt; Color |  |
-|  [feature](./three-loader-3dtiles.featuretocolor.feature.md) |  | string |  |
+|  [colorMap](./three-loader-3dtiles.featuretocolor.colormap.md) |  | (value: number) =&gt; Color | A function mapping a value of the property to a vertex color |
+|  [feature](./three-loader-3dtiles.featuretocolor.feature.md) |  | string | Name of the property in the GeoJSON feature data |
 

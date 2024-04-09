@@ -18,6 +18,14 @@ import { Vector2 } from 'three';
 import { Vector3 } from 'three';
 import { WebGLRenderer } from 'three';
 
+// @public (undocumented)
+export interface FeatureToColor {
+    // (undocumented)
+    colorMap: (value: number) => Color;
+    // (undocumented)
+    feature: string;
+}
+
 // @public
 export interface GeoCoord {
     // (undocumented)
@@ -28,16 +36,20 @@ export interface GeoCoord {
     long: number;
 }
 
+// @public (undocumented)
+export interface GeoJSONLoaderProps {
+    featureToColor?: FeatureToColor;
+    height: number;
+    url: string;
+}
+
 // @public
 export class Loader3DTiles {
     static load(props: LoaderProps): Promise<{
         model: Object3D;
         runtime: Runtime;
     }>;
-    // Warning: (ae-forgotten-export) The symbol "FeatureToColor" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    static loadGeoJSON(url: string, height: number, featureToColor: FeatureToColor): Promise<Object3D>;
+    static loadGeoJSON(props: GeoJSONLoaderProps): Promise<Object3D>;
 }
 
 // @public

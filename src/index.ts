@@ -659,7 +659,7 @@ class Loader3DTiles {
   }
   /**
   * Loads a tileset of 3D Tiles according to the given {@link GeoJSONLoaderProps}
-  * Could be overlayed on geograpical 3D Tiles using {@link overlayGeoJSON}
+  * Could be overlayed on geograpical 3D Tiles using {@link Runtime.overlayGeoJSON}
   * @public
   *
   * @param props - Properties for this load call {@link GeoJSONLoaderProps}.
@@ -919,5 +919,6 @@ export {
    GeoCoord, 
    FeatureToColor, 
    LoaderOptions, 
-   LoaderProps 
+   LoaderProps,
+   GeoJSONLoaderProps
 };

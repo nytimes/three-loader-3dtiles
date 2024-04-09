@@ -17,5 +17,5 @@ declare class Loader3DTiles
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [load(props)](./three-loader-3dtiles.loader3dtiles.load.md) | <code>static</code> | Loads a tileset of 3D Tiles according to the given [LoaderProps](./three-loader-3dtiles.loaderprops.md) |
-|  [loadGeoJSON(url, height, featureToColor)](./three-loader-3dtiles.loader3dtiles.loadgeojson.md) | <code>static</code> |  |
+|  [loadGeoJSON(props)](./three-loader-3dtiles.loader3dtiles.loadgeojson.md) | <code>static</code> | Loads a tileset of 3D Tiles according to the given [GeoJSONLoaderProps](./three-loader-3dtiles.geojsonloaderprops.md) Could be overlayed on geograpical 3D Tiles using [Runtime.overlayGeoJSON()](./three-loader-3dtiles.runtime.overlaygeojson.md) |
 

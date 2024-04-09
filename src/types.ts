@@ -119,6 +119,15 @@ interface FeatureToColor {
   colorMap: (value: number) => Color;
 }
 
+interface GeoJSONLoaderProps {
+  /** The URL of the GeoJSON file. */
+  url: string;
+  /** cartographic A height in which to place the GeoJSON */ 
+  height: number;
+  /** A mapping function between data features and vertex colors */
+  featureToColor?: FeatureToColor;
+}
+
 /** Runtime methods that can be used once a tileset is loaded */
 interface Runtime {
   /** 
@@ -170,7 +179,7 @@ interface Runtime {
   getWebMercatorCoord(coord: GeoCoord): void;
   /** Get the current camera frustum as mesh planes (for debugging purposes). */
   getCameraFrustum(camera: Camera): Object3D;
-  /* Overlay a GeoJSON */
+  /* Overlay a GeoJSON polygon on top of geo-located 3d tiles*/
   overlayGeoJSON(geoJSONMesh: Mesh): void;  
   /** Update the tileset for rendering. */
   update(dt:Number, viewportSize: Vector2, camera:Camera): void;
@@ -178,5 +187,5 @@ interface Runtime {
   dispose(): void;
 }
 
-export type { LoaderProps, LoaderOptions, Runtime, GeoCoord, FeatureToColor };
+export type { LoaderProps, LoaderOptions, Runtime, GeoCoord, GeoJSONLoaderProps, FeatureToColor };
 export { PointCloudColoring, Shading }

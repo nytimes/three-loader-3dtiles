@@ -42,7 +42,7 @@ import { Gradients } from './gradients';
 
 import { PointCloudFS, PointCloudVS } from './shaders';
 
-import type { LoaderProps, LoaderOptions, Runtime, GeoCoord, FeatureToColor} from './types';
+import type { LoaderProps, LoaderOptions, Runtime, GeoCoord, GeoJSONLoaderProps, FeatureToColor} from './types';
 import { PointCloudColoring, Shading  } from './types';
 import { BinaryFeatureCollection, FeatureCollection } from '@loaders.gl/schema';
 import { features } from 'process';
@@ -657,7 +657,16 @@ class Loader3DTiles {
       },
     };
   }
-  public static async loadGeoJSON(url: string, height: number, featureToColor: FeatureToColor): Promise <Object3D> {
+  /**
+  * Loads a tileset of 3D Tiles according to the given {@link GeoJSONLoaderProps}
+  * Could be overlayed on geograpical 3D Tiles using {@link overlayGeoJSON}
+  * @public
+  *
+  * @param props - Properties for this load call {@link GeoJSONLoaderProps}.
+  * @returns An object containing the 3D Model to be added to the scene
+  */
+  public static async loadGeoJSON(props: GeoJSONLoaderProps): Promise <Object3D> {
+    const { url, height, featureToColor } = props; 
     return load(url, _GeoJSONLoader, { worker: false,  gis: {format: 'binary'}}).then((data) => {  
         const featureCollection = data as unknown as BinaryFeatureCollection;
         const geometry = new BufferGeometry();
@@ -670,20 +679,22 @@ class Loader3DTiles {
           }
           return acc;
         }, []);
-        const colors = ((featureCollection.polygons.numericProps as any)
-        [featureToColor.feature].value as Array<number>).reduce((acc, val, i, src) => {
-            const color = featureToColor.colorMap(val);
-            acc[i * 3] = color.r;
-            acc[(i *3) + 1] = color.g;
-            acc[(i *3) + 2] = color.b;
-            return acc;
-        }, []);
+        if (featureToColor) {
+          const colors = ((featureCollection.polygons.numericProps as any)
+          [featureToColor.feature].value as Array<number>).reduce((acc, val, i, src) => {
+              const color = featureToColor.colorMap(val);
+              acc[i * 3] = color.r;
+              acc[(i *3) + 1] = color.g;
+              acc[(i *3) + 2] = color.b;
+              return acc;
+          }, []);
+          geometry.setAttribute('color', new Float32BufferAttribute(
+            colors,
+            3
+          ));
+        }
         geometry.setAttribute('position', new Float32BufferAttribute(
           cartesianPositions,
-          3
-        ));
-        geometry.setAttribute('color', new Float32BufferAttribute(
-          colors,
           3
         ));
         geometry.setIndex(
@@ -900,4 +911,13 @@ function collectAttributions(tiles) {
   return attributionString;
 }
 
-export { Loader3DTiles, PointCloudColoring, Shading, Runtime, GeoCoord, LoaderOptions, LoaderProps };
+export {
+   Loader3DTiles, 
+   PointCloudColoring, 
+   Shading, 
+   Runtime, 
+   GeoCoord, 
+   FeatureToColor, 
+   LoaderOptions, 
+   LoaderProps 
+};

@@ -203,15 +203,15 @@
       camera.translateY(1000);
       controls.update();
       
-      const geoJSONMesh = await Loader3DTiles.loadGeoJSON(
-        'https://raw.githubusercontent.com/visgl/deck.gl-data/1126e3041884597d2d3777446d1c292efc26a671/examples/google-3d-tiles/buildings.geojson',
-        270,
-        { 
+      const geoJSONMesh = await Loader3DTiles.loadGeoJSON({
+        url: 'https://raw.githubusercontent.com/visgl/deck.gl-data/1126e3041884597d2d3777446d1c292efc26a671/examples/google-3d-tiles/buildings.geojson',
+        height: 270,
+        featureToColor: { 
           feature: 'distance_to_nearest_tree',
           colorMap: (value) => 
             value <= 50 ? new Color(0, 1, 0): new Color(1, 0, 0)
         }
-      );
+      });
       geoJSONMesh.material.opacity = 0.5;
       runtime.overlayGeoJSON(geoJSONMesh);
       scene.add(geoJSONMesh);

@@ -91,6 +91,7 @@
       GridHelper, 
       Clock,
       Matrix4,
+      Vector2,
       Euler,
       SRGBColorSpace
     } from 'three';
@@ -117,6 +118,7 @@
       1000000,
     );
 
+    const viewportSize = new Vector2();
     const renderer = new WebGLRenderer();
     renderer.preserveDrawingBuffer  = true;
 
@@ -219,7 +221,7 @@
       const dt = clock.getDelta()
       controls.update();
       if (tilesRuntime) {
-        tilesRuntime.update(dt, canvasParent.clientHeight, camera);
+        tilesRuntime.update(dt, viewportSize, camera);
       }
       if (statsRuntime) {
         statsRuntime.update();
@@ -234,6 +236,7 @@
 
     function onWindowResize() {
       renderer.setSize(canvasParent.clientWidth, canvasParent.clientHeight);
+      viewportSize.set(canvasParent.clientWidth, canvasParent.clientHeight);
       camera.aspect = canvasParent.clientWidth / canvasParent.clientHeight;
       camera.updateProjectionMatrix();
     }

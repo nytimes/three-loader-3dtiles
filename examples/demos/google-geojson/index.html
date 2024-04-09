@@ -219,7 +219,6 @@
 
     function render(t) {
       const dt = clock.getDelta()
-      viewportSize.set(canvasParent.clientWidth, canvasParent.clientHeight);
       controls.update();
       if (tilesRuntime) {
         tilesRuntime.update(dt, viewportSize, camera);
@@ -238,6 +237,7 @@
 
     function onWindowResize() {
       renderer.setSize(canvasParent.clientWidth, canvasParent.clientHeight);
+      viewportSize.set(canvasParent.clientWidth, canvasParent.clientHeight);
       camera.aspect = canvasParent.clientWidth / canvasParent.clientHeight;
       camera.updateProjectionMatrix();
     }
@@ -259,6 +259,6 @@
 
     render();
   </script>
-  <a id="button" target="_blank" href="https://github.com/nytimes/three-loader-3dtiles/blob/main/examples/demos/google-3dtiles/index.html" title="View source code for demo" style=""><img src="../ic_code_black_24dp.svg"></a>
+  <a id="button" target="_blank" href="https://github.com/nytimes/three-loader-3dtiles/blob/main/examples/demos/google-3dtiles/index.html" title="View source code for demo"><img src="../ic_code_black_24dp.svg"></a>
 </body>
 </html>

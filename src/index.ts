@@ -1,6 +1,6 @@
 import { load } from '@loaders.gl/core';
 import { CesiumIonLoader, Tiles3DLoader } from '@loaders.gl/3d-tiles';
-import { JSONLoader, _GeoJSONLoader } from '@loaders.gl/json';
+import { _GeoJSONLoader } from '@loaders.gl/json';
 import { Tileset3D, TILE_TYPE, TILE_CONTENT_STATE } from '@loaders.gl/tiles';
 import { CullingVolume, Plane } from '@math.gl/culling';
 import  { _PerspectiveFrustum as PerspectiveFrustum}  from '@math.gl/culling';
@@ -518,7 +518,7 @@ class Loader3DTiles {
         setMaximumScreenSpaceError: (sse) => {
           tileset.options.maximumScreenSpaceError = sse;
           tileset._frameNumber++;
-          tilesetUpdate(tileset, renderMap, lastViewportHeight, cameraReference);
+          tilesetUpdate(tileset, renderMap, lastViewportSize.y, cameraReference);
         },
         setHideGround: (enabled) => {
           pointcloudUniforms.hideGround.value = enabled;

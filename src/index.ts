@@ -583,7 +583,7 @@ class Loader3DTiles {
 
           return model;
         },
-        async overlayGeoJSON(geoJSONMesh) {
+        overlayGeoJSON: (geoJSONMesh) => {
           geoJSONMesh.applyMatrix4(threeMat);
           geoJSONMesh.updateMatrixWorld();
           return geoJSONMesh;

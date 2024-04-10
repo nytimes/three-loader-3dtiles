@@ -184,7 +184,7 @@ interface Runtime {
   getWebMercatorCoord(coord: GeoCoord): void;
   /** Get the current camera frustum as mesh planes (for debugging purposes). */
   getCameraFrustum(camera: Camera): Object3D;
-  /* Overlay a GeoJSON polygon on top of geo-located 3d tiles*/
+  /** Overlay a GeoJSON polygon on top of geo-located 3d tiles */
   overlayGeoJSON(geoJSONMesh: Mesh): void;  
   /** Update the tileset for rendering. */
   update(dt:Number, viewportSize: Vector2, camera:Camera): void;

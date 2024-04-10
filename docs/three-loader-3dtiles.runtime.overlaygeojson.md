@@ -4,6 +4,8 @@
 
 ## Runtime.overlayGeoJSON() method
 
+Overlay a GeoJSON polygon on top of geo-located 3d tiles
+
 **Signature:**
 
 ```typescript

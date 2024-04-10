@@ -114,7 +114,6 @@ export interface Runtime {
     getTileset(): Tileset3D;
     getWebMercatorCoord(coord: GeoCoord): void;
     orientToGeocoord(coord: GeoCoord): void;
-    // (undocumented)
     overlayGeoJSON(geoJSONMesh: Mesh): void;
     setDebug(boolean: any): void;
     setElevationRange(range: ReadonlyArray<number>): void;

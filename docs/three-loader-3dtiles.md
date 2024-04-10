@@ -21,7 +21,9 @@
 
 |  Interface | Description |
 |  --- | --- |
+|  [FeatureToColor](./three-loader-3dtiles.featuretocolor.md) |  |
 |  [GeoCoord](./three-loader-3dtiles.geocoord.md) | Container object for interfacing with lat/long/height coordinates |
+|  [GeoJSONLoaderProps](./three-loader-3dtiles.geojsonloaderprops.md) |  |
 |  [LoaderOptions](./three-loader-3dtiles.loaderoptions.md) | Advanced loader options |
 |  [LoaderProps](./three-loader-3dtiles.loaderprops.md) | Properties for loading a tileset |
 |  [Runtime](./three-loader-3dtiles.runtime.md) | Runtime methods that can be used once a tileset is loaded |

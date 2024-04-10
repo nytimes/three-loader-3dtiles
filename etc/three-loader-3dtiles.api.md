@@ -5,6 +5,7 @@
 ```ts
 
 import { Camera } from 'three';
+import { Color } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { LoadingManager } from 'three';
 import { Material } from 'three';
@@ -13,17 +14,28 @@ import { Object3D } from 'three';
 import { Points } from 'three';
 import { Stats as Stats_2 } from '@probe.gl/stats';
 import { Tileset3D } from '@loaders.gl/tiles';
+import { Vector2 } from 'three';
 import { Vector3 } from 'three';
 import { WebGLRenderer } from 'three';
 
+// @public (undocumented)
+export interface FeatureToColor {
+    colorMap: (value: number) => Color;
+    feature: string;
+}
+
 // @public
 export interface GeoCoord {
-    // (undocumented)
     height: number;
-    // (undocumented)
     lat: number;
-    // (undocumented)
     long: number;
+}
+
+// @public (undocumented)
+export interface GeoJSONLoaderProps {
+    featureToColor?: FeatureToColor;
+    height: number;
+    url: string;
 }
 
 // @public
@@ -32,6 +44,7 @@ export class Loader3DTiles {
         model: Object3D;
         runtime: Runtime;
     }>;
+    static loadGeoJSON(props: GeoJSONLoaderProps): Promise<Object3D>;
 }
 
 // @public
@@ -101,6 +114,7 @@ export interface Runtime {
     getTileset(): Tileset3D;
     getWebMercatorCoord(coord: GeoCoord): void;
     orientToGeocoord(coord: GeoCoord): void;
+    overlayGeoJSON(geoJSONMesh: Mesh): void;
     setDebug(boolean: any): void;
     setElevationRange(range: ReadonlyArray<number>): void;
     setHideGround(boolean: any): void;
@@ -113,7 +127,7 @@ export interface Runtime {
     setViewDistanceScale(number: any): void;
     setWireframe(boolean: any): void;
     showTiles(boolean: any): void;
-    update(dt: Number, viewportHeight: number, camera: Camera): void;
+    update(dt: Number, viewportSize: Vector2, camera: Camera): void;
 }
 
 // @public

@@ -1,9 +1,11 @@
 import { load } from '@loaders.gl/core';
 import { CesiumIonLoader, Tiles3DLoader } from '@loaders.gl/3d-tiles';
+import { _GeoJSONLoader } from '@loaders.gl/json';
 import { Tileset3D, TILE_TYPE, TILE_CONTENT_STATE } from '@loaders.gl/tiles';
 import { CullingVolume, Plane } from '@math.gl/culling';
 import  { _PerspectiveFrustum as PerspectiveFrustum}  from '@math.gl/culling';
 import { Matrix4 as MathGLMatrix4, toRadians } from '@math.gl/core';
+import { Ellipsoid } from '@math.gl/geospatial';
 import * as Util from './util';
 import {
   Object3D,
@@ -24,10 +26,9 @@ import {
   Points,
   Camera,
   PerspectiveCamera,
-  WebGLRenderer,
   Texture,
   Euler,
-  Quaternion
+  Quaternion,
 } from 'three';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -38,8 +39,10 @@ import { Gradients } from './gradients';
 
 import { PointCloudFS, PointCloudVS } from './shaders';
 
-import type { LoaderProps, LoaderOptions, Runtime, GeoCoord} from './types';
+import type { LoaderProps, LoaderOptions, Runtime, GeoCoord, GeoJSONLoaderProps, FeatureToColor} from './types';
 import { PointCloudColoring, Shading  } from './types';
+import { BinaryFeatureCollection, FeatureCollection } from '@loaders.gl/schema';
+import { features } from 'process';
 
 const gradient = Gradients.RAINBOW;
 const gradientTexture = typeof document != 'undefined' ? Util.generateGradientTexture(gradient) : null;
@@ -155,7 +158,7 @@ class Loader3DTiles {
     });
     
     let cameraReference = null;
-    let lastViewportHeight = 0;
+    let lastViewportSize = new Vector2();
 
     let gltfLoader = undefined;
     let ktx2Loader = undefined;
@@ -289,7 +292,6 @@ class Loader3DTiles {
 
     let disposeFlag = false;
     let loadingEnded = false;
-
 
     pointcloudUniforms.rootCenter.value.copy(rootCenter);
     pointcloudUniforms.rootNormal.value.copy(new Vector3(0, 0, 1).normalize());
@@ -508,12 +510,12 @@ class Loader3DTiles {
         setViewDistanceScale: (scale) => {
           tileset.options.viewDistanceScale = scale;
           tileset._frameNumber++;
-          tilesetUpdate(tileset, renderMap, lastViewportHeight, cameraReference);
+          tilesetUpdate(tileset, renderMap, lastViewportSize.y, cameraReference);
         },
         setMaximumScreenSpaceError: (sse) => {
           tileset.options.maximumScreenSpaceError = sse;
           tileset._frameNumber++;
-          tilesetUpdate(tileset, renderMap, lastViewportHeight, cameraReference);
+          tilesetUpdate(tileset, renderMap, lastViewportSize.y, cameraReference);
         },
         setHideGround: (enabled) => {
           pointcloudUniforms.hideGround.value = enabled;
@@ -581,9 +583,14 @@ class Loader3DTiles {
 
           return model;
         },
-        update: function (dt: number, viewportHeight: number, camera: Camera) {
+        overlayGeoJSON: (geoJSONMesh) => {
+          geoJSONMesh.applyMatrix4(threeMat);
+          geoJSONMesh.updateMatrixWorld();
+          return geoJSONMesh;
+        },
+        update: function (dt: number, viewportSize:Vector2, camera: Camera) {
           cameraReference = camera;
-          lastViewportHeight = viewportHeight;
+          lastViewportSize.copy(viewportSize);
 
           timer += dt;
 
@@ -618,7 +625,7 @@ class Loader3DTiles {
                 tileset._frameNumber++;
                 camera.getWorldPosition(lastCameraPosition);
                 lastCameraTransform.copy(camera.matrixWorld);
-                tilesetUpdate(tileset, renderMap, lastViewportHeight, camera);
+                tilesetUpdate(tileset, renderMap, lastViewportSize.y, camera);
               }
             }
           }
@@ -647,7 +654,58 @@ class Loader3DTiles {
       },
     };
   }
+  /**
+  * Loads a tileset of 3D Tiles according to the given {@link GeoJSONLoaderProps}
+  * Could be overlayed on geograpical 3D Tiles using {@link Runtime.overlayGeoJSON}
+  * @public
+  *
+  * @param props - Properties for this load call {@link GeoJSONLoaderProps}.
+  * @returns An object containing the 3D Model to be added to the scene
+  */
+  public static async loadGeoJSON(props: GeoJSONLoaderProps): Promise <Object3D> {
+    const { url, height, featureToColor } = props; 
+    return load(url, _GeoJSONLoader, { worker: false,  gis: {format: 'binary'}}).then((data) => {  
+        const featureCollection = data as unknown as BinaryFeatureCollection;
+        const geometry = new BufferGeometry();
+        const cartesianPositions = (featureCollection.polygons.positions.value as Float32Array).reduce((acc, val, i, src) => {
+          if (i % 2 == 0) {
+            const cartographic = [val, src[i + 1], height];
+            const cartesian = Ellipsoid.WGS84.cartographicToCartesian(cartographic);
+
+            acc.push(...cartesian);
+          }
+          return acc;
+        }, []);
+        if (featureToColor) {
+          const colors = ((featureCollection.polygons.numericProps as any)
+          [featureToColor.feature].value as Array<number>).reduce((acc, val, i, src) => {
+              const color = featureToColor.colorMap(val);
+              acc[i * 3] = color.r;
+              acc[(i *3) + 1] = color.g;
+              acc[(i *3) + 2] = color.b;
+              return acc;
+          }, []);
+          geometry.setAttribute('color', new Float32BufferAttribute(
+            colors,
+            3
+          ));
+        }
+        geometry.setAttribute('position', new Float32BufferAttribute(
+          cartesianPositions,
+          3
+        ));
+        geometry.setIndex(
+          new BufferAttribute(featureCollection.polygons.triangles.value, 1)
+        );
+        const material = new MeshBasicMaterial( { transparent: true } );
+        material.vertexColors = true;
+        const mesh = new Mesh( geometry, material );
+        return mesh;
+    });
+  }
 }
+
+
 
 async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTransformInverse): Promise<Object3D> {
   return new Promise((resolve, reject) => {
@@ -850,4 +908,14 @@ function collectAttributions(tiles) {
   return attributionString;
 }
 
-export { Loader3DTiles, PointCloudColoring, Shading, Runtime, GeoCoord, LoaderOptions, LoaderProps };
+export {
+   Loader3DTiles, 
+   PointCloudColoring, 
+   Shading, 
+   Runtime, 
+   GeoCoord, 
+   FeatureToColor, 
+   LoaderOptions, 
+   LoaderProps,
+   GeoJSONLoaderProps
+};

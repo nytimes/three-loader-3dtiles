@@ -4,6 +4,8 @@
 
 ## GeoCoord.lat property
 
+Latitude
+
 **Signature:**
 
 ```typescript

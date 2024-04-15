@@ -1,4 +1,5 @@
 import { Camera } from 'three';
+import { Color } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { LoadingManager } from 'three';
 import { Material } from 'three';
@@ -7,14 +8,34 @@ import { Object3D } from 'three';
 import { Points } from 'three';
 import { Stats as Stats_2 } from '@probe.gl/stats';
 import { Tileset3D } from '@loaders.gl/tiles';
+import { Vector2 } from 'three';
 import { Vector3 } from 'three';
 import { WebGLRenderer } from 'three';
 
+export declare interface FeatureToColor {
+    /** Name of the property in the GeoJSON feature data */
+    feature: string;
+    /** A function mapping a value of the property to a vertex color*/
+    colorMap: (value: number) => Color;
+}
+
 /** Container object for interfacing with lat/long/height coordinates */
 export declare interface GeoCoord {
+    /** Longitude */
     long: number;
+    /** Latitude */
     lat: number;
+    /** Height */
     height: number;
+}
+
+export declare interface GeoJSONLoaderProps {
+    /** The URL of the GeoJSON file. */
+    url: string;
+    /** cartographic A height in which to place the GeoJSON */
+    height: number;
+    /** A mapping function between data features and vertex colors */
+    featureToColor?: FeatureToColor;
 }
 
 /** 3D Tiles Loader */
@@ -31,6 +52,15 @@ export declare class Loader3DTiles {
         model: Object3D;
         runtime: Runtime;
     }>;
+    /**
+     * Loads a tileset of 3D Tiles according to the given {@link GeoJSONLoaderProps}
+     * Could be overlayed on geograpical 3D Tiles using {@link Runtime.overlayGeoJSON}
+     * @public
+     *
+     * @param props - Properties for this load call {@link GeoJSONLoaderProps}.
+     * @returns An object containing the 3D Model to be added to the scene
+     */
+    static loadGeoJSON(props: GeoJSONLoaderProps): Promise<Object3D>;
 }
 
 /** Advanced loader options */
@@ -145,6 +175,8 @@ export declare interface Runtime {
       setShading(Shading: any): void;
       /** Set the current view distance scale. See {@link LoaderOptions} */
       setViewDistanceScale(number: any): void;
+      /** Set the current maximum screen space error. See {@link LoaderOptions} */
+      setMaximumScreenSpaceError(number: any): void;
       /** In point clouds wher the points are classified as `Ground`, hide the ground level points - Default: `false`.*/
       setHideGround(boolean: any): void;
       /** In point clouds set the type of coloring used. See {@link PointCloudColoring} */
@@ -167,8 +199,10 @@ export declare interface Runtime {
       getWebMercatorCoord(coord: GeoCoord): void;
       /** Get the current camera frustum as mesh planes (for debugging purposes). */
       getCameraFrustum(camera: Camera): Object3D;
+      /** Overlay a GeoJSON polygon on top of geo-located 3d tiles */
+      overlayGeoJSON(geoJSONMesh: Mesh): void;
       /** Update the tileset for rendering. */
-      update(dt: Number, viewportHeight: number, camera: Camera): void;
+      update(dt: Number, viewportSize: Vector2, camera: Camera): void;
       /** Dispose of all of the tileset's assets in memory. */
       dispose(): void;
      }

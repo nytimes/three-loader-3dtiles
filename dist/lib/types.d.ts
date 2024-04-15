@@ -1,6 +1,6 @@
 import { Stats } from '@probe.gl/stats';
 import { Tileset3D } from '@loaders.gl/tiles';
-import { Object3D, Vector3, Material, Camera, WebGLRenderer, LoadingManager, Mesh, Points } from 'three';
+import { Object3D, Vector2, Vector3, Material, Camera, WebGLRenderer, LoadingManager, Mesh, Points, Color } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 /** Types of coloring used when viewing point cloud tiles */
 declare enum PointCloudColoring {
@@ -92,9 +92,26 @@ interface LoaderOptions {
 }
 /** Container object for interfacing with lat/long/height coordinates */
 interface GeoCoord {
+    /** Longitude */
     long: number;
+    /** Latitude */
     lat: number;
+    /** Height */
     height: number;
+}
+interface FeatureToColor {
+    /** Name of the property in the GeoJSON feature data */
+    feature: string;
+    /** A function mapping a value of the property to a vertex color*/
+    colorMap: (value: number) => Color;
+}
+interface GeoJSONLoaderProps {
+    /** The URL of the GeoJSON file. */
+    url: string;
+    /** cartographic A height in which to place the GeoJSON */
+    height: number;
+    /** A mapping function between data features and vertex colors */
+    featureToColor?: FeatureToColor;
 }
 /** Runtime methods that can be used once a tileset is loaded */
 interface Runtime {
@@ -123,6 +140,8 @@ interface Runtime {
     setShading(Shading: any): void;
     /** Set the current view distance scale. See {@link LoaderOptions} */
     setViewDistanceScale(number: any): void;
+    /** Set the current maximum screen space error. See {@link LoaderOptions} */
+    setMaximumScreenSpaceError(number: any): void;
     /** In point clouds wher the points are classified as `Ground`, hide the ground level points - Default: `false`.*/
     setHideGround(boolean: any): void;
     /** In point clouds set the type of coloring used. See {@link PointCloudColoring} */
@@ -145,11 +164,13 @@ interface Runtime {
     getWebMercatorCoord(coord: GeoCoord): void;
     /** Get the current camera frustum as mesh planes (for debugging purposes). */
     getCameraFrustum(camera: Camera): Object3D;
+    /** Overlay a GeoJSON polygon on top of geo-located 3d tiles */
+    overlayGeoJSON(geoJSONMesh: Mesh): void;
     /** Update the tileset for rendering. */
-    update(dt: Number, viewportHeight: number, camera: Camera): void;
+    update(dt: Number, viewportSize: Vector2, camera: Camera): void;
     /** Dispose of all of the tileset's assets in memory. */
     dispose(): void;
 }
-export type { LoaderProps, LoaderOptions, Runtime, GeoCoord };
+export type { LoaderProps, LoaderOptions, Runtime, GeoCoord, GeoJSONLoaderProps, FeatureToColor };
 export { PointCloudColoring, Shading };
 //# sourceMappingURL=types.d.ts.map

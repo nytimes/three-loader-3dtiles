@@ -4,6 +4,8 @@
 
 ## GeoCoord.long property
 
+Longitude
+
 **Signature:**
 
 ```typescript

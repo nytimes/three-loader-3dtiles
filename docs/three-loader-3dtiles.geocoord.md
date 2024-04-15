@@ -16,7 +16,7 @@ interface GeoCoord
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [height](./three-loader-3dtiles.geocoord.height.md) |  | number |  |
-|  [lat](./three-loader-3dtiles.geocoord.lat.md) |  | number |  |
-|  [long](./three-loader-3dtiles.geocoord.long.md) |  | number |  |
+|  [height](./three-loader-3dtiles.geocoord.height.md) |  | number | Height |
+|  [lat](./three-loader-3dtiles.geocoord.lat.md) |  | number | Latitude |
+|  [long](./three-loader-3dtiles.geocoord.long.md) |  | number | Longitude |
 

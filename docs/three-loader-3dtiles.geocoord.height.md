@@ -4,6 +4,8 @@
 
 ## GeoCoord.height property
 
+Height
+
 **Signature:**
 
 ```typescript

@@ -1,5 +1,5 @@
 import { Object3D } from 'three';
-import type { LoaderProps, LoaderOptions, Runtime, GeoCoord } from './types';
+import type { LoaderProps, LoaderOptions, Runtime, GeoCoord, GeoJSONLoaderProps, FeatureToColor } from './types';
 import { PointCloudColoring, Shading } from './types';
 /** 3D Tiles Loader */
 declare class Loader3DTiles {
@@ -15,6 +15,15 @@ declare class Loader3DTiles {
         model: Object3D;
         runtime: Runtime;
     }>;
+    /**
+    * Loads a tileset of 3D Tiles according to the given {@link GeoJSONLoaderProps}
+    * Could be overlayed on geograpical 3D Tiles using {@link Runtime.overlayGeoJSON}
+    * @public
+    *
+    * @param props - Properties for this load call {@link GeoJSONLoaderProps}.
+    * @returns An object containing the 3D Model to be added to the scene
+    */
+    static loadGeoJSON(props: GeoJSONLoaderProps): Promise<Object3D>;
 }
-export { Loader3DTiles, PointCloudColoring, Shading, Runtime, GeoCoord, LoaderOptions, LoaderProps };
+export { Loader3DTiles, PointCloudColoring, Shading, Runtime, GeoCoord, FeatureToColor, LoaderOptions, LoaderProps, GeoJSONLoaderProps };
 //# sourceMappingURL=index.d.ts.map

@@ -1,5 +1,9 @@
 ## v1.2
 
+## v1.2.3
+ - runtime.update() now takes `viewportSize:Vector2` rather than `viewportHeight:number` (for future features that will require viewport width).
+ - Preliminary support and example for loading GeoJSON and overlaying on Google 3D Tiles.
+
 ## v1.2.2
  - Extract data attributions from Google's 3D Tiles.
  - Options added: 

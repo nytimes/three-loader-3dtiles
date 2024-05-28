@@ -85,7 +85,7 @@ The library supports [three.js](https://threejs.org/) r160 and uses its GLTF, Dr
 Refer to the `browserslist` field in [package.json](./package.json) for target browsers.
 
 ### 1. ES Module
-Download [dist/three-loader-3dtiles.esm.min.js](dist/three-loader-3dtiles.esm.min.js) and use an `importmap` to import the dependencies. See [here](examples/installation/es-module) for a full example. 
+Use an `importmap` to import the dependencies from the npm. See [here](examples/installation/es-module) for a full example. 
 
 #### **`index.html`**
   ```html
@@ -94,7 +94,7 @@ Download [dist/three-loader-3dtiles.esm.min.js](dist/three-loader-3dtiles.esm.mi
       "imports": {
         "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
         "three/examples/jsm/": "https://unpkg.com/three@0.160.0/examples/jsm/",
-        "three-loader-3dtiles" : "../../../../dist/lib/three-loader-3dtiles.js"
+        "three-loader-3dtiles" : "https://unpkg.com/three-loader-3dtiles/dist/lib/three-loader-3dtiles.js"
       }
     }
   </script>

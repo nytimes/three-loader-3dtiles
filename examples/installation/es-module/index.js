@@ -11,7 +11,7 @@ import {
   Clock,
   SRGBColorSpace,
   GridHelper,
-  AmbientLight
+  Vector2,
 } from 'three'
 
 const scene = new Scene()
@@ -34,6 +34,8 @@ canvasParent.appendChild(renderer.domElement);
 
 let tilesRuntime = undefined;
 
+const viewportSize = new Vector2();
+
 
 async function loadTileset() {
   const result = await Loader3DTiles.load( 
@@ -43,6 +45,7 @@ async function loadTileset() {
       options: {
         dracoDecoderPath: 'https://unpkg.com/three@0.160.0/examples/jsm/libs/draco',
         basisTranscoderPath: 'https://unpkg.com/three@0.160.0/examples/jsm/libs/basis',
+        resetTransform: true,
         debug: true
       }
   }
@@ -60,7 +63,7 @@ function render() {
   const dt = clock.getDelta()
   controls.update();
   if (tilesRuntime) {
-    tilesRuntime.update(dt, canvasParent.clientHeight, camera)
+    tilesRuntime.update(dt, viewportSize, camera)
   }
   renderer.render(scene, camera)
   window.requestAnimationFrame(render)
@@ -68,6 +71,7 @@ function render() {
 
 function onWindowResize() {
   renderer.setSize(canvasParent.clientWidth, canvasParent.clientHeight);
+  renderer.getSize(viewportSize)
   camera.aspect = canvasParent.clientWidth / canvasParent.clientHeight;
   camera.updateProjectionMatrix();
 }

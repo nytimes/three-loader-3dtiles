@@ -154,8 +154,7 @@
       document.querySelector('#example-desc').style.display = 'none';
     }
 
-    loadTileset();
-
+   loadTileset();
 
     async function loadTileset() {
       const result = await Loader3DTiles.load(
@@ -163,15 +162,14 @@
           url:
             queryParams.get('tilesetUrl') ??
            'https://int.nyt.com/data/3dscenes/ONA360/TILESET/0731_FREEMAN_ALLEY_10M_A_36x8K__10K-PN_50P_DB/tileset_tileset.json',
-          renderer: renderer,
+           viewport: getViewport(),
           options: {
             dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco',
             basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/basis',
             maximumScreenSpaceError: queryParams.get('sse') ?? 48,
             resetTransform: true
           }
-        }
-      );
+      });
 
       const {model, runtime} = result;
       model.rotation.set(-Math.PI / 2, 0, Math.PI / 2);
@@ -191,7 +189,7 @@
       const dt = clock.getDelta()
       controls.update(t);
       if (tilesRuntime) {
-        tilesRuntime.update(dt, viewportSize, camera);
+        tilesRuntime.update(dt, camera);
       }
       if (statsRuntime) {
         statsRuntime.update();
@@ -206,11 +204,19 @@
 
     function onWindowResize() {
       renderer.setSize(canvasParent.clientWidth, canvasParent.clientHeight);
-      viewportSize.set(canvasParent.clientWidth, canvasParent.clientHeight);
+      tilesRuntime?.setViewport(getViewport());
       camera.aspect = canvasParent.clientWidth / canvasParent.clientHeight;
       camera.updateProjectionMatrix();
     }
     window.addEventListener('resize', onWindowResize)
+
+    function getViewport() {
+      return {
+        width: canvasParent.clientWidth,
+        height: canvasParent.clientHeight,
+        devicePixelRatio: window.devicePixelRatio
+      }
+    }
 
     render();
   </script>

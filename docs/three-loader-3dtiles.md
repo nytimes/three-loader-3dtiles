@@ -21,6 +21,7 @@
 
 |  Interface | Description |
 |  --- | --- |
+|  [DrapingShaderOptions](./three-loader-3dtiles.drapingshaderoptions.md) |  |
 |  [FeatureToColor](./three-loader-3dtiles.featuretocolor.md) |  |
 |  [GeoCoord](./three-loader-3dtiles.geocoord.md) | Container object for interfacing with lat/long/height coordinates |
 |  [GeoJSONLoaderProps](./three-loader-3dtiles.geojsonloaderprops.md) |  |

@@ -7,6 +7,7 @@ import  { _PerspectiveFrustum as PerspectiveFrustum}  from '@math.gl/culling';
 import { Matrix4 as MathGLMatrix4, toRadians } from '@math.gl/core';
 import { Ellipsoid } from '@math.gl/geospatial';
 import * as Util from './util';
+import * as Draping from './draping';
 import {
   Object3D,
   Group,
@@ -25,10 +26,11 @@ import {
   BufferAttribute,
   Points,
   Camera,
-  PerspectiveCamera,
   Texture,
   Euler,
   Quaternion,
+  NormalBlending,
+  WebGLRenderer
 } from 'three';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -39,10 +41,18 @@ import { Gradients } from './gradients';
 
 import { PointCloudFS, PointCloudVS } from './shaders';
 
-import type { LoaderProps, LoaderOptions, Runtime, GeoCoord, GeoJSONLoaderProps, FeatureToColor} from './types';
-import { PointCloudColoring, Shading  } from './types';
+import type { 
+  LoaderProps, 
+  LoaderOptions, 
+  Runtime, 
+  GeoCoord, 
+  GeoJSONLoaderProps, 
+  FeatureToColor, 
+  DrapingShaderOptions,
+  Viewport
+} from './types';
+import { PointCloudColoring, Shading } from './types';
 import { BinaryFeatureCollection, FeatureCollection } from '@loaders.gl/schema';
-import { features } from 'process';
 
 const gradient = Gradients.RAINBOW;
 const gradientTexture = typeof document != 'undefined' ? Util.generateGradientTexture(gradient) : null;
@@ -91,7 +101,9 @@ class Loader3DTiles {
   */
   public static async load (props: LoaderProps): Promise<{ model: Object3D; runtime: Runtime }> {
     const options = { ...defaultOptions, ...props.options };
-    const { url } = props;
+
+    const { url, renderer } = props;
+    let { viewport } = props;
 
     const UPDATE_INTERVAL = options.updateInterval;
     const MAX_DEPTH_FOR_ORIENTATION = 5;
@@ -157,9 +169,6 @@ class Loader3DTiles {
       vertexColors: true
     });
     
-    let cameraReference = null;
-    let lastViewportSize = new Vector2();
-
     let gltfLoader = undefined;
     let ktx2Loader = undefined;
     let dracoLoader = undefined;
@@ -172,7 +181,7 @@ class Loader3DTiles {
 
       if (options.basisTranscoderPath) {
         ktx2Loader = new KTX2Loader();
-        ktx2Loader.detectSupport(props.renderer);
+        ktx2Loader.detectSupport(renderer ?? new WebGLRenderer());
         ktx2Loader.setTranscoderPath(options.basisTranscoderPath + '/');
         ktx2Loader.setWorkerLimit(1);
 
@@ -237,7 +246,7 @@ class Loader3DTiles {
         unloadQueue.push(tile);
       },
       onTileError: (tile, message) => {
-        console.error('Tile error', tile.id, message);
+        console.warn('Tile error', tile.id, message);
       },
       onTraversalComplete(selectedTiles) {
         if (options.collectAttributions) {
@@ -303,8 +312,8 @@ class Loader3DTiles {
     let timer = 0;
 
     let lastCameraTransform: Matrix4 = null;
-    let lastCameraAspect = null;
-    let needsUpdate = false;
+    let needsUpdate = true;
+    let cameraReference = null;
     const lastCameraPosition = new Vector3(Infinity, Infinity, Infinity);
     let sseDenominator = null;
 
@@ -355,13 +364,12 @@ class Loader3DTiles {
 
       tileset.modelMatrix = new MathGLMatrix4(threeMat.toArray());
     }
-    function tilesetUpdate(tileset, renderMap, viewportHeight, camera) {
+    function tilesetUpdate(tileset, renderMap, viewport, camera) {
       if (disposeFlag || !camera) {
         return;
       }
-
       // Assumes camera fov, near and far are not changing
-      if (!sseDenominator || camera.aspect != lastCameraAspect) {
+      if (!sseDenominator) {
         const loadersFrustum = new PerspectiveFrustum({
           fov: (camera.fov / 180) * Math.PI,
           aspectRatio: camera.aspect,
@@ -370,7 +378,6 @@ class Loader3DTiles {
         });
 
         sseDenominator = loadersFrustum.sseDenominator;
-        lastCameraAspect = camera.aspect;
 
         if (options.debug) {
           console.log('Updated sse denonimator:', sseDenominator);
@@ -386,7 +393,7 @@ class Loader3DTiles {
           position: lastCameraPosition.toArray(),
         },
 
-        height: viewportHeight,
+        height: viewport.height * viewport.devicePixelRatio,
         frameNumber: tileset._frameNumber,
         sseDenominator: sseDenominator,
         cullingVolume: cullingVolume,
@@ -510,12 +517,12 @@ class Loader3DTiles {
         setViewDistanceScale: (scale) => {
           tileset.options.viewDistanceScale = scale;
           tileset._frameNumber++;
-          tilesetUpdate(tileset, renderMap, lastViewportSize.y, cameraReference);
+          tilesetUpdate(tileset, renderMap, viewport, cameraReference);
         },
         setMaximumScreenSpaceError: (sse) => {
           tileset.options.maximumScreenSpaceError = sse;
           tileset._frameNumber++;
-          tilesetUpdate(tileset, renderMap, lastViewportSize.y, cameraReference);
+          tilesetUpdate(tileset, renderMap, viewport, cameraReference);
         },
         setHideGround: (enabled) => {
           pointcloudUniforms.hideGround.value = enabled;
@@ -583,16 +590,36 @@ class Loader3DTiles {
 
           return model;
         },
-        overlayGeoJSON: (geoJSONMesh) => {
+        overlayGeoJSON: (geoJSONMesh, shaderOptions: DrapingShaderOptions) => {
           geoJSONMesh.applyMatrix4(threeMat);
           geoJSONMesh.updateMatrixWorld();
+
+          // Initialize draping
+          if (!renderer) {
+            throw new Error("GeoJSON draping requires a rendere reference via LoaderProps");
+          }
+          Draping.setup(viewport, root, renderer, shaderOptions);
+          (geoJSONMesh.material as Material).dispose();
+          geoJSONMesh.material = Draping.drapingMaterial;
+
           return geoJSONMesh;
         },
-        update: function (dt: number, viewportSize:Vector2, camera: Camera) {
-          cameraReference = camera;
-          lastViewportSize.copy(viewportSize);
+        setViewport: (updatedViewport: Viewport) => {
+          viewport = updatedViewport;
+          sseDenominator = null;
+          needsUpdate = true;
 
+          if (Draping.target) {
+            Draping.resizeRenderTarget(viewport);
+          }
+        },
+        update: function (dt: number, camera: Camera) {
+          cameraReference = camera;
           timer += dt;
+
+          if (Draping.target) {
+            Draping.update(camera);
+          }
 
           if (tileset && timer >= UPDATE_INTERVAL) {
             if (!lastRootTransform.equals(root.matrixWorld)) {
@@ -618,14 +645,14 @@ class Loader3DTiles {
             } else {
               if (
                 needsUpdate || 
-                cameraChanged(camera, lastCameraTransform, lastCameraAspect)
+                cameraChanged(camera, lastCameraTransform)
             ) {
                 timer = 0;
                 needsUpdate = false;
                 tileset._frameNumber++;
                 camera.getWorldPosition(lastCameraPosition);
                 lastCameraTransform.copy(camera.matrixWorld);
-                tilesetUpdate(tileset, renderMap, lastViewportSize.y, camera);
+                tilesetUpdate(tileset, renderMap, viewport, camera);
               }
             }
           }
@@ -669,13 +696,17 @@ class Loader3DTiles {
         const geometry = new BufferGeometry();
         const cartesianPositions = (featureCollection.polygons.positions.value as Float32Array).reduce((acc, val, i, src) => {
           if (i % 2 == 0) {
-            const cartographic = [val, src[i + 1], height];
+            const cartographic = [val, src[i + 1], height ?? 0];
             const cartesian = Ellipsoid.WGS84.cartographicToCartesian(cartographic);
 
             acc.push(...cartesian);
           }
           return acc;
         }, []);
+        geometry.setAttribute('position', new Float32BufferAttribute(
+          cartesianPositions,
+          3
+        ));
         if (featureToColor) {
           const colors = ((featureCollection.polygons.numericProps as any)
           [featureToColor.feature].value as Array<number>).reduce((acc, val, i, src) => {
@@ -690,15 +721,15 @@ class Loader3DTiles {
             3
           ));
         }
-        geometry.setAttribute('position', new Float32BufferAttribute(
-          cartesianPositions,
-          3
-        ));
         geometry.setIndex(
           new BufferAttribute(featureCollection.polygons.triangles.value, 1)
         );
-        const material = new MeshBasicMaterial( { transparent: true } );
-        material.vertexColors = true;
+        const material = new MeshBasicMaterial({
+          transparent: true, 
+          vertexColors: true,
+          opacity: 0.5, 
+          blending: NormalBlending
+        });
         const mesh = new Mesh( geometry, material );
         return mesh;
     });
@@ -726,7 +757,7 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTra
 
     gltfLoader.parse(
       tile.content.gltfArrayBuffer,
-      tile.contentUrl ? tile.contentUrl.substr(0,tile.contentUrl.lastIndexOf('/') + 1) : '',
+      tile.contentUrl ? tile.contentUrl.substr(0,tile.contentUrl.lastIndexOf('/') + 1) : null,
       (gltf) => {
         tile.userData.asset = gltf.asset;
         
@@ -746,9 +777,11 @@ async function createGLTFNodes(gltfLoader, tile, unlitMaterial, options, rootTra
             const originalMaterial = (mesh.material as MeshStandardMaterial);
             const originalMap = originalMaterial.map;
 
-            const textureByteLength = Util.getTextureVRAMByteLength(originalMap);
-            if (textureByteLength) {
-              tile.content.texturesByteLength += textureByteLength;
+            if (originalMap) {
+              const textureByteLength = Util.getTextureVRAMByteLength(originalMap);
+              if (textureByteLength) {
+                tile.content.texturesByteLength += textureByteLength;
+              }
             }
 
             if (options.material) {
@@ -877,9 +910,8 @@ function disposeNode(node) {
   }
 }
 
-function cameraChanged(camera:Camera, lastCameraTransform:Matrix4, lastCameraAspect: number) {
-  return !camera.matrixWorld.equals(lastCameraTransform) ||
-  !((<PerspectiveCamera>camera).aspect == lastCameraAspect);
+function cameraChanged(camera:Camera, lastCameraTransform:Matrix4) {
+  return !camera.matrixWorld.equals(lastCameraTransform);
 }
 
 function collectAttributions(tiles) {
@@ -917,5 +949,6 @@ export {
    FeatureToColor, 
    LoaderOptions, 
    LoaderProps,
-   GeoJSONLoaderProps
+   GeoJSONLoaderProps,
+   DrapingShaderOptions
 };

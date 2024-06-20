@@ -18,8 +18,9 @@ interface LoaderProps
 |  --- | --- | --- | --- |
 |  [loadingManager?](./three-loader-3dtiles.loaderprops.loadingmanager.md) |  | LoadingManager | _(Optional)_ Use a Three JS loading manager |
 |  [options?](./three-loader-3dtiles.loaderprops.options.md) |  | [LoaderOptions](./three-loader-3dtiles.loaderoptions.md) | _(Optional)_ Advanced options for loading the tileset ([LoaderOptions](./three-loader-3dtiles.loaderoptions.md)<!-- -->) |
-|  [renderer?](./three-loader-3dtiles.loaderprops.renderer.md) |  | WebGLRenderer | _(Optional)_ Required when using compressed textures (basis universal) for GPU feature detection. |
+|  [renderer?](./three-loader-3dtiles.loaderprops.renderer.md) |  | WebGLRenderer | _(Optional)_ An existing renderer reference. Required for shader processing. |
 |  [url](./three-loader-3dtiles.loaderprops.url.md) |  | string | The URL of the tileset. For example if using Cesium ION, it would have the form: <code>https://assets.cesium.com/[ASSET_ID]/tileset.json</code>. |
+|  [viewport](./three-loader-3dtiles.loaderprops.viewport.md) |  | Viewport | Viewport properties. Use <code>setViewport()</code> to update |
 
 ## Methods
 

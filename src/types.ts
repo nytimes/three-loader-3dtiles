@@ -31,13 +31,23 @@ enum Shading {
   ShadedNoTexture = 3,
 }
 
+import type { DrapingShaderOptions } from './draping';
+
+interface Viewport {
+  width: number;
+  height: number;
+  devicePixelRatio: number;
+}
+
 /** Properties for loading a tileset */
 interface LoaderProps {
     /** The URL of the tileset. For example if using Cesium ION, 
     * it would have the form: `https://assets.cesium.com/[ASSET_ID]/tileset.json`.
     */
     url: string;
-    /** Required when using compressed textures (basis universal) for GPU feature detection. */
+    /** Viewport properties. Use `setViewport()` to update */
+    viewport: Viewport;
+    /** An existing renderer reference. Required for shader processing. */
     renderer?: WebGLRenderer;
     /** Advanced options for loading the tileset ({@link LoaderOptions}) */
     options?: LoaderOptions;
@@ -184,13 +194,24 @@ interface Runtime {
   getWebMercatorCoord(coord: GeoCoord): void;
   /** Get the current camera frustum as mesh planes (for debugging purposes). */
   getCameraFrustum(camera: Camera): Object3D;
-  /** Overlay a GeoJSON polygon on top of geo-located 3d tiles */
-  overlayGeoJSON(geoJSONMesh: Mesh): void;  
+  /** Overlay a GeoJSON polygon on top of geo-located 3d tiles. Implements a _Draping_ algorithm from https://ieeexplore.ieee.org/abstract/document/8811991 */
+  overlayGeoJSON(geoJSONMesh: Mesh, shaderOptions:DrapingShaderOptions): void;  
+  /** Set the viewport properties */
+  setViewport(viewport: Viewport): void;
   /** Update the tileset for rendering. */
-  update(dt:Number, viewportSize: Vector2, camera:Camera): void;
+  update(dt:Number, camera:Camera): void;
   /** Dispose of all of the tileset's assets in memory. */
   dispose(): void;
 }
 
-export type { LoaderProps, LoaderOptions, Runtime, GeoCoord, GeoJSONLoaderProps, FeatureToColor };
+export type { 
+  LoaderProps, 
+  LoaderOptions, 
+  Runtime, 
+  GeoCoord, 
+  GeoJSONLoaderProps, 
+  FeatureToColor, 
+  DrapingShaderOptions,
+  Viewport
+};
 export { PointCloudColoring, Shading }

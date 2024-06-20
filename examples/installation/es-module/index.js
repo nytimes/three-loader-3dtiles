@@ -12,6 +12,7 @@ import {
   SRGBColorSpace,
   GridHelper,
   Vector2,
+  LinearSRGBColorSpace,
 } from 'three'
 
 const scene = new Scene()
@@ -23,7 +24,7 @@ const camera = new PerspectiveCamera();
 camera.position.set(0,0,100);
 
 const renderer = new WebGLRenderer()
-renderer.outputColorSpace = SRGBColorSpace;
+renderer.outputColorSpace = LinearSRGBColorSpace;
 
 const clock = new Clock()
 const controls = new OrbitControls( camera, renderer.domElement);

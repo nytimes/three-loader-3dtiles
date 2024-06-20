@@ -25,6 +25,7 @@ Development of this library started at The New York Times R&D as an effort to cr
 * [LiDAR Point Cloud hosted as 3D Tiles in Cesium ION](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/cesium)
 * [Map overlay with OpenStreetMap](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/map-overlay)
 * [Google Maps Photorealistic 3D Tiles (requires API key)](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/google-3dtiles)
+* [Google 3D Tiles with GeoJSON Draping (experimental, requires API key)](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/google-3dtiles)
 
 ---
 
@@ -53,7 +54,11 @@ let tilesRuntime = null;
 async function loadTileset() {
   const result = await Loader3DTiles.load(
       url: 'https://<TILESET URL>/tileset.json',
-      renderer: renderer,
+      viewport: {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        devicePixelRatio: window.devicePixelRatio
+      }
       options: {
         dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco',
         basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/basis',
@@ -85,7 +90,7 @@ The library supports [three.js](https://threejs.org/) r160 and uses its GLTF, Dr
 Refer to the `browserslist` field in [package.json](./package.json) for target browsers.
 
 ### 1. ES Module
-Download [dist/three-loader-3dtiles.esm.min.js](dist/three-loader-3dtiles.esm.min.js) and use an `importmap` to import the dependencies. See [here](examples/installation/es-module) for a full example. 
+Use an `importmap` to import the dependencies from the npm. See [here](examples/installation/es-module) for a full example. 
 
 #### **`index.html`**
   ```html
@@ -94,7 +99,7 @@ Download [dist/three-loader-3dtiles.esm.min.js](dist/three-loader-3dtiles.esm.mi
       "imports": {
         "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
         "three/examples/jsm/": "https://unpkg.com/three@0.160.0/examples/jsm/",
-        "three-loader-3dtiles" : "../../../../dist/lib/three-loader-3dtiles.js"
+        "three-loader-3dtiles" : "https://unpkg.com/three-loader-3dtiles/dist/lib/three-loader-3dtiles.js"
       }
     }
   </script>

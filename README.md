@@ -25,6 +25,7 @@ Development of this library started at The New York Times R&D as an effort to cr
 * [LiDAR Point Cloud hosted as 3D Tiles in Cesium ION](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/cesium)
 * [Map overlay with OpenStreetMap](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/map-overlay)
 * [Google Maps Photorealistic 3D Tiles (requires API key)](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/google-3dtiles)
+* [Google 3D Tiles with GeoJSON Draping (experimental, requires API key)](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/google-3dtiles)
 
 ---
 
@@ -53,7 +54,11 @@ let tilesRuntime = null;
 async function loadTileset() {
   const result = await Loader3DTiles.load(
       url: 'https://<TILESET URL>/tileset.json',
-      renderer: renderer,
+      viewport: {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        devicePixelRatio: window.devicePixelRatio
+      }
       options: {
         dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco',
         basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/basis',

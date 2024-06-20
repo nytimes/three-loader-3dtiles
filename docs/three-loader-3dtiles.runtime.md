@@ -26,7 +26,7 @@ interface Runtime
 |  [getTileset()](./three-loader-3dtiles.runtime.gettileset.md) | Get a reference to the loaders.gl [Tileset3D](https://github.com/visgl/loaders.gl/blob/master/modules/tiles/docs/api-reference/tileset-3d.md) object. |
 |  [getWebMercatorCoord(coord)](./three-loader-3dtiles.runtime.getwebmercatorcoord.md) | Get Web-Mercator coordinates from Lat/long |
 |  [orientToGeocoord(coord)](./three-loader-3dtiles.runtime.orienttogeocoord.md) | Orient a WGS84 globe to lat/long |
-|  [overlayGeoJSON(geoJSONMesh)](./three-loader-3dtiles.runtime.overlaygeojson.md) | Overlay a GeoJSON polygon on top of geo-located 3d tiles |
+|  [overlayGeoJSON(geoJSONMesh, shaderOptions)](./three-loader-3dtiles.runtime.overlaygeojson.md) | Overlay a GeoJSON polygon on top of geo-located 3d tiles. Implements a \_Draping\_ algorithm from https://ieeexplore.ieee.org/abstract/document/8811991 |
 |  [setDebug(boolean)](./three-loader-3dtiles.runtime.setdebug.md) | Enable or disable deubg mode. |
 |  [setElevationRange(range)](./three-loader-3dtiles.runtime.setelevationrange.md) | In point clouds when coloring by <code>PointCloudColoring.Elevation</code>, set the min/max elevation values - Default: <code>[0, 400]</code>. |
 |  [setHideGround(boolean)](./three-loader-3dtiles.runtime.sethideground.md) | In point clouds wher the points are classified as <code>Ground</code>, hide the ground level points - Default: <code>false</code>. |
@@ -37,7 +37,8 @@ interface Runtime
 |  [setPointCloudColoring(PointCloudColoring)](./three-loader-3dtiles.runtime.setpointcloudcoloring.md) | In point clouds set the type of coloring used. See [PointCloudColoring](./three-loader-3dtiles.pointcloudcoloring.md) |
 |  [setShading(Shading)](./three-loader-3dtiles.runtime.setshading.md) | Set the current shading mode for b3dm tiles. See [Shading](./three-loader-3dtiles.shading.md)<!-- -->. |
 |  [setViewDistanceScale(number)](./three-loader-3dtiles.runtime.setviewdistancescale.md) | Set the current view distance scale. See [LoaderOptions](./three-loader-3dtiles.loaderoptions.md) |
+|  [setViewport(viewport)](./three-loader-3dtiles.runtime.setviewport.md) | Set the viewport properties |
 |  [setWireframe(boolean)](./three-loader-3dtiles.runtime.setwireframe.md) | Enable or disable wireframe mode. |
 |  [showTiles(boolean)](./three-loader-3dtiles.runtime.showtiles.md) | Show or hide the tile bounding boxes. |
-|  [update(dt, viewportSize, camera)](./three-loader-3dtiles.runtime.update.md) | Update the tileset for rendering. |
+|  [update(dt, camera)](./three-loader-3dtiles.runtime.update.md) | Update the tileset for rendering. |
 

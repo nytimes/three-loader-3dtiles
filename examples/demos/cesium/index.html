@@ -110,7 +110,6 @@
     );
     camera.position.set(0, 4000, 0);
 
-    const viewportSize = new Vector2();
     const renderer = new WebGLRenderer();
     const clock = new Clock()
     const controls = new OrbitControls( camera, canvasParent);
@@ -136,7 +135,7 @@
       const result = await Loader3DTiles.load(
         {
           url: `https://assets.ion.cesium.com/${queryParams.get('assetId') ?? 43978}/tileset.json`,
-          renderer: renderer,
+          viewport: getViewport(),
           options: {
             cesiumIONToken: queryParams.get('ionToken') ?? ION_TOKEN, 
             dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco',
@@ -156,13 +155,15 @@
 
       statsRuntime = new StatsWidget(runtime.getStats(), {container: statsParent });
       statsParent.style.visibility = 'visible';
+
+      onWindowResize();
     }
 
     function render(t) {
       const dt = clock.getDelta()
       controls.update();
       if (tilesRuntime) {
-        tilesRuntime.update(dt, viewportSize, camera);
+        tilesRuntime.update(dt, camera);
       }
       if (statsRuntime) {
         statsRuntime.update();
@@ -175,13 +176,22 @@
 
     onWindowResize();
 
+
     function onWindowResize() {
       renderer.setSize(canvasParent.clientWidth, canvasParent.clientHeight);
-      viewportSize.set(canvasParent.clientWidth, canvasParent.clientHeight);
+      tilesRuntime?.setViewport(getViewport());
       camera.aspect = canvasParent.clientWidth / canvasParent.clientHeight;
       camera.updateProjectionMatrix();
     }
     window.addEventListener('resize', onWindowResize)
+
+    function getViewport() {
+      return {
+        width: canvasParent.clientWidth,
+        height: canvasParent.clientHeight,
+        devicePixelRatio: window.devicePixelRatio
+      }
+    }
 
     render();
   </script>

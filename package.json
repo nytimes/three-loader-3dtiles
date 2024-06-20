@@ -1,6 +1,6 @@
 {
   "name": "three-loader-3dtiles",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "A 3D Tiles loader for Three.js",
   "main": "dist/lib/three-loader-3dtiles.umd.cjs",
   "module": "dist/lib/three-loader-3dtiles.js",
@@ -58,10 +58,10 @@
   "devDependencies": {
     "@loaders.gl/3d-tiles": "^4.1.0",
     "@loaders.gl/core": "^4.1.0",
+    "@loaders.gl/json": "^4.1.0",
     "@loaders.gl/polyfills": "^4.1.0",
     "@loaders.gl/schema": "^4.1.0",
     "@loaders.gl/tiles": "^4.1.0",
-    "@loaders.gl/json": "^4.1.0",
     "@math.gl/core": "^4.0.0",
     "@math.gl/culling": "^4.0.0",
     "@math.gl/geospatial": "^4.0.0",
@@ -88,6 +88,7 @@
     "geo-three": "^0.1.14",
     "http-server": "^14.1.1",
     "jpeg-js": ">=0.4.0",
+    "meshline": "^3.3.1",
     "mocha": "^9.0.1",
     "ocular-dev-tools": "^2.0.0-alpha.15",
     "prettier": "2.3.0",

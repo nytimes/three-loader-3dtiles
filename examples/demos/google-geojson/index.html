@@ -65,15 +65,20 @@
       left: 0;
       padding: 10px;
       font-size: 14px;
-      background-color: rgba(0, 0, 0, 0.8);
-      color: white;
+      background-color: rgba(255, 255, 255, 0.8);
+      color: black;
+      line-height: 20px;
     }
   </style>
 </head>
 <body>
   <div id="canvas-parent"></div>
   <div id="stats-widget"></div>
-  <div id="data-attribution">Data attribution: <span id="copyright"></span></div>
+  <div id="data-attribution">
+    <p>Example ported from <a href="https://deck.gl/examples/google-3d-tiles" target="_blank">Deck.gl.</a></p>
+    <p>Draping algorithm by <a href="https://ieeexplore.ieee.org/abstract/document/8811991" target="_blank">Trapp and Döllner.</a></p>
+    <p>Data attribution: <span id="copyright"></span></div></p>
+  </div>
 
 
   <script type='module'>
@@ -81,16 +86,26 @@
       Vector3,
       Scene, 
       PerspectiveCamera, 
+      OrthographicCamera,
       WebGLRenderer, 
       GridHelper, 
       Clock,
       Matrix4,
       Euler,
       Vector2,
-      Color
+      Color,
+      Mesh,
+      SphereGeometry,
+      MeshBasicMaterial,
+      SRGBColorSpace,
+      ColorManagement,
+      AdditiveBlending,
+      SubtractiveBlending,
+      MultiplyBlending,
+      NormalBlending
     } from 'three';
 
-    import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+    import { MapControls } from 'three/examples/jsm/controls/MapControls';
     import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 
     import { Loader3DTiles, PointCloudColoring  } from '../../../src/index';
@@ -104,6 +119,7 @@
     const statsParent = document.querySelector('#stats-widget')
 
     const scene = new Scene();
+
     const camera = new PerspectiveCamera(
       45,
       1,
@@ -112,10 +128,9 @@
     );
 
     const renderer = new WebGLRenderer();
-    renderer.preserveDrawingBuffer  = true;
 
     const clock = new Clock()
-    const controls = new OrbitControls( camera, canvasParent);
+    const controls = new MapControls( camera, canvasParent);
     controls.listenToKeyEvents( window );
 
     canvasParent.appendChild(renderer.domElement);
@@ -131,21 +146,32 @@
 
     const copyrightElement = document.getElementById('copyright');
 
-    const viewportSize = new Vector2();
-
     loadTileset();
-
 
     const demoLat = queryParams.get('lat') ?? 50.089;
     const demoLong = queryParams.get('long') ?? 14.42;
-    const demoHeight = queryParams.get('height') ?? 100;
+    const demoHeight = queryParams.get('height') ?? 0;
     
     const guiParams = {
       'lat': demoLat,
       'long': demoLong,
       'height': demoHeight,
       'googleApiKey': queryParams.get('googleApiKey') ?? '',
-      'reload': setQueryParams,
+      'reload': () => {setQueryParams(); window.location.reload()},
+      'enableDraping': true,
+      'minHeight': 0.0,
+      'maxHeight': 300.0,
+      'samples': 4,
+      'sampleStep': 4.0,
+      'opacity': 0.7,
+      'blendingType': 'Normal'
+    };
+
+    const BLENDING_TYPES = {
+      'Normal': NormalBlending,
+      'Additive': AdditiveBlending,
+      'Subtractive': SubtractiveBlending,
+      'Multiply': MultiplyBlending
     };
     
     function setQueryParams() {
@@ -154,13 +180,15 @@
       queryParams.set('long', guiParams.long);
       queryParams.set('height', guiParams.height);
       window.history.replaceState({}, '', '?' + queryParams.toString());
-      window.location.reload();
     }
 
     let tilesRuntime = undefined;
     let tilesModel = undefined;
     let statsRuntime = undefined;
     
+    let geoJSONMesh = undefined;
+    let drapingMaterial = undefined;
+    let basicMaterial = undefined;
 
 
     async function loadTileset() {
@@ -168,7 +196,8 @@
         {
           url:
             "https://tile.googleapis.com/v1/3dtiles/root.json",
-          renderer: renderer,
+          renderer,
+          viewport: getViewport(),
           options: {
             googleApiKey: queryParams.get('googleApiKey') ?? '',
             dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco',
@@ -180,12 +209,11 @@
       );
 
       const {model, runtime} = result;
-
       tilesRuntime = runtime;
       tilesModel = model;
 
+      onWindowResize();
       scene.add(model);
-      scene.add(runtime.getTileBoxes());
 
       statsRuntime = new StatsWidget(runtime.getStats(), {container: statsParent });
       statsParent.style.visibility = 'visible';
@@ -199,17 +227,26 @@
       camera.translateY(1000);
       controls.update();
       
-      const geoJSONMesh = await Loader3DTiles.loadGeoJSON({
+      geoJSONMesh = await Loader3DTiles.loadGeoJSON({
         url: 'https://raw.githubusercontent.com/visgl/deck.gl-data/1126e3041884597d2d3777446d1c292efc26a671/examples/google-3d-tiles/buildings.geojson',
         height: 270,
         featureToColor: { 
           feature: 'distance_to_nearest_tree',
-          colorMap: (value) => 
-            value <= 50 ? new Color(0, 1, 0): new Color(1, 0, 0)
+          colorMap: (value) => {
+            if (value < 50) return new Color("rgb(254, 235, 226)");
+            if (value < 100) return new Color("rgb(251, 180, 185)"); 
+            if (value < 200) return new Color("rgb(247, 104, 161)");
+            if (value < 300) return new Color("rgb(197, 27, 138)");
+            return new Color("rgb(122, 1, 119)");
+          }
         }
       });
-      geoJSONMesh.material.opacity = 0.5;
+
+      basicMaterial = geoJSONMesh.material;
       runtime.overlayGeoJSON(geoJSONMesh);
+      drapingMaterial = geoJSONMesh.material;
+      geoJSONMesh.updateMatrixWorld(true);
+      updateShaderParams();
       scene.add(geoJSONMesh);
     }
 
@@ -217,7 +254,7 @@
       const dt = clock.getDelta()
       controls.update();
       if (tilesRuntime) {
-        tilesRuntime.update(dt, viewportSize, camera);
+        tilesRuntime.update(dt, camera);
       }
       if (statsRuntime) {
         statsRuntime.update();
@@ -226,31 +263,57 @@
       threeJsStats.update();
       copyrightElement.innerHTML = tilesRuntime?.getDataAttributions() ?? '';
       window.requestAnimationFrame(render);
-
     }
 
     onWindowResize();
 
     function onWindowResize() {
       renderer.setSize(canvasParent.clientWidth, canvasParent.clientHeight);
-      viewportSize.set(canvasParent.clientWidth, canvasParent.clientHeight);
+      tilesRuntime?.setViewport(getViewport());
       camera.aspect = canvasParent.clientWidth / canvasParent.clientHeight;
       camera.updateProjectionMatrix();
     }
     window.addEventListener('resize', onWindowResize)
 
+    function getViewport() {
+      return {
+        width: canvasParent.clientWidth,
+        height: canvasParent.clientHeight,
+        devicePixelRatio: window.devicePixelRatio
+      }
+    }
+
+    function updateShaderParams() {
+      if (geoJSONMesh) {
+        geoJSONMesh.material = guiParams.enableDraping ? drapingMaterial : basicMaterial;
+        if (guiParams.enableDraping) {
+          geoJSONMesh.material.uniforms.minHeight.value = guiParams.minHeight;
+          geoJSONMesh.material.uniforms.maxHeight.value = guiParams.maxHeight;
+          geoJSONMesh.material.uniforms.samples.value = guiParams.samples;
+          geoJSONMesh.material.uniforms.sampleStep.value = guiParams.sampleStep;
+          geoJSONMesh.material.uniforms.opacity.value = guiParams.opacity;
+          geoJSONMesh.material.blending = BLENDING_TYPES[guiParams.blendingType];
+        }
+      }
+    }
+
     // GUI
     const gui = new GUI()
-    .title("Query params");
+    .title("Params");
     gui.width = 300;
     gui.add( guiParams, 'lat' )
     gui.add( guiParams, 'long')
     gui.add( guiParams, 'height')
     gui.add( guiParams, 'googleApiKey' )
-    .onFinishChange((value) => {
-      setQueryParams();
-    });
+    gui.add( guiParams, 'enableDraping' )
+    gui.add( guiParams, 'minHeight', 0.0, 1000.0 )
+    gui.add( guiParams, 'maxHeight', 0.0, 1000.0 )
+    gui.add( guiParams, 'samples', 1, 10 )
+    gui.add( guiParams, 'sampleStep', 0.1, 10.0 )
+    gui.add( guiParams, 'opacity', 0, 1.0)
+    gui.add( guiParams, 'blendingType', Object.keys(BLENDING_TYPES))
     gui.add( guiParams, 'reload' );
+    gui.onChange(updateShaderParams)
     gui.open();
 
     render();

@@ -130,10 +130,7 @@
 
     const copyrightElement = document.getElementById('copyright');
 
-    const viewportSize = new Vector2();
-
     loadTileset();
-
 
     // Default is Tokyo Tower
     const demoLat = queryParams.get('lat') ?? 35.6586;
@@ -168,7 +165,7 @@
         {
           url:
             "https://tile.googleapis.com/v1/3dtiles/root.json",
-          renderer: renderer,
+          viewport: getViewport(),
           options: {
             googleApiKey: queryParams.get('googleApiKey') ?? '',
             dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco',
@@ -183,6 +180,8 @@
 
       tilesRuntime = runtime;
       tilesModel = model;
+
+      onWindowResize();
 
       scene.add(model);
       scene.add(runtime.getTileBoxes());
@@ -205,7 +204,7 @@
       const dt = clock.getDelta()
       controls.update();
       if (tilesRuntime) {
-        tilesRuntime.update(dt, viewportSize, camera);
+        tilesRuntime.update(dt, camera);
       }
       if (statsRuntime) {
         statsRuntime.update();
@@ -221,11 +220,19 @@
 
     function onWindowResize() {
       renderer.setSize(canvasParent.clientWidth, canvasParent.clientHeight);
-      viewportSize.set(canvasParent.clientWidth, canvasParent.clientHeight);
+      tilesRuntime?.setViewport(getViewport());
       camera.aspect = canvasParent.clientWidth / canvasParent.clientHeight;
       camera.updateProjectionMatrix();
     }
     window.addEventListener('resize', onWindowResize)
+
+    function getViewport() {
+      return {
+        width: canvasParent.clientWidth,
+        height: canvasParent.clientHeight,
+        devicePixelRatio: window.devicePixelRatio
+      }
+    }
 
     // GUI
     const gui = new GUI()

@@ -4,6 +4,7 @@
 
 ```ts
 
+import { Blending } from 'three';
 import { Camera } from 'three';
 import { Color } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -14,9 +15,18 @@ import { Object3D } from 'three';
 import { Points } from 'three';
 import { Stats as Stats_2 } from '@probe.gl/stats';
 import { Tileset3D } from '@loaders.gl/tiles';
-import { Vector2 } from 'three';
 import { Vector3 } from 'three';
 import { WebGLRenderer } from 'three';
+
+// @public (undocumented)
+export interface DrapingShaderOptions {
+    blendingType: Blending;
+    maxHeight: number;
+    minHeight: number;
+    opacity: number;
+    samples: number;
+    sampleStep: number;
+}
 
 // @public (undocumented)
 export interface FeatureToColor {
@@ -86,6 +96,8 @@ export interface LoaderProps {
     options?: LoaderOptions;
     renderer?: WebGLRenderer;
     url: string;
+    // Warning: (ae-forgotten-export) The symbol "Viewport" needs to be exported by the entry point index.d.ts
+    viewport: Viewport;
 }
 
 // @public
@@ -114,7 +126,7 @@ export interface Runtime {
     getTileset(): Tileset3D;
     getWebMercatorCoord(coord: GeoCoord): void;
     orientToGeocoord(coord: GeoCoord): void;
-    overlayGeoJSON(geoJSONMesh: Mesh): void;
+    overlayGeoJSON(geoJSONMesh: Mesh, shaderOptions?: DrapingShaderOptions): void;
     setDebug(boolean: any): void;
     setElevationRange(range: ReadonlyArray<number>): void;
     setHideGround(boolean: any): void;
@@ -125,9 +137,10 @@ export interface Runtime {
     setPointCloudColoring(PointCloudColoring: any): void;
     setShading(Shading: any): void;
     setViewDistanceScale(number: any): void;
+    setViewport(viewport: Viewport): void;
     setWireframe(boolean: any): void;
     showTiles(boolean: any): void;
-    update(dt: Number, viewportSize: Vector2, camera: Camera): void;
+    update(dt: Number, camera: Camera): void;
 }
 
 // @public

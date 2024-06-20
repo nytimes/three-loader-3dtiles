@@ -18,6 +18,7 @@ describe('Loader3DTiles', () => {
     const { model, runtime } = <{ model: Object3D; runtime: Runtime }>await Loader3DTiles.load(
       {
         url: path.resolve(__dirname,'./redrocks-tileset.json'),
+        viewport: { width: 100, height: 100, devicePixelRatio: 1 }
       },
     )
     expect(model.type).to.equal('Group')
@@ -27,6 +28,7 @@ describe('Loader3DTiles', () => {
     expect(
       Loader3DTiles.load({
         url: path.resolve(__dirname, './non-existing.json'),
+        viewport: { width: 100, height: 100, devicePixelRatio: 1 }
       }),
     ).to.be.rejectedWith(Error)
   })

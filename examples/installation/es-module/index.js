@@ -12,6 +12,7 @@ import {
   SRGBColorSpace,
   GridHelper,
   Vector2,
+  LinearSRGBColorSpace,
 } from 'three'
 
 const scene = new Scene()
@@ -23,7 +24,7 @@ const camera = new PerspectiveCamera();
 camera.position.set(0,0,100);
 
 const renderer = new WebGLRenderer()
-renderer.outputColorSpace = SRGBColorSpace;
+renderer.outputColorSpace = LinearSRGBColorSpace;
 
 const clock = new Clock()
 const controls = new OrbitControls( camera, renderer.domElement);
@@ -41,7 +42,7 @@ async function loadTileset() {
   const result = await Loader3DTiles.load( 
   {
       url: 'https://int.nyt.com/data/3dscenes/ONA360/TILESET/0731_FREEMAN_ALLEY_10M_A_36x8K__10K-PN_50P_DB/tileset_tileset.json',
-      renderer: renderer,
+      viewport: getViewport(),
       options: {
         dracoDecoderPath: 'https://unpkg.com/three@0.160.0/examples/jsm/libs/draco',
         basisTranscoderPath: 'https://unpkg.com/three@0.160.0/examples/jsm/libs/basis',
@@ -71,11 +72,19 @@ function render() {
 
 function onWindowResize() {
   renderer.setSize(canvasParent.clientWidth, canvasParent.clientHeight);
-  renderer.getSize(viewportSize)
+  tilesRuntime?.setViewport(getViewport());
   camera.aspect = canvasParent.clientWidth / canvasParent.clientHeight;
   camera.updateProjectionMatrix();
 }
 window.addEventListener('resize', onWindowResize)
+
+function getViewport() {
+  return {
+    width: canvasParent.clientWidth,
+    height: canvasParent.clientHeight,
+    devicePixelRatio: window.devicePixelRatio
+  }
+}
 
 loadTileset();
 onWindowResize();

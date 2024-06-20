@@ -1,6 +1,6 @@
 import { Loader3DTiles, LoaderProps, Runtime } from 'three-loader-3dtiles'
 import { useLoader, useThree, useFrame } from '@react-three/fiber'
-import { Loader, Object3D } from 'three'
+import { Loader, Vector2 } from 'three'
 
 class Loader3DTilesBridge extends Loader {
   props: LoaderProps;
@@ -31,6 +31,7 @@ function Loader3DTilesR3FAsset(props) {
   const threeState = useThree();
   const loaderProps = {
     renderer: threeState.gl,
+    viewport: getViewport(threeState.gl),
     options: {
       ...props
     }
@@ -51,6 +52,14 @@ function Loader3DTilesR3FAsset(props) {
       <primitive object={model} />
     </group>
   )
+}
+function getViewport(renderer) {
+  const viewSize = renderer.getSize(new Vector2());
+  return {
+    width: viewSize.x,
+    height: viewSize.y,
+    devicePixelRatio: renderer.getPixelRatio()
+  }
 }
 
 export { Loader3DTilesR3FAsset }

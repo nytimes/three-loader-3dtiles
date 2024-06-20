@@ -195,7 +195,7 @@ interface Runtime {
   /** Get the current camera frustum as mesh planes (for debugging purposes). */
   getCameraFrustum(camera: Camera): Object3D;
   /** Overlay a GeoJSON polygon on top of geo-located 3d tiles. Implements a _Draping_ algorithm from https://ieeexplore.ieee.org/abstract/document/8811991 */
-  overlayGeoJSON(geoJSONMesh: Mesh, shaderOptions:DrapingShaderOptions): void;  
+  overlayGeoJSON(geoJSONMesh: Mesh, shaderOptions?:DrapingShaderOptions): void;  
   /** Set the viewport properties */
   setViewport(viewport: Viewport): void;
   /** Update the tileset for rendering. */

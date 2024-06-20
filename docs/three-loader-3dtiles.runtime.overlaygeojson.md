@@ -9,7 +9,7 @@ Overlay a GeoJSON polygon on top of geo-located 3d tiles. Implements a \_Draping
 **Signature:**
 
 ```typescript
-overlayGeoJSON(geoJSONMesh: Mesh, shaderOptions: DrapingShaderOptions): void;
+overlayGeoJSON(geoJSONMesh: Mesh, shaderOptions?: DrapingShaderOptions): void;
 ```
 
 ## Parameters
@@ -17,7 +17,7 @@ overlayGeoJSON(geoJSONMesh: Mesh, shaderOptions: DrapingShaderOptions): void;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  geoJSONMesh | Mesh |  |
-|  shaderOptions | [DrapingShaderOptions](./three-loader-3dtiles.drapingshaderoptions.md) |  |
+|  shaderOptions | [DrapingShaderOptions](./three-loader-3dtiles.drapingshaderoptions.md) | _(Optional)_ |
 
 **Returns:**
 

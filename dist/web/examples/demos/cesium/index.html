@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Tiles Loader: Cesium ION</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #canvas-parent {
+      width: 100vw;
+      height: 100vh;
+      touch-action: none;
+    }
+    #guide {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 300px;
+      padding: 1rem 2rem;
+      font-family:'Courier New', Courier, monospace;
+      line-height: 1.2;
+      background-color: white;
+      color: black;
+    }
+
+    #guide p {
+      margin-top: 10px;
+    }
+
+    #stats-widget {
+      position: absolute;
+      top: 70px;
+      left: 10px;
+      background-color: rgb(255 255 255 / 83%);
+      padding: 10px;
+      width: 300px;
+      word-break: break-all;
+      visibility: hidden;
+    }
+    #button {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      padding: 12px;
+      border-radius: 50%;
+      margin-bottom: 0px;
+      background-color: #FFF;
+      opacity: .9;
+      z-index: 999;
+      box-shadow: 0 0 4px rgb(0 0 0 / 15%);
+    }
+    @media (max-width:480px) {
+      #guide, #stats-widget { display: none; }
+    }
+  </style>
+  <script type="module" crossorigin src="../../../assets/cesium-9zWkHe8l.js"></script>
+  <link rel="modulepreload" crossorigin href="../../../assets/three-loader-3diles-lsJcE5pf.js">
+  <link rel="modulepreload" crossorigin href="../../../assets/stats-widget-Jvz1JHcD.js">
+</head>
+<body>
+  <div id="canvas-parent"></div>
+  <div id="stats-widget"></div>
+
+  <div id="guide">
+    Use arrow keys, mouse wheel/trackpad, or right click to move around, and left click and drag to turn/rotate the camera.
+    <p>
+      <u>Available URL parameters:</u>
+      <ul>
+        <li><b>assetId</b>: Load another Cesium ion asset id.</li>
+        <li><b>ionToken</b>: Set the Cesium ion access token.</li>
+      </ul>
+    </p>
+  </div>
+
+  <a id="button" target="_blank" href="https://github.com/nytimes/three-loader-3dtiles/blob/master/examples/demos/cesium/index.html" title="View source code for demo" style=""><img src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='24px'%20height='24px'%20viewBox='0%200%2024%2024'%20fill='%23000000'%3e%3cpath%20fill='none'%20d='M0%200h24v24H0V0z'/%3e%3cpath%20d='M9.4%2016.6L4.8%2012l4.6-4.6L8%206l-6%206%206%206%201.4-1.4zm5.2%200l4.6-4.6-4.6-4.6L16%206l6%206-6%206-1.4-1.4z'/%3e%3c/svg%3e"></a>
+</body>
+</html>

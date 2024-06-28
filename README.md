@@ -24,8 +24,8 @@ Development of this library started at The New York Times R&D as an effort to cr
 * [Photogrammetry exported to 3D Tiles in RealityCapture](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/realitycapture)
 * [LiDAR Point Cloud hosted as 3D Tiles in Cesium ION](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/cesium)
 * [Map overlay with OpenStreetMap](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/map-overlay)
-* [Google Maps Photorealistic 3D Tiles (requires API key)](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/google-3dtiles)
-* [Google 3D Tiles with GeoJSON Draping (experimental, requires API key)](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/google-geojson)
+* [Google Maps Photorealistic 3D Tiles](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/google-3dtiles)
+* [Google 3D Tiles with GeoJSON Draping (experimental)](https://nytimes.github.io/three-loader-3dtiles/dist/web/examples/demos/google-geojson)
 
 ---
 

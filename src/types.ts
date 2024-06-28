@@ -198,6 +198,8 @@ interface Runtime {
   overlayGeoJSON(geoJSONMesh: Mesh, shaderOptions?:DrapingShaderOptions): void;  
   /** Set the viewport properties */
   setViewport(viewport: Viewport): void;
+  /** Set the renderer used for shader processsing */
+  setRenderer(renderer: WebGLRenderer): void;
   /** Update the tileset for rendering. */
   update(dt:Number, camera:Camera): void;
   /** Dispose of all of the tileset's assets in memory. */

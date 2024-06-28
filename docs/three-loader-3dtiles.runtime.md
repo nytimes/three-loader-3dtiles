@@ -35,6 +35,7 @@ interface Runtime
 |  [setMaxIntensity(number)](./three-loader-3dtiles.runtime.setmaxintensity.md) | In point clouds when coloring by <code>PointCloudColoring.Intensity</code>, set the max intensity value - Default: <code>1.0</code> |
 |  [setPointAlpha(number)](./three-loader-3dtiles.runtime.setpointalpha.md) | In point clouds when, set the alpha value. Default: <code>1.0</code>. |
 |  [setPointCloudColoring(PointCloudColoring)](./three-loader-3dtiles.runtime.setpointcloudcoloring.md) | In point clouds set the type of coloring used. See [PointCloudColoring](./three-loader-3dtiles.pointcloudcoloring.md) |
+|  [setRenderer(renderer)](./three-loader-3dtiles.runtime.setrenderer.md) | Set the renderer used for shader processsing |
 |  [setShading(Shading)](./three-loader-3dtiles.runtime.setshading.md) | Set the current shading mode for b3dm tiles. See [Shading](./three-loader-3dtiles.shading.md)<!-- -->. |
 |  [setViewDistanceScale(number)](./three-loader-3dtiles.runtime.setviewdistancescale.md) | Set the current view distance scale. See [LoaderOptions](./three-loader-3dtiles.loaderoptions.md) |
 |  [setViewport(viewport)](./three-loader-3dtiles.runtime.setviewport.md) | Set the viewport properties |

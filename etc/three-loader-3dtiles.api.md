@@ -135,6 +135,7 @@ export interface Runtime {
     setMaxIntensity(number: any): void;
     setPointAlpha(number: any): void;
     setPointCloudColoring(PointCloudColoring: any): void;
+    setRenderer(renderer: WebGLRenderer): void;
     setShading(Shading: any): void;
     setViewDistanceScale(number: any): void;
     setViewport(viewport: Viewport): void;

@@ -102,8 +102,8 @@ class Loader3DTiles {
   public static async load (props: LoaderProps): Promise<{ model: Object3D; runtime: Runtime }> {
     const options = { ...defaultOptions, ...props.options };
 
-    const { url, renderer } = props;
-    let { viewport } = props;
+    const { url } = props;
+    let { viewport, renderer } = props;
 
     const UPDATE_INTERVAL = options.updateInterval;
     const MAX_DEPTH_FOR_ORIENTATION = 5;
@@ -596,7 +596,7 @@ class Loader3DTiles {
 
           // Initialize draping
           if (!renderer) {
-            throw new Error("GeoJSON draping requires a rendere reference via LoaderProps");
+            throw new Error("GeoJSON draping requires a renderer reference via LoaderProps");
           }
           Draping.setup(viewport, root, renderer, shaderOptions);
           (geoJSONMesh.material as Material).dispose();
@@ -612,6 +612,9 @@ class Loader3DTiles {
           if (Draping.target) {
             Draping.resizeRenderTarget(viewport);
           }
+        },
+        setRenderer: (updatedRenderer: WebGLRenderer) => {
+          renderer = updatedRenderer;
         },
         update: function (dt: number, camera: Camera) {
           cameraReference = camera;

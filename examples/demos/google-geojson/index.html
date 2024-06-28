@@ -175,7 +175,9 @@
     };
     
     function setQueryParams() {
-      queryParams.set('googleApiKey', guiParams.googleApiKey);
+      if (window.location.hostname !== 'nytimes.github.io') {
+        queryParams.set('googleApiKey', guiParams.googleApiKey);
+      }
       queryParams.set('lat', guiParams.lat);
       queryParams.set('long', guiParams.long);
       queryParams.set('height', guiParams.height);
@@ -199,7 +201,10 @@
           renderer,
           viewport: getViewport(),
           options: {
-            googleApiKey: queryParams.get('googleApiKey') ?? '',
+            googleApiKey: 
+              window.location.hostname === 'nytimes.github.io' ?
+              'AIzaSyD7mJdqBYNwSP6RUQcmstZ6DXfn3rf5wkM' :
+               queryParams.get('googleApiKey') ?? '',
             dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco',
             basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/basis',
             pointCloudColoring: PointCloudColoring.RGB,
@@ -304,7 +309,9 @@
     gui.add( guiParams, 'lat' )
     gui.add( guiParams, 'long')
     gui.add( guiParams, 'height')
-    gui.add( guiParams, 'googleApiKey' )
+    if (window.location.hostname !== 'nytimes.github.io') {
+      gui.add( guiParams, 'googleApiKey' )
+    }
     gui.add( guiParams, 'enableDraping' )
     gui.add( guiParams, 'minHeight', 0.0, 1000.0 )
     gui.add( guiParams, 'maxHeight', 0.0, 1000.0 )

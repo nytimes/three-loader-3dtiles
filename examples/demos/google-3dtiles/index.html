@@ -169,6 +169,7 @@
           options: {
             googleApiKey: 
               window.location.hostname === 'nytimes.github.io' ?
+              // restricted to only being used for Map Tiles API, and only on the domain nytimes.github.io
               'AIzaSyD7mJdqBYNwSP6RUQcmstZ6DXfn3rf5wkM' :
                queryParams.get('googleApiKey') ?? '',
             dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco',

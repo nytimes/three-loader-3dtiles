@@ -4,12 +4,12 @@
 
 ## Runtime.overlayGeoJSON() method
 
-Overlay a GeoJSON polygon on top of geo-located 3d tiles
+Overlay a GeoJSON polygon on top of geo-located 3d tiles. Implements a \_Draping\_ algorithm from https://ieeexplore.ieee.org/abstract/document/8811991
 
 **Signature:**
 
 ```typescript
-overlayGeoJSON(geoJSONMesh: Mesh): void;
+overlayGeoJSON(geoJSONMesh: Mesh, shaderOptions?: DrapingShaderOptions): void;
 ```
 
 ## Parameters
@@ -17,6 +17,7 @@ overlayGeoJSON(geoJSONMesh: Mesh): void;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  geoJSONMesh | Mesh |  |
+|  shaderOptions | [DrapingShaderOptions](./three-loader-3dtiles.drapingshaderoptions.md) | _(Optional)_ |
 
 **Returns:**
 

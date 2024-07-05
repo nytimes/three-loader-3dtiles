@@ -16,7 +16,6 @@ class Loader3DTilesBridge extends Loader {
          onLoad(result);
       }
       catch(e) {
-        console.log("Error loading 3d tiles!", e);
         onError(e);
       }
     }
@@ -44,7 +43,7 @@ function Loader3DTilesR3FAsset(props) {
   })
 
   useFrame(({ size, camera }, dt) => {
-    runtime.update(dt, size.height, camera);
+    runtime.update(dt, camera);
   });
 
   return (

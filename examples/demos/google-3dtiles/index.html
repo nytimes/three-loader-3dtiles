@@ -89,7 +89,7 @@
       Vector2
     } from 'three';
 
-    import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+    import { MapControls } from 'three/examples/jsm/controls/MapControls';
     import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 
     import { Loader3DTiles, PointCloudColoring  } from '../../../src/index';
@@ -114,7 +114,7 @@
     renderer.preserveDrawingBuffer  = true;
 
     const clock = new Clock()
-    const controls = new OrbitControls( camera, canvasParent);
+    const controls = new MapControls( camera, canvasParent);
     controls.listenToKeyEvents( window );
 
     canvasParent.appendChild(renderer.domElement);
@@ -175,7 +175,7 @@
             dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco',
             basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/basis',
             pointCloudColoring: PointCloudColoring.RGB,
-            maximumScreenSpaceError: queryParams.get('sse') ?? 24
+            maximumScreenSpaceError: queryParams.get('sse') ?? 48
           }
         }
       );

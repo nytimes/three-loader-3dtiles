@@ -1,6 +1,6 @@
 ## v1.2
 
-## v1.2.6
+## v1.2.7
 - Experimental feature: real time draping of GeoJSON overlays (see example).
 - Add a `Viewport` structure required on initial load and updated via the `setViewport()` function. Contains `width`, `height`, and `devicePixelRatio`.
 - Added `setRenderer()` for setting the renderer after the first load if needed.
